@@ -666,7 +666,7 @@
     .stat-box-label { font-size: 0.7rem; color: var(--text-muted); }
     .week-row {
       display: grid;
-      grid-template-columns: 38px 1fr 1fr;
+      grid-template-columns: 34px 1fr 1fr 1fr;
       gap: 8px;
       align-items: center;
       font-size: 0.72rem;
@@ -937,6 +937,52 @@
     }
     .spotlight { animation: spotlight 1.8s ease 2 !important; }
 
+    /* Small phones: tabs keep their width and scroll sideways; the top bar gets more compact */
+    .tab-btn { flex: 1 0 auto; }
+    @media (max-width: 370px) {
+      .moon-next, .sun-info .moon-next { display: none; }
+      .moon-phase { font-size: 0.72rem; }
+      header .icon-btn { padding: 6px 9px; }
+    }
+    header .icon-btn { white-space: nowrap; flex-shrink: 0; }
+    .moon-info { overflow: hidden; flex: 1 1 auto; margin-right: 8px; }
+    .moon-info > div:not(.sun-info) { min-width: 0; overflow: hidden; }
+    .moon-phase { overflow: hidden; text-overflow: ellipsis; }
+
+    .unsponge-tap { cursor: pointer; min-height: 70px; }
+    .unsponge-hint { font-size: 0.68rem; color: var(--text-muted); margin-top: 8px; }
+    @keyframes unspongeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    .unsponge-tap.reveal #unsponge-text { display: inline-block; animation: unspongeIn 0.45s ease both; }
+
+    .biff-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+    .biff-block {
+      background: rgba(5, 10, 22, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+      line-height: 1.45;
+      animation: cardIn 0.3s ease both;
+    }
+    .biff-label { font-size: 0.68rem; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
+    .biff-reply { font-size: 0.95rem; color: var(--text-main); }
+    .biff-emergency { border-color: rgba(239, 68, 68, 0.85); background: rgba(239, 68, 68, 0.16); }
+    .biff-call {
+      display: block;
+      text-align: center;
+      text-decoration: none;
+      background: linear-gradient(135deg, #ef4444, #f97316);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.35);
+    }
+    .anchor-gen { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border-color); }
+    .anchor-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 8px; }
+    #anchor-script { background: var(--tint); border-radius: 10px; padding: 10px 12px; }
+    .biff-log-head { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border-color); }
+    #biff-log { margin-top: 10px; }
+    .biff-safety { border-color: rgba(239, 68, 68, 0.6); background: rgba(239, 68, 68, 0.12); }
+
     .theme-reason {
       display: flex;
       align-items: center;
@@ -1144,7 +1190,7 @@
     <button class="tab-btn active" onclick="switchTab(0)">Vagus</button>
     <button class="tab-btn" onclick="switchTab(1)">Journey</button>
     <button class="tab-btn" onclick="switchTab(2)">Tetris</button>
-    <button class="tab-btn" onclick="switchTab(3)">Recovery</button>
+    <button class="tab-btn" onclick="switchTab(3)">Recover</button>
     <button class="tab-btn" onclick="switchTab(4)" id="hamster-tab">Spirit</button>
     <button class="tab-btn" onclick="switchTab(5)">Calm</button>
     <button class="tab-btn" onclick="switchTab(6)">Practise</button>
@@ -1198,7 +1244,6 @@
 
       <div class="card" id="unsent-wrap" style="position: relative;">
         <h2>Unsent Defense</h2>
-        <div class="subtitle">A safe place for the insults, defenses and replies you held back. Nobody will read this.</div>
         <textarea id="unsent-input" placeholder="Type what you wanted to say or defend against. Get it out of your head."></textarea>
         <div class="unsent-options">
           <label><input type="radio" name="unsent-mode" value="destroy" checked> Destroy completely without saving</label>
@@ -1286,8 +1331,7 @@
     <!-- TAB 3: TETRIS -->
     <div class="tab-content">
       <div class="card" style="text-align: center;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-          <h2>Visuospatial Focus</h2>
+        <div style="display:flex; justify-content:center; align-items:center; margin-bottom:10px;">
           <span id="tetris-timer" style="color:var(--theme-primary); font-weight:700;">10:00</span>
         </div>
         
@@ -1340,8 +1384,35 @@
       </div>
     </div>
 
-    <!-- TAB 4: RECOVERY PROTOCOL -->
+    <!-- TAB 4: RECOVER -->
     <div class="tab-content">
+      <div class="card">
+        <h2>BIFF Reply Helper</h2>
+        <textarea id="biff-input" placeholder='e.g. "You used me up, what solutions do you have to fix me?!"'></textarea>
+        <div style="display:grid; grid-template-columns: 2fr 1fr; gap:8px;">
+          <button class="btn-action" onclick="generateBiff()">Get a calm reply</button>
+          <button class="btn-action btn-secondary" onclick="clearBiff()">Clear</button>
+        </div>
+        <div id="biff-output" style="display:none; margin-top:12px;"></div>
+
+        <div class="anchor-gen">
+          <div class="biff-label">Need to step away? Anchor script</div>
+          <div class="anchor-chips">
+            <button class="tag-chip" onclick="makeAnchor(10)">10 min</button>
+            <button class="tag-chip" onclick="makeAnchor(20)">20 min</button>
+            <button class="tag-chip" onclick="makeAnchor(30)">30 min</button>
+            <button class="tag-chip" onclick="makeAnchor(60)">1 hour</button>
+          </div>
+          <div class="biff-reply" id="anchor-script" style="display:none;"></div>
+        </div>
+
+        <div class="biff-log-head">
+          <div class="biff-label" style="margin:0;">BIFF Log <span id="biff-log-count"></span></div>
+          <button class="icon-btn" onclick="toggleBiffLog()" id="biff-log-btn">Show</button>
+        </div>
+        <div id="biff-log" style="display:none;"></div>
+      </div>
+
       <div class="card" style="text-align: center;">
         <h2>Discreet Bathroom Reset</h2>
         <div class="subtitle">Execute silently during a bathroom break. Do not raise suspicion.</div>
@@ -1364,35 +1435,14 @@
 
       <div class="card">
         <div style="font-weight:600; font-size:0.9rem; color:var(--theme-primary); margin-bottom:8px;">3. Emotional Un-Sponging</div>
-        <div class="subtitle">Tap to read and leave her weather behind:</div>
-        
-        <div class="unsponge-card">
-          "I held the line and remained calm. Now I return her emotional load back to her."
-        </div>
-        <div class="unsponge-card">
-          "Her storm belongs to her pain. My body is my house, not her storage container."
-        </div>
-        <div class="unsponge-card">
-          "The bathroom door is shut. In this space, my nervous system is safe."
+        <div class="subtitle">Tap the card to read the next one and leave her weather behind:</div>
+
+        <div class="unsponge-card unsponge-tap" id="unsponge-card" onclick="nextUnsponge()">
+          <span id="unsponge-text">"I held the line and remained calm. Now I return her emotional load back to her."</span>
+          <div class="unsponge-hint">Tap for the next one</div>
         </div>
       </div>
 
-      <div class="card">
-        <div style="font-weight:600; font-size:0.9rem; color:var(--theme-primary); margin-bottom:8px;">4. Bathroom Reset Checklist</div>
-        
-        <div class="checklist-item" onclick="toggleCheck(this)">
-          <span>[ ]</span> Drink 1 full cup of cold sink water (flushes cortisol)
-        </div>
-        <div class="checklist-item" onclick="toggleCheck(this)">
-          <span>[ ]</span> Drop tongue from roof of mouth & open jaw wide
-        </div>
-        <div class="checklist-item" onclick="toggleCheck(this)">
-          <span>[ ]</span> Swallow 3 times to un-clench throat muscles
-        </div>
-        <div class="checklist-item" onclick="toggleCheck(this)">
-          <span>[ ]</span> Take 3 slow exhales silently through mouth
-        </div>
-      </div>
     </div>
 
     <!-- TAB 5: COUNT -->
@@ -1578,8 +1628,20 @@
       </div>
 
       <div class="card">
+        <h2>Breathing</h2>
+        <div class="subtitle">A round counts each time the pacer completes a full breath cycle.</div>
+        <div class="stat-grid">
+          <div class="stat-box"><div class="stat-box-val" id="p-breath-today">0</div><div class="stat-box-label">Rounds today</div></div>
+          <div class="stat-box"><div class="stat-box-val" id="p-breath-total">0</div><div class="stat-box-label">Rounds all time</div></div>
+          <div class="stat-box"><div class="stat-box-val" id="p-breath-min-today">0</div><div class="stat-box-label">Minutes today</div></div>
+          <div class="stat-box"><div class="stat-box-val" id="p-breath-min-total">0</div><div class="stat-box-label">Minutes all time</div></div>
+        </div>
+        <button class="btn-action btn-secondary" onclick="goTool('breathe')">Start Breathing ▶</button>
+      </div>
+
+      <div class="card">
         <h2>Last 7 Days</h2>
-        <div class="week-row" style="color:var(--text-muted);"><span></span><span>Vagus resets</span><span>Tetris minutes</span></div>
+        <div class="week-row" style="color:var(--text-muted);"><span></span><span>Vagus</span><span>Tetris min</span><span>Breaths</span></div>
         <div id="p-week"></div>
       </div>
     </div>
@@ -1925,7 +1987,7 @@
       initChaosGame();
     });
 
-    // ONI FACES (chibi style): happy (gold), calm (blue), angry (red), numb (violet), anxious (orange), sad (slate blue)
+    // ONI STYLES: colours per mood (tiles, glow, theme). The start screen draws Spirit's face in each mood.
     const ONI_STYLES = {
       happy: { skin1: '#fff3c4', skin2: '#f7c548', skin3: '#7a4b00', horn1: '#fffaf0', horn2: '#ffcf6e', glow: '251, 191, 36', blush: 'rgba(255, 120, 120, 0.55)' },
       calm:  { skin1: '#cdf6ff', skin2: '#4aa8f0', skin3: '#0b3366', horn1: '#f4fbff', horn2: '#a4d8ff', glow: '0, 242, 254', blush: 'rgba(255, 150, 190, 0.45)' },
@@ -1936,309 +1998,189 @@
     };
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    function drawOniFace(canvasId, kind, t = 0) {
-      const canvas = document.getElementById(canvasId);
-      if(!canvas) return;
-      const ctx = canvas.getContext('2d');
-      const c = ONI_STYLES[kind] || ONI_STYLES.calm;
-      const S = canvas.width / 100;
+    // Start-screen faces: Spirit in each mood, on the oni's coloured tile
+    function drawOniFace(canvasId, mood, t = 0) {
+      const c = document.getElementById(canvasId);
+      if(!c) return;
+      const ctx = c.getContext('2d');
+      const S = c.width / 100;
       ctx.setTransform(S, 0, 0, S, 0, 0);
       ctx.clearRect(0, 0, 100, 100);
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
 
-      // Personality in motion: happy bounces, calm breathes, angry trembles, numb barely drifts, anxious jitters, sad sinks
+      // Motion per mood
       let ox = 0, oy = 0;
-      if(kind === 'happy') oy = -Math.abs(Math.sin(t / 380)) * 3;
-      if(kind === 'calm') oy = Math.sin(t / 900) * 1.5;
-      if(kind === 'angry') { oy = Math.sin(t / 600) * 0.8; ox = Math.sin(t / 900) > 0.55 ? Math.sin(t / 35) * 0.9 : 0; }
-      if(kind === 'numb') oy = Math.sin(t / 1700) * 0.7;
-      if(kind === 'anxious') { ox = Math.sin(t / 40) * 0.6; oy = Math.sin(t / 55) * 0.5; }
-      if(kind === 'sad') oy = 1 + Math.sin(t / 1400) * 1.2;
-      const cx = 50 + ox, cy = 60 + oy;
-      const pulse = 0.5 + 0.5 * Math.sin(t / (kind === 'angry' ? 320 : kind === 'numb' ? 2200 : 900));
+      if(mood === 'happy') oy = -Math.abs(Math.sin(t / 380)) * 3;
+      if(mood === 'calm') oy = Math.sin(t / 900) * 1.4;
+      if(mood === 'angry') ox = Math.sin(t / 900) > 0.55 ? Math.sin(t / 35) * 0.8 : 0;
+      if(mood === 'anxious') { ox = Math.sin(t / 40) * 0.6; oy = Math.sin(t / 55) * 0.4; }
+      if(mood === 'numb') oy = Math.sin(t / 1700) * 0.6;
+      if(mood === 'sad') oy = 1.5 + Math.sin(t / 1400) * 1;
+      const cx = 50 + ox, cy = 56 + oy;
+      const pulse = 0.5 + 0.5 * Math.sin(t / 900);
 
-      // Aura
+      const fur = mood === 'numb' ? '#c8ab90' : '#dc9850';
+      const furDark = mood === 'numb' ? '#9c8270' : '#b06f30';
+      const cream = mood === 'numb' ? '#ece2d6' : '#f8ecd9';
+      const pinkIn = '#f2a7a7';
+      const ink = '#1e130b';
+
+      const oval = (x, y, rx, ry, col, rot = 0) => { ctx.fillStyle = col; ctx.beginPath(); ctx.ellipse(x, y, rx, ry, rot, 0, Math.PI * 2); ctx.fill(); };
+
+      // Soft aura in the mood colour
       const aura = ctx.createRadialGradient(cx, cy, 8, cx, cy, 50);
-      aura.addColorStop(0, `rgba(${c.glow}, ${kind === 'numb' ? 0.1 + 0.05 * pulse : 0.24 + 0.16 * pulse})`);
-      aura.addColorStop(1, `rgba(${c.glow}, 0)`);
+      aura.addColorStop(0, `rgba(${ONI_STYLES[mood].glow}, ${mood === 'numb' ? 0.1 : 0.22 + 0.12 * pulse})`);
+      aura.addColorStop(1, `rgba(${ONI_STYLES[mood].glow}, 0)`);
       ctx.fillStyle = aura;
       ctx.fillRect(0, 0, 100, 100);
 
-      // Horns: each mood has its own shape
-      function horn(x, baseY, w, h, lean) {
-        const g = ctx.createLinearGradient(x, baseY, x + lean, baseY - h);
-        g.addColorStop(0, c.horn2);
-        g.addColorStop(1, c.horn1);
-        ctx.fillStyle = g;
-        ctx.strokeStyle = g;
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(x - w / 2, baseY);
-        ctx.quadraticCurveTo(x - w / 2 + lean * 0.4, baseY - h * 0.6, x + lean, baseY - h);
-        ctx.quadraticCurveTo(x + w / 2 + lean * 0.4, baseY - h * 0.6, x + w / 2, baseY);
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-      }
-      const hornY = cy - 24;
-      if(kind === 'happy') { horn(cx - 14, hornY, 10, 12, -3); horn(cx + 14, hornY, 10, 12, 3); }
-      if(kind === 'calm')  { horn(cx - 15, hornY, 9, 15, -2); horn(cx + 15, hornY, 9, 15, 2); }
-      if(kind === 'angry') { horn(cx - 16, hornY + 1, 10, 19, -7); horn(cx + 16, hornY + 1, 10, 19, 7); }
-      if(kind === 'numb')  { horn(cx - 15, hornY, 9, 13, -2); horn(cx + 16, hornY + 3, 9, 10, 10); }
-      if(kind === 'anxious') { horn(cx - 14, hornY, 8, 11, 1); horn(cx + 14, hornY, 8, 11, -1); }
-      if(kind === 'sad')   { horn(cx - 16, hornY + 3, 9, 11, -9); horn(cx + 16, hornY + 3, 9, 11, 9); }
-
-      // Little pointed ears
-      ctx.fillStyle = c.skin2;
+      // Ears: perky, flattened back (anxious, angry) or drooping (sad)
       [-1, 1].forEach(s => {
-        ctx.beginPath();
-        ctx.moveTo(cx + s * 30, cy - 9);
-        ctx.quadraticCurveTo(cx + s * 41, cy - 10, cx + s * 42, cy - 15);
-        ctx.quadraticCurveTo(cx + s * 40, cy + 1, cx + s * 31, cy + 5);
-        ctx.closePath();
-        ctx.fill();
+        let ex = cx + s * 24, ey = cy - 26, rot = s * 0.3, ry = 10;
+        if(mood === 'sad') { ex = cx + s * 30; ey = cy - 18; rot = s * 1.1; }
+        if(mood === 'anxious' || mood === 'angry') { ex = cx + s * 27; ey = cy - 22; rot = s * 0.9; ry = 7.5; }
+        oval(ex, ey, 9.5, ry, furDark, rot);
+        oval(ex, ey + 0.5, 5.5, ry * 0.62, pinkIn, rot);
       });
 
-      // Round mochi head
-      const skin = ctx.createRadialGradient(cx - 10, cy - 12, 3, cx, cy, 52);
-      skin.addColorStop(0, c.skin1);
-      skin.addColorStop(0.62, c.skin2);
-      skin.addColorStop(1, c.skin3);
-      ctx.fillStyle = skin;
+      // Head
+      const g = ctx.createLinearGradient(cx - 36, 0, cx + 36, 0);
+      g.addColorStop(0, furDark); g.addColorStop(0.25, fur); g.addColorStop(0.75, fur); g.addColorStop(1, furDark);
+      ctx.fillStyle = g;
       ctx.beginPath();
-      ctx.ellipse(cx, cy, 34, 30, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(0, 0, 0, 0.22)';
-      ctx.lineWidth = 1.2;
-      ctx.stroke();
-      // Soft shine
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.22)';
-      ctx.beginPath();
-      ctx.ellipse(cx - 13, cy - 16, 8, 4, -0.4, 0, Math.PI * 2);
+      ctx.ellipse(cx, cy, 35, 30, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      // Forehead mark: heart / drop / flame / dim dot / zigzag / crescent
-      ctx.save();
-      ctx.fillStyle = c.horn1;
-      ctx.shadowColor = `rgba(${c.glow}, 0.9)`;
-      ctx.shadowBlur = kind === 'numb' ? 0 : 3 + 3 * pulse;
-      const mx = cx, my = cy - 20;
-      ctx.beginPath();
-      if(kind === 'happy') {
-        ctx.moveTo(mx, my + 3);
-        ctx.bezierCurveTo(mx - 5, my - 1, mx - 2, my - 5, mx, my - 2);
-        ctx.bezierCurveTo(mx + 2, my - 5, mx + 5, my - 1, mx, my + 3);
-      } else if(kind === 'calm') {
-        ctx.moveTo(mx, my - 4);
-        ctx.quadraticCurveTo(mx + 3.5, my + 0.5, mx, my + 2.5);
-        ctx.quadraticCurveTo(mx - 3.5, my + 0.5, mx, my - 4);
-      } else if(kind === 'angry') {
-        ctx.moveTo(mx, my - 4.5);
-        ctx.quadraticCurveTo(mx + 4, my, mx, my + 3);
-        ctx.quadraticCurveTo(mx - 4, my, mx, my - 4.5);
-      } else if(kind === 'anxious') {
-        ctx.strokeStyle = c.horn1;
-        ctx.lineWidth = 1.6;
-        ctx.moveTo(mx - 4, my);
-        ctx.lineTo(mx - 2, my - 2.5);
-        ctx.lineTo(mx, my + 1);
-        ctx.lineTo(mx + 2, my - 2.5);
-        ctx.lineTo(mx + 4, my);
-        ctx.stroke();
-      } else if(kind === 'sad') {
-        ctx.arc(mx, my, 3, 0.25 * Math.PI, 1.75 * Math.PI);
-        ctx.arc(mx + 1.6, my, 2.2, 1.6 * Math.PI, 0.4 * Math.PI, true);
-        ctx.closePath();
-      } else {
-        ctx.globalAlpha = 0.5;
-        ctx.arc(mx, my, 2, 0, Math.PI * 2);
-      }
-      if(kind !== 'anxious') ctx.fill();
-      ctx.restore();
+      // Cream cheek pouches (puffed when angry) and muzzle
+      const puff = mood === 'angry' ? 1.25 : 1;
+      oval(cx - 18, cy + 8, 13 * puff, 10.5 * puff, cream, 0.3);
+      oval(cx + 18, cy + 8, 13 * puff, 10.5 * puff, cream, -0.3);
+      oval(cx, cy + 7, 11, 8, cream);
+
+      // Blush
+      const blush = mood === 'angry' ? 'rgba(255, 60, 60, 0.55)' : mood === 'numb' ? 'rgba(220, 180, 180, 0.2)' : 'rgba(255, 130, 140, 0.45)';
+      oval(cx - 22, cy + 9, 6 * puff, 3.6 * puff, blush);
+      oval(cx + 22, cy + 9, 6 * puff, 3.6 * puff, blush);
 
       // Eyes
-      const blinking = !reduceMotion && (t % (kind === 'numb' ? 6500 : 4300)) < (kind === 'numb' ? 300 : 140);
-      ctx.strokeStyle = c.skin3;
+      const blink = !reduceMotion && (mood === 'angry' || mood === 'anxious' || mood === 'sad') && (t % 4300) < 140;
       [-1, 1].forEach(s => {
-        const ex = cx + s * 12, ey = cy - 2;
-        if(kind === 'happy') {
+        const ex = cx + s * 12, ey = cy - 4;
+        ctx.strokeStyle = ink;
+        if(mood === 'happy') {
           ctx.lineWidth = 2.6;
           ctx.beginPath();
-          ctx.arc(ex, ey + 2, 4.6, Math.PI * 1.12, Math.PI * 1.88);
+          ctx.arc(ex, ey + 2, 4.4, Math.PI * 1.12, Math.PI * 1.88);
           ctx.stroke();
-        } else if(kind === 'calm') {
-          ctx.lineWidth = 2.4;
+        } else if(mood === 'calm' || blink) {
+          ctx.lineWidth = 2.3;
           ctx.beginPath();
-          ctx.arc(ex, ey - 3, 4.8, 0.15 * Math.PI, 0.85 * Math.PI);
+          ctx.arc(ex, ey - 2.5, 4.4, 0.15 * Math.PI, 0.85 * Math.PI);
           ctx.stroke();
-        } else if(blinking) {
-          ctx.lineWidth = 2.2;
-          ctx.beginPath();
-          ctx.moveTo(ex - 4.5, ey);
-          ctx.lineTo(ex + 4.5, ey);
-          ctx.stroke();
-        } else if(kind === 'anxious') {
-          // Wide eyes with small darting pupils
-          ctx.fillStyle = '#fffaf3';
-          ctx.beginPath();
-          ctx.ellipse(ex, ey, 5.2, 6, 0, 0, Math.PI * 2);
-          ctx.fill();
+        } else if(mood === 'anxious') {
+          // Wide eyes, tiny darting pupils
+          oval(ex, ey, 5.2, 5.8, '#fffaf3');
           ctx.lineWidth = 1.2;
-          ctx.stroke();
+          ctx.beginPath(); ctx.ellipse(ex, ey, 5.2, 5.8, 0, 0, Math.PI * 2); ctx.stroke();
           const dart = reduceMotion ? 0 : Math.round(Math.sin(t / 700)) * 1.6;
-          ctx.fillStyle = '#3a1a04';
-          ctx.beginPath();
-          ctx.arc(ex + dart, ey + 0.5, 2.1, 0, Math.PI * 2);
-          ctx.fill();
-        } else if(kind === 'sad') {
-          // Glossy round eyes, looking down
-          ctx.fillStyle = '#16244a';
-          ctx.beginPath();
-          ctx.ellipse(ex, ey + 1, 4.6, 5.4, 0, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
-          ctx.beginPath();
-          ctx.arc(ex - 1.5, ey - 0.6, 1.7, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.beginPath();
-          ctx.arc(ex + 1.5, ey + 3, 0.9, 0, Math.PI * 2);
-          ctx.fill();
-          // Watery lower lid
-          ctx.strokeStyle = 'rgba(190, 225, 255, 0.85)';
-          ctx.lineWidth = 1.4;
-          ctx.beginPath();
-          ctx.arc(ex, ey + 1, 5, 0.2 * Math.PI, 0.8 * Math.PI);
-          ctx.stroke();
-          ctx.strokeStyle = c.skin3;
+          oval(ex + dart, ey + 0.4, 2, 2, ink);
         } else {
-          // Big round eyes (angry glossy, numb heavy-lidded)
-          ctx.fillStyle = kind === 'angry' ? '#2a0a0a' : '#2b1d48';
-          ctx.beginPath();
-          ctx.ellipse(ex, ey, 5, 5.8, 0, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.fillStyle = kind === 'angry' ? '#ffffff' : 'rgba(255, 255, 255, 0.45)';
-          ctx.beginPath();
-          ctx.arc(ex - 1.7, ey - 2.2, 1.8, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.beginPath();
-          ctx.arc(ex + 1.4, ey + 1.6, 0.8, 0, Math.PI * 2);
-          ctx.fill();
-          if(kind === 'numb') {
+          // Glossy bead eyes
+          oval(ex, ey, 4.6, 5.2, ink);
+          oval(ex - 1.5, ey - 1.8, 1.5, 1.5, 'rgba(255,255,255,0.9)');
+          oval(ex + 1.3, ey + 1.6, 0.7, 0.7, 'rgba(255,255,255,0.6)');
+          if(mood === 'numb') {
+            // Heavy half-lids
             ctx.save();
-            ctx.beginPath();
-            ctx.ellipse(ex, ey, 5.4, 6.2, 0, 0, Math.PI * 2);
-            ctx.clip();
-            ctx.fillStyle = c.skin2;
-            ctx.fillRect(ex - 7, ey - 7, 14, 7.5);
+            ctx.beginPath(); ctx.ellipse(ex, ey, 5, 5.6, 0, 0, Math.PI * 2); ctx.clip();
+            ctx.fillStyle = fur;
+            ctx.fillRect(ex - 6, ey - 6, 12, 6.4);
             ctx.restore();
-            ctx.lineWidth = 1.6;
-            ctx.beginPath();
-            ctx.moveTo(ex - 5, ey + 0.5);
-            ctx.lineTo(ex + 5, ey + 0.5);
-            ctx.stroke();
+            ctx.lineWidth = 1.4;
+            ctx.beginPath(); ctx.moveTo(ex - 4.6, ey + 0.4); ctx.lineTo(ex + 4.6, ey + 0.4); ctx.stroke();
           }
         }
       });
-      if(kind === 'angry') {
-        ctx.lineWidth = 3;
-        ctx.strokeStyle = c.skin3;
-        [-1, 1].forEach(s => {
-          ctx.beginPath();
-          ctx.moveTo(cx + s * 5, cy - 8);
-          ctx.lineTo(cx + s * 17, cy - 13);
-          ctx.stroke();
-        });
-      }
-      if(kind === 'anxious' || kind === 'sad') {
+
+      // Brows for angry / sad / anxious
+      if(mood === 'angry' || mood === 'sad' || mood === 'anxious') {
+        ctx.strokeStyle = '#6b3d1c';
         ctx.lineWidth = 2;
-        ctx.strokeStyle = c.skin3;
         [-1, 1].forEach(s => {
           ctx.beginPath();
-          ctx.moveTo(cx + s * 7, cy - 14);
-          ctx.quadraticCurveTo(cx + s * 12, cy - 13, cx + s * 17, cy - 10);
+          if(mood === 'angry') { ctx.moveTo(cx + s * 6, cy - 10); ctx.lineTo(cx + s * 17, cy - 14); }
+          else { ctx.moveTo(cx + s * 7, cy - 13); ctx.lineTo(cx + s * 17, cy - 11); }
           ctx.stroke();
         });
       }
 
-      // Blush
-      ctx.fillStyle = c.blush;
-      [-1, 1].forEach(s => {
-        ctx.beginPath();
-        ctx.ellipse(cx + s * 21, cy + 7, 5.5, 3.4, 0, 0, Math.PI * 2);
-        ctx.fill();
-      });
+      // Nose
+      ctx.fillStyle = '#e88a9a';
+      ctx.beginPath();
+      ctx.moveTo(cx - 3, cy + 2);
+      ctx.quadraticCurveTo(cx, cy + 0.5, cx + 3, cy + 2);
+      ctx.quadraticCurveTo(cx + 1.4, cy + 5, cx, cy + 5);
+      ctx.quadraticCurveTo(cx - 1.4, cy + 5, cx - 3, cy + 2);
+      ctx.fill();
 
       // Mouth
-      ctx.strokeStyle = c.skin3;
-      ctx.lineWidth = 2;
-      if(kind === 'happy') {
-        ctx.fillStyle = '#5a1a1a';
-        ctx.beginPath();
-        ctx.moveTo(cx - 7, cy + 8);
-        ctx.quadraticCurveTo(cx, cy + 20, cx + 7, cy + 8);
+      ctx.strokeStyle = '#7a4a34';
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      if(mood === 'happy') {
+        ctx.fillStyle = '#6a2a24';
+        ctx.moveTo(cx - 5, cy + 8);
+        ctx.quadraticCurveTo(cx, cy + 16, cx + 5, cy + 8);
         ctx.closePath();
         ctx.fill();
-        ctx.fillStyle = '#ff8fa3';
-        ctx.beginPath();
-        ctx.ellipse(cx, cy + 13, 3, 1.8, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = '#ffffff';
-        [-1, 1].forEach(s => {
-          ctx.beginPath();
-          ctx.moveTo(cx + s * 6, cy + 8.3);
-          ctx.lineTo(cx + s * 4, cy + 8.3);
-          ctx.lineTo(cx + s * 5, cy + 11);
-          ctx.closePath();
-          ctx.fill();
-        });
-      } else if(kind === 'calm') {
-        ctx.beginPath();
-        ctx.arc(cx, cy + 7, 5, 0.2 * Math.PI, 0.8 * Math.PI);
+        oval(cx, cy + 11.5, 2.4, 1.5, '#ff8fa3');
+      } else if(mood === 'calm') {
+        ctx.moveTo(cx, cy + 5); ctx.lineTo(cx, cy + 7);
+        ctx.moveTo(cx - 4, cy + 7);
+        ctx.quadraticCurveTo(cx - 2, cy + 9.5, cx, cy + 7);
+        ctx.quadraticCurveTo(cx + 2, cy + 9.5, cx + 4, cy + 7);
         ctx.stroke();
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.moveTo(cx + 2, cy + 11.4);
-        ctx.lineTo(cx + 4.5, cy + 10.6);
-        ctx.lineTo(cx + 3.6, cy + 13.4);
-        ctx.closePath();
-        ctx.fill();
-      } else if(kind === 'angry') {
-        ctx.beginPath();
-        ctx.moveTo(cx - 6, cy + 13);
-        ctx.quadraticCurveTo(cx - 3, cy + 10, cx, cy + 12);
-        ctx.quadraticCurveTo(cx + 3, cy + 10, cx + 6, cy + 13);
+      } else if(mood === 'angry') {
+        ctx.moveTo(cx - 4, cy + 10);
+        ctx.quadraticCurveTo(cx, cy + 7, cx + 4, cy + 10);
         ctx.stroke();
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.moveTo(cx + 1.5, cy + 11.6);
-        ctx.lineTo(cx + 4.5, cy + 11.6);
-        ctx.lineTo(cx + 3, cy + 15);
-        ctx.closePath();
-        ctx.fill();
-      } else if(kind === 'anxious') {
-        // Wobbly mouth
-        ctx.lineWidth = 1.8;
-        ctx.beginPath();
-        ctx.moveTo(cx - 7, cy + 12);
-        for(let i = 1; i <= 4; i++) ctx.lineTo(cx - 7 + i * 3.5, cy + 12 + (i % 2 ? -1.6 : 0));
+      } else if(mood === 'anxious') {
+        ctx.moveTo(cx - 5, cy + 9);
+        for(let i = 1; i <= 4; i++) ctx.lineTo(cx - 5 + i * 2.5, cy + 9 + (i % 2 ? -1.3 : 0));
         ctx.stroke();
-      } else if(kind === 'sad') {
-        ctx.beginPath();
-        ctx.arc(cx, cy + 16, 5, 1.2 * Math.PI, 1.8 * Math.PI);
+      } else if(mood === 'numb') {
+        ctx.moveTo(cx - 4, cy + 9); ctx.lineTo(cx + 4, cy + 9);
         ctx.stroke();
-      } else {
-        ctx.beginPath();
-        ctx.moveTo(cx - 5, cy + 12);
-        ctx.lineTo(cx + 5, cy + 12);
+      } else if(mood === 'sad') {
+        ctx.arc(cx, cy + 12, 4, 1.2 * Math.PI, 1.8 * Math.PI);
         ctx.stroke();
       }
 
+      drawOniTouches(ctx, {
+        mood, ink: '#6b3d1c', dim: mood === 'numb',
+        mark: [cx, cy - 18],
+        tusks: mood === 'happy' ? [] : [[cx - 4.6, cy + 10.5, 1], [cx + 4.6, cy + 10.5, -1]],
+        stripes: [[cx - 31, cy + 1, 1], [cx + 31, cy + 1, -1]]
+      });
+
+      // Whiskers
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+      ctx.lineWidth = 0.7;
+      [-1, 1].forEach(s => {
+        [-3, 0, 3].forEach(o => {
+          ctx.beginPath();
+          ctx.moveTo(cx + s * 9, cy + 5 + o * 0.4);
+          ctx.lineTo(cx + s * 26, cy + 3 + o * 1.3);
+          ctx.stroke();
+        });
+      });
+
       // Extras
-      if(kind === 'happy') {
-        [[16, 30, 0], [85, 34, 2], [82, 82, 4]].forEach(([x, y, ph]) => {
+      if(mood === 'happy') {
+        [[14, 26, 0], [86, 30, 2], [84, 82, 4]].forEach(([x, y, ph]) => {
           const s = 2 + 2 * Math.max(0, Math.sin(t / 300 + ph));
-          ctx.fillStyle = 'rgba(255, 240, 180, 0.9)';
+          ctx.fillStyle = 'rgba(255, 240, 180, 0.95)';
           ctx.beginPath();
           ctx.moveTo(x, y - s); ctx.lineTo(x + s * 0.3, y - s * 0.3); ctx.lineTo(x + s, y);
           ctx.lineTo(x + s * 0.3, y + s * 0.3); ctx.lineTo(x, y + s); ctx.lineTo(x - s * 0.3, y + s * 0.3);
@@ -2247,81 +2189,132 @@
           ctx.fill();
         });
       }
-      if(kind === 'calm') {
-        [0, 1, 2].forEach(i => {
-          const k = ((t / 2600 + i / 3) % 1);
-          ctx.fillStyle = `rgba(200, 240, 255, ${0.35 * (1 - k)})`;
+      if(mood === 'angry') {
+        const ax = cx + 26, ay = cy - 24;
+        ctx.strokeStyle = '#e53935';
+        ctx.lineWidth = 1.6;
+        [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([sx, sy]) => {
           ctx.beginPath();
-          ctx.arc((i % 2 ? 84 : 16) + Math.sin(t / 700 + i) * 2, 80 - k * 50, 1.6 + i * 0.4, 0, Math.PI * 2);
-          ctx.fill();
+          ctx.moveTo(ax + sx * 1.5, ay + sy * 4.5);
+          ctx.quadraticCurveTo(ax + sx * 1.5, ay + sy * 1.5, ax + sx * 4.5, ay + sy * 1.5);
+          ctx.stroke();
         });
       }
-      if(kind === 'angry') {
-        [-1, 1].forEach(s => {
-          const k = ((t / 1400 + (s > 0 ? 0.5 : 0)) % 1);
-          ctx.fillStyle = `rgba(255, 255, 255, ${0.45 * (1 - k)})`;
-          ctx.beginPath();
-          ctx.arc(cx + s * (34 + k * 4), cy - 22 - k * 14, 2.5 + k * 3, 0, Math.PI * 2);
-          ctx.fill();
-        });
-      }
-      if(kind === 'numb') {
-        for(let i = 0; i < 3; i++) {
-          const fx = ((t / 45 + i * 47) % 140) - 20;
-          const fy = cy - 4 + i * 9;
-          const mg = ctx.createRadialGradient(fx, fy, 0, fx, fy, 18);
-          mg.addColorStop(0, 'rgba(210, 200, 240, 0.18)');
-          mg.addColorStop(1, 'rgba(210, 200, 240, 0)');
-          ctx.fillStyle = mg;
-          ctx.beginPath();
-          ctx.ellipse(fx, fy, 18, 7, 0, 0, Math.PI * 2);
-          ctx.fill();
-        }
-      }
-      if(kind === 'anxious') {
-        // Sweat drop sliding down the side, plus little nervous lines
-        const k = (t / 1800) % 1;
-        const sx = cx + 27, sy = cy - 16 + k * 10;
-        ctx.fillStyle = `rgba(200, 235, 255, ${0.9 * (1 - k * 0.6)})`;
+      if(mood === 'anxious') {
+        const k = (t / 1600) % 1, sx = cx + 30, sy = cy - 18 + k * 10;
+        ctx.fillStyle = `rgba(190, 230, 255, ${0.9 * (1 - k * 0.5)})`;
         ctx.beginPath();
         ctx.moveTo(sx, sy - 5);
         ctx.quadraticCurveTo(sx + 3.5, sy, sx, sy + 2.5);
         ctx.quadraticCurveTo(sx - 3.5, sy, sx, sy - 5);
         ctx.fill();
-        ctx.strokeStyle = `rgba(255, 220, 190, ${0.4 + 0.4 * pulse})`;
-        ctx.lineWidth = 1.4;
-        [[-1, 0], [-1, 1], [1, 1]].forEach(([s, i]) => {
-          const x = cx + s * (40 + i * 3), y = cy - 26 + i * 8;
-          ctx.beginPath();
-          ctx.moveTo(x, y);
-          ctx.lineTo(x + s * 4, y - 3);
-          ctx.stroke();
-        });
       }
-      if(kind === 'sad') {
-        // Tears rolling down and a soft drizzle
+      if(mood === 'sad') {
         [-1, 1].forEach(s => {
-          const k = ((t / 2200 + (s > 0 ? 0.45 : 0)) % 1);
-          const tx = cx + s * 15, ty = cy + 5 + k * 14;
-          ctx.fillStyle = `rgba(170, 215, 255, ${0.85 * (1 - k)})`;
+          const k = ((t / 2000) + (s > 0 ? 0.5 : 0)) % 1;
+          const tx = cx + s * 12 + 1, ty = cy + 2 + k * 14;
+          ctx.fillStyle = `rgba(160, 210, 255, ${0.9 * (1 - k)})`;
           ctx.beginPath();
           ctx.moveTo(tx, ty - 3);
           ctx.quadraticCurveTo(tx + 2.2, ty + 0.5, tx, ty + 2);
           ctx.quadraticCurveTo(tx - 2.2, ty + 0.5, tx, ty - 3);
           ctx.fill();
         });
-        ctx.strokeStyle = 'rgba(170, 200, 245, 0.35)';
-        ctx.lineWidth = 1;
-        for(let i = 0; i < 5; i++) {
-          const k = ((t / 1600 + i / 5) % 1);
-          const x = 10 + i * 20, y = 4 + k * 30;
-          ctx.beginPath();
-          ctx.moveTo(x, y);
-          ctx.lineTo(x - 1, y + 4);
-          ctx.stroke();
+      }
+      if(mood === 'numb') {
+        for(let i = 0; i < 3; i++) {
+          const fx = ((t / 45 + i * 47) % 140) - 20, fy = cy - 2 + i * 9;
+          const mg = ctx.createRadialGradient(fx, fy, 0, fx, fy, 18);
+          mg.addColorStop(0, 'rgba(210, 200, 240, 0.18)');
+          mg.addColorStop(1, 'rgba(210, 200, 240, 0)');
+          ctx.fillStyle = mg;
+          ctx.beginPath(); ctx.ellipse(fx, fy, 18, 7, 0, 0, Math.PI * 2); ctx.fill();
         }
       }
       ctx.setTransform(1, 0, 0, 1, 0, 0);
+    }
+
+    // A light oni touch for hamster faces: glowing forehead mark, tiny tusks, faint cheek stripes.
+    // o = { mood, mark: [x, y], tusks: [[x, y, dir], ...], stripes: [[x, y, side], ...], ink, dim, size }
+    function drawOniTouches(ctx, o) {
+      const st = ONI_STYLES[o.mood] || { horn1: '#fff3d6', glow: '255, 230, 170' };
+      const k = o.size || 1;
+
+      // Cheek stripes
+      ctx.save();
+      ctx.strokeStyle = o.ink;
+      ctx.globalAlpha = o.dim ? 0.25 : 0.45;
+      ctx.lineWidth = 1.3 * k;
+      (o.stripes || []).forEach(([x, y, s]) => {
+        [0, 3.2].forEach(dy => {
+          ctx.beginPath();
+          ctx.moveTo(x, y + dy * k);
+          ctx.lineTo(x + s * 4.5 * k, y + (dy - 1.2) * k);
+          ctx.stroke();
+        });
+      });
+      ctx.restore();
+
+      // Tiny tusks pointing up from the mouth corners
+      ctx.fillStyle = '#fffaf0';
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
+      ctx.lineWidth = 0.5;
+      (o.tusks || []).forEach(([x, y, s]) => {
+        ctx.beginPath();
+        ctx.moveTo(x - 1.3 * k, y);
+        ctx.lineTo(x + s * 0.4 * k, y - 3.4 * k);
+        ctx.lineTo(x + 1.3 * k, y);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+      });
+
+      // Forehead mark: heart / drop / flame / dim dot / zigzag / crescent, or a neutral diamond
+      if(!o.mark) return;
+      const [mx, my] = o.mark;
+      ctx.save();
+      ctx.translate(mx, my);
+      ctx.scale(k, k);
+      ctx.fillStyle = st.horn1;
+      ctx.strokeStyle = st.horn1;
+      ctx.shadowColor = `rgba(${st.glow}, 0.9)`;
+      ctx.shadowBlur = o.dim ? 0 : 4;
+      ctx.globalAlpha = o.dim ? 0.45 : 0.95;
+      ctx.beginPath();
+      const m = o.mood;
+      if(m === 'happy') {
+        ctx.moveTo(0, 2.6);
+        ctx.bezierCurveTo(-4.4, -0.8, -1.8, -4.4, 0, -1.8);
+        ctx.bezierCurveTo(1.8, -4.4, 4.4, -0.8, 0, 2.6);
+        ctx.fill();
+      } else if(m === 'calm') {
+        ctx.moveTo(0, -3.6);
+        ctx.quadraticCurveTo(3.2, 0.4, 0, 2.4);
+        ctx.quadraticCurveTo(-3.2, 0.4, 0, -3.6);
+        ctx.fill();
+      } else if(m === 'angry') {
+        ctx.moveTo(0, -4);
+        ctx.quadraticCurveTo(3.6, 0, 0, 2.8);
+        ctx.quadraticCurveTo(-3.6, 0, 0, -4);
+        ctx.fill();
+      } else if(m === 'numb') {
+        ctx.arc(0, 0, 1.8, 0, Math.PI * 2);
+        ctx.fill();
+      } else if(m === 'anxious') {
+        ctx.lineWidth = 1.4;
+        ctx.moveTo(-3.6, 0); ctx.lineTo(-1.8, -2.2); ctx.lineTo(0, 0.8); ctx.lineTo(1.8, -2.2); ctx.lineTo(3.6, 0);
+        ctx.stroke();
+      } else if(m === 'sad') {
+        ctx.arc(0, 0, 2.7, 0.25 * Math.PI, 1.75 * Math.PI);
+        ctx.arc(1.4, 0, 2, 1.6 * Math.PI, 0.4 * Math.PI, true);
+        ctx.closePath();
+        ctx.fill();
+      } else {
+        ctx.moveTo(0, -3.2); ctx.lineTo(2.4, 0); ctx.lineTo(0, 3.2); ctx.lineTo(-2.4, 0);
+        ctx.closePath();
+        ctx.fill();
+      }
+      ctx.restore();
     }
 
     const ONI_KINDS = ['happy', 'calm', 'angry', 'numb', 'anxious', 'sad'];
@@ -2393,6 +2386,7 @@
         renderFeedButton(); // a new day unlocks a new seed
       }
       if(index === 6) renderPractice();
+      if(index === 3) toggleBiffLog(false);
       if(index === 1) { toggleJournal(false); toggleIncidents(false); }
       if(index === 5) initChaosGame();
       else if(typeof stopBreathing === 'function' && breathTimer) stopBreathing();
@@ -2995,6 +2989,12 @@
       } else {
         drawHealingMarks(ctx, [[cx + 27, 88, 11], [cx - 29, 110, 10], [cx + 14, 125, 7]], bodyPath);
       }
+      drawOniTouches(ctx, {
+        mood: todaysOni(), ink: '#6b3d1c', dim: zombie, size: 1.3,
+        mark: [cx, 31],
+        tusks: [[cx - 4, ny + 9.5, 1], [cx + 4, ny + 9.5, -1]],
+        stripes: [[cx - 30, 54, 1], [cx + 30, 54, -1]]
+      });
       drawSpiritOni(ctx, {
         now, zombie, fur,
         eyes: [[cx - 13, 44], [cx + 13, 44]],
@@ -3608,6 +3608,12 @@
       } else {
         drawHealingMarks(ctx, [[62, 74, 11], [36, 104, 10], [86, ground - 14, 8]], bodyPath);
       }
+      drawOniTouches(ctx, {
+        mood: todaysOni(), ink: '#6b3d1c', dim: zombie, size: 1.3,
+        mark: [128, 61],
+        tusks: [[nx - 6, ny + 8, 1]],
+        stripes: [[110, 86, -1]]
+      });
       drawSpiritOni(ctx, {
         now, zombie, fur,
         eyes: [[122, 72]],
@@ -3716,14 +3722,28 @@
       }, 1000);
     }
 
-    function toggleCheck(el) {
-      el.classList.toggle('done');
-      let span = el.querySelector('span');
-      if(el.classList.contains('done')) {
-        span.innerText = '[✓]';
-      } else {
-        span.innerText = '[ ]';
-      }
+
+    // Emotional Un-Sponging: one phrase at a time, tap to reveal the next
+    const UNSPONGE = [
+      'I held the line and remained calm. Now I return her emotional load back to her.',
+      'Her storm belongs to her pain. My body is my house, not her storage container.',
+      'The bathroom door is shut. In this space, my nervous system is safe.',
+      'What she said came from her state, not from my worth.',
+      'I can care about her without carrying her anger inside me.',
+      'I breathe out her words. I breathe in my own calm.',
+      'I did not create this storm, and I do not have to fix it right now.',
+      'Her feelings are hers to hold. My job is to keep myself steady.',
+      'I let the tension drain out through my feet into the floor.',
+      'I am allowed to step out of the line of fire and rest.'
+    ];
+    let unspongeIdx = 0;
+    function nextUnsponge() {
+      unspongeIdx = (unspongeIdx + 1) % UNSPONGE.length;
+      const card = document.getElementById('unsponge-card');
+      document.getElementById('unsponge-text').innerText = `"${UNSPONGE[unspongeIdx]}"`;
+      card.classList.remove('reveal');
+      void card.offsetWidth;
+      card.classList.add('reveal');
     }
 
     function nextQuote() {
@@ -3917,15 +3937,21 @@
       set('p-tetris-total', sum(all, 'tetrisSessions'));
       set('p-tetris-min-today', Math.floor(day(today).tetrisSec / 60));
       set('p-tetris-min-total', Math.floor(sum(all, 'tetrisSec') / 60));
+      set('p-breath-today', day(today).breathRounds || 0);
+      set('p-breath-total', sum(all, 'breathRounds'));
+      set('p-breath-min-today', Math.floor((day(today).breathSec || 0) / 60));
+      set('p-breath-min-total', Math.floor(sum(all, 'breathSec') / 60));
 
       const maxV = Math.max(1, ...last7.map(d => d.vagus));
       const maxT = Math.max(1, ...last7.map(d => d.tetrisSec));
+      const maxB = Math.max(1, ...last7.map(d => d.breathRounds || 0));
       const names = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
       el.innerHTML = last7.map(d => `
         <div class="week-row">
           <span style="color:var(--text-muted);">${names[d.date.getDay()]}</span>
           <div class="week-bar"><span style="width:${d.vagus / maxV * 100}%; background:var(--theme-secondary); opacity:0.55;"></span><em>${d.vagus}</em></div>
           <div class="week-bar"><span style="width:${d.tetrisSec / maxT * 100}%; background:var(--theme-accent); opacity:0.8;"></span><em>${Math.floor(d.tetrisSec / 60)}</em></div>
+          <div class="week-bar"><span style="width:${(d.breathRounds || 0) / maxB * 100}%; background:var(--color-green); opacity:0.55;"></span><em>${d.breathRounds || 0}</em></div>
         </div>`).join('');
     }
 
@@ -5442,6 +5468,7 @@
       unsent:   { label: '🍂 Unsent Defense',      tab: 1, el: () => document.getElementById('unsent-wrap') },
       exhale:   { label: '🌬️ Long-exhale breathing', tab: 5, el: () => document.getElementById('breath-circle'),
                   before: () => { stopBreathing(); document.getElementById('breath-pattern').value = 'calm'; } },
+      breathe:  { label: '🌬️ Breathing pacer',  tab: 5, el: () => document.getElementById('breath-circle') },
       pond:     { label: '🌙 Still Pond',          tab: 5, el: () => document.getElementById('pond-canvas') },
       fog:      { label: '🪟 Clear the Fog',       tab: 5, el: () => document.getElementById('fog-canvas') },
       lanterns: { label: '🏮 Sky Lanterns',        tab: 5, el: () => document.getElementById('lantern-canvas') },
@@ -5609,6 +5636,223 @@
       return t ? t.words : encouragements;
     }
 
+    // ---------- BIFF REPLY HELPER ----------
+    // Offline, rule-based: matches common high-conflict patterns and suggests a
+    // Brief, Informative, Friendly, Firm reply. Nothing typed here is ever saved.
+    const BIFF_RULES = [
+      {
+        key: 'selfharm', label: 'Self-harm statement', priority: 100, safety: true, emergency: true,
+        anchor: "I love you, and I'm calling for help right now because your safety matters.",
+        test: /\b(kill (myself|me)|end (it|my life)|hurt myself|suicid|don'?t want to (live|be here)|want to die|better off (dead|without me)|cut myself|overdose|take (all )?(my|the) pills)\b/i,
+        replies: [
+          "I care about you and I take this seriously. I'm getting help right now so you're safe.",
+          "I'm worried about your safety. I'm calling for help now because I want you to be okay."
+        ],
+        exit: 'If there is any immediate danger, call 112 now. You don\'t have to handle this alone or decide if it\'s "real". If you feel unsafe yourself, go to another room or outside and call from there.'
+      },
+      {
+        key: 'physical', label: 'Physical danger', priority: 95, safety: true, emergency: true,
+        anchor: "I'm leaving now to keep us both safe, and I'm getting help.",
+        test: /\b(hit(ting)? me|hits me|punch|slap|kick(ed|ing)? me|push(ed|ing)? me|shov|chok|strangl|grab(bed|bing)? (me|my)|knife|weapon|gun|throw(ing|s)? (things|stuff|it at)|threw (something|it|things)|smash|block(ing|ed)? the door|won'?t let me (leave|out)|lock(ed)? me (in|out)|hurting me)\b/i,
+        replies: [
+          "I'm leaving now to keep us both safe.",
+          "I'm going somewhere safe now. We can talk when things are calm."
+        ],
+        exit: 'Get to safety first: leave the room or the home, go to a neighbour, a public place or your car with the doors locked. Call 112. Log it privately later, when you are safe.'
+      },
+      {
+        key: 'threat', label: 'Threat toward you', priority: 90, safety: true,
+        test: /\b(i'?ll (hit|hurt|kill|destroy|ruin) you|you'?ll (regret|pay)|watch what (i|happens)|i swear i'?ll|or else|you'?re dead|throw you out|take (the kids|everything))\b/i,
+        replies: [
+          "I'm not going to continue this conversation while there are threats. I'm leaving now.",
+          "I won't stay while I'm being threatened. We can talk when things are calm."
+        ],
+        exit: 'Leave calmly now: go somewhere safe (outside, a neighbour, your car with doors locked). If you are in danger, call 112. Log it privately afterwards.'
+      },
+      {
+        key: 'guilt', label: 'Guilt trap', priority: 60,
+        test: /\b(used me|after (everything|all) i|because of you|your fault|fix me|you (ruined|destroyed)|you make me|you did this|look what you|you owe me|how could you|you don'?t care)\b/i,
+        replies: [
+          "I'm sorry you're feeling this way. I can't fix it on my own, but I do care how you feel. I'd like us to find support together, maybe with a therapist.",
+          "I hear that you're hurting. I'm not able to take responsibility for all of it, but I'm willing to talk calmly about what would help.",
+          "That sounds really hard for you. I care, and I also can't carry this alone. Let's talk about getting support."
+        ]
+      },
+      {
+        key: 'attack', label: 'Tone / character attack', priority: 55, exit: true,
+        test: /\b(stupid|idiot|pathetic|worthless|useless|selfish|liar|disgusting|loser|failure|crazy|psycho|moron|hate you|shut up|f+u+c+k|bitch|bastard)\b/i,
+        replies: [
+          "I'm willing to talk about this when we can both speak respectfully. I'm going to take a break now.",
+          "I want to hear what's wrong, but not while I'm being called names. Let's continue when things are calmer.",
+          "I'll step away for now. I'm happy to talk when we can do it without insults."
+        ]
+      },
+      {
+        key: 'demand', label: 'Demand / pressure to answer now', priority: 45,
+        test: /\b(answer me|right now|why (aren'?t|won'?t) you (answer|reply|respond|say)|say something|look at me|don'?t ignore|immediately|this instant)\b/i,
+        replies: [
+          "I've heard you. I want to give you a proper answer, so I'll reply in a little while once I've thought about it.",
+          "I'm not ignoring you. I need a few minutes to think, and then I'll answer."
+        ]
+      },
+      {
+        key: 'task', label: 'Task complaint', priority: 40,
+        test: /\b(never help|don'?t do anything|do nothing|dishes|clean(ing)?|laundry|cook(ing)?|chores|lazy|always have to|i do everything|bins?|groceries|shopping|tidy|mess)\b/i,
+        replies: [
+          "I hear that you want more help around the house. I'll take care of {task} tonight.",
+          "You're right that this needs doing. I'll do {task} today, and we can agree on a plan for the rest.",
+          "Thanks for telling me. I'll handle {task}, and I'm open to splitting things more fairly."
+        ]
+      },
+      {
+        key: 'history', label: 'Old grievance', priority: 35,
+        test: /\b(always|never|last time|remember when|every time|years ago|again\b|like you did|you used to)\b/i,
+        replies: [
+          "I understand that still hurts. I'm not going to go back over the past tonight, but I'm happy to talk about what we can do now.",
+          "I know that was painful. Let's focus on what would help right now."
+        ]
+      },
+      {
+        key: 'money', label: 'Money', priority: 30,
+        test: /\b(money|pay|paid|spend|spent|bills?|rent|salary|afford|cost)\b/i,
+        replies: [
+          "Let's look at the numbers together when we're both calm. I can sit down with you tomorrow evening.",
+          "I want to sort this out properly. Let's go through it together at a calm moment."
+        ]
+      }
+    ];
+    const BIFF_FALLBACK = [
+      "I hear that you're upset. I'll think about what you said and come back to it when we're both calmer.",
+      "I can see this matters to you. Let's talk about it calmly in a little while."
+    ];
+    const BODY_CHECKS = [
+      'Unclench your jaw and let your tongue drop from the roof of your mouth.',
+      'Drop your shoulders away from your ears.',
+      'Breathe out slowly, longer than you breathe in. Twice.',
+      'Feel both feet on the floor.',
+      'Open your hands. Let your fingers relax.',
+      'Soften your eyes and forehead.'
+    ];
+    let biffVariant = 0;
+
+    function biffTask(text) {
+      const m = text.match(/\b(dishes|laundry|cooking|cleaning|bins?|groceries|shopping|tidying|the mess)\b/i);
+      return m ? 'the ' + m[1].toLowerCase().replace(/^the /, '') : 'that';
+    }
+
+    function generateBiff(again) {
+      const input = document.getElementById('biff-input');
+      const text = input.value.trim();
+      const out = document.getElementById('biff-output');
+      if(!text) { input.focus(); return; }
+      biffVariant = again ? biffVariant + 1 : 0;
+
+      const hits = BIFF_RULES.filter(r => r.test.test(text)).sort((a, b) => b.priority - a.priority);
+      const main = hits[0];
+      const shouting = (text.replace(/[^A-Za-z]/g, '').length > 8 && text === text.toUpperCase()) || /[!?]{2,}/.test(text);
+      const pool = main ? main.replies : BIFF_FALLBACK;
+      const reply = pool[biffVariant % pool.length].replace('{task}', biffTask(text));
+
+      // Step away when it's unsafe, insulting or escalating
+      let exit = '';
+      if(main && typeof main.exit === 'string') exit = main.exit;
+      else if(hits.some(h => h.exit === true) || shouting) {
+        exit = `Say: "${anchorText(20)}" Then leave the room calmly. A bathroom break works.`;
+      }
+      const body = BODY_CHECKS[(Math.floor(Date.now() / 1000) + biffVariant) % BODY_CHECKS.length];
+
+      const labels = (hits.length ? hits.map(h => h.label) : ['General upset']).concat(shouting ? ['Escalating tone'] : []);
+      lastBiff = { trigger: text, labels, reply: main && main.emergency ? main.anchor : reply };
+      const actions = `
+          <div style="display:flex; gap:6px; margin-top:8px; flex-wrap:wrap;">
+            ${main && main.emergency ? '' : '<button class="icon-btn" onclick="generateBiff(true)">Another version</button>'}
+            <button class="icon-btn" id="biff-save-btn" onclick="saveBiff(this)">Save to log</button>
+          </div>`;
+      out.innerHTML = `
+        <div class="biff-tags">${labels.map(l => `<span class="tag-pill">${l}</span>`).join('')}</div>
+        ${main && main.emergency ? `
+        <div class="biff-block biff-emergency">
+          <div class="biff-label">🚨 Emergency protocol</div>
+          <div>Treat this as a medical and safety emergency. You don't have to handle it alone.</div>
+          <a class="btn-action biff-call" href="tel:112">📞 Call 112</a>
+          <div style="margin-top:8px;">${escapeHtml(main.exit)}</div>
+          <div class="biff-label" style="margin-top:10px;">Safety anchor script</div>
+          <div class="biff-reply" id="biff-reply">"${escapeHtml(main.anchor)}"</div>
+          ${actions}
+        </div>` : `
+        ${main && main.safety ? `<div class="biff-block biff-safety"><div class="biff-label">⚠️ Safety first</div>${escapeHtml(main.exit)}</div>` : ''}
+        <div class="biff-block">
+          <div class="biff-label">BIFF reply</div>
+          <div class="biff-reply" id="biff-reply">${escapeHtml(reply)}</div>
+          ${actions}
+        </div>`}
+        ${exit && !(main && main.safety) ? `<div class="biff-block"><div class="biff-label">Exit script</div>${escapeHtml(exit)}</div>` : ''}
+        <div class="biff-block"><div class="biff-label">Body check</div>${escapeHtml(body)}</div>`;
+      out.style.display = 'block';
+    }
+
+    // Anchor script: a calm, timed exit with a real return time
+    function anchorText(minutes) {
+      const back = new Date(Date.now() + minutes * 60000);
+      back.setMinutes(Math.ceil(back.getMinutes() / 5) * 5, 0, 0); // round up to the next 5 minutes
+      const time = back.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+      return `I care about you, but I'm stepping out to cool off. I'll be back at ${time}.`;
+    }
+    function makeAnchor(minutes) {
+      const el = document.getElementById('anchor-script');
+      el.innerText = `"${anchorText(minutes)}"`;
+      el.style.display = 'block';
+      bump('anchor-script');
+    }
+
+    // BIFF LOG: only what you choose to save, for review in a quiet moment
+    let biffLog = JSON.parse(localStorage.getItem('aq_biff_log') || '[]');
+    let lastBiff = null;
+    function saveBiff(btn) {
+      if(!lastBiff) return;
+      biffLog.push({ id: Date.now(), ts: Date.now(), ...lastBiff });
+      localStorage.setItem('aq_biff_log', JSON.stringify(biffLog));
+      lastBiff = null;
+      btn.innerText = 'Saved ✓';
+      btn.disabled = true;
+      renderBiffLog();
+    }
+    function deleteBiff(id) {
+      if(!confirm('Delete this log entry?')) return;
+      biffLog = biffLog.filter(e => e.id !== id);
+      localStorage.setItem('aq_biff_log', JSON.stringify(biffLog));
+      renderBiffLog();
+    }
+    function toggleBiffLog(forceOpen) {
+      const el = document.getElementById('biff-log');
+      const open = forceOpen !== undefined ? forceOpen : el.style.display === 'none';
+      el.style.display = open ? 'block' : 'none';
+      document.getElementById('biff-log-btn').innerText = open ? 'Hide' : 'Show';
+    }
+    function renderBiffLog() {
+      const el = document.getElementById('biff-log');
+      if(!el) return;
+      document.getElementById('biff-log-count').innerText = biffLog.length ? `(${biffLog.length})` : '';
+      el.innerHTML = biffLog.length ? biffLog.slice().sort((a, b) => b.ts - a.ts).map(e => {
+        const d = new Date(e.ts);
+        return `<div class="incident-item" style="border-left-color: var(--theme-primary);">
+          <div class="incident-head">
+            <span>${d.toLocaleDateString()} ${d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+            <button class="mood-del" onclick="deleteBiff(${e.id})">✕</button>
+          </div>
+          <div class="note-text" style="color:var(--text-muted);">They said: ${escapeHtml(e.trigger)}</div>
+          <div class="note-text" style="margin-top:4px;">Reply: ${escapeHtml(e.reply)}</div>
+          <div class="tag-pills">${(e.labels || []).map(l => `<span class="tag-pill">${escapeHtml(l)}</span>`).join('')}</div>
+        </div>`;
+      }).join('') : '<div class="subtitle" style="margin:8px 0 0;">Nothing saved yet.</div>';
+    }
+
+    function clearBiff() {
+      document.getElementById('biff-input').value = '';
+      document.getElementById('biff-output').style.display = 'none';
+      document.getElementById('biff-output').innerHTML = '';
+    }
+
     // BACKUP / RESTORE
     function exportBackup() {
       const data = {};
@@ -5693,6 +5937,8 @@
         if(stepIdx === 0) {
           breathRounds++;
           document.getElementById('breath-rounds').innerText = `Rounds: ${breathRounds}`;
+          logPractice('breathRounds', 1);
+          logPractice('breathSec', steps.reduce((a, s) => a + s[1], 0));
         }
         beginStep();
       }, 1000);
@@ -6097,6 +6343,7 @@
     renderTagPicker('journal');
     renderTagPicker('incident');
     renderUnsentCount();
+    renderBiffLog();
     applyOniTailoring();
     // When a pick goes stale while the app is open, everything falls back
     let lastOniSeen = todaysOni();
