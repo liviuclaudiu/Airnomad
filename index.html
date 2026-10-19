@@ -2550,6 +2550,7 @@
     let hamsterMood = 'calm';
     let hamsterHasData = false; // any calendar days marked in the last 30 days
     let hamsterWound = 'none';  // healing stage: fresh, stitched, bandaged, scars, none
+    let hamsterHealDays = 99;   // days since the last red/black day (cuts and bruises fade over 2 weeks)
 
     function updateCountMeters() {
       let greenCount = 0;         // all time, up to today
@@ -2559,6 +2560,7 @@
       let recentRed = 0;
       let recentBlack = 0;
       let lastConflictDate = null;
+      let lastConflictBlack = false;
       let today = startOfToday();
       let windowStart = new Date(today);
       windowStart.setDate(windowStart.getDate() - 29);
@@ -2580,6 +2582,7 @@
           if(recent) recentBad++;
           if(!lastConflictDate || d > lastConflictDate) {
             lastConflictDate = d;
+            lastConflictBlack = st === 'status-black';
           }
         }
       });
@@ -2613,6 +2616,13 @@
         : hamsterScore <= -2 ? 'stitched'
         : hamsterScore < 0 ? 'bandaged'
         : (badPoints > 0 && hamsterScore < 2) ? 'scars' : 'none';
+      // However quickly his score recovers, he isn't fully healed until 2 weeks after the last red/black day:
+      // bandages for the first days (longer after a black day), then cuts and bruises that fade out.
+      hamsterHealDays = lastConflictDate ? Math.round((today - lastConflictDate) / 86400000) : 99;
+      const WOUND_RANK = { none: 0, scars: 1, bandaged: 2, stitched: 3, fresh: 4 };
+      const woundFloor = hamsterHealDays < (lastConflictBlack ? 8 : 5) ? 'bandaged'
+        : hamsterHealDays < 14 ? 'scars' : 'none';
+      if(WOUND_RANK[woundFloor] > WOUND_RANK[hamsterWound]) hamsterWound = woundFloor;
       hamsterHasData = recentGood + recentBad + recentYellow > 0 || !!lastConflictDate;
       document.getElementById('m-good-days').innerText = greenCount;
       const oniToday = todaysOni();
@@ -2983,7 +2993,7 @@
         ctx.fillRect(-3, -3, 6, 6);
         ctx.restore();
       } else {
-        drawHealingMarks(ctx, [[cx + 45, 84, 12], [cx - 47, 117, 11], [cx + 30, 128, 7]], bodyPath);
+        drawHealingMarks(ctx, [[cx + 27, 88, 11], [cx - 29, 110, 10], [cx + 14, 125, 7]], bodyPath);
       }
       drawSpiritOni(ctx, {
         now, zombie, fur,
@@ -3090,8 +3100,17 @@
           ctx.fillRect(-r * 0.35, -r * 0.45, r * 0.7, r * 0.9);
           ctx.restore();
         } else {
-          ctx.strokeStyle = 'rgba(255, 235, 220, 0.55)';
-          ctx.lineWidth = 1.2;
+          // Cuts and bruises: fresh-looking at first, fading towards day 14
+          const fade = Math.max(0.25, Math.min(1, (14 - hamsterHealDays) / 9));
+          const bruise = ctx.createRadialGradient(x + r * 0.2, y + r * 0.35, 0, x + r * 0.2, y + r * 0.35, r * 0.75);
+          bruise.addColorStop(0, `rgba(105, 60, 120, ${0.7 * fade})`);
+          bruise.addColorStop(1, 'rgba(110, 70, 120, 0)');
+          ctx.fillStyle = bruise;
+          ctx.beginPath();
+          ctx.ellipse(x + r * 0.2, y + r * 0.35, r * 0.75, r * 0.55, 0.3, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = `rgba(185, 60, 60, ${0.9 * fade})`;
+          ctx.lineWidth = 1.8;
           ctx.beginPath();
           ctx.moveTo(x - r * 0.7, y - r * 0.2);
           ctx.lineTo(x - r * 0.2, y + r * 0.15);
@@ -3587,7 +3606,7 @@
         ctx.fillRect(-3.5, -3.5, 7, 7);
         ctx.restore();
       } else {
-        drawHealingMarks(ctx, [[58, 62, 11], [20, 104, 10], [92, ground - 2, 8]], bodyPath);
+        drawHealingMarks(ctx, [[62, 74, 11], [36, 104, 10], [86, ground - 14, 8]], bodyPath);
       }
       drawSpiritOni(ctx, {
         now, zombie, fur,
