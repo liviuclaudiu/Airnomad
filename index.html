@@ -573,6 +573,7 @@
       margin: 6px auto;
       background: radial-gradient(circle at 50% 40%, var(--tint), rgba(2, 4, 10, 0.5) 70%);
       border-radius: 28px;
+      overflow: hidden;
       border: 1px solid var(--border-color);
       display: flex;
       align-items: center;
@@ -968,6 +969,31 @@
     }
     .tag-chip.selected { background: var(--tint-strong); color: var(--theme-primary); border-color: var(--theme-primary); font-weight: 700; }
     .tag-add { display: inline-flex; gap: 4px; align-items: center; }
+    .spirit-strip { display: flex; gap: 3px; justify-content: center; flex-wrap: wrap; margin-top: 8px; }
+    .spirit-strip span { width: 7px; height: 7px; border-radius: 50%; }
+    .spirit-strip span.today { box-shadow: 0 0 0 1.5px var(--text-muted); }
+    .spirit-opts { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+    .spirit-opts .tag-chip { display: inline-flex; align-items: center; gap: 6px; }
+    .spirit-level { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 2px; font-size: 0.72rem; color: var(--text-muted); }
+    .spirit-level .lv { font-weight: 800; color: var(--theme-primary); }
+    .spirit-level .xp-bar { width: 90px; height: 5px; border-radius: 3px; background: rgba(255, 255, 255, 0.1); overflow: hidden; }
+    .spirit-level .xp-bar i { display: block; height: 100%; background: var(--theme-primary); border-radius: 3px; }
+    .spirit-level.levelup .lv { animation: lvPop 0.9s ease 3; }
+    @keyframes lvPop { 50% { transform: scale(1.35); color: #fbbf24; } }
+    .tag-chip.locked { opacity: 0.45; cursor: default; }
+    .spirit-custom summary { cursor: pointer; font-size: 0.85rem; color: var(--theme-primary); font-weight: 700; margin-bottom: 4px; }
+    .hamster-canvas-container[data-backdrop="wx-day"] { background: linear-gradient(180deg, rgba(110, 180, 240, 0.55), rgba(170, 215, 245, 0.35) 70%, rgba(60, 90, 70, 0.5)); }
+    .hamster-canvas-container[data-backdrop="wx-grey"] { background: linear-gradient(180deg, rgba(120, 135, 155, 0.6), rgba(80, 92, 110, 0.6) 70%, rgba(40, 50, 60, 0.7)); }
+    .hamster-canvas-container[data-backdrop="wx-night"] { background: linear-gradient(180deg, rgba(8, 14, 40, 0.85), rgba(25, 35, 75, 0.7) 70%, rgba(10, 15, 30, 0.85)); }
+    .spirit-sub { font-size: 0.7rem; color: var(--text-muted); margin: 6px 0 4px; }
+    .hamster-canvas-container[data-backdrop="meadow"] { background: radial-gradient(circle at 50% 30%, rgba(190, 240, 170, 0.35), rgba(30, 70, 40, 0.75) 75%); }
+    .hamster-canvas-container[data-backdrop="sunset"] { background: linear-gradient(180deg, rgba(255, 170, 110, 0.45), rgba(150, 70, 130, 0.55) 60%, rgba(40, 20, 50, 0.8)); }
+    .hamster-canvas-container[data-backdrop="ocean"] { background: radial-gradient(circle at 50% 20%, rgba(140, 220, 255, 0.35), rgba(10, 50, 90, 0.8) 75%); }
+    .hamster-canvas-container[data-backdrop="lavender"] { background: radial-gradient(circle at 50% 35%, rgba(220, 200, 255, 0.4), rgba(70, 50, 110, 0.75) 75%); }
+    .hamster-canvas-container[data-backdrop="cozy"] { background: radial-gradient(circle at 50% 30%, rgba(255, 220, 160, 0.4), rgba(90, 55, 30, 0.8) 75%); }
+    .fur-swatch { width: 12px; height: 12px; border-radius: 50%; border: 1px solid rgba(0, 0, 0, 0.25); }
+    .form-group .spirit-check { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; margin-bottom: 8px; }
+    .form-group .spirit-check input { width: auto; margin: 0; flex: none; }
     .tag-add .text-input { width: 96px; flex: none; padding: 6px 8px; font-size: 16px; }
     .tag-pills { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
     .tag-pill { font-size: 0.68rem; color: var(--theme-primary); background: var(--tint); border-radius: 10px; padding: 2px 7px; }
@@ -993,6 +1019,30 @@
     }
     .insight-icon { font-size: 1.1rem; line-height: 1.2; }
     .insight-note { color: var(--text-muted); font-size: 0.72rem; }
+    .cyc-now { font-size: 0.85rem; line-height: 1.45; margin-bottom: 10px; }
+    .cyc-now b { color: var(--theme-primary); }
+    .cyc-row { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; margin: 6px 0; }
+    .cyc-name { width: 78px; flex-shrink: 0; }
+    .cyc-bar { flex: 1; height: 8px; border-radius: 4px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
+    .cyc-bar i { display: block; height: 100%; border-radius: 4px; background: var(--theme-primary); }
+    .cyc-row.hard .cyc-bar i { background: var(--color-red); }
+    .cyc-row.hard .cyc-name { font-weight: 700; }
+    .dark-banner { display: flex; align-items: center; gap: 10px; padding: 10px 14px; margin: 0 0 12px; border-radius: 14px; cursor: pointer;
+                   background: linear-gradient(90deg, rgba(76, 52, 140, 0.6), rgba(22, 20, 48, 0.75)); border: 1px solid rgba(167, 139, 250, 0.45);
+                   font-size: 0.85rem; line-height: 1.4; animation: cardIn 0.35s ease both; }
+    .dark-banner.good { background: linear-gradient(90deg, rgba(16, 120, 100, 0.45), rgba(14, 30, 40, 0.7)); border-color: rgba(52, 211, 153, 0.4); }
+    .dark-list { margin: 0 0 8px; padding-left: 18px; font-size: 0.8rem; line-height: 1.5; }
+    .dark-list li { margin-bottom: 4px; }
+    .dark-plan summary { cursor: pointer; font-weight: 700; font-size: 0.85rem; color: var(--theme-primary); margin: 6px 0; }
+    .plan-group { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin: 10px 0 4px; }
+    .plan-item { display: flex; gap: 8px; align-items: flex-start; font-size: 0.8rem; line-height: 1.45; margin: 5px 0; cursor: pointer; }
+    .plan-item input { width: auto; margin: 3px 0 0; flex: none; }
+    .plan-item.done span { color: var(--text-muted); text-decoration: line-through; }
+    .cyc-detail summary { list-style: none; cursor: pointer; }
+    .cyc-detail summary::-webkit-details-marker { display: none; }
+    .cyc-sum { font-size: 0.75rem; line-height: 1.5; color: var(--text-muted); margin: 0 0 10px; padding: 6px 10px; border-left: 2px solid var(--border-color); }
+    .cyc-sum b { color: var(--text-main); }
+    .cyc-val { width: 86px; flex-shrink: 0; white-space: nowrap; text-align: right; color: var(--text-muted); font-size: 0.72rem; }
     .validation-breakdown { font-size: 0.72rem; color: var(--text-muted); text-align: center; margin: 6px 0 10px; }
     .validation-reality {
       font-size: 0.88rem;
@@ -1263,7 +1313,7 @@
 
   <nav>
     <button class="tab-btn active" data-tab="journey" onclick="switchTab('journey')">Journey</button>
-    <button class="tab-btn" data-tab="puzzle" onclick="switchTab('puzzle')">Honeycomb</button>
+    <button class="tab-btn" data-tab="puzzle" onclick="switchTab('puzzle')">Disrupt</button>
     <button class="tab-btn" data-tab="spirit" onclick="switchTab('spirit')" id="hamster-tab">Spirit</button>
     <button class="tab-btn" data-tab="vagus" onclick="switchTab('vagus')">Vagus</button>
     <button class="tab-btn" data-tab="recover" onclick="switchTab('recover')">Recover</button>
@@ -1278,6 +1328,11 @@
   </div>
 
   <main>
+    <div class="dark-banner" id="dark-banner" style="display:none;" onclick="darkBannerTap()">
+      <span id="dark-banner-icon">🌘</span>
+      <span id="dark-banner-text" style="flex:1;"></span>
+      <button class="mood-del" onclick="event.stopPropagation(); dismissDarkBanner()" title="Hide for today">✕</button>
+    </div>
     <div class="card foryou" id="for-you" style="display:none;">
       <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
         <h2 style="margin:0;" id="for-you-title"></h2>
@@ -1403,7 +1458,7 @@
           <b>Imagery Competing Task Intervention</b><br>Right after something upsetting, your brain spends a few hours "saving" the memory, mostly as vivid pictures.
           A visual puzzle keeps that same part of your brain busy, so the memory gets stored less vividly and pops back into your head less often.
           You still remember what happened; it just intrudes less. It works best within about 6 hours, for 10 to 20 minutes, while really focusing on turning the pieces in your mind.
-          Honeycomb's hexagons turn six ways, so they ask for a lot of mental rotation, which is the part that helps.
+          <span id="puzzle-why-mode">Honeycomb's hexagons turn six ways, so they ask for a lot of mental rotation, which is the part that helps.</span>
         </div>
         
         <div class="puzzle-area">
@@ -1417,7 +1472,7 @@
         </div>
         <div class="puzzle-side">
           <button class="puzzle-pp" id="puzzle-pp" onclick="togglePuzzlePause()" aria-label="Pause or play"></button>
-          <div class="puzzle-stat">
+          <div class="puzzle-stat" id="puzzle-next-stat">
             <div class="puzzle-stat-label">NEXT</div>
             <canvas id="puzzle-next" width="64" height="48"></canvas>
           </div>
@@ -1426,7 +1481,7 @@
             <div class="puzzle-stat-val" id="puzzle-score">0</div>
           </div>
           <div class="puzzle-stat">
-            <div class="puzzle-stat-label">BLOTS</div>
+            <div class="puzzle-stat-label" id="puzzle-unit-label">BLOTS</div>
             <div class="puzzle-stat-val" id="puzzle-lines">0</div>
           </div>
           <div class="puzzle-stat">
@@ -1451,10 +1506,13 @@
           <canvas id="hamster-canvas" width="320" height="150" style="width:100%; height:100%;"></canvas>
         </div>
         <div class="hamster-name" id="hamster-name" onclick="renameHamster()" title="Tap to rename">Spirit</div>
+        <div class="spirit-level" id="spirit-level"></div>
         <div style="font-weight:700; color:var(--theme-primary); margin-top:2px;" id="hamster-status">Companion Status</div>
         <div style="font-size:0.75rem; color:var(--text-muted);" id="hamster-desc">Reflects environment energy</div>
         <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;" id="hamster-trend"></div>
-        <button class="icon-btn" id="feed-btn" onclick="feedHamster()" style="margin-top:8px;">🌻 Give Spirit a seed</button>
+        <div class="spirit-strip" id="spirit-strip" title="Last 30 days"></div>
+        <button class="icon-btn" id="feed-btn" onclick="feedHamster()" style="margin-top:8px;">Feed</button>
+        <button class="icon-btn" id="trick-btn" onclick="spiritDoTrick()" style="margin-top:8px;">Trick</button>
         <div class="advice-bubble" id="hamster-advice" style="display:none;"></div>
       </div>
 
@@ -1472,7 +1530,7 @@
 
       <div class="card">
         <h2>Pattern Correlation</h2>
-        <div class="subtitle">Cross-checks your oni check-ins, tagged entries and the cycle date. Calculated only on this device.</div>
+        <div class="subtitle">How your days line up with the cycle and your tags. Calculated only on this device.</div>
         <div id="correlations"></div>
       </div>
 
@@ -1661,7 +1719,7 @@
         <h2>Time on Exercises</h2>
         <div class="stat-grid">
           <div class="stat-box"><div class="stat-box-val" id="p-vagus-total">0</div><div class="stat-box-label">Vagus resets</div></div>
-          <div class="stat-box"><div class="stat-box-val" id="p-puzzle-min-total">0</div><div class="stat-box-label">Honeycomb minutes</div></div>
+          <div class="stat-box"><div class="stat-box-val" id="p-puzzle-min-total">0</div><div class="stat-box-label">Disrupt minutes</div></div>
           <div class="stat-box"><div class="stat-box-val" id="p-breath-min-total">0</div><div class="stat-box-label">Breathing minutes</div></div>
           <div class="stat-box"><div class="stat-box-val" id="p-tools-total">0</div><div class="stat-box-label">Calm games &amp; tools</div></div>
         </div>
@@ -1674,7 +1732,7 @@
   <div class="modal" id="hard-day-modal">
     <div class="modal-content card" style="text-align:center;">
       <h2>That sounded like a hard moment.</h2>
-      <div class="subtitle" style="font-size:0.9rem;">Playing Honeycomb for about 10 minutes within the next 6 hours can help stop the memory replaying later. You don't have to do it now. It just helps if it happens today.</div>
+      <div class="subtitle" style="font-size:0.9rem;">Playing Disrupt for about 10 minutes within the next 6 hours can help stop the memory replaying later. You don't have to do it now. It just helps if it happens today.</div>
       <button class="btn-action" onclick="startPuzzleWindow()">Play 10 minutes now</button>
       <button class="btn-action btn-secondary" onclick="remindPuzzleWindow()" style="margin-top:8px;">Remind me (6-hour window)</button>
       <button class="btn-action btn-secondary" onclick="closeHardDayPrompt()" style="margin-top:8px;">Not now</button>
@@ -1761,6 +1819,20 @@
       <div class="form-group">
         <label>Next Office Day Date:</label>
         <input type="date" id="cfg-office">
+      </div>
+
+      <div class="form-group">
+        <label>Disrupt game:</label>
+        <div class="spirit-opts" id="puzzle-mode-opts"></div>
+      </div>
+
+      <div class="form-group">
+        <details class="spirit-custom">
+          <summary>Customise Spirit <span id="spirit-settings-lv"></span></summary>
+          <div id="spirit-settings"></div>
+          <label class="spirit-check"><input type="checkbox" id="spirit-blush" onchange="setSpiritStyle('blush', this.checked)"> Rosy cheeks</label>
+          <label class="spirit-check"><input type="checkbox" id="spirit-house" onchange="setSpiritStyle('house', this.checked)"> His house</label>
+        </details>
       </div>
 
       <div class="form-group">
@@ -1983,7 +2055,7 @@
       "Allow your muscles to melt and relax for 30 seconds.",
       "You don't need to react to every prompt or tension.",
       "Be gentle with your thoughts tonight.",
-      "It is okay to take refuge in simple distractions like Honeycomb or quiet music.",
+      "It is okay to take refuge in simple distractions like Disrupt or quiet music.",
       "You are holding a line of self-respect and sanity.",
       "Focus on what brings peace into your immediate physical space.",
       "Don't judge yourself for feeling drained.",
@@ -2052,6 +2124,33 @@
       anxious: { skin1: '#ffe1c2', skin2: '#f59a4a', skin3: '#5a2a06', horn1: '#fff7ec', horn2: '#ffc58a', glow: '251, 146, 60', blush: 'rgba(255, 130, 110, 0.45)' },
       sad:   { skin1: '#d6e2fa', skin2: '#6f8fd0', skin3: '#16244a', horn1: '#eef3fd', horn2: '#a9bde6', glow: '96, 130, 210', blush: 'rgba(190, 170, 230, 0.3)' }
     };
+    // Spirit's look, chosen in Settings
+    const SPIRIT_FURS = {
+      golden:    { name: 'Golden',    fur: '#d9944c', furDark: '#b06f30', cream: '#f7ead7' },
+      grey:      { name: 'Grey',      fur: '#9a948f', furDark: '#6e6863', cream: '#eeeae4' },
+      cream:     { name: 'Cream',     fur: '#e3c79c', furDark: '#c2a172', cream: '#fbf4e8' },
+      chocolate: { name: 'Chocolate', fur: '#8a5a3c', furDark: '#62402a', cream: '#efe2d0' },
+      black:     { name: 'Black',     fur: '#4d4642', furDark: '#2f2a27', cream: '#e9e2d8' }
+    };
+    const SPIRIT_EYES = { black: '#120a06', brown: '#5a3418', ruby: '#9b1d2a', blue: '#1e4f8a' };
+    const SPIRIT_PACE = { calm: 0.7, normal: 1, lively: 1.4 };
+    const SPIRIT_SIZE = { small: 0.82, normal: 1, big: 1.12 };
+    // Each row in Settings: [label, key, { value: text or [text, level needed] }].
+    // 'fur' is drawn as its own row with swatches.
+    const SPIRIT_OPTIONS = [
+      ['Fur', 'fur', null],
+      ['Fur style', 'furStyle', { smooth: 'Smooth', fluffy: 'Fluffy', ruffled: 'Ruffled', long: 'Long-haired', curly: 'Curly' }],
+      ['Pattern', 'pattern', { plain: 'Plain', spots: ['Spots', 3], stripe: ['Stripe', 6], banded: ['Banded', 9] }],
+      ['Eyes', 'eyes', { black: 'Black', brown: 'Brown', ruby: 'Ruby', blue: 'Blue' }],
+      ['Holding', 'held', { seed: '🌻 Seed', strawberry: ['🍓 Strawberry', 2], acorn: ['🌰 Acorn', 4], heart: ['💗 Heart', 7], flower: ['🌸 Flower', 10] }],
+      ['Effect', 'effect', { none: 'None', sparkles: ['✨ Sparkles', 3], hearts: ['💕 Hearts', 5], bubbles: ['🫧 Bubbles', 8], fireflies: ['🌟 Fireflies', 12], snow: ['❄️ Snow', 15] }],
+      ['Backdrop', 'backdrop', { weather: '🌦️ Real weather', night: 'Night', meadow: 'Meadow', sunset: 'Sunset', ocean: 'Ocean', lavender: 'Lavender', cozy: 'Cozy' }],
+      ['Size', 'size', { small: 'Small', normal: 'Normal', big: 'Big' }],
+      ['Pace', 'pace', { calm: 'Calm', normal: 'Normal', lively: 'Lively' }]
+    ];
+    let spiritStyle = { fur: 'golden', furStyle: 'smooth', eyes: 'black', blush: false, house: true, backdrop: 'weather', pace: 'normal',
+                        pattern: 'plain', held: 'seed', effect: 'none', size: 'normal' };
+    try { Object.assign(spiritStyle, JSON.parse(localStorage.getItem('aq_spirit_style') || '{}')); } catch(e) {}
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     // Start-screen faces: Spirit in each mood, on the oni's coloured tile
@@ -2433,12 +2532,16 @@
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === name));
       document.querySelectorAll('.tab-content').forEach(ct => ct.classList.toggle('active', ct.id === 'tab-' + name));
       // A brand-new game starts by itself; one you left stays paused until you tap Resume
-      if(name === 'puzzle') { if(!isGameOver && !currentPiece) startPuzzle(); else drawBoard(); }
+      if(name === 'puzzle') { if(!isGameOver && !PE().started()) startPuzzle(); else drawBoard(); }
       else if(tInterval) pausePuzzle();
       if(name === 'spirit') {
         updateCountMeters();
         drawHamster();
-        renderFeedButton(); // a new day unlocks a new seed
+        renderFeedButton();
+        spiritCheer();
+        renderSpiritLevel(true);
+        applySpiritBackdrop();
+        if(spiritStyle.backdrop === 'weather') fetchWeather().then(applySpiritBackdrop);
       }
       if(name === 'practise') renderPractice();
       if(name === 'journey') { toggleJournal(false); toggleIncidents(false); }
@@ -2530,6 +2633,8 @@
     function openSettings() {
       renderThemeReason();
       renderPastPeriods();
+      renderSpiritSettings();
+      renderPuzzleModeSettings();
       if(typeof renderUsageSettings === 'function') renderUsageSettings();
       document.getElementById('cfg-therapy').value = dates.therapy || '';
       document.getElementById('cfg-period').value = dates.period || '';
@@ -2607,8 +2712,13 @@
           <div class="note-text">${escapeHtml(n.text)}</div>
           ${tagPills(n.tags)}
           ${editingNoteId === n.id ? `
-            <div class="tag-picker">${allTags().map(t =>
+            <div class="tag-picker">${[...new Set([...allTags(), ...(n.tags || [])])].map(t =>
               `<button type="button" class="tag-chip ${(n.tags || []).includes(t) ? 'selected' : ''}" onclick="toggleNoteTag(${n.id}, '${t}')">#${escapeHtml(t)}</button>`).join('')}
+              <span class="tag-add">
+                <input type="text" class="text-input" id="note-tag-input-${n.id}" placeholder="new tag" maxlength="24"
+                       onkeydown="if(event.key === 'Enter') { event.preventDefault(); addNoteCustomTag(${n.id}); }">
+                <button type="button" class="icon-btn" onclick="addNoteCustomTag(${n.id})">+</button>
+              </span>
             </div>
             <button class="icon-btn" style="margin-top:6px;" onclick="editNoteTags(null)">Done</button>`
           : `<button class="note-tag-btn" onclick="editNoteTags(${n.id})">${(n.tags || []).length ? '✎ Edit tags' : '+ Add tags'}</button>`}
@@ -2621,6 +2731,21 @@
     function editNoteTags(id) {
       editingNoteId = id;
       renderNotes();
+    }
+    // Make a new tag while editing an old entry: it's saved for later and added to this entry
+    function addNoteCustomTag(id) {
+      const input = document.getElementById(`note-tag-input-${id}`);
+      const t = input ? cleanTag(input.value) : '';
+      if(!t) return;
+      if(!allTags().includes(t)) {
+        customTags.push(t);
+        localStorage.setItem('aq_custom_tags', JSON.stringify(customTags));
+        renderTagPicker('journal');
+        renderTagPicker('incident');
+      }
+      const n = notes.find(x => x.id === id);
+      if(n && !(n.tags || []).includes(t)) toggleNoteTag(id, t);
+      else renderNotes();
     }
     function toggleNoteTag(id, t) {
       const n = notes.find(x => x.id === id);
@@ -2693,6 +2818,88 @@
     let hamsterWound = 'none';  // healing stage: fresh, stitched, bandaged, scars, none
     let hamsterHealDays = 99;   // days since the last red/black day (cuts and bruises fade over 2 weeks)
 
+    // Spirit's hidden health for the 30 days ending on `today` (see the rules inside)
+    // Logging is self-care too: each journal entry or incident logged, plus checking in with an oni (once a day)
+    function spiritLogsByDay() {
+      const logsByDay = {};
+      const addLog = (ts, n = 1) => { const k = dayKey(new Date(ts)); logsByDay[k] = (logsByDay[k] || 0) + n; };
+      notes.forEach(n => addLog(n.id));
+      incidents.forEach(e => addLog(e.ts));
+      const checkinDays = new Set(moodLog.map(m => dayKey(new Date(m.ts))));
+      checkinDays.forEach(k => { logsByDay[k] = (logsByDay[k] || 0) + 1; });
+      return logsByDay;
+    }
+    function spiritHealthOn(today, logsByDay = spiritLogsByDay()) {
+      let badPoints = 0, streak = 0, streakBonus = 0, healing = 0, todayHealing = 0;
+      let badDays10 = 0, blackDays10 = 0; // red/black days in the last 10 days
+      let recentGood = 0, recentYellow = 0, hasData = false;
+      let greenSince = 0, yellowSince = 0; // calmer days since the last red/black day
+      let yellowDecay = 0;                  // each yellow day wears him down a little (fades with age like bad days)
+      let yellowRun = 0, greensAfterYellow = 0, yellowZombie = false, lastYellowAgo = 99; // 5 yellow days in a row zombify him until 2 green days
+      for(let i = 29; i >= 0; i--) {
+        const d = new Date(today);
+        d.setDate(d.getDate() - i);
+        const k = dayKey(d), st = calData[k];
+        if(st) hasData = true;
+        if(st === 'status-green') recentGood++;
+        if(st === 'status-yellow') recentYellow++;
+        const w = i < 7 ? 1 : i < 14 ? 0.75 : i < 21 ? 0.5 : 0.25;
+        if(st === 'status-red') badPoints += w;
+        if(st === 'status-black') badPoints += 2 * w;
+        if(st === 'status-red' || st === 'status-black') { greenSince = 0; yellowSince = 0; }
+        if(st === 'status-green') greenSince++;
+        if(st === 'status-yellow') yellowSince++;
+        // 5 yellow days in a row (consecutive days, any other day breaks the run) zombify him; then any 2 green days lift it
+        if(st === 'status-yellow') {
+          lastYellowAgo = i;
+          yellowDecay += 0.5 * w;
+          if(++yellowRun >= 5 && !yellowZombie) { yellowZombie = true; greensAfterYellow = 0; }
+        } else yellowRun = 0;
+        if(st === 'status-green' && yellowZombie && ++greensAfterYellow >= 2) yellowZombie = false;
+        if(i < 10 && (st === 'status-red' || st === 'status-black')) {
+          badDays10++;
+          if(st === 'status-black') blackDays10++;
+        }
+        if(st === 'status-green') { streak++; if(streak % 3 === 0) streakBonus++; } else streak = 0;
+        const pr = practice[k] || {};
+        const acts = (pr.vagus || 0) + (pr.puzzleSessions || 0) + (pr.tools || 0) + (logsByDay[k] || 0);
+        if(acts) {
+          const h = Math.min(2, 0.5 * acts);
+          healing += h;
+          if(i === 0) todayHealing = h;
+        }
+      }
+      const damage = Math.max(0, badPoints + yellowDecay - healing);
+      // Any red/black day in the last 10 days zombifies him, until calmer days follow the last one:
+      // 2 green, 3 yellow, or 1 green + 2 yellow (green counts 3, yellow 2, 6 lifts it)
+      const badZombie = badDays10 >= 1 && greenSince * 3 + yellowSince * 2 < 6;
+      // Like red/black days, a yellow run stops counting 10 days after its last yellow day
+      const yellowStill = yellowZombie && lastYellowAgo < 10;
+      return { score: recentGood + streakBonus - damage, badPoints, todayHealing, streak, badDays10, blackDays10, hasData,
+               zombify: badZombie || yellowStill, zombifyReason: badZombie ? 'bad' : yellowStill ? 'yellow' : null };
+    }
+    function spiritMoodOn(day, logsByDay) {
+      const h = spiritHealthOn(day, logsByDay);
+      if(!h.hasData) return null;
+      return h.zombify ? 'stressed' : h.score < 0 ? 'recovering' : h.score >= 5 ? 'thriving' : 'calm';
+    }
+    // One dot per day for the last 30 days, coloured by how Spirit was doing
+    function renderSpiritStrip() {
+      const el = document.getElementById('spirit-strip');
+      if(!el) return;
+      const look = { thriving: ['#10b981', 'Thriving'], calm: ['var(--theme-primary)', 'Calm'], recovering: ['#f59e0b', 'Recovering'], stressed: ['#ef4444', 'Zombified'] };
+      const today = startOfToday(), logs = spiritLogsByDay();
+      let html = '';
+      for(let i = 29; i >= 0; i--) {
+        const d = new Date(today);
+        d.setDate(d.getDate() - i);
+        const m = spiritMoodOn(d, logs);
+        const [col, label] = look[m] || ['rgba(255, 255, 255, 0.12)', 'No data'];
+        html += `<span class="${i === 0 ? 'today' : ''}" style="background:${col};" title="${d.toLocaleDateString()} · ${label}"></span>`;
+      }
+      el.innerHTML = html;
+    }
+
     function updateCountMeters() {
       let greenCount = 0;         // all time, up to today
       let recentGood = 0;         // last 30 days
@@ -2731,45 +2938,16 @@
       // Spirit's health over the last 30 days (kept hidden, only his looks show it):
       //  green +1, plus +1 for every 3 green days in a row
       //  red -1, black -2, and bad days fade with age (full this week, then 3/4, 1/2, 1/4)
-      //  each yellow cancels 1 bad point
+      //  each yellow wears him down by 1/2 (fading with age); 5 yellows in a row zombify him until 2 green days follow
       //  self-care heals damage: +0.5 per vagus reset, Puzzle session, reset tool, journal entry or
       //  incident logged, and for checking in with an oni that day (max +2 a day),
       //  Healing can undo damage but not add on top.
-      let badPoints = 0, streak = 0, streakBonus = 0, healing = 0, todayHealing = 0;
-      // Logging is self-care too: each journal entry or incident logged, plus checking in with an oni (once a day)
-      const logsByDay = {};
-      const addLog = (ts, n = 1) => { const k = dayKey(new Date(ts)); logsByDay[k] = (logsByDay[k] || 0) + n; };
-      notes.forEach(n => addLog(n.id));
-      incidents.forEach(e => addLog(e.ts));
-      const checkinDays = new Set(moodLog.map(m => dayKey(new Date(m.ts))));
-      checkinDays.forEach(k => { logsByDay[k] = (logsByDay[k] || 0) + 1; });
-      let badDays10 = 0, blackDays10 = 0; // red/black days in the last 10 days
-      for(let i = 29; i >= 0; i--) {
-        const d = new Date(today);
-        d.setDate(d.getDate() - i);
-        const k = dayKey(d), st = calData[k];
-        const w = i < 7 ? 1 : i < 14 ? 0.75 : i < 21 ? 0.5 : 0.25;
-        if(st === 'status-red') badPoints += w;
-        if(st === 'status-black') badPoints += 2 * w;
-        if(i < 10 && (st === 'status-red' || st === 'status-black')) {
-          badDays10++;
-          if(st === 'status-black') blackDays10++;
-        }
-        if(st === 'status-green') { streak++; if(streak % 3 === 0) streakBonus++; } else streak = 0;
-        const pr = practice[k] || {};
-        const acts = (pr.vagus || 0) + (pr.puzzleSessions || 0) + (pr.tools || 0) + (logsByDay[k] || 0);
-        if(acts) {
-          const h = Math.min(2, 0.5 * acts);
-          healing += h;
-          if(i === 0) todayHealing = h;
-        }
-      }
-      const cancelled = Math.min(recentYellow, badPoints);
-      const damage = Math.max(0, badPoints - cancelled - healing);
-      const hamsterScore = recentGood + streakBonus - damage;
-      // Zombified only when hard days pile up: 2+ red/black days within 10 days, in any combination.
-      // A single red or black day leaves him bruised (and bandaged/sleepy if his health dips), never zombified.
-      const zombify = badDays10 >= 2;
+      const health = spiritHealthOn(today);
+      const { badPoints, todayHealing, streak, badDays10, blackDays10 } = health;
+      const hamsterScore = health.score;
+      // Zombified by any red/black day (lifts after 2 green, 3 yellow, or 1 green + 2 yellow days since the last one)
+      // or by 5 yellow days in a row (lifts after 2 green days).
+      const zombify = health.zombify;
       hamsterWound = zombify ? ((badDays10 >= 3 || blackDays10 >= 2) ? 'fresh' : 'stitched')
         : hamsterScore < 0 ? 'bandaged'
         : (badPoints > 0 && hamsterScore < 2) ? 'scars' : 'none';
@@ -2808,13 +2986,14 @@
         hamsterMood = 'stressed';
         hStatus.innerText = "Zombified / High Strain";
         hStatus.style.color = "#ef4444";
-        hDesc.innerText = "Several hard days close together. Go easy on yourself.";
+        hDesc.innerText = health.zombifyReason === 'yellow'
+          ? "Many tense days without a break. Go easy on yourself."
+          : badDays10 >= 2 ? "Several hard days close together. Go easy on yourself." : "A hard day. Go easy on yourself.";
         
         let randomAdvice = hamsterAdvices[Math.floor(Math.random() * hamsterAdvices.length)];
         hAdvice.style.display = 'block';
         hAdvice.innerText = `💡 Reminder: ${randomAdvice}`;
       } else if(hamsterScore < 0) {
-        // Includes a single bad day that would once have zombified him: bruised and sleepy instead
         hamsterMood = 'recovering';
         hStatus.innerText = "Wilted / Recovering";
         hStatus.style.color = "#f59e0b";
@@ -2837,6 +3016,8 @@
         hAdvice.style.display = 'none';
       }
 
+      renderSpiritStrip();
+      renderSpiritLevel(false);
       drawHamster();
       applyAdaptiveTheme();
       calcDaysToDate(dates.period, 'm-period', 'lbl-period-date');
@@ -2891,19 +3072,20 @@
       const now = reduceMotion ? 0 : performance.now();
 
       // Idle motion: slow breathing; quick shiver when zombified; sleepy slump when recovering
+      const B = spiritBody(now);
       const shiver = mood === 'stressed' ? Math.sin(now / 55) * 0.5 : todaysOni() === 'anxious' ? Math.sin(now / 45) * 0.6 : 0;
-      const sway = mood === 'stressed' ? Math.sin(now / 700) * 0.06 : 0;
-      const breathe = 1 + Math.sin(now / 900) * 0.02;
-      const slump = mood === 'recovering' ? 0.95 : 1;
-      // Sniffing: the nose twitches in short bursts
-      const sniff = !reduceMotion && (now % 2600) < 600 ? Math.sin(now / 45) * 0.8 : 0;
+      const sway = mood === 'stressed' ? Math.sin(now / 700) * 0.06 : B.sway;
+      const breathe = 1 + Math.sin(now / B.speed) * B.amp;
+      const slump = mood === 'recovering' ? 0.95 : B.slump;
+      // Sniffing: the nose twitches in short bursts (not when numb)
+      const sniff = !reduceMotion && !B.still && (now % 2600) < 600 ? Math.sin(now / 45) * 0.8 : 0;
       const blink = !reduceMotion && (mood === 'calm' || mood === 'thriving') && (now % 4200) < 140;
+
+      const puff = spiritEatState() ? 1 + 0.08 * Math.abs(Math.sin(performance.now() / 90)) : 1;
 
       // Syrian hamster colours (muted when zombified)
       const zombie = mood === 'stressed';
-      const fur = zombie ? '#8d9b76' : '#d9944c';
-      const furDark = zombie ? '#5d6b4f' : '#b06f30';
-      const cream = zombie ? '#c8cfb4' : '#f7ead7';
+      const { fur, furDark, cream } = spiritFur(zombie);
       const pink = '#f2a7a7';
 
       function oval(x, y, rx, ry, color, rot = 0) {
@@ -2917,13 +3099,13 @@
       oval(cx, 141 - jumpY / S, 44 * (1 - jumpK * 0.35), 5, `rgba(0, 0, 0, ${0.35 - jumpK * 0.15})`);
 
       ctx.save();
-      ctx.translate(cx + shiver, 141);
+      ctx.translate(cx + shiver, 141 - B.bob);
       ctx.rotate(sway);
-      ctx.scale(breathe, slump / breathe);
+      ctx.scale(breathe * B.puff, slump / breathe);
       ctx.translate(-cx, -141);
 
       // Ears (behind the head). Flattened back when stressed.
-      const earFlat = mood === 'stressed';
+      const earFlat = mood === 'stressed' || B.earFlat;
       [-1, 1].forEach(s => {
         const ex = cx + s * (earFlat ? 25 : 21), ey = earFlat ? 33 : 27;
         oval(ex, ey, 9, earFlat ? 6 : 10, furDark, s * (earFlat ? 0.9 : 0.35));
@@ -2937,19 +3119,10 @@
       bodyGrad.addColorStop(0.75, fur);
       bodyGrad.addColorStop(1, furDark);
       ctx.fillStyle = bodyGrad;
-      const bodyPath = () => {
-      ctx.beginPath();
-      ctx.moveTo(cx, 24);
-      ctx.bezierCurveTo(cx + 24, 24, cx + 35, 36, cx + 35, 52);
-      ctx.bezierCurveTo(cx + 35, 64, cx + 41, 74, cx + 47, 92);
-      ctx.bezierCurveTo(cx + 55, 114, cx + 50, 139, cx + 28, 141);
-      ctx.quadraticCurveTo(cx, 144, cx - 28, 141);
-      ctx.bezierCurveTo(cx - 50, 139, cx - 55, 114, cx - 47, 92);
-      ctx.bezierCurveTo(cx - 41, 74, cx - 35, 64, cx - 35, 52);
-      ctx.bezierCurveTo(cx - 35, 36, cx - 24, 24, cx, 24);
-      };
+      const bodyPath = () => traceSpiritShape(ctx, 'front'); // laid out for cx = 80
       bodyPath();
       ctx.fill();
+      drawSpiritFurStyle(ctx, SPIRIT_FRONT_OUTLINE(), mixHexToHex(fur, furDark, 0.55), furDark, (x, y) => y > 128);
 
       // Cream belly running up to the chin
       ctx.fillStyle = cream;
@@ -2971,9 +3144,14 @@
         ctx.quadraticCurveTo(cx + s * 34, 70, cx + s * 30, 78);
         ctx.stroke();
         ctx.globalAlpha = 1;
-        oval(cx + s * 19, 58, 13, 10, cream, s * -0.3);
+        oval(cx + s * 19, 58, 13 * puff, 10 * puff, cream, s * -0.3);
       });
       oval(cx, 56, 11, 8, cream);
+
+      drawSpiritPattern(ctx, {
+        spots: [[cx - 36, 100, 8, 6], [cx + 38, 112, 7, 5], [cx - 26, 40, 6, 4], [cx + 33, 84, 5, 4]],
+        stripe: [[cx, 25], [cx, 37]], stripeWidth: 4, band: [cx - 60, 94, 120, 13]
+      }, bodyPath, furDark, cream);
 
       // Fur texture: a few short strokes along the back and flanks
       ctx.strokeStyle = 'rgba(120, 70, 30, 0.35)';
@@ -3014,7 +3192,7 @@
           ctx.restore();
           oval(ex + 1.8, ey + 1.2, 1.3, 1.3, '#120a06');
         } else {
-          oval(ex, ey, 4.4, 4.8, '#120a06');
+          oval(ex, ey, 4.4, 4.8, spiritEyeColour());
           oval(ex - 1.4, ey - 1.6, 1.4, 1.4, 'rgba(255, 255, 255, 0.9)');
           oval(ex + 1.3, ey + 1.5, 0.6, 0.6, 'rgba(255, 255, 255, 0.6)');
         }
@@ -3051,15 +3229,9 @@
         });
       });
 
-      // Hands: holding a sunflower seed (dropped when zombified)
-      if(mood !== 'stressed') {
-        oval(cx, 82, 4.5, 8, '#3d3226', 0.15);
-        ctx.strokeStyle = '#d8cbb0';
-        ctx.lineWidth = 0.9;
-        ctx.beginPath();
-        ctx.moveTo(cx - 0.8, 75);
-        ctx.lineTo(cx + 1, 89);
-        ctx.stroke();
+      // Hands: holding his item (dropped when zombified, unless he's eating)
+      if(mood !== 'stressed' || spiritEatState()) {
+        drawSpiritHeld(ctx, cx, 82);
         [-1, 1].forEach(s => {
           oval(cx + s * 6.5, 84, 4.5, 3.6, pink, s * 0.4);
           ctx.strokeStyle = 'rgba(160, 80, 80, 0.5)';
@@ -3162,13 +3334,15 @@
         eyes: [[cx - 13, 44], [cx + 13, 44]],
         cheeks: [[cx - 21, 60], [cx + 21, 60]],
         mark: [cx + 27, 34],
-        sparkles: [[cx - 40, 30], [cx + 42, 40], [cx + 38, 100]]
+        sparkles: [[cx - 40, 30], [cx + 42, 40], [cx + 38, 100]],
+        steam: [[cx - 25, 20, -1], [cx + 25, 20, 1]]
       });
+      drawSpiritExtras(ctx, { cheeks: [[cx - 21, 60], [cx + 21, 60]] }, zombie);
       ctx.restore();
 
       // Dropped seed + sweat drop when zombified
       if(mood === 'stressed') {
-        oval(cx + 40, 138, 3.5, 6.5, '#3d3226', 1.3);
+        if(!spiritEatState()) oval(cx + 40, 138, 3.5, 6.5, '#3d3226', 1.3);
         ctx.fillStyle = 'rgba(150, 210, 255, 0.85)';
         ctx.beginPath();
         ctx.moveTo(cx + 30, 26);
@@ -3305,6 +3479,379 @@
       const e = currentOniEntry();
       return e ? e.mood : null;
     }
+    // Body language for the oni you picked: breathing, posture, ears, puffed fur, stamping
+    function spiritBody(now) {
+      const oni = todaysOni();
+      const b = { amp: 0.02, speed: 900, puff: 1, slump: 1, earFlat: false, bob: 0, sway: 0, still: false };
+      if(oni === 'happy') { b.amp = 0.025; b.speed = 600; }
+      if(oni === 'calm') { b.amp = 0.035; b.speed = 1500; b.sway = Math.sin(now / 1700) * 0.03; }
+      if(oni === 'angry') { b.puff = 1.07; b.bob = now % 1800 < 600 ? Math.abs(Math.sin(now / 70)) * 1.8 : 0; b.amp = 0.03; b.speed = 350; }
+      if(oni === 'anxious') { b.amp = 0.015; b.speed = 260; }
+      if(oni === 'sad') { b.earFlat = true; b.slump = 0.93; b.amp = 0.03; b.speed = 1700; }
+      if(oni === 'numb') { b.earFlat = true; b.slump = 0.97; b.amp = 0.004; b.speed = 2000; b.still = true; }
+      return b;
+    }
+
+    // His fur colour from Settings (muted green when zombified)
+    function spiritFur(zombie) {
+      if(zombie) return { fur: '#8d9b76', furDark: '#5d6b4f', cream: '#c8cfb4' };
+      const base = SPIRIT_FURS[spiritStyle.fur] || SPIRIT_FURS.golden;
+      return { fur: base.fur, furDark: base.furDark, cream: base.cream };
+    }
+
+    function setSpiritStyle(key, value) {
+      spiritStyle[key] = value;
+      localStorage.setItem('aq_spirit_style', JSON.stringify(spiritStyle));
+      renderSpiritSettings();
+      applySpiritBackdrop();
+      drawHamster();
+    }
+    function renderSpiritSettings() {
+      const el = document.getElementById('spirit-settings');
+      if(!el) return;
+      const L = spiritLevelInfo().level;
+      document.getElementById('spirit-settings-lv').innerText = `· Lv ${L}`;
+      const swatch = col => `<span class="fur-swatch" style="background:${col};"></span>`;
+      const furs = Object.fromEntries(Object.entries(SPIRIT_FURS).map(([k, f]) => [k, f.name]));
+      const extraFor = key => key === 'fur' ? k => swatch(SPIRIT_FURS[k].fur)
+        : key === 'eyes' ? k => swatch(SPIRIT_EYES[k]) : () => '';
+      el.innerHTML = SPIRIT_OPTIONS.map(([label, key, opts]) => {
+        const extra = extraFor(key);
+        const chips = Object.entries(opts || furs).map(([k, v]) => {
+          const [name, need] = Array.isArray(v) ? v : [v, 1];
+          if(need > L) return `<button type="button" class="tag-chip locked" disabled>🔒 ${name} · Lv ${need}</button>`;
+          return `<button type="button" class="tag-chip ${spiritStyle[key] === k ? 'selected' : ''}" onclick="setSpiritStyle('${key}', '${k}')">${extra(k)}${name}</button>`;
+        }).join('');
+        return `<div class="spirit-sub">${label}</div><div class="spirit-opts">${chips}</div>`;
+      }).join('');
+      document.getElementById('spirit-blush').checked = !!spiritStyle.blush;
+      document.getElementById('spirit-house').checked = spiritStyle.house !== false;
+    }
+    // The last weather result (fetched for the moon view too); null until the first fetch
+    function spiritWeatherNow() {
+      try { return typeof weatherCache !== 'undefined' ? weatherCache : null; } catch(e) { return null; }
+    }
+    let spiritDayCache = { at: 0, day: true };
+    function spiritIsDay() {
+      const t = Date.now();
+      if(t - spiritDayCache.at > 30000) spiritDayCache = { at: t, day: isDaytime() };
+      return spiritDayCache.day;
+    }
+    function applySpiritBackdrop() {
+      const box = document.querySelector('.hamster-canvas-container');
+      if(!box) return;
+      let bd = spiritStyle.backdrop || 'weather';
+      if(bd === 'weather') {
+        const w = spiritWeatherNow();
+        const dull = w && (w.code >= 3 || w.cloud > 70);
+        bd = !spiritIsDay() ? 'wx-night' : dull ? 'wx-grey' : 'wx-day';
+      }
+      box.dataset.backdrop = bd;
+    }
+
+    // Level: earned from self-care over all time. Just for fun: it never changes his health.
+    function spiritXP() {
+      let xp = 0;
+      Object.values(calData).forEach(st => { if(st === 'status-green') xp += 10; });
+      Object.values(practice).forEach(p => {
+        xp += (p.puzzleSessions || 0) * 15 + (p.vagus || 0) * 3 + (p.tools || 0) * 5 + (p.breathRounds || 0) * 2;
+      });
+      xp += notes.length * 5 + incidents.length * 5 + new Set(moodLog.map(m => dayKey(new Date(m.ts)))).size * 4;
+      return xp;
+    }
+    function spiritLevelInfo() {
+      const xp = spiritXP();
+      const level = Math.min(50, Math.floor(Math.sqrt(xp / 20)) + 1);
+      return { xp, level, cur: 20 * (level - 1) ** 2, next: 20 * level ** 2 };
+    }
+    function renderSpiritLevel(celebrate) {
+      const el = document.getElementById('spirit-level');
+      if(!el) return;
+      const { xp, level, cur, next } = spiritLevelInfo();
+      const pct = level >= 50 ? 100 : Math.round((xp - cur) / (next - cur) * 100);
+      el.innerHTML = `<span class="lv">Lv ${level}</span><span class="xp-bar"><i style="width:${pct}%"></i></span>`;
+      el.title = level >= 50 ? `${xp} XP` : `${xp} / ${next} XP`;
+      const seen = +localStorage.getItem('aq_spirit_seen_lvl') || 0;
+      if(!seen) { localStorage.setItem('aq_spirit_seen_lvl', level); return; }
+      if(celebrate && level > seen) {
+        localStorage.setItem('aq_spirit_seen_lvl', level);
+        el.classList.remove('levelup'); void el.offsetWidth; el.classList.add('levelup');
+        el.innerHTML += ` <span>Level up!</span>`;
+        [300, 1000].forEach(ms => setTimeout(() => { hamsterJumpStart = performance.now(); }, ms));
+        setTimeout(careForHamster, 1000);
+      }
+    }
+
+    function spiritEyeColour() { return SPIRIT_EYES[spiritStyle.eyes] || SPIRIT_EYES.black; }
+
+    // Rosy cheeks, positioned by each view's geometry `g`
+    function drawSpiritExtras(ctx, g, zombie) {
+      if(!spiritStyle.blush || zombie) return;
+      ctx.fillStyle = 'rgba(255, 130, 150, 0.35)';
+      g.cheeks.forEach(([x, y]) => { ctx.beginPath(); ctx.ellipse(x, y, 6, 3.5, 0, 0, Math.PI * 2); ctx.fill(); });
+    }
+
+    // Points along a body outline (same curves as the drawing), every `step` px, with the outward normal
+    const spiritOutlineCache = {};
+    function spiritOutline(key, start, segs, step = 5) {
+      if(spiritOutlineCache[key]) return spiritOutlineCache[key];
+      const pts = [];
+      let [px, py] = start;
+      segs.forEach(sg => {
+        for(let i = 1; i <= 24; i++) {
+          const t = i / 24, u = 1 - t;
+          pts.push(sg.length === 6
+            ? [u * u * u * px + 3 * u * u * t * sg[0] + 3 * u * t * t * sg[2] + t * t * t * sg[4],
+               u * u * u * py + 3 * u * u * t * sg[1] + 3 * u * t * t * sg[3] + t * t * t * sg[5]]
+            : [u * u * px + 2 * u * t * sg[0] + t * t * sg[2], u * u * py + 2 * u * t * sg[1] + t * t * sg[3]]);
+        }
+        px = sg[sg.length - 2]; py = sg[sg.length - 1];
+      });
+      const out = [];
+      let acc = 0;
+      for(let i = 1; i < pts.length; i++) {
+        const [x0, y0] = pts[i - 1], [x1, y1] = pts[i], d = Math.hypot(x1 - x0, y1 - y0);
+        acc += d;
+        if(acc >= step && d > 0) { acc = 0; out.push([x1, y1, (y1 - y0) / d, -(x1 - x0) / d]); }
+      }
+      return (spiritOutlineCache[key] = out);
+    }
+    // His silhouettes: a start point plus bezier (6 numbers) or quadratic (4 numbers) segments.
+    // Both the body fill and the fur outline are built from these.
+    const SPIRIT_SHAPES = {
+      front: { start: [80, 24], segs: [
+        [104, 24, 115, 36, 115, 52], [115, 64, 121, 74, 127, 92], [135, 114, 130, 139, 108, 141], [80, 144, 52, 141],
+        [30, 139, 25, 114, 33, 92], [39, 74, 45, 64, 45, 52], [45, 36, 56, 24, 80, 24]] },
+      side: { start: [32, 132], segs: [
+        [12, 122, 14, 74, 50, 64], [72, 56, 96, 48, 112, 55], [127, 60, 139, 74, 143, 86], [141, 97, 128, 100], [122, 112, 120, 132], [80, 140, 32, 132]] }
+    };
+    function traceSpiritShape(ctx, key) {
+      const { start, segs } = SPIRIT_SHAPES[key];
+      ctx.beginPath();
+      ctx.moveTo(start[0], start[1]);
+      segs.forEach(sg => sg.length === 6 ? ctx.bezierCurveTo(...sg) : ctx.quadraticCurveTo(...sg));
+    }
+    const SPIRIT_FRONT_OUTLINE = () => spiritOutline('front', SPIRIT_SHAPES.front.start, SPIRIT_SHAPES.front.segs);
+    const SPIRIT_SIDE_OUTLINE = () => spiritOutline('side', SPIRIT_SHAPES.side.start, SPIRIT_SHAPES.side.segs);
+
+    // Points around an ellipse every ~5px with the outward normal, for fur on the all-fours views
+    function spiritEllipseOutline(key, cx, cy, rx, ry) {
+      if(spiritOutlineCache[key]) return spiritOutlineCache[key];
+      const n = Math.round(Math.PI * (rx + ry) / 5), out = [];
+      for(let i = 0; i < n; i++) {
+        const a = i / n * Math.PI * 2, c = Math.cos(a), sn = Math.sin(a);
+        const nx = c / rx, ny = sn / ry, m = Math.hypot(nx, ny);
+        out.push([cx + rx * c, cy + ry * sn, nx / m, ny / m]);
+      }
+      return (spiritOutlineCache[key] = out);
+    }
+
+    // On all fours, seen from behind (160px frame, ground at 141): his round rump as he squeezes into his house
+    function drawHamsterBack(ctx) {
+      const zombie = hamsterMood === 'stressed';
+      const { fur, furDark } = spiritFur(zombie);
+      const cx = 80;
+      const oval = (x, y, rx, ry, c, rot = 0) => { ctx.fillStyle = c; ctx.beginPath(); ctx.ellipse(x, y, rx, ry, rot, 0, Math.PI * 2); ctx.fill(); };
+      oval(cx, 141, 46, 5, 'rgba(0, 0, 0, 0.35)');
+      // His head is further away: just the top of it and his ears peek over his back
+      [-1, 1].forEach(s => oval(cx + s * 16, 71, 7.5, 9, furDark, s * 0.3));
+      oval(cx, 84, 23, 15, mixHexToHex(fur, furDark, 0.5));
+      const edge = mixHexToHex(fur, furDark, 0.55);
+      drawSpiritFurStyle(ctx, spiritEllipseOutline('back-head', cx, 84, 23, 15), mixHexToHex(fur, furDark, 0.6), furDark, (x, y) => y > 90);
+      // Rump
+      const g = ctx.createRadialGradient(cx, 98, 6, cx, 112, 50);
+      g.addColorStop(0, fur); g.addColorStop(0.75, fur); g.addColorStop(1, furDark);
+      oval(cx, 112, 44, 30, g);
+      drawSpiritFurStyle(ctx, spiritEllipseOutline('back-rump', cx, 112, 44, 30), edge, furDark, (x, y) => y > 132);
+      // Darker fur down his spine and a few tufts
+      oval(cx, 104, 10, 22, 'rgba(0, 0, 0, 0.08)');
+      ctx.strokeStyle = 'rgba(120, 70, 30, 0.35)';
+      ctx.lineWidth = 1;
+      [[-26, 104, -2, -3], [24, 100, 2, -3], [-12, 92, -1, -3], [14, 120, 1, -3], [-30, 122, -3, -1]].forEach(([x, y, dx, dy]) => {
+        ctx.beginPath(); ctx.moveTo(cx + x, y); ctx.lineTo(cx + x + dx, y + dy); ctx.stroke();
+      });
+      // Tiny tail and the soles of his back feet
+      oval(cx, 126, 4.5, 3.5, furDark);
+      const sole = zombie ? '#b98f8f' : '#f2a7a7';
+      [-1, 1].forEach(s => {
+        oval(cx + s * 22, 139, 9, 3.6, sole);
+        [-4, 0, 4].forEach(o => oval(cx + s * 22 + o, 136.6, 1.4, 1.2, '#e48d8d'));
+      });
+    }
+
+    // On all fours, facing you (160px frame, ground at 141): crawling out of his house head first
+    function drawHamsterCrawlFront(ctx) {
+      const mood = hamsterMood, zombie = mood === 'stressed';
+      const { fur, furDark, cream } = spiritFur(zombie);
+      const now = reduceMotion ? 0 : performance.now();
+      const cx = 80;
+      const oval = (x, y, rx, ry, c, rot = 0) => { ctx.fillStyle = c; ctx.beginPath(); ctx.ellipse(x, y, rx, ry, rot, 0, Math.PI * 2); ctx.fill(); };
+      oval(cx, 141, 46, 5, 'rgba(0, 0, 0, 0.35)');
+      // Body behind his head
+      const bg = ctx.createLinearGradient(cx - 46, 0, cx + 46, 0);
+      bg.addColorStop(0, furDark); bg.addColorStop(0.3, fur); bg.addColorStop(0.7, fur); bg.addColorStop(1, furDark);
+      oval(cx, 110, 46, 28, bg);
+      const edge = mixHexToHex(fur, furDark, 0.55);
+      drawSpiritFurStyle(ctx, spiritEllipseOutline('crawl-body', cx, 110, 46, 28), edge, furDark, (x, y) => y > 132);
+      // Ears and head
+      [-1, 1].forEach(s => { oval(cx + s * 20, 68, 8, 9, furDark, s * 0.35); oval(cx + s * 20.5, 69, 5, 6, '#f2a7a7', s * 0.35); });
+      oval(cx, 94, 30, 26, fur);
+      drawSpiritFurStyle(ctx, spiritEllipseOutline('crawl-head', cx, 94, 30, 26), mixHexToHex(fur, furDark, 0.3), furDark, (x, y) => y > 104);
+      [-1, 1].forEach(s => oval(cx + s * 15, 102, 12, 9, cream, s * -0.3));
+      oval(cx, 100, 9, 7, cream);
+      // Eyes
+      const blink = !reduceMotion && (mood === 'calm' || mood === 'thriving') && (now % 4200) < 140;
+      [-1, 1].forEach(s => {
+        const ex = cx + s * 11, ey = 88;
+        if(mood === 'recovering' || blink) {
+          ctx.strokeStyle = '#2a1a10'; ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.arc(ex, ey - 1, 3.6, 0.15 * Math.PI, 0.85 * Math.PI); ctx.stroke();
+        } else if(zombie && s < 0) {
+          ctx.strokeStyle = '#2a1a10'; ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.moveTo(ex - 3.5, ey - 3.5); ctx.lineTo(ex + 3.5, ey + 3.5); ctx.moveTo(ex + 3.5, ey - 3.5); ctx.lineTo(ex - 3.5, ey + 3.5); ctx.stroke();
+        } else if(zombie) {
+          oval(ex, ey, 4.6, 5, '#eef7dc');
+          oval(ex + 1.6, ey + 1, 1.2, 1.2, '#120a06');
+        } else {
+          oval(ex, ey, 4, 4.4, spiritEyeColour());
+          oval(ex - 1.3, ey - 1.5, 1.3, 1.3, 'rgba(255, 255, 255, 0.9)');
+        }
+      });
+      // Nose, mouth, whiskers
+      const ny = 97;
+      oval(cx, ny, 3, 2.2, '#e88a9a');
+      ctx.strokeStyle = '#8a5a48'; ctx.lineWidth = 1.1;
+      ctx.beginPath();
+      ctx.moveTo(cx, ny + 2); ctx.lineTo(cx, ny + 4.5);
+      ctx.moveTo(cx - 3.2, ny + 6); ctx.quadraticCurveTo(cx - 1.4, ny + 7, cx, ny + 4.5); ctx.quadraticCurveTo(cx + 1.4, ny + 7, cx + 3.2, ny + 6);
+      ctx.stroke();
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.55)'; ctx.lineWidth = 0.7;
+      [-1, 1].forEach(s => [[-3, -6], [0, 0], [3, 6]].forEach(([oy, ey2]) => {
+        ctx.beginPath(); ctx.moveTo(cx + s * 6, ny + 2 + oy * 0.5); ctx.quadraticCurveTo(cx + s * 20, ny + oy, cx + s * 32, ny + ey2); ctx.stroke();
+      }));
+      // Front paws on the ground
+      [-1, 1].forEach(s => {
+        oval(cx + s * 15, 138, 7, 3.6, zombie ? '#b98f8f' : '#f2a7a7');
+        [-3, 0, 3].forEach(o => oval(cx + s * 15 + o, 135.8, 1.2, 1.1, '#e48d8d'));
+      });
+      drawOniTouches(ctx, {
+        mood: todaysOni(), ink: '#6b3d1c', dim: zombie, size: 1.2,
+        mark: [cx, 74], tusks: [[cx - 4, ny + 9, 1], [cx + 4, ny + 9, -1]], stripes: [[cx - 28, 96, 1], [cx + 28, 96, -1]]
+      });
+      drawSpiritOni(ctx, {
+        now, zombie, fur,
+        eyes: [[cx - 11, 88], [cx + 11, 88]], cheeks: [[cx - 17, 103], [cx + 17, 103]], mark: [cx + 24, 76],
+        sparkles: [[cx - 40, 70], [cx + 42, 78], [cx + 40, 120]], steam: [[cx - 22, 60, -1], [cx + 22, 60, 1]]
+      });
+      drawSpiritExtras(ctx, { cheeks: [[cx - 17, 103], [cx + 17, 103]] }, zombie);
+    }
+
+    // Fur style along his outline: fluffy scallops, ruffled tufts, long teddy-bear strands or little curls
+    function drawSpiritFurStyle(ctx, pts, edge, dark, skip) {
+      const style = spiritStyle.furStyle;
+      if(!style || style === 'smooth') return;
+      ctx.save();
+      ctx.fillStyle = edge;
+      ctx.strokeStyle = dark;
+      pts.forEach(([x, y, nx, ny], i) => {
+        if(skip(x, y)) return;
+        const r = rand01(i, 50), tx = -ny, ty = nx;
+        if(style === 'fluffy') {
+          ctx.beginPath(); ctx.arc(x + nx * 1.4, y + ny * 1.4, 3.3, 0, Math.PI * 2); ctx.fill();
+        } else if(style === 'ruffled') {
+          const len = 3 + r * 4.5, a = (rand01(i, 51) - 0.5) * 0.9;
+          const dx = nx * Math.cos(a) - ny * Math.sin(a), dy = nx * Math.sin(a) + ny * Math.cos(a);
+          ctx.beginPath();
+          ctx.moveTo(x + tx * 2, y + ty * 2); ctx.lineTo(x + dx * len, y + dy * len); ctx.lineTo(x - tx * 2, y - ty * 2);
+          ctx.closePath(); ctx.fill();
+        } else if(style === 'long') {
+          // Longer, drooping strands on the lower half; short ones above
+          const low = y > 70, len = low ? 7 + r * 6 : 3 + r * 2;
+          let dx = nx * 0.7, dy = ny * 0.7 + (low ? 0.75 : 0);
+          const m = Math.hypot(dx, dy); dx /= m; dy /= m;
+          ctx.beginPath();
+          ctx.moveTo(x + tx * 2.4, y + ty * 2.4);
+          ctx.quadraticCurveTo(x + dx * len * 0.6 + tx, y + dy * len * 0.6 + ty, x + dx * len, y + dy * len);
+          ctx.lineTo(x - tx * 2.4, y - ty * 2.4);
+          ctx.closePath(); ctx.fill();
+        } else if(style === 'curly' && i % 2 === 0) {
+          ctx.beginPath(); ctx.arc(x + nx * 1.6, y + ny * 1.6, 2.8, 0, Math.PI * 2); ctx.fill();
+          ctx.lineWidth = 1.1; ctx.globalAlpha = 0.55;
+          ctx.beginPath(); ctx.arc(x + nx * 1.6, y + ny * 1.6, 1.6, r * 6, r * 6 + Math.PI * 1.5); ctx.stroke();
+          ctx.globalAlpha = 1;
+        }
+      });
+      ctx.restore();
+    }
+
+    // Fur pattern inside the body outline. g.spots / g.stripe / g.band are per view.
+    function drawSpiritPattern(ctx, g, bodyPath, furDark, cream) {
+      const pat = spiritStyle.pattern;
+      if(!pat || pat === 'plain') return;
+      ctx.save();
+      bodyPath();
+      ctx.clip();
+      if(pat === 'spots') {
+        ctx.fillStyle = ['chocolate', 'black'].includes(spiritStyle.fur) ? cream : mixHexToHex(furDark, '#000000', 0.1);
+        g.spots.forEach(([x, y, rx, ry]) => { ctx.beginPath(); ctx.ellipse(x, y, rx, ry, 0.3, 0, Math.PI * 2); ctx.fill(); });
+      } else if(pat === 'stripe') {
+        ctx.strokeStyle = mixHexToHex(furDark, '#000000', 0.15); ctx.lineWidth = g.stripeWidth; ctx.lineCap = 'round';
+        ctx.beginPath();
+        g.stripe.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y));
+        ctx.stroke();
+      } else if(pat === 'banded') {
+        const [x, y, w, h] = g.band;
+        ctx.fillStyle = cream;
+        ctx.fillRect(x, y, w, h);
+      }
+      ctx.restore();
+    }
+
+    // What he holds in his paws (front view); while eating it is the meal, shrinking bite by bite
+    function drawSpiritHeld(ctx, x, y) {
+      let item = spiritStyle.held || 'seed', k = 1;
+      const meal = spiritEatState();
+      if(meal) { item = meal.food; k = Math.max(0.15, 1 - meal.p * 0.9); y -= 4 + Math.abs(Math.sin(performance.now() / 90)) * 2; }
+      const oval = (cx, cy, rx, ry, c, rot = 0) => { ctx.fillStyle = c; ctx.beginPath(); ctx.ellipse(cx, cy, rx, ry, rot, 0, Math.PI * 2); ctx.fill(); };
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(k, k);
+      if(item === 'strawberry') {
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath(); ctx.moveTo(0, 8); ctx.bezierCurveTo(-8, 2, -6, -6, 0, -5); ctx.bezierCurveTo(6, -6, 8, 2, 0, 8); ctx.fill();
+        ctx.fillStyle = '#fde68a';
+        [[-2, -1], [2, 0], [0, 3], [-3, 3], [3, 4]].forEach(([dx, dy]) => { ctx.beginPath(); ctx.arc(dx, dy, 0.6, 0, Math.PI * 2); ctx.fill(); });
+        ctx.fillStyle = '#22c55e';
+        [-1, 0, 1].forEach(s => oval(s * 2.5, -6, 2.5, 1.3, '#22c55e', s * 0.6));
+      } else if(item === 'acorn') {
+        oval(0, 2, 4.5, 6, '#b7793a');
+        oval(0, -4, 5.5, 3, '#6b4423');
+        ctx.strokeStyle = '#6b4423'; ctx.lineWidth = 1.2;
+        ctx.beginPath(); ctx.moveTo(0, -6.5); ctx.lineTo(1, -9); ctx.stroke();
+      } else if(item === 'heart') {
+        ctx.fillStyle = '#f472b6';
+        ctx.beginPath(); ctx.moveTo(0, 6); ctx.bezierCurveTo(-9, -1, -4, -9, 0, -3); ctx.bezierCurveTo(4, -9, 9, -1, 0, 6); ctx.fill();
+      } else if(item === 'flower') {
+        ctx.strokeStyle = '#3f8f4a'; ctx.lineWidth = 1.2;
+        ctx.beginPath(); ctx.moveTo(0, 8); ctx.lineTo(0, -2); ctx.stroke();
+        const petal = '#f9a8d4';
+        for(let i = 0; i < 5; i++) { const a = i / 5 * Math.PI * 2; oval(Math.cos(a) * 3, -5 + Math.sin(a) * 3, 2.6, 1.8, petal, a); }
+        oval(0, -5, 1.6, 1.6, '#fbbf24');
+      } else if(item === 'carrot') {
+        ctx.fillStyle = '#f97316';
+        ctx.beginPath(); ctx.moveTo(-3.5, -4); ctx.lineTo(3.5, -4); ctx.lineTo(0, 9); ctx.closePath(); ctx.fill();
+        [-1, 0, 1].forEach(s => oval(s * 2, -6.5, 1.2, 3, '#22c55e', s * 0.4));
+      } else {
+        oval(0, 0, 4.5, 8, '#3d3226', 0.15);
+        ctx.strokeStyle = '#d8cbb0';
+        ctx.lineWidth = 0.9;
+        ctx.beginPath();
+        ctx.moveTo(-0.8, -7);
+        ctx.lineTo(1, 7);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
 
     // Drawn on top of either view. g = geometry of that view (eyes, cheeks, marks).
     function drawSpiritOni(ctx, g) {
@@ -3363,6 +3910,14 @@
             ctx.fill();
           });
         }
+        if(oni === 'angry' && g.steam) {
+          // Little puffs of steam rising from his ears
+          g.steam.forEach(([x, y, s], j) => [0, 1, 2].forEach(i => {
+            const k = ((now / 1100) + i / 3 + j * 0.17) % 1;
+            ctx.fillStyle = `rgba(235, 235, 240, ${0.7 * (1 - k)})`;
+            ctx.beginPath(); ctx.arc(x + s * k * 8, y - k * 16, 2 + k * 3, 0, Math.PI * 2); ctx.fill();
+          }));
+        }
         if(oni === 'angry') {
           // Flushed, puffed cheeks and an anger mark
           g.cheeks.forEach(([x, y]) => oval(x, y, 8, 5.5, 'rgba(255, 70, 70, 0.45)'));
@@ -3412,26 +3967,46 @@
       }
       if(navigator.vibrate) { try { navigator.vibrate([20, 40, 20]); } catch(e) {} }
     }
-    // One seed a day (petting is unlimited)
-    function seedGivenToday() { return localStorage.getItem('aq_seed_day') === dayKey(new Date()); }
+    // Feed: as often as you like. He stops, faces you and munches a snack. Just for fun, no effect on his stats.
+    const SPIRIT_SNACKS = ['seed', 'strawberry', 'acorn', 'carrot'];
+    let spiritEat = null, spiritCrumbs = [];
+    function spiritEatState() {
+      if(!spiritEat) return null;
+      const p = (performance.now() - spiritEat.start) / spiritEat.dur;
+      if(p >= 1) { spiritEat = null; careForHamster(); return null; }
+      return { food: spiritEat.food, p };
+    }
     function feedHamster() {
-      if(seedGivenToday()) return;
-      localStorage.setItem('aq_seed_day', dayKey(new Date()));
-      renderFeedButton();
-      // He stops, turns to you and nibbles the seed
+      if(spiritEat) return;
+      callSpiritOut();
+      hamsterWalk.toHouse = false;
+      spiritEat = { start: performance.now(), dur: 2800, food: SPIRIT_SNACKS[Math.floor(Math.random() * SPIRIT_SNACKS.length)] };
       hamsterWalk.walking = false;
       hamsterWalk.facing = 'front';
-      hamsterWalk.until = performance.now() + 2500;
-      careForHamster();
+      hamsterWalk.until = performance.now() + 4000;
+      if(reduceMotion) { drawHamster(); setTimeout(() => { spiritEatState(); drawHamster(); }, 2900); }
     }
     function renderFeedButton() {
       const btn = document.getElementById('feed-btn');
-      if(!btn) return;
-      // Hidden once today's seed is given; it comes back tomorrow
-      btn.innerText = `🌻 Give ${hamsterName} a seed`;
-      btn.style.display = seedGivenToday() ? 'none' : '';
+      if(btn) btn.innerText = 'Feed';
+    }
+    function drawSpiritCrumbs() {
+      const c = document.getElementById('hamster-canvas');
+      const ctx = c.getContext('2d');
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      if(spiritEatState() && Math.random() < 0.2) {
+        const S = 0.85 * (SPIRIT_SIZE[spiritStyle.size] || 1);
+        spiritCrumbs.push({ x: hamsterWalk.x + (Math.random() - 0.5) * 12, y: 141 - 64 * S, vx: (Math.random() - 0.5) * 1.2, vy: -0.6 - Math.random() * 0.6 });
+      }
+      ctx.fillStyle = '#c8a46a';
+      spiritCrumbs.forEach(cr => {
+        cr.vy += 0.12; cr.x += cr.vx; cr.y = Math.min(141, cr.y + cr.vy);
+        ctx.fillRect(cr.x, cr.y, 1.6, 1.6);
+      });
+      spiritCrumbs = spiritCrumbs.filter(cr => cr.y < 141);
     }
     function drawHearts() {
+      drawSpiritCrumbs();
       if(!hamsterHearts.length) return;
       const ctx = document.getElementById('hamster-canvas').getContext('2d');
       ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -3449,6 +4024,124 @@
       hamsterHearts = hamsterHearts.filter(h => h.life > 0);
     }
 
+    // After a full Honeycomb session: two happy hops and hearts
+    function spiritCheer() {
+      if(!localStorage.getItem('aq_spirit_cheer')) return;
+      localStorage.removeItem('aq_spirit_cheer');
+      [400, 1150].forEach(ms => setTimeout(() => { hamsterJumpStart = performance.now(); }, ms));
+      setTimeout(careForHamster, 1150);
+    }
+
+    // His little house on the right. He wanders in now and then; tap it to call him in or out.
+    const HOUSE = { x: 222, w: 90, door: 267 };
+    const spiritHome = { inside: false, until: 0, anim: null }; // anim: squeezing in or out of the door
+    const SPIRIT_DOOR_MS = 800;
+    function spiritHouseHit(e) {
+      const c = document.getElementById('hamster-canvas');
+      const r = c.getBoundingClientRect();
+      const x = (e.clientX - r.left) * c.width / r.width, y = (e.clientY - r.top) * c.height / r.height;
+      return spiritStyle.house !== false && x >= HOUSE.x - 4 && y >= 44;
+    }
+    function spiritHouseTap() {
+      const w = hamsterWalk;
+      if(spiritHome.anim || spiritTrick || spiritEat) return;
+      if(spiritHome.inside) { spiritHome.until = 0; return; }
+      w.toHouse = true; // handled before moods and comfort mode, so a tap always sends him in
+    }
+    function leaveHouse() {
+      spiritHome.inside = false;
+      const w = hamsterWalk;
+      w.x = HOUSE.door; w.dir = -1; w.walking = false; w.facing = 'side'; w.toHouse = false;
+      w.target = 80 + Math.random() * 100;
+      spiritHome.anim = { kind: 'out', start: performance.now() };
+    }
+    // Feeding or a trick brings him straight out, in front of the house
+    function callSpiritOut() {
+      if(!spiritHome.inside && !spiritHome.anim) return;
+      spiritHome.inside = false; spiritHome.anim = null;
+      hamsterWalk.x = HOUSE.door; hamsterWalk.toHouse = false;
+    }
+    // Tricks: chasing his own tail, a backflip, a roll and a spin. Just for fun, no effect on his stats.
+    const SPIRIT_TRICKS = { chase: 2400, flip: 900, roll: 1300, spin: 1000 };
+    let spiritTrick = null, spiritDizzyUntil = 0;
+    function spiritDoTrick(kind) {
+      if(spiritTrick || spiritEat || reduceMotion) return;
+      const w = hamsterWalk;
+      if(hamsterMood === 'stressed') { hamsterJumpStart = performance.now(); return; } // too worn out, just a small hop
+      callSpiritOut();
+      const kinds = Object.keys(SPIRIT_TRICKS);
+      kind = kind || kinds[Math.floor(Math.random() * kinds.length)];
+      if(kind === 'roll' && w.x > 320 - 100) kind = 'flip'; // no room to roll right
+      w.toHouse = false;
+      w.walking = false;
+      spiritTrick = { kind, start: performance.now(), dur: SPIRIT_TRICKS[kind], baseX: w.x };
+    }
+    function spiritTrickState() {
+      if(!spiritTrick) return null;
+      const p = (performance.now() - spiritTrick.start) / spiritTrick.dur;
+      if(p < 1) return { kind: spiritTrick.kind, p };
+      const w = hamsterWalk;
+      if(spiritTrick.kind === 'chase') { w.x = spiritTrick.baseX; spiritDizzyUntil = performance.now() + 1700; }
+      w.walking = false; w.facing = 'front'; w.dir = -1; w.until = performance.now() + 2500;
+      spiritTrick = null;
+      return null;
+    }
+    // Drawn last, in canvas coordinates: dizzy stars after a tail chase
+    function drawSpiritOverlay(ctx, now, S) {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      if(performance.now() < spiritDizzyUntil) {
+        const hy = 141 - 120 * S, t = performance.now() / 260;
+        ctx.fillStyle = '#fde047';
+        for(let i = 0; i < 3; i++) {
+          const a = t + i * Math.PI * 2 / 3, x = hamsterWalk.x + Math.cos(a) * 15, y = hy + Math.sin(a) * 4;
+          ctx.beginPath();
+          for(let k = 0; k < 10; k++) {
+            const r = k % 2 ? 1.4 : 3.4, b = k / 10 * Math.PI * 2 - Math.PI / 2;
+            k ? ctx.lineTo(x + Math.cos(b) * r, y + Math.sin(b) * r) : ctx.moveTo(x + Math.cos(b) * r, y + Math.sin(b) * r);
+          }
+          ctx.closePath(); ctx.fill();
+        }
+      }
+    }
+
+    function drawSpiritHouse(ctx, now) {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      if(spiritStyle.house === false) return;
+      const { x, w } = HOUSE, base = 141, top = 80, mid = x + w / 2;
+      const lit = spiritHome.inside || !spiritIsDay();
+      ctx.save();
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+      ctx.beginPath(); ctx.ellipse(mid, base + 2, w / 2 + 6, 4, 0, 0, Math.PI * 2); ctx.fill();
+      // Walls with planks
+      ctx.fillStyle = '#c98b5a';
+      ctx.fillRect(x, top, w, base - top);
+      ctx.strokeStyle = 'rgba(110, 65, 35, 0.45)'; ctx.lineWidth = 1;
+      ctx.beginPath();
+      for(let y = top + 8; y < base; y += 8) { ctx.moveTo(x, y); ctx.lineTo(x + w, y); }
+      ctx.stroke();
+      // Roof
+      ctx.fillStyle = '#9b4a3a';
+      ctx.beginPath(); ctx.moveTo(x - 8, top + 2); ctx.lineTo(mid, top - 30); ctx.lineTo(x + w + 8, top + 2); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = '#6e3026'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(x - 8, top + 2); ctx.lineTo(mid, top - 30); ctx.lineTo(x + w + 8, top + 2); ctx.stroke();
+      // Round window in the gable, warm when he's home or at night
+      ctx.fillStyle = lit ? '#fde68a' : '#9cc9e8';
+      if(lit) { ctx.shadowColor = 'rgba(253, 230, 138, 0.9)'; ctx.shadowBlur = 8; }
+      ctx.beginPath(); ctx.arc(mid, top - 11, 6, 0, Math.PI * 2); ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = '#6e3026'; ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.arc(mid, top - 11, 6, 0, Math.PI * 2); ctx.moveTo(mid - 6, top - 11); ctx.lineTo(mid + 6, top - 11); ctx.stroke();
+      // Arched door
+      ctx.fillStyle = '#3b2618';
+      ctx.beginPath(); ctx.moveTo(mid - 20, base); ctx.lineTo(mid - 20, base - 24); ctx.arc(mid, base - 24, 20, Math.PI, 0); ctx.lineTo(mid + 20, base); ctx.closePath(); ctx.fill();
+      // Two eyes peeking out of the dark when he's inside
+      if(spiritHome.inside && (now % 4000) > 150) {
+        ctx.fillStyle = '#fff6e0';
+        [-5, 5].forEach(d => { ctx.beginPath(); ctx.arc(mid + d, base - 22, 2, 0, Math.PI * 2); ctx.fill(); });
+      }
+      ctx.restore();
+    }
+
     const hamsterWalk = { x: 200, dir: -1, walking: false, target: 200, until: 0, phase: 0, facing: 'front', turnAt: 0 };
     let hamsterJumpStart = -1;
 
@@ -3461,11 +4154,14 @@
       let petTimer = null;
       const stopPet = () => { clearTimeout(petTimer); petTimer = null; };
       ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => c.addEventListener(ev, stopPet));
-      c.addEventListener('pointerdown', () => {
+      c.addEventListener('pointerdown', e => {
         stopPet();
+        if(spiritHouseHit(e)) return;
         petTimer = setTimeout(careForHamster, 600);
       });
-      c.addEventListener('pointerdown', () => {
+      c.addEventListener('pointerdown', e => {
+        if(spiritHouseHit(e)) { spiritHouseTap(); return; }
+        if(spiritHome.inside) return;
         const now = performance.now();
         if(hamsterJumpStart >= 0 && now - hamsterJumpStart < 650) return; // already in the air
         hamsterJumpStart = now;
@@ -3476,9 +4172,55 @@
 
     function updateHamsterWalk(now, width, mood) {
       const w = hamsterWalk;
-      if(reduceMotion || mood === 'recovering') { w.walking = false; w.dir = -1; w.facing = 'front'; return; }
+      const hasHouse = spiritStyle.house !== false;
+      if(!hasHouse && (spiritHome.inside || spiritHome.anim)) { spiritHome.inside = false; spiritHome.anim = null; } // house switched off
+      if(spiritHome.anim) {
+        // Squeezing through the door: stay put until it's done
+        w.walking = false; w.facing = 'side';
+        if(now - spiritHome.anim.start >= SPIRIT_DOOR_MS) {
+          if(spiritHome.anim.kind === 'in') { spiritHome.inside = true; spiritHome.until = now + 6000 + Math.random() * 7000; }
+          else { w.walking = true; w.dir = -1; }
+          spiritHome.anim = null;
+        }
+        return;
+      }
+      if(spiritHome.inside) {
+        if(now > spiritHome.until && !reduceMotion) leaveHouse();
+        return;
+      }
+      const trick = spiritTrickState();
+      if(trick) {
+        if(trick.kind === 'chase') {
+          // Running in a tight little circle after his tail
+          const a = trick.p * Math.PI * 2 * 4;
+          w.x = spiritTrick.baseX + Math.sin(a) * 14;
+          w.dir = Math.cos(a) > 0 ? 1 : -1;
+          w.walking = true; w.facing = 'side';
+          w.phase += 0.55;
+        } else if(trick.kind === 'roll') {
+          w.x = spiritTrick.baseX + trick.p * 44;
+          w.dir = 1; w.walking = false; w.facing = 'side';
+        } else {
+          w.walking = false; w.facing = 'front';
+        }
+        return;
+      }
+      // Heading home: walk to the door, then squeeze in (takes priority over moods, so a tap on the house always works)
+      if(w.toHouse && hasHouse && !reduceMotion && !spiritEat) {
+        w.facing = 'side';
+        w.dir = HOUSE.door >= w.x ? 1 : -1;
+        const step = 0.8 * (SPIRIT_PACE[spiritStyle.pace] || 1);
+        if(Math.abs(HOUSE.door - w.x) <= step) {
+          w.x = HOUSE.door; w.walking = false; w.toHouse = false; w.dir = 1;
+          spiritHome.anim = { kind: 'in', start: now };
+        } else {
+          w.walking = true; w.x += w.dir * step; w.phase += step * 0.22;
+        }
+        return;
+      }
+      if(reduceMotion || mood === 'recovering' || spiritEat) { w.walking = false; w.dir = -1; w.facing = 'front'; return; }
       const oni = todaysOni();
-      const oniSpeed = oni === 'happy' ? 1.3 : (oni === 'sad' || oni === 'numb') ? 0.6 : 1;
+      const oniSpeed = (oni === 'happy' ? 1.3 : (oni === 'sad' || oni === 'numb') ? 0.6 : 1) * (SPIRIT_PACE[spiritStyle.pace] || 1);
       if(HARD_ONI.includes(oni)) {
         // Comfort mode: he comes to the middle, faces you and stays close
         const mid = width / 2;
@@ -3496,10 +4238,13 @@
         }
         return;
       }
+      if(!w.walking && w.facing === 'front' && !reduceMotion && (mood === 'calm' || mood === 'thriving') &&
+         Math.random() < (mood === 'thriving' ? 1 / 1500 : 1 / 3000)) { spiritDoTrick(); return; }
       if(!w.walking && w.facing === 'left' && now > w.turnAt) w.facing = 'front';
       if(!w.walking && now > w.until) {
         let target;
-        do { target = 60 + Math.random() * (width - 120); } while(Math.abs(target - w.x) < 50);
+        if(hasHouse && Math.random() < 0.25) { w.toHouse = true; return; }
+        do { target = 50 + Math.random() * ((hasHouse ? HOUSE.x : width) - 110); } while(Math.abs(target - w.x) < 50);
         w.target = target;
         w.dir = target > w.x ? 1 : -1;
         w.walking = true;
@@ -3519,6 +4264,190 @@
       }
     }
 
+    const fract = x => x - Math.floor(x);
+    const rand01 = (i, k) => fract(Math.sin(i * 12.9898 + k * 78.233) * 43758.5453);
+
+    // Real weather behind him: sun or moon and stars, clouds, rain, snow, fog, lightning
+    function drawSpiritWeather(ctx, now, w, h) {
+      const wx = spiritWeatherNow();
+      const code = wx ? wx.code : 0, cloud = wx ? wx.cloud : 20, wind = wx ? Math.min(40, wx.wind || 5) : 5;
+      const day = spiritIsDay(), t = now / 1000;
+      if(!day && cloud < 75) {
+        for(let i = 0; i < 22; i++) {
+          ctx.fillStyle = `rgba(255, 255, 255, ${0.35 + 0.4 * Math.max(0, Math.sin(t * 1.5 + i * 2))})`;
+          ctx.fillRect(rand01(i, 1) * w, rand01(i, 2) * h * 0.55, 1.3, 1.3);
+        }
+        ctx.fillStyle = 'rgba(240, 240, 220, 0.85)';
+        ctx.beginPath(); ctx.arc(w - 34, 24, 9, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = 'rgba(15, 22, 50, 0.9)';
+        ctx.beginPath(); ctx.arc(w - 30, 21, 8, 0, Math.PI * 2); ctx.fill();
+      }
+      if(day && code <= 2) {
+        const g = ctx.createRadialGradient(w - 36, 24, 2, w - 36, 24, 34);
+        g.addColorStop(0, 'rgba(255, 245, 200, 0.95)'); g.addColorStop(0.3, 'rgba(255, 220, 120, 0.5)'); g.addColorStop(1, 'rgba(255, 220, 120, 0)');
+        ctx.fillStyle = g;
+        ctx.beginPath(); ctx.arc(w - 36, 24, 34, 0, Math.PI * 2); ctx.fill();
+      }
+      const storm = code >= 95, wet = isRain(code);
+      const nClouds = Math.round(cloud / 100 * 5);
+      const cloudCol = storm ? 'rgba(70, 75, 90, 0.85)' : wet ? 'rgba(150, 160, 175, 0.75)' : day ? 'rgba(255, 255, 255, 0.8)' : 'rgba(170, 180, 205, 0.3)';
+      ctx.fillStyle = cloudCol;
+      for(let i = 0; i < nClouds; i++) {
+        const span = w + 120;
+        const x = fract(rand01(i, 3) + t * (0.004 + wind * 0.0006) * (0.7 + rand01(i, 4) * 0.6)) * span - 60;
+        const y = 12 + rand01(i, 5) * 34, sc = 0.7 + rand01(i, 6) * 0.6;
+        [[0, 0, 16], [14, 4, 12], [-14, 5, 11], [6, -6, 11]].forEach(([dx, dy, r]) => {
+          ctx.beginPath(); ctx.arc(x + dx * sc, y + dy * sc, r * sc, 0, Math.PI * 2); ctx.fill();
+        });
+      }
+      if(code === 45 || code === 48) {
+        for(let i = 0; i < 3; i++) {
+          ctx.fillStyle = 'rgba(220, 225, 235, 0.18)';
+          const y = 70 + i * 22 + Math.sin(t * 0.4 + i) * 4;
+          ctx.fillRect(0, y, w, 12);
+        }
+      }
+      if(wet) {
+        const n = code === 51 || code === 61 || code === 80 ? 28 : code === 65 || code === 82 || storm ? 90 : 55;
+        const slant = 2 + wind * 0.12;
+        ctx.strokeStyle = day ? 'rgba(200, 225, 255, 0.6)' : 'rgba(170, 200, 240, 0.45)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        for(let i = 0; i < n; i++) {
+          const y = fract(rand01(i, 7) + t * (0.9 + rand01(i, 8) * 0.4)) * (h + 20) - 10;
+          const x = fract(rand01(i, 9) + y / h * slant / w * 10) * w;
+          ctx.moveTo(x, y); ctx.lineTo(x - slant, y + 8);
+        }
+        ctx.stroke();
+      }
+      if(isSnow(code)) {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        for(let i = 0; i < 45; i++) {
+          const y = fract(rand01(i, 10) + t * (0.08 + rand01(i, 11) * 0.06)) * h;
+          const x = fract(rand01(i, 12) + Math.sin(t + i) * 0.01) * w;
+          ctx.beginPath(); ctx.arc(x, y, 1 + rand01(i, 13) * 1.4, 0, Math.PI * 2); ctx.fill();
+        }
+      }
+      if(storm && now % 6000 < 110) {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+        ctx.fillRect(0, 0, w, h);
+      }
+    }
+
+    // The ground he walks on, matching the backdrop (and the real weather: grass, puddles or snow)
+    function drawSpiritGround(ctx, w, h) {
+      const bd = spiritStyle.backdrop || 'weather';
+      const wx = bd === 'weather' ? spiritWeatherNow() : null;
+      const code = wx ? wx.code : 0;
+      const day = spiritIsDay();
+      const snowy = bd === 'weather' && isSnow(code);
+      const kind = snowy ? 'snow' : { ocean: 'sand', sunset: 'dune', cozy: 'wood', lavender: 'lavender' }[bd] || 'grass';
+      const night = bd === 'night' || (bd === 'weather' && !day);
+      const top = 129;
+      const fill = {
+        grass: night ? ['#1f3a2a', '#14261c'] : ['#5f9e4a', '#3f7434'],
+        lavender: ['#6a5a8e', '#4a3d6a'],
+        sand: ['#e2c992', '#c9a96e'],
+        dune: ['#a0624a', '#6e3f34'],
+        wood: ['#8a5a36', '#6b4428'],
+        snow: night ? ['#c9d4e6', '#a9b6cc'] : ['#f4f8ff', '#dce6f2']
+      }[kind];
+      const g = ctx.createLinearGradient(0, top, 0, h);
+      g.addColorStop(0, fill[0]); g.addColorStop(1, fill[1]);
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.moveTo(0, h);
+      ctx.lineTo(0, top + 2);
+      ctx.quadraticCurveTo(w * 0.25, top - 2, w * 0.5, top + 1);
+      ctx.quadraticCurveTo(w * 0.75, top + 4, w, top);
+      ctx.lineTo(w, h);
+      ctx.closePath();
+      ctx.fill();
+      if(kind === 'grass' || kind === 'lavender') {
+        ctx.strokeStyle = kind === 'grass' ? (night ? 'rgba(90, 140, 100, 0.6)' : 'rgba(150, 210, 110, 0.8)') : 'rgba(170, 150, 220, 0.8)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        for(let i = 0; i < 46; i++) {
+          const x = rand01(i, 30) * w, y = top + 2 + rand01(i, 31) * 3;
+          ctx.moveTo(x, y + 3); ctx.lineTo(x - 1.5, y - 2);
+          ctx.moveTo(x + 2, y + 3); ctx.lineTo(x + 3, y - 1);
+        }
+        ctx.stroke();
+        if(kind === 'lavender') {
+          ctx.fillStyle = '#c4a8f0';
+          for(let i = 0; i < 14; i++) { ctx.beginPath(); ctx.arc(rand01(i, 32) * w, top - 1 + rand01(i, 33) * 4, 1.6, 0, Math.PI * 2); ctx.fill(); }
+        } else if(!night) {
+          ['#fde68a', '#fbcfe8', '#ffffff'].forEach((c, k) => {
+            ctx.fillStyle = c;
+            for(let i = 0; i < 3; i++) { ctx.beginPath(); ctx.arc(rand01(i + k * 5, 34) * w, top + 4 + rand01(i + k * 5, 35) * 7, 1.3, 0, Math.PI * 2); ctx.fill(); }
+          });
+        }
+      } else if(kind === 'sand' || kind === 'dune') {
+        ctx.fillStyle = kind === 'sand' ? 'rgba(150, 115, 60, 0.35)' : 'rgba(60, 25, 20, 0.35)';
+        for(let i = 0; i < 40; i++) ctx.fillRect(rand01(i, 36) * w, top + 3 + rand01(i, 37) * (h - top - 3), 1.2, 1.2);
+        if(kind === 'sand') {
+          ctx.fillStyle = '#f8f1e4';
+          ctx.beginPath(); ctx.ellipse(w * 0.8, top + 8, 3, 2, 0.4, 0, Math.PI * 2); ctx.fill();
+        }
+      } else if(kind === 'wood') {
+        ctx.strokeStyle = 'rgba(50, 30, 15, 0.45)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        [top + 5, top + 10].forEach(y => { ctx.moveTo(0, y); ctx.lineTo(w, y); });
+        for(let i = 0; i < 8; i++) { const x = (i * 47 + (i % 2) * 20) % w; ctx.moveTo(x, top + (i % 2 ? 5 : 10)); ctx.lineTo(x, top + (i % 2 ? 10 : 15)); }
+        ctx.stroke();
+        ctx.fillStyle = 'rgba(160, 60, 70, 0.55)';
+        ctx.beginPath(); ctx.ellipse(w / 2, top + 9, 70, 4.5, 0, 0, Math.PI * 2); ctx.fill();
+      } else if(kind === 'snow') {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        for(let i = 0; i < 6; i++) { ctx.beginPath(); ctx.ellipse(rand01(i, 38) * w, top + 1, 14, 3, 0, 0, Math.PI * 2); ctx.fill(); }
+      }
+      if(bd === 'weather' && isRain(code)) {
+        ctx.fillStyle = 'rgba(180, 210, 240, 0.35)';
+        ctx.beginPath(); ctx.ellipse(w * 0.3, top + 9, 30, 2.5, 0, 0, Math.PI * 2); ctx.ellipse(w * 0.78, top + 11, 22, 2, 0, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+
+    // Ambient effect chosen in Settings, drawn behind him
+    function drawSpiritAmbient(ctx, now, w, h) {
+      const kind = spiritStyle.effect;
+      if(!kind || kind === 'none') return;
+      const t = now / 1000;
+      for(let i = 0; i < 14; i++) {
+        const a = rand01(i, 20), b = rand01(i, 21);
+        if(kind === 'sparkles') {
+          const sz = 1 + 2.2 * Math.max(0, Math.sin(t * 2 + i * 1.7));
+          ctx.fillStyle = 'rgba(255, 240, 180, 0.9)';
+          ctx.beginPath(); ctx.moveTo(a * w, b * h - sz); ctx.lineTo(a * w + sz * 0.3, b * h); ctx.lineTo(a * w, b * h + sz); ctx.lineTo(a * w - sz * 0.3, b * h); ctx.fill();
+          ctx.beginPath(); ctx.moveTo(a * w - sz, b * h); ctx.lineTo(a * w, b * h + sz * 0.3); ctx.lineTo(a * w + sz, b * h); ctx.lineTo(a * w, b * h - sz * 0.3); ctx.fill();
+        } else if(kind === 'hearts' || kind === 'bubbles') {
+          const k = fract(b + t * 0.07);
+          const x = a * w + Math.sin(t + i) * 6, y = h - k * (h + 10);
+          ctx.globalAlpha = Math.sin(k * Math.PI) * 0.7;
+          if(kind === 'hearts') {
+            ctx.fillStyle = '#f9a8d4';
+            ctx.beginPath(); ctx.moveTo(x, y + 3); ctx.bezierCurveTo(x - 5, y - 1, x - 2, y - 5, x, y - 2); ctx.bezierCurveTo(x + 2, y - 5, x + 5, y - 1, x, y + 3); ctx.fill();
+          } else {
+            ctx.strokeStyle = 'rgba(190, 235, 255, 0.9)'; ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.arc(x, y, 2 + rand01(i, 22) * 3, 0, Math.PI * 2); ctx.stroke();
+          }
+          ctx.globalAlpha = 1;
+        } else if(kind === 'fireflies') {
+          const x = a * w + Math.sin(t * 0.7 + i) * 18, y = 20 + b * (h - 40) + Math.cos(t * 0.5 + i * 2) * 10;
+          const glow = 0.3 + 0.7 * Math.max(0, Math.sin(t * 1.3 + i * 2.1));
+          ctx.fillStyle = `rgba(250, 240, 140, ${glow * 0.25})`;
+          ctx.beginPath(); ctx.arc(x, y, 5, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = `rgba(255, 250, 190, ${glow})`;
+          ctx.beginPath(); ctx.arc(x, y, 1.5, 0, Math.PI * 2); ctx.fill();
+        } else if(kind === 'snow') {
+          const y = fract(b + t * 0.06) * h, x = a * w + Math.sin(t + i) * 8;
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+          ctx.beginPath(); ctx.arc(x, y, 1.6, 0, Math.PI * 2); ctx.fill();
+        }
+      }
+    }
+
+    let spiritLastHop = 0, spiritBackdropAt = 0;
     function drawHamster() {
       const hCanvas = document.getElementById('hamster-canvas');
       if(!hCanvas) return;
@@ -3544,13 +4473,86 @@
       const jumpY = jumpT < 1 ? -Math.sin(jumpT * Math.PI) * jumpH : 0;
       const jumpK = jumpT < 1 ? Math.sin(jumpT * Math.PI) : 0;
 
-      const S = 0.85;
+      const S = 0.85 * (SPIRIT_SIZE[spiritStyle.size] || 1);
+      if(spiritStyle.backdrop === 'weather') drawSpiritWeather(ctx, now, hCanvas.width, hCanvas.height);
+      drawSpiritGround(ctx, hCanvas.width, hCanvas.height);
+      drawSpiritAmbient(ctx, now, hCanvas.width, hCanvas.height);
+      drawSpiritHouse(ctx, now);
+      if(spiritHome.inside) return;
+      // Keep the backdrop in step with sunset, sunrise and new weather while you watch
+      if(performance.now() - spiritBackdropAt > 60000) { spiritBackdropAt = performance.now(); applySpiritBackdrop(); }
+
+      // Soft glow behind him in the colour of the oni you picked
+      const oniNow = todaysOni();
+      if(oniNow && !zombie) {
+        const gy = 141 - 55 * S + jumpY, pulse = 0.28 + 0.08 * Math.sin(now / 900);
+        const glow = ctx.createRadialGradient(hamsterWalk.x, gy, 4, hamsterWalk.x, gy, 72 * S);
+        glow.addColorStop(0, `rgba(${ONI_STYLES[oniNow].glow}, ${pulse})`);
+        glow.addColorStop(1, `rgba(${ONI_STYLES[oniNow].glow}, 0)`);
+        ctx.fillStyle = glow;
+        ctx.beginPath(); ctx.arc(hamsterWalk.x, gy, 72 * S, 0, Math.PI * 2); ctx.fill();
+      }
+      // Happy: little hops of joy every few seconds while he stands with you
+      if(oniNow === 'happy' && !walking && !spiritEat && mood !== 'stressed' && mood !== 'recovering' && !reduceMotion &&
+         performance.now() - Math.max(hamsterJumpStart, spiritLastHop) > 3400) {
+        hamsterJumpStart = spiritLastHop = performance.now();
+      }
+
+      ctx.save(); // trick and door transforms below, undone before the overlay
+      if(spiritHome.anim) {
+        // Squeezing through the door: he shrinks into (or out of) the dark doorway, clipped to its arch near the end
+        const k = Math.min(1, (performance.now() - spiritHome.anim.start) / SPIRIT_DOOR_MS);
+        const e = spiritHome.anim.kind === 'in' ? k : 1 - k;
+        const mid = HOUSE.x + HOUSE.w / 2;
+        if(e > 0.35) {
+          ctx.beginPath(); ctx.moveTo(mid - 20, 141); ctx.lineTo(mid - 20, 117); ctx.arc(mid, 117, 20, Math.PI, 0); ctx.lineTo(mid + 20, 141); ctx.closePath();
+          ctx.clip();
+        }
+        ctx.globalAlpha = 1 - 0.8 * e;
+        ctx.translate(mid, 141);
+        ctx.scale(1 - 0.6 * e, 1 - 0.6 * e);
+        ctx.translate(-mid, -141);
+        // Going in you see his back; coming out he faces you
+        ctx.save();
+        ctx.translate(hamsterWalk.x - 80 * S, 141 - 141 * S);
+        ctx.scale(S, S);
+        if(spiritHome.anim.kind === 'in') drawHamsterBack(ctx);
+        else drawHamsterCrawlFront(ctx);
+        ctx.restore();
+        ctx.restore();
+        drawSpiritOverlay(ctx, now, S);
+        return;
+      }
+      const tr = spiritTrickState();
+      if(tr) {
+        const px = hamsterWalk.x, py = 141 - 60 * S;
+        if(tr.kind === 'flip') {
+          // Up, a full backward somersault, and down
+          ctx.translate(px, py - Math.sin(tr.p * Math.PI) * 42);
+          ctx.rotate(-tr.p * Math.PI * 2);
+          ctx.translate(-px, -py);
+        } else if(tr.kind === 'roll') {
+          const ry = 141 - 42 * S;
+          ctx.translate(px, ry);
+          ctx.rotate(tr.p * Math.PI * 2);
+          ctx.translate(-px, -ry);
+        } else if(tr.kind === 'spin') {
+          // A pirouette: two full turns with a little hop
+          const sx = Math.cos(tr.p * Math.PI * 4);
+          ctx.translate(px, -Math.sin(tr.p * Math.PI) * 10);
+          ctx.scale(Math.sign(sx || 1) * Math.max(0.12, Math.abs(sx)), 1);
+          ctx.translate(-px, 0);
+        }
+      }
+
       if(!walking && hamsterWalk.facing === 'front') {
         ctx.save();
         ctx.translate(hamsterWalk.x - 80 * S, 141 - 141 * S + jumpY);
         ctx.scale(S, S);
         drawHamsterFront(ctx, jumpY, jumpK, S);
         ctx.restore();
+        ctx.restore();
+        drawSpiritOverlay(ctx, now, S);
         return;
       }
 
@@ -3561,16 +4563,15 @@
       ctx.translate(-82, 0);
 
       // Motion: breathing, sniffing nose, blinking; zombie sway; sleepy slump when recovering
-      const breathe = 1 + Math.sin(now / 900) * 0.022;
-      const slump = mood === 'recovering' ? 0.9 : 1;
-      const sway = zombie ? Math.sin(now / 700) * 0.05 : 0;
+      const B = spiritBody(now);
+      const breathe = 1 + Math.sin(now / B.speed) * (B.amp + 0.002);
+      const slump = mood === 'recovering' ? 0.9 : B.slump;
+      const sway = zombie ? Math.sin(now / 700) * 0.05 : B.sway;
       const shiver = zombie ? Math.sin(now / 55) * 0.5 : todaysOni() === 'anxious' ? Math.sin(now / 45) * 0.6 : 0;
       const sniff = !reduceMotion && (now % 2600) < 600 ? Math.sin(now / 45) * 0.9 : 0;
       const blink = !reduceMotion && (mood === 'calm' || mood === 'thriving') && (now % 4200) < 140;
 
-      const fur = zombie ? '#8d9b76' : '#d9944c';
-      const furDark = zombie ? '#5d6b4f' : '#b06f30';
-      const cream = zombie ? '#c8cfb4' : '#f7ead7';
+      const { fur, furDark, cream } = spiritFur(zombie);
       const pink = zombie ? '#b98f8f' : '#f2a7a7';
 
       function oval(x, y, rx, ry, color, rot = 0) {
@@ -3585,9 +4586,9 @@
       oval(82, ground + 3 - jumpY / S, 60 * (1 - jumpK * 0.35), 5, `rgba(0, 0, 0, ${0.35 - jumpK * 0.15})`);
 
       ctx.save();
-      ctx.translate(82 + shiver, ground);
+      ctx.translate(82 + shiver, ground - B.bob);
       ctx.rotate(sway);
-      ctx.scale(breathe, slump / breathe);
+      ctx.scale(breathe * B.puff, slump / breathe);
       ctx.translate(-82, -ground);
 
       // Far-side legs and ear (behind the body, darker)
@@ -3599,16 +4600,7 @@
       oval(21, 112, 4.5, 3.5, furDark, 0.4);
 
       // Body + head silhouette: round rump on the left, snout on the right
-      const bodyPath = () => {
-        ctx.beginPath();
-        ctx.moveTo(32, ground - 6);
-        ctx.bezierCurveTo(12, 122, 14, 74, 50, 64);
-        ctx.bezierCurveTo(72, 56, 96, 48, 112, 55);
-        ctx.bezierCurveTo(127, 60, 139, 74, 143, 86);
-        ctx.quadraticCurveTo(141, 97, 128, 100);
-        ctx.quadraticCurveTo(122, 112, 120, ground - 6);
-        ctx.quadraticCurveTo(80, ground + 2, 32, ground - 6);
-      };
+      const bodyPath = () => traceSpiritShape(ctx, 'side'); // laid out for ground = 138
       const bodyGrad = ctx.createLinearGradient(0, 50, 0, ground);
       bodyGrad.addColorStop(0, furDark);
       bodyGrad.addColorStop(0.35, fur);
@@ -3616,6 +4608,7 @@
       ctx.fillStyle = bodyGrad;
       bodyPath();
       ctx.fill();
+      drawSpiritFurStyle(ctx, SPIRIT_SIDE_OUTLINE(), mixHexToHex(fur, furDark, 0.4), furDark, (x, y) => y > ground - 12 || (x > 126 && y > 66));
 
       // Cream belly, chin and cheek (clipped to the body)
       ctx.save();
@@ -3634,6 +4627,11 @@
       ctx.globalAlpha = 1;
       ctx.restore();
 
+      drawSpiritPattern(ctx, {
+        spots: [[40, 90, 9, 7], [70, 70, 8, 6], [28, 114, 6, 5], [96, 62, 5, 4]],
+        stripe: [[22, 98], [40, 74], [66, 61], [100, 53]], stripeWidth: 6, band: [56, 40, 16, 110]
+      }, bodyPath, furDark, cream);
+
       // Fur texture along the back (ruffled when zombified)
       ctx.strokeStyle = 'rgba(110, 65, 28, 0.35)';
       ctx.lineWidth = 1;
@@ -3648,7 +4646,7 @@
       });
 
       // Near ear
-      const earTilt = zombie ? -1.1 : -0.35;
+      const earTilt = zombie || B.earFlat ? -1.1 : -0.35;
       oval(106, 50, 8.5, 10, furDark, earTilt);
       oval(106.5, 51, 5, 6.5, '#f2a7a7', earTilt);
 
@@ -3668,7 +4666,7 @@
         ctx.restore();
         oval(ex + 1.6, ey + 1.3, 1.3, 1.3, '#120a06');
       } else {
-        oval(ex, ey, 4.4, 4.8, '#120a06');
+        oval(ex, ey, 4.4, 4.8, spiritEyeColour());
         oval(ex + 1.4, ey - 1.6, 1.4, 1.4, 'rgba(255, 255, 255, 0.9)');
         oval(ex - 1.2, ey + 1.5, 0.6, 0.6, 'rgba(255, 255, 255, 0.6)');
       }
@@ -3790,8 +4788,10 @@
         eyes: [[122, 72]],
         cheeks: [[124, 92]],
         mark: [131, 60],
-        sparkles: [[90, 34], [146, 50], [30, 70]]
+        sparkles: [[90, 34], [146, 50], [30, 70]],
+        steam: [[104, 40, -1]]
       });
+      drawSpiritExtras(ctx, { cheeks: [[126, 90]] }, zombie);
       ctx.restore();
 
       if(zombie && !walking) {
@@ -3825,6 +4825,8 @@
         });
       }
       ctx.restore();
+      ctx.restore();
+      drawSpiritOverlay(ctx, now, S);
     }
 
     function hamsterLoop() {
@@ -4104,10 +5106,10 @@
       set('p-puzzle-min-total', Math.floor(sum(all, 'puzzleSec') / 60));
       set('p-breath-min-total', Math.floor(sum(all, 'breathSec') / 60));
       set('p-tools-total', sum(all, 'tools'));
-      set('p-week-line', `Last 7 days: ${sum(last7, 'vagus')} vagus · ${Math.floor(sum(last7, 'puzzleSec') / 60)} min Honeycomb · ` +
+      set('p-week-line', `Last 7 days: ${sum(last7, 'vagus')} vagus · ${Math.floor(sum(last7, 'puzzleSec') / 60)} min Disrupt · ` +
         `${Math.floor(sum(last7, 'breathSec') / 60)} min breathing · ${sum(last7, 'tools')} games & tools`);
 
-      const EXERCISE = ['Honeycomb within 6 hours', 'Honeycomb session', 'Breathing', 'Vagus reset', 'A Calm game', 'Shake or cold water', 'Unsent Defense', 'Reset tools'];
+      const EXERCISE = ['Disrupt within 6 hours', 'Disrupt session', 'Breathing', 'Vagus reset', 'A Calm game', 'Shake or cold water', 'Unsent Defense', 'Reset tools'];
       const evs = hardDayEvents();
       const rec = evs.map((ev, i) => ({ ms: recoveryTime(ev, evs[i + 1] && evs[i + 1].start), f: recoveryFactors(ev) })).filter(r => r.ms !== null);
       const avg = list => list.reduce((a, r) => a + r.ms, 0) / list.length;
@@ -5253,7 +6255,7 @@
       const left = puzzleWindow.until - Date.now();
       const h = Math.floor(left / 3600000), m = Math.floor((left % 3600000) / 60000);
       document.getElementById('puzzle-window-text').innerText =
-        `Honeycomb window: ${h}h ${m}m left · ${Math.floor(puzzleWindow.played / 60)}/10 min played`;
+        `Disrupt window: ${h}h ${m}m left · ${Math.floor(puzzleWindow.played / 60)}/10 min played`;
       b.querySelector('button').style.display = '';
       b.style.display = 'flex';
     }
@@ -5466,7 +6468,7 @@
     }
 
     // ---------- QUICK TAGS (journal + incident log) ----------
-    const DEFAULT_TAGS = ['incident', 'screaming', 'insults', 'silent_treatment', 'away_from_home', 'morning_dread', 'period_window', 'held_boundary'];
+    const DEFAULT_TAGS = ['incident', 'screaming', 'insults', 'away_from_home', 'morning_dread', 'period_window', 'held_boundary'];
 
     // Incident log entries plus journal entries tagged #incident, so both count in the analysis
     function allIncidents() {
@@ -5622,7 +6624,7 @@
 
     // ---------- RECOVERY ANALYSIS: what helped you bounce back after hard days ----------
     const TOOL_NAMES = {
-      vagus: 'Vagus reset', puzzle: 'Honeycomb session', breath: 'Breathing round', breathing: 'Breathing session',
+      vagus: 'Vagus reset', puzzle: 'Disrupt session', breath: 'Breathing round', breathing: 'Breathing session',
       shake: 'Shake it out', cold: 'Cold water', chaos: 'Chaos Release', leaves: 'Leaves on a Stream',
       pond: 'Still Pond', lanterns: 'Sky Lanterns', fog: 'Clear the Fog', unsent: 'Unsent Defense'
     };
@@ -5668,8 +6670,8 @@
       const f = new Set();
       if(acts.length) {
         const has = k => acts.some(a => a.k === k);
-        if(acts.some(a => a.k === 'puzzle' && a.ts <= from + 6 * 3600e3)) f.add('Honeycomb within 6 hours');
-        else if(has('puzzle')) f.add('Honeycomb session');
+        if(acts.some(a => a.k === 'puzzle' && a.ts <= from + 6 * 3600e3)) f.add('Disrupt within 6 hours');
+        else if(has('puzzle')) f.add('Disrupt session');
         if(acts.filter(a => a.k === 'breath').length >= 2 || has('breathing')) f.add('Breathing');
         if(has('vagus')) f.add('Vagus reset');
         if(acts.some(a => CALM_GAMES.includes(a.k))) f.add('A Calm game');
@@ -5680,7 +6682,7 @@
         const next = new Date(ev.day);
         next.setDate(next.getDate() + 1);
         [ev.key, dayKey(next)].map(k => practice[k]).filter(Boolean).forEach(p => {
-          if(p.puzzleSessions) f.add('Honeycomb session');
+          if(p.puzzleSessions) f.add('Disrupt session');
           if(p.breathRounds) f.add('Breathing');
           if(p.vagus) f.add('Vagus reset');
           if(p.tools) f.add('Reset tools');
@@ -5785,6 +6787,366 @@
       return `<div class="insight-card"><span class="insight-icon">${icon}</span><div>${html}</div></div>`;
     }
 
+    // Cycle: which phases hold most of the hard or tense days, and where things are now
+    function buildCycleHtml(allInc) {
+      const cyc = cycleInfo();
+      if(!cyc.starts.length) {
+        return '<div class="pat-title">Cycle</div>' + insightCard('🌙', 'Add period dates in Settings to see how hard days line up with the cycle.');
+      }
+      const L = Math.round(cyc.avg);
+      // Day of the cycle (1 = first day of a period), counted from the last start date when there is one
+      const cycleDayOf = date => {
+        const d = new Date(date); d.setHours(0, 0, 0, 0);
+        const prev = [...cyc.starts].reverse().find(st => st <= d);
+        if(prev && (d - prev) / DAY < 45) return Math.round((d - prev) / DAY) + 1;
+        const dbp = daysBeforePeriod(d, cyc);
+        return dbp === 0 ? 1 : L - dbp + 1;
+      };
+      const phaseOf = date => {
+        const dbp = daysBeforePeriod(date, cyc);
+        if(dbp === null) return null;
+        const cycleDay = cycleDayOf(date);
+        if(cycleDay >= 1 && cycleDay <= 5) return 'period';
+        if(dbp >= 1 && dbp <= 13) return 'luteal';
+        if(dbp >= 14 && dbp <= 16) return 'ovulation';
+        return 'follicular';
+      };
+      // A day counts as hard or tense if it was marked red, black or yellow, had an incident, or you picked a hard oni
+      const hard = new Set(), tracked = new Set();
+      Object.entries(calData).forEach(([k, st]) => { if(!st) return; tracked.add(k); if(st === 'status-red' || st === 'status-black' || st === 'status-yellow') hard.add(k); });
+      allInc.forEach(e => { const k = dayKey(new Date(e.ts)); tracked.add(k); hard.add(k); });
+      moodLog.forEach(m => { const k = dayKey(new Date(m.ts)); tracked.add(k); if(HARD_ONI.includes(m.mood)) hard.add(k); });
+      const since = startOfToday().getTime() - 180 * DAY;
+      // Every day from your first record (or 6 months ago) to today. Days you didn't mark count as okay days.
+      const firstTs = Math.min(...[...tracked].map(k => parseDay(k).getTime()), Date.now());
+      const allDays = [];
+      for(let d = new Date(Math.max(since, firstTs)); d.getTime() <= Date.now(); d.setDate(d.getDate() + 1)) allDays.push(dayKey(d));
+      const PH = { period: ['Period', 0, 0], luteal: ['Luteal', 0, 0], ovulation: ['Ovulation', 0, 0], follicular: ['Follicular', 0, 0] };
+      allDays.forEach(k => {
+        const d = parseDay(k);
+        if(d.getTime() < since || d.getTime() > Date.now()) return;
+        const ph = phaseOf(d);
+        if(!ph) return;
+        PH[ph][1]++;
+        if(hard.has(k)) PH[ph][2]++;
+      });
+      const rate = ph => PH[ph][1] ? PH[ph][2] / PH[ph][1] : 0;
+      const enough = Object.values(PH).filter(v => v[1] >= 4).length >= 2;
+      const base = Math.min(...['follicular', 'ovulation'].filter(ph => PH[ph][1] >= 4).map(rate).concat([1]));
+      const flagged = ph => PH[ph][1] >= 4 && rate(ph) > 0 && rate(ph) >= Math.max(0.25, base * 1.4);
+
+      // Where you are today
+      const today = startOfToday(), nowPh = phaseOf(today), dbp = daysBeforePeriod(today, cyc);
+      const nowDay = cycleDayOf(today);
+      let now = `Today: <b>${PH[nowPh][0]}</b>, day ${nowDay} of about ${L}.`;
+      if(nowPh !== 'period') now += ` Period in about ${dbp} day${dbp === 1 ? '' : 's'}.`;
+      if(enough && flagged(nowPh)) now += ' This is usually a harder stretch. Go gently and keep Disrupt close.';
+
+      // How each phase usually goes: marked days, tags, oni picks and incidents that fell in it
+      const PHASES = ['period', 'luteal', 'ovulation', 'follicular'];
+      const SUM = {};
+      PHASES.forEach(ph => { SUM[ph] = { marks: { green: 0, yellow: 0, red: 0, black: 0 }, hardByTime: {}, tags: {}, oni: {}, inc: 0, bands: {} }; });
+      const inWindow = ts => ts >= since && ts <= Date.now();
+      const occurrence = d => dayKey(new Date(d.getTime() + daysBeforePeriod(d, cyc) * DAY)); // one id per time the phase came round
+      allDays.forEach(k => {
+        const d = parseDay(k);
+        if(!inWindow(d.getTime())) return;
+        const ph = phaseOf(d);
+        if(!ph) return;
+        const sm = SUM[ph], occ = occurrence(d), st = (calData[k] || '').replace('status-', '');
+        if(sm.marks[st] !== undefined) sm.marks[st]++;
+        sm.hardByTime[occ] = (sm.hardByTime[occ] || 0) + (hard.has(k) ? 1 : 0);
+      });
+      taggedEntries().forEach(e => {
+        if(!inWindow(e.ts)) return;
+        const ph = phaseOf(new Date(e.ts));
+        if(ph) e.tags.filter(t => t !== 'incident' && t !== 'unsent_defense').forEach(t => { SUM[ph].tags[t] = (SUM[ph].tags[t] || 0) + 1; });
+      });
+      moodLog.forEach(m => {
+        if(!inWindow(m.ts) || !MOODS[m.mood]) return;
+        const ph = phaseOf(new Date(m.ts));
+        if(ph) SUM[ph].oni[m.mood] = (SUM[ph].oni[m.mood] || 0) + 1;
+      });
+      allInc.forEach(e => {
+        if(!inWindow(e.ts)) return;
+        const ph = phaseOf(new Date(e.ts));
+        if(!ph) return;
+        SUM[ph].inc++;
+        const b = bandName(new Date(e.ts).getHours());
+        SUM[ph].bands[b] = (SUM[ph].bands[b] || 0) + 1;
+      });
+      const top = (obj, n) => Object.entries(obj).sort((a, b) => b[1] - a[1]).slice(0, n).map(x => x[0]);
+      const phaseSummary = ph => {
+        const sm = SUM[ph], times = Object.keys(sm.hardByTime).length;
+        if(!times) return '';
+        const avg = Math.round(Object.values(sm.hardByTime).reduce((a, b) => a + b, 0) / times);
+        const lines = [`Usually <b>${avg}</b> hard or tense day${avg === 1 ? '' : 's'} each time (${times} time${times === 1 ? '' : 's'} in 6 months).`];
+        const m = sm.marks, marked = m.red + m.black + m.yellow + m.green;
+        if(marked) lines.push(`Marked: ${m.red} red · ${m.black} black · ${m.yellow} yellow · ${m.green} green.`);
+        const tags = top(sm.tags, 3);
+        if(tags.length) lines.push(`Tags that came up: ${tags.map(t => '<b>#' + escapeHtml(t) + '</b>').join(', ')}.`);
+        const oni = top(sm.oni, 2);
+        if(oni.length) lines.push(`You most often felt: <b>${oni.map(o => MOODS[o].name).join('</b>, <b>')}</b>.`);
+        if(sm.inc) {
+          const b = top(sm.bands, 1)[0];
+          lines.push(`${sm.inc} incident${sm.inc === 1 ? '' : 's'}, mostly ${b === 'night' ? 'at' : 'in the'} ${b}.`);
+        }
+        return lines.join('<br>');
+      };
+
+      let rows = '';
+      if(enough) {
+        rows = PHASES.map(ph => {
+          const [name, days, h] = PH[ph];
+          if(!days) return '';
+          const row = `<div class="cyc-row ${flagged(ph) ? 'hard' : ''}"><span class="cyc-name">${name}</span>` +
+            `<span class="cyc-bar"><i style="width:${Math.round(rate(ph) * 100)}%"></i></span>` +
+            `<span class="cyc-val">${h} of ${days} days</span></div>`;
+          const sum = phaseSummary(ph);
+          return sum ? `<details class="cyc-detail" ${ph === nowPh ? 'open' : ''}><summary>${row}</summary><div class="cyc-sum">${sum}</div></details>` : row;
+        }).join('');
+        const hardPhases = ['period', 'luteal'].filter(flagged).map(ph => PH[ph][0].toLowerCase());
+        rows += `<div class="insight-note">Hard or tense days in each phase over the last 6 months (days you didn't mark count as okay)${hardPhases.length ? `. Red marks the harder phases: ${hardPhases.join(' and ')}` : ''}. Tap a phase to see how it usually goes.</div>`;
+      } else {
+        rows = '<div class="insight-note">Keep marking days on the calendar; the phase comparison fills in after a few weeks.</div>';
+      }
+      const note = cyc.measured ? '' : '<div class="insight-note">Assumes a 28-day cycle until at least 2 past period dates are added in Settings.</div>';
+      return `<div class="pat-title">Cycle</div><div class="cyc-now">${now}</div>${rows}${note}`;
+    }
+
+    // ---------- DARK PART OF THE MONTH ----------
+    // The 8 days before her period and its first day: where most red and black days have fallen so far.
+    const DARK_DAYS = 8;
+    const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; }; // calendar days, safe across clock changes
+    function computeDarkStretch() {
+      const cyc = cycleInfo();
+      if(!cyc.starts.length) return null;
+      const L = Math.round(cyc.avg), today = startOfToday();
+      const daysBetween = (a, b) => Math.round((a - b) / DAY);
+      const cycleDayOf = d => {
+        const prev = [...cyc.starts].reverse().find(st => st <= d);
+        if(prev && daysBetween(d, prev) < 45) return daysBetween(d, prev) + 1;
+        const x = daysBeforePeriod(d, cyc);
+        return x === 0 ? 1 : L - x + 1;
+      };
+      const known = d => cyc.starts.some(st => Math.abs(daysBetween(d, st)) <= 45);
+      const inDark = d => { const x = daysBeforePeriod(d, cyc); return (x >= 1 && x <= DARK_DAYS) || cycleDayOf(d) === 1; };
+
+      // Where today sits
+      const dbpNow = daysBeforePeriod(today, cyc), cdNow = cycleDayOf(today);
+      const inWindow = inDark(today);
+      const nextStart = addDays(today, cdNow === 1 ? 0 : dbpNow);
+      const winStart = addDays(nextStart, -DARK_DAYS);
+      const dayIdx = cdNow === 1 ? DARK_DAYS + 1 : DARK_DAYS + 1 - dbpNow;
+      const headsUp = !inWindow && dbpNow > DARK_DAYS && dbpNow <= DARK_DAYS + 3 ? dbpNow - DARK_DAYS : 0;
+      // The next stretch (if today is past this one's start, the next cycle's)
+      const upcomingEnd = inWindow ? nextStart : addDays(today, dbpNow);
+      const upcomingStart = addDays(upcomingEnd, -DARK_DAYS);
+
+      // What the marked days show
+      const bad = Object.entries(calData).filter(([, st]) => st === 'status-red' || st === 'status-black')
+        .map(([k, st]) => ({ d: parseDay(k), black: st === 'status-black' })).filter(b => b.d <= today);
+      const withCyc = bad.filter(b => known(b.d));
+      const dark = withCyc.filter(b => inDark(b.d));
+      const marks = Object.entries(calData).filter(([, st]) => st).map(([k]) => parseDay(k).getTime());
+      const firstMark = marks.length ? Math.min(...marks) : Date.now();
+      const startsSeen = cyc.starts.filter(st => st.getTime() >= firstMark && st <= today);
+      const onsetHits = startsSeen.filter(st => bad.some(b => { const g = daysBetween(st, b.d); return g === 0 || g === 1; })).length;
+      const blackTotal = withCyc.filter(b => b.black).length, blackDark = dark.filter(b => b.black).length;
+      const bump = withCyc.filter(b => { const c = cycleDayOf(b.d); return c >= 7 && c <= 11; }).length;
+      const wd = [0, 0, 0, 0, 0, 0, 0];
+      bad.forEach(b => wd[b.d.getDay()]++);
+      const order = [0, 1, 2, 3, 4, 5, 6].sort((a, b) => wd[b] - wd[a]);
+      const weekly = {};
+      bad.forEach(b => { const k = b.d.getFullYear() + '-' + b.d.getMonth() + '-' + b.d.getDay(); weekly[k] = (weekly[k] || 0) + 1; });
+      const rhythm = Object.entries(weekly).filter(([, n]) => n >= 3).sort().pop();
+      // Runs of hard days (gaps of a day allowed)
+      const sorted = [...bad].sort((a, b) => a.d - b.d), runs = [];
+      sorted.forEach(b => {
+        const last = runs[runs.length - 1];
+        if(last && daysBetween(b.d, last[last.length - 1].d) <= 2) last.push(b); else runs.push([b]);
+      });
+      return { L, today, inWindow, dayIdx, headsUp, nextStart, winStart, upcomingStart, upcomingEnd, cdNow,
+               withCyc, dark, startsSeen, onsetHits, blackTotal, blackDark, bump, wd, order, rhythm,
+               runs: runs.filter(r => r.length >= 3).slice(-3), badTotal: bad.length };
+    }
+
+    const WEEKDAY = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const MONTH = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const shortDate = d => `${d.getDate()} ${MONTH[d.getMonth()]}`;
+
+    // What happened in the last dark stretch (the one that ended most recently)
+    function lastDarkStretch(ds) {
+      const cyc = cycleInfo();
+      const ended = [...cyc.starts].reverse().find(st => st <= ds.today && !(ds.inWindow && st.getTime() === ds.nextStart.getTime()));
+      if(!ended) return null;
+      const from = addDays(ended, -DARK_DAYS), to = new Date(addDays(ended, 1).getTime() - 1);
+      const inRange = ts => ts >= from.getTime() && ts <= to.getTime();
+      let red = 0, black = 0, yellow = 0;
+      Object.entries(calData).forEach(([k, st]) => {
+        if(!inRange(parseDay(k).getTime())) return;
+        if(st === 'status-red') red++; else if(st === 'status-black') black++; else if(st === 'status-yellow') yellow++;
+      });
+      return { from, to: ended, red, black, yellow, incidents: allIncidents().filter(e => inRange(e.ts)).length,
+               notes: notes.filter(n => inRange(n.id)).length };
+    }
+
+    // Self-care and processing reminders for the calmer weeks after a dark stretch
+    function SPIRIT_RECOVERY_REMINDERS(ds) {
+      const last = lastDarkStretch(ds);
+      const list = [];
+      if(last && (last.red + last.black + last.incidents)) {
+        const parts = [last.black && `${last.black} black`, last.red && `${last.red} red`, last.yellow && `${last.yellow} yellow`,
+                       last.incidents && `${last.incidents} incident${last.incidents === 1 ? '' : 's'}`].filter(Boolean).join(', ');
+        list.push(`Last dark stretch (${shortDate(last.from)} – ${shortDate(last.to)}) had ${parts}. That was a lot. Let your body and mind come down from it.`);
+        if(last.notes) list.push(`When you feel steady, re-read the ${last.notes} journal entr${last.notes === 1 ? 'y' : 'ies'} from those days and add anything you missed.`);
+      }
+      if(dates.therapy && parseDay(dates.therapy) >= ds.today) list.push(`Bring what happened to therapy on ${shortDate(parseDay(dates.therapy))}: read your entries out or show them.`);
+      else list.push('Talk it through with your therapist or someone you trust. You don\'t have to hold it alone.');
+      list.push(
+        'Sleep and eat properly for a few days. Your body has been on alert.',
+        'Look after any pain or injuries, and get them checked if they linger.',
+        'Move your body gently: a walk, stretching, the gym. It helps the stress leave.',
+        'For memories that keep replaying: write them out in Unsent Defense, then let them float away.',
+        'Do something just for you this week, something that has nothing to do with her.',
+        'Notice what helped you get through, and keep it for next time.'
+      );
+      return list;
+    }
+
+    // Strategies to keep yourself intact. Some adapt to what the data shows.
+    function darkPlanGroups(ds) {
+      const during = [];
+      if(ds.startsSeen.length >= 2 && ds.onsetHits / ds.startsSeen.length >= 0.5) {
+        const before = addDays(ds.upcomingEnd, -1);
+        during.push(`Treat ${shortDate(before)} and ${shortDate(ds.upcomingEnd)} (the day before and first day of her period) as rest days: nothing planned, nothing to fix.`);
+      }
+      if(ds.badTotal >= 10) during.push(`${WEEKDAY[ds.order[0]]}s and ${WEEKDAY[ds.order[1]]}s are the hardest weekdays: keep those especially quiet.`);
+      during.push(
+        'Keep these days light: move chores, errands and big talks (moves, money, plans) to after.',
+        'Keep everyday tasks simple: easy meals or ordering in. Small tasks have been flashpoints.',
+        'Give yourself a little time for you every day: a walk, the gym, a coffee on your own.',
+        'When voices rise, speak low and step out. You don\'t have to win it or explain yourself.',
+        'Protect your sleep, even if it means sleeping separately.',
+        'Play Disrupt within 6 hours of anything upsetting, and write it down with the time.'
+      );
+      return [
+        ['Recover and process', SPIRIT_RECOVERY_REMINDERS(ds)],
+        ['Before it starts', [
+          `Put the next dark stretch in your calendar: ${shortDate(ds.upcomingStart)} – ${shortDate(ds.upcomingEnd)}.`,
+          'Move anything stressful you can (big conversations, trips, deadlines) out of those dates.',
+          'Rest well in the days before, so you start it with a full tank.'
+        ]],
+        ['During the dark stretch', during],
+        ['When it gets heated', [
+          'Lower your voice and take a short break in another room until things cool down.',
+          'Keep heated moments out of the kitchen.',
+          'Afterwards, write down what happened, with the time.'
+        ]]
+      ];
+    }
+    function darkPlanState() { try { return JSON.parse(localStorage.getItem('aq_dark_plan') || '{}'); } catch(e) { return {}; } }
+    function toggleDarkPlan(id, key) {
+      const st = darkPlanState();
+      const list = new Set(st[id] || []);
+      list.has(key) ? list.delete(key) : list.add(key);
+      st[id] = [...list];
+      Object.keys(st).sort().slice(0, -3).forEach(k => delete st[k]); // keep the last few months only
+      localStorage.setItem('aq_dark_plan', JSON.stringify(st));
+      renderCorrelations();
+    }
+
+    function buildDarkHtml() {
+      const ds = computeDarkStretch();
+      if(!ds || !ds.inWindow) return ''; // only shown during the dark stretch, so the ok weeks stay free of it
+      const facts = [];
+      if(ds.withCyc.length >= 4) facts.push(`<b>${ds.dark.length} of ${ds.withCyc.length}</b> red or black days fell in the ${DARK_DAYS} days before her period or on its first day, about ${Math.round((DARK_DAYS + 1) / ds.L * 100)}% of the month.`);
+      if(ds.startsSeen.length >= 2) facts.push(`<b>${ds.onsetHits} of ${ds.startsSeen.length}</b> period starts had a red or black day the day before or on day 1.`);
+      if(ds.blackTotal >= 3) facts.push(`<b>${ds.blackDark} of ${ds.blackTotal}</b> black days were in that stretch.`);
+      if(ds.bump >= 4 && ds.bump / ds.withCyc.length >= 0.15) facts.push(`A smaller rise around days 7–11 of her cycle (${ds.bump} days).`);
+      if(ds.badTotal >= 10) facts.push(`Hardest weekdays: <b>${WEEKDAY[ds.order[0]]}</b> and <b>${WEEKDAY[ds.order[1]]}</b> (${ds.wd[ds.order[0]] + ds.wd[ds.order[1]]} of ${ds.badTotal}); calmest: ${WEEKDAY[ds.order[6]]}.`);
+      if(ds.rhythm) {
+        const [y, m, w] = ds.rhythm[0].split('-').map(Number);
+        facts.push(`In ${MONTH[m]} ${y}, hard days fell on ${WEEKDAY[w]}s ${ds.rhythm[1]} times. Worth checking if something happens that day.`);
+      }
+      ds.runs.forEach(r => {
+        const end = r[r.length - 1].d, x = daysBeforePeriod(end, cycleInfo()), blacks = r.filter(b => b.black).length;
+        facts.push(`${shortDate(r[0].d)} – ${shortDate(end)}: ${r.length} hard days${blacks ? ` (${blacks} black)` : ''}${x >= 0 && x <= 10 ? `, ending ${x === 0 ? 'as her period started' : x + ' day' + (x === 1 ? '' : 's') + ' before her period'}` : ''}.`);
+      });
+
+      const now = ds.inWindow
+        ? `You're in the dark part of the month now: <b>day ${ds.dayIdx} of ${DARK_DAYS + 1}</b>, until ${shortDate(ds.nextStart)}.`
+        : ds.headsUp ? `The dark part of the month starts in <b>${ds.headsUp} day${ds.headsUp === 1 ? '' : 's'}</b> (${shortDate(ds.upcomingStart)} – ${shortDate(ds.upcomingEnd)}).`
+        : `Recovery stretch. Take care of yourself and process what happened last time. Next dark part of the month: <b>${shortDate(ds.upcomingStart)} – ${shortDate(ds.upcomingEnd)}</b>.`;
+
+      const id = dayKey(ds.upcomingEnd), done = new Set(darkPlanState()[id] || []);
+      const groups = darkPlanGroups(ds).map(([title, items], gi) => `<div class="plan-group">${title}</div>` + items.map((t, i) => {
+        const key = gi + ':' + i;
+        return `<label class="plan-item ${done.has(key) ? 'done' : ''}"><input type="checkbox" ${done.has(key) ? 'checked' : ''} onchange="toggleDarkPlan('${id}', '${key}')"><span>${t}</span></label>`;
+      }).join('')).join('');
+      return `<div class="pat-title">Dark part of the month</div><div class="cyc-now">${now}</div>` +
+        (facts.length ? `<ul class="dark-list">${facts.map(f => `<li>${f}</li>`).join('')}</ul>` : '') +
+        `<details class="dark-plan" id="dark-plan"><summary>Your plan: recover, get ready, stay intact</summary>${groups}</details>`;
+    }
+
+    // Banner on every tab: during the stretch, a heads-up 3 days before, and a daily self-care reminder in the recovery weeks
+    // Plain self-care for the ok weeks: one idea a day, tap for another
+    const SELF_CARE_IDEAS = [
+      'Get outside in daylight for a bit today.',
+      'Move your body for 20 minutes: a walk, the gym, some stretching.',
+      'Go to bed at the same time tonight and tomorrow.',
+      'Cook or order something you really like.',
+      'Drink a big glass of water right now.',
+      'Message a friend you haven\'t talked to in a while.',
+      'Spend 20 minutes on something you\'re learning.',
+      'Put on music you love and actually listen to it.',
+      'Write down one good moment from today.',
+      'Plan something small to look forward to this week.',
+      'Enjoy something simple together today: a show, a walk, a meal.',
+      'Take a long shower or bath and don\'t rush it.',
+      'Put your phone away for an hour and see how it feels.',
+      'Do something creative, even for ten minutes.',
+      'Notice one thing you did well today.',
+      'Stretch your neck and shoulders for a few minutes.',
+      'Have a slow morning coffee without doing anything else.',
+      'Get a little extra sleep if you can.'
+    ];
+    function renderDarkBanner() {
+      const el = document.getElementById('dark-banner');
+      if(!el) return;
+      const ds = computeDarkStretch();
+      const hidden = localStorage.getItem('aq_dark_dismiss') === dayKey(new Date());
+      if(hidden) { el.style.display = 'none'; return; }
+      const dark = !!(ds && ds.inWindow);
+      el.classList.toggle('good', !dark);
+      el.dataset.mode = dark ? 'dark' : 'care';
+      document.getElementById('dark-banner-icon').innerText = dark ? '🌘' : '🌿';
+      if(dark) {
+        document.getElementById('dark-banner-text').innerHTML = `<b>Dark part of the month</b> · day ${ds.dayIdx} of ${DARK_DAYS + 1}. Go gently. Tap for your plan.`;
+      } else {
+        const n = Math.floor(startOfToday().getTime() / DAY) + selfCareShift;
+        document.getElementById('dark-banner-text').innerHTML = `<b>Self-care</b> · ${SELF_CARE_IDEAS[((n % SELF_CARE_IDEAS.length) + SELF_CARE_IDEAS.length) % SELF_CARE_IDEAS.length]}`;
+      }
+      el.style.display = 'flex';
+    }
+    let selfCareShift = 0;
+    function darkBannerTap() {
+      const el = document.getElementById('dark-banner');
+      if(el.dataset.mode === 'dark') openDarkPlan();
+      else { selfCareShift++; renderDarkBanner(); } // another idea
+    }
+    function dismissDarkBanner() {
+      localStorage.setItem('aq_dark_dismiss', dayKey(new Date()));
+      renderDarkBanner();
+    }
+    function openDarkPlan() {
+      switchTab('spirit');
+      setTimeout(() => {
+        const p = document.getElementById('dark-plan');
+        if(p) { p.open = true; p.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      }, 60);
+    }
+
     function renderCorrelations() {
       const allInc = allIncidents();
       const el = document.getElementById('correlations');
@@ -5805,24 +7167,8 @@
         })).filter(r => r.hard > 0).sort((a, b) => b.hard - a.hard);
         const show = results.filter(r => r.tag === 'screaming').concat(results.filter(r => r.tag !== 'screaming')).slice(0, 2);
         show.forEach(r => cards.push(insightCard('🧭',
-          `<b>${Math.round(r.hard * 100)}%</b> of Anxious or Numb check-ins came within 48 hours after an entry tagged <b>#${escapeHtml(r.tag)}</b>` +
-          (r.easy !== null ? ` (compared with ${Math.round(r.easy * 100)}% of Calm or Happy check-ins).` : '.'))));
-      }
-
-      // 2. Incidents relative to the period date (estimate, 28-day cycle)
-      const cyc = cycleInfo();
-      if(cyc.starts.length && allInc.length >= 3) {
-        const before = allInc.map(e => daysBeforePeriod(e.ts, cyc));
-        const buckets = {};
-        before.filter(b => b >= 1 && b <= 14).forEach(b => {
-          const lo = b % 2 ? b : b - 1;
-          buckets[lo] = (buckets[lo] || 0) + 1;
-        });
-        const top = Object.entries(buckets).sort((a, b) => b[1] - a[1])[0];
-        if(top && top[1] >= 2) {
-          const lo = +top[0];
-          cards.push(insightCard('🌙', `Conflict incidents spike <b>${lo}–${lo + 1} days before</b> a period (${top[1]} of ${allInc.length} incidents). <span class="insight-note">${cyc.measured ? `Based on ${cyc.starts.length} real period dates.` : 'Estimate, assumes a 28-day cycle. Add past period dates in Settings to make it accurate.'}</span>`));
-        }
+          `After entries tagged <b>#${escapeHtml(r.tag)}</b>, you often felt Anxious or Numb within 2 days ` +
+          `(${Math.round(r.hard * hardPicks.length)} of your ${hardPicks.length} Anxious or Numb check-ins).`)));
       }
 
       // 3. Most frequent incident window
@@ -5830,7 +7176,7 @@
         const counts = {};
         allInc.forEach(e => { const b = bandName(new Date(e.ts).getHours()); counts[b] = (counts[b] || 0) + 1; });
         const [band, n] = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
-        cards.push(insightCard('⏰', `Most frequent incident window: <b>${band[0].toUpperCase() + band.slice(1)}</b> (${Math.round(n / allInc.length * 100)}% of incidents).`));
+        cards.push(insightCard('⏰', `Most incidents happen ${band === 'night' ? 'at' : 'in the'} <b>${band}</b> (${n} of ${allInc.length}).`));
       }
 
       // 4. Most common tag and the weekday it shows up most
@@ -5845,9 +7191,9 @@
       }
 
       const recovery = buildRecoveryHtml();
-      el.innerHTML = (recovery || cards.length)
-        ? recovery + (cards.length ? (recovery ? '<div class="pat-title">Other patterns</div>' : '') + cards.join('') : '')
-        : '<div class="subtitle" style="margin:0;">Not enough data yet. Mark hard days on the calendar, pick an oni when you open the app and use the tools, and insights will appear here.</div>';
+      renderDarkBanner();
+      el.innerHTML = buildDarkHtml() + buildCycleHtml(allInc) + recovery +
+        (cards.length ? '<div class="pat-title">Other patterns</div>' + cards.join('') : '');
     }
 
     // ---------- OBJECTIVE VALIDATION ----------
@@ -5883,7 +7229,7 @@
           <div class="stat-box"><div class="stat-box-val">${boundaries}</div><div class="stat-box-label">Calm boundaries maintained</div></div>
           <div class="stat-box"><div class="stat-box-val">${vagus + puzzle + tools + logged}</div><div class="stat-box-label">Self-regulation interventions</div></div>
         </div>
-        <div class="validation-breakdown">Logging ${logged} · Vagus resets ${vagus} · Honeycomb sessions ${puzzle} · Reset tools ${tools}</div>
+        <div class="validation-breakdown">Logging ${logged} · Vagus resets ${vagus} · Disrupt sessions ${puzzle} · Reset tools ${tools}</div>
         <div class="validation-reality"><div class="validation-label">Reality verification</div>${sentence}</div>`;
     }
 
@@ -5904,7 +7250,7 @@
                   after: el => el.focus() },
       green:    { label: '🟢 Mark today green',    action: markTodayGreen },
       vagus:    { label: '👀 Vagus reset',         tab: 'vagus', el: () => document.getElementById('eye-pos') },
-      puzzle:   { label: '🧩 Honeycomb',              tab: 'puzzle', el: () => document.getElementById('puzzle-canvas') }
+      puzzle:   { label: '🧩 Disrupt',              tab: 'puzzle', el: () => document.getElementById('puzzle-canvas') }
     };
 
     const ONI_TAILOR = {
@@ -6067,7 +7413,7 @@
     // Records app opens, session length, time per tab and which features you use, so the app can be
     // trimmed and tuned around how you actually use it.
     const TAB_KEYS = ['journey', 'puzzle', 'spirit', 'vagus', 'recover', 'calm', 'practise'];
-    const TAB_LABEL = { journey: 'Journey', puzzle: 'Honeycomb', spirit: 'Spirit', vagus: 'Vagus', recover: 'Recover', calm: 'Calm', practise: 'Practise' };
+    const TAB_LABEL = { journey: 'Journey', puzzle: 'Disrupt', spirit: 'Spirit', vagus: 'Vagus', recover: 'Recover', calm: 'Calm', practise: 'Practise' };
     // Time recorded before tabs had names (by their old position)
     const OLD_TAB = { 0: 'vagus', 1: 'journey', 2: 'puzzle', 3: 'recover', 4: 'spirit', 5: 'calm', 6: 'practise' };
     const FEATURE_LABELS = {
@@ -6079,9 +7425,9 @@
       exportIncidents: 'Incident log: export',
       toggleCalendarView: 'Calendar: show', calendarDay: 'Calendar: mark a day', changeCalMonth: 'Calendar: change month',
       toggleMoodCalendar: 'Emotional State calendar', moodCalendarDay: 'Emotional State: view a day', changeMoodMonth: 'Emotional State: change month',
-      puzzlePlay: 'Honeycomb: play', pausePuzzle: 'Honeycomb: pause', resumePuzzle: 'Honeycomb: resume', resetPuzzle: 'Honeycomb: reset',
+      puzzlePlay: 'Disrupt: play', pausePuzzle: 'Disrupt: pause', resumePuzzle: 'Disrupt: resume', resetPuzzle: 'Disrupt: reset',
       startShakeTimer: 'Shake reset', startColdTimer: 'Cold water timer', nextUnsponge: 'Un-Sponging phrases',
-      feedHamster: 'Spirit: give seed', 'canvas:hamster-canvas': 'Spirit: tap / pet', renameHamster: 'Spirit: rename',
+      feedHamster: 'Spirit: feed', spiritDoTrick: 'Spirit: trick', 'canvas:hamster-canvas': 'Spirit: tap / pet', renameHamster: 'Spirit: rename',
       nextQuote: 'Statements', toggleBreathing: 'Breathing pacer',
       'canvas:chaos-canvas': 'Chaos Release', initChaosGame: 'Chaos Release: new round',
       addLeaf: 'Leaves on a Stream', 'canvas:pond-canvas': 'Still Pond', resetPond: 'Still Pond: stir',
@@ -6094,7 +7440,7 @@
     const KEY_FEATURES = ['incrementVagus', 'saveNote', 'releaseUnsent', 'saveIncident', 'calendarDay', 'toggleMoodCalendar',
       'puzzlePlay', 'startShakeTimer', 'startColdTimer', 'nextUnsponge', 'nextQuote', 'toggleBreathing',
       'canvas:chaos-canvas', 'addLeaf', 'canvas:pond-canvas', 'canvas:lantern-canvas', 'canvas:fog-canvas',
-      'feedHamster', 'canvas:hamster-canvas', 'openMoonView', 'goTool', 'editNoteTags'];
+      'feedHamster', 'spiritDoTrick', 'canvas:hamster-canvas', 'openMoonView', 'goTool', 'editNoteTags'];
     const GROUP = { movePuzzle: 'puzzlePlay', rotatePuzzle: 'puzzlePlay', dropPuzzle: 'puzzlePlay' };
     const IGNORE = new Set(['switchTab', 'enterApp', 'pickOni', 'closeSettings', 'saveSettings', 'previewTheme', 'closeIncidentForm',
       'selectSeverity', 'selectMoodDay', 'closeMoonView', 'closeHardDayPrompt', 'if', 'document', 'event']);
@@ -6424,14 +7770,14 @@
     function updatePuzzleStats() {
       if(score > bestScore) {
         bestScore = score;
-        localStorage.setItem('aq_puzzle_best', bestScore);
+        localStorage.setItem(PE().bestKey, bestScore);
       }
       document.getElementById('puzzle-score').innerText = score;
       document.getElementById('puzzle-lines').innerText = totalClearedLines;
       document.getElementById('puzzle-best').innerText = bestScore;
     }
 
-    function drawNextPiece() {
+    function hcDrawNext() {
       const nc = document.getElementById('puzzle-next');
       if(!nc) return;
       const nctx = nc.getContext('2d');
@@ -6446,7 +7792,7 @@
       pts.forEach(([x, y], i) => drawInkHex(nctx, ox + x, oy + y, s, nextPiece.colors[i]));
     }
 
-    function softDropPuzzle() {
+    function hcSoftDrop() {
       if(isPaused || isGameOver || !currentPiece) return;
       if(canMove(pieceX, pieceY + 1, currentPiece.shape)) {
         pieceY++;
@@ -6494,7 +7840,7 @@
     function startPuzzle() {
       if(isGameOver) return;
       if(tInterval && !isPaused) return;
-      if(!currentPiece) spawnPiece();
+      if(!PE().started()) PE().newBoard();
       
       if(!tInterval) {
         tInterval = setInterval(updatePuzzle, 600);
@@ -6512,6 +7858,7 @@
             updatePuzzleRing();
             if(timeLeft <= 0) {
               logPractice('puzzleSessions', 1);
+              localStorage.setItem('aq_spirit_cheer', '1'); // Spirit celebrates next time you visit him
               gameOver('session');
             }
           }
@@ -6534,7 +7881,7 @@
     const PUZZLE_MILESTONES = [
       [0, 'Turn pieces so matching inks touch: 6 joined hexes dissolve. Picture each turn in your mind first.'],
       [60, 'One minute in. Your visual brain is busy with shapes now.'],
-      [180, 'Three minutes. Keep your focus on the falling pieces.'],
+      [180, 'Three minutes. Keep your focus on the shapes.'],
       [300, 'Halfway there. Notice your breathing slowing down.'],
       [480, 'Two minutes left. Stay with the shapes.'],
       [600, 'Session complete ✓ Well done for looking after yourself.']
@@ -6582,6 +7929,7 @@
       let start = null, holdTimer = null, dropTimer = null;
       const stopDrop = () => { clearTimeout(holdTimer); clearInterval(dropTimer); holdTimer = dropTimer = null; };
       c.addEventListener('pointerdown', e => {
+        if(puzzleMode === 'ink') return;
         e.preventDefault();
         try { c.setPointerCapture(e.pointerId); } catch(err) {}
         start = { x: e.clientX, y: e.clientY, stepX: e.clientX, t: Date.now(), moved: false };
@@ -6595,7 +7943,7 @@
       });
       c.addEventListener('pointermove', e => {
         if(!start || start.dropping) return;
-        const cell = c.getBoundingClientRect().width / COLS;
+        const cell = c.getBoundingClientRect().width / (PE().cols || COLS);
         if(Math.abs(e.clientX - start.x) > 10 || Math.abs(e.clientY - start.y) > 14) {
           start.moved = true;
           clearTimeout(holdTimer);
@@ -6629,17 +7977,14 @@
       isGameOver = false;
       let goScreen = document.getElementById('game-over-screen');
       if(goScreen) goScreen.style.display = 'none';
-      grid = Array(ROWS).fill().map(() => Array(COLS).fill(0));
       timeLeft = SESSION_SECONDS;
       totalClearedLines = 0;
       score = 0;
-      nextPiece = null;
       updatePuzzleStats();
       let timerEl = document.getElementById('puzzle-timer');
       if(timerEl) timerEl.innerText = formatTime(SESSION_SECONDS);
       updatePuzzleRing();
-      currentPiece = null;
-      spawnPiece();
+      PE().newBoard();
       drawBoard();
       startPuzzle();
     }
@@ -6668,7 +8013,7 @@
         btn.innerText = `Keep Going (${formatTime(timeLeft)} left)`;
       }
       let statsEl = document.getElementById('game-over-stats');
-      if(statsEl) statsEl.innerText = `Score: ${score} · Blots: ${totalClearedLines} · Best: ${bestScore}`;
+      if(statsEl) statsEl.innerText = `Score: ${score} · ${PE().unitWord}: ${totalClearedLines} · Best: ${bestScore}`;
       let goScreen = document.getElementById('game-over-screen');
       if(goScreen) goScreen.style.display = 'flex';
     }
@@ -6678,12 +8023,10 @@
       if(overlayMode === 'session') { resetPuzzle(); return; }
       isGameOver = false;
       document.getElementById('game-over-screen').style.display = 'none';
-      grid = Array(ROWS).fill().map(() => Array(COLS).fill(0));
       score = 0;
       totalClearedLines = 0;
       updatePuzzleStats();
-      currentPiece = null;
-      spawnPiece();
+      PE().newBoard();
       isPaused = true;
       startPuzzle();
     }
@@ -6753,7 +8096,7 @@
     }
     function drawGhostHex(g, x, y, s, color) { drawInkHex(g, x, y, s, color, 0.2); }
 
-    function spawnPiece() {
+    function hcSpawn() {
       currentPiece = nextPiece || randomPiece();
       nextPiece = randomPiece();
       drawNextPiece();
@@ -6765,7 +8108,7 @@
       if(!canMove(pieceX, pieceY, currentPiece.shape)) gameOver();
     }
 
-    function updatePuzzle() {
+    function hcUpdate() {
       if(isPaused || isGameOver) return;
       if(!canMove(pieceX, pieceY + 1, currentPiece.shape)) {
         lockPiece();
@@ -6875,7 +8218,7 @@
       return { chain, hexes, blots, points, moves: allMoves };
     }
 
-    function drawBoard() {
+    function hcDrawBoard() {
       if(!ctx) return;
       // Rorschach paper
       const paper = ctx.createRadialGradient(canvas.width / 2, canvas.height / 2, 40, canvas.width / 2, canvas.height / 2, canvas.height * 0.7);
@@ -6985,7 +8328,7 @@
 
 
 
-    function movePuzzle(dir) {
+    function hcMove(dir) {
       if(isPaused || isGameOver) return;
       const [nq, nr] = sidestep(pieceX, pieceY, dir);
       if(canMove(nq, nr, currentPiece.shape)) {
@@ -6995,7 +8338,7 @@
       }
     }
 
-    function rotatePuzzle() {
+    function hcRotate() {
       if(isPaused || isGameOver) return;
       // 60-degree turn around the piece's [0, 0] cell (axial rotation)
       const rotated = currentPiece.shape.map(([q, r]) => [-r, q + r]);
@@ -7014,7 +8357,7 @@
       }
     }
 
-    function dropPuzzle() {
+    function hcDrop() {
       if(isPaused || isGameOver) return;
       while(canMove(pieceX, pieceY + 1, currentPiece.shape)) {
         pieceY++;
@@ -7023,6 +8366,423 @@
       drawBoard();
       updatePuzzle();
     }
+
+    // ===== DISRUPT GAMES: Honeycomb, Classic Blocks and Ink Blocks share the timer, pause and stats above =====
+
+    // Pause button + "Paused" veil for the games that draw their own board
+    function puzzleChrome(started) {
+      const pp = document.getElementById('puzzle-pp');
+      if(pp) {
+        const playing = !!tInterval && !isPaused && !isGameOver;
+        if(pp.dataset.state !== String(playing)) {
+          pp.dataset.state = String(playing);
+          pp.innerHTML = playing
+            ? '<svg viewBox="0 0 12 12"><rect x="2" y="1" width="3" height="10" rx="1"/><rect x="7" y="1" width="3" height="10" rx="1"/></svg>'
+            : '<svg viewBox="0 0 12 12"><path d="M3 1.5 L10.5 6 L3 10.5 Z"/></svg>';
+        }
+        pp.style.display = isGameOver ? 'none' : 'flex';
+      }
+      if(isPaused && started && !isGameOver) {
+        ctx.fillStyle = 'rgba(2, 4, 10, 0.72)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#e6f3ff';
+        ctx.font = 'bold 22px -apple-system, sans-serif';
+        ctx.fillText('Paused', canvas.width / 2, canvas.height / 2 - 6);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
+        ctx.font = '13px -apple-system, sans-serif';
+        ctx.fillText('Tap to continue', canvas.width / 2, canvas.height / 2 + 18);
+      }
+    }
+
+    // ----- Classic Blocks: the original falling-block game (10 x 20, glossy blocks, ghost piece)
+    const CL_COLS = 10, CL_ROWS = 20, CL_BLOCK = 20;
+    const CL_PIECES = [
+      { shape: [[1, 1, 1, 1]], color: '#00f2fe' },
+      { shape: [[1, 0, 0], [1, 1, 1]], color: '#4facfe' },
+      { shape: [[0, 0, 1], [1, 1, 1]], color: '#f59e0b' },
+      { shape: [[1, 1], [1, 1]], color: '#facc15' },
+      { shape: [[0, 1, 1], [1, 1, 0]], color: '#10b981' },
+      { shape: [[0, 1, 0], [1, 1, 1]], color: '#7b2cbf' },
+      { shape: [[1, 1, 0], [0, 1, 1]], color: '#ef4444' }
+    ];
+    let clGrid = [], clPiece = null, clNext = null, clX = 0, clY = 0, clFlashRows = [], clFlashUntil = 0;
+    const clRandom = () => { const p = CL_PIECES[Math.floor(Math.random() * CL_PIECES.length)]; return { shape: p.shape.map(r => r.slice()), color: p.color }; };
+    function clCanMove(nx, ny, shape) {
+      for(let r = 0; r < shape.length; r++) for(let c = 0; c < shape[r].length; c++) {
+        if(!shape[r][c]) continue;
+        const gx = nx + c, gy = ny + r;
+        if(gx < 0 || gx >= CL_COLS || gy >= CL_ROWS) return false;
+        if(gy >= 0 && clGrid[gy][gx]) return false;
+      }
+      return true;
+    }
+    function clSpawn() {
+      clPiece = clNext || clRandom();
+      clNext = clRandom();
+      drawNextPiece();
+      clY = 0;
+      clX = Math.floor((CL_COLS - clPiece.shape[0].length) / 2);
+      if(!clCanMove(clX, clY, clPiece.shape)) gameOver();
+    }
+    function clLock() {
+      for(let r = 0; r < clPiece.shape.length; r++) for(let c = 0; c < clPiece.shape[r].length; c++) {
+        if(!clPiece.shape[r][c]) continue;
+        if(clY + r < 0) { gameOver(); return; }
+        clGrid[clY + r][clX + c] = clPiece.color;
+      }
+    }
+    function clClearLines() {
+      let cleared = 0;
+      clFlashRows = [];
+      for(let r = CL_ROWS - 1; r >= 0; r--) {
+        if(clGrid[r].every(Boolean)) {
+          clGrid.splice(r, 1);
+          clGrid.unshift(Array(CL_COLS).fill(0));
+          totalClearedLines++; cleared++;
+          clFlashRows.push(r);
+          r++;
+        }
+      }
+      return cleared;
+    }
+    function clTick() {
+      if(isPaused || isGameOver || !clPiece) return;
+      if(!clCanMove(clX, clY + 1, clPiece.shape)) {
+        clLock();
+        const cleared = isGameOver ? 0 : clClearLines();
+        score += LINE_POINTS[Math.min(cleared, 4)];
+        updatePuzzleStats();
+        if(cleared) {
+          bump('puzzle-score'); bump('puzzle-lines');
+          clFlashUntil = performance.now() + 260;
+          (function flash() { drawBoard(); if(performance.now() < clFlashUntil) requestAnimationFrame(flash); })();
+        }
+        if(!isGameOver) clSpawn();
+      } else clY++;
+      drawBoard();
+    }
+    function drawGlossyBlock(g, x, y, sz, color) {
+      const body = g.createLinearGradient(x, y, x, y + sz);
+      body.addColorStop(0, shadeHex(color, 0.28)); body.addColorStop(0.5, color); body.addColorStop(1, shadeHex(color, -0.28));
+      g.fillStyle = body;
+      g.fillRect(x, y, sz, sz);
+      const e = Math.max(1, sz * 0.12);
+      g.fillStyle = 'rgba(255, 255, 255, 0.35)';
+      g.fillRect(x, y, sz, e); g.fillRect(x, y, e, sz);
+      g.fillStyle = 'rgba(0, 0, 0, 0.3)';
+      g.fillRect(x, y + sz - e, sz, e); g.fillRect(x + sz - e, y, e, sz);
+      const shine = g.createLinearGradient(x, y, x, y + sz * 0.55);
+      shine.addColorStop(0, 'rgba(255, 255, 255, 0.45)'); shine.addColorStop(1, 'rgba(255, 255, 255, 0)');
+      g.fillStyle = shine;
+      g.beginPath(); g.ellipse(x + sz * 0.42, y + sz * 0.26, sz * 0.3, sz * 0.15, -0.3, 0, Math.PI * 2); g.fill();
+    }
+    function drawGhostBlock(g, x, y, sz, color) {
+      g.fillStyle = shadeHex(color, -0.55).replace('rgb', 'rgba').replace(')', ', 0.35)');
+      g.fillRect(x, y, sz, sz);
+      g.strokeStyle = color; g.globalAlpha = 0.55; g.lineWidth = 1.5;
+      g.strokeRect(x + 0.75, y + 0.75, sz - 1.5, sz - 1.5);
+      g.globalAlpha = 1;
+    }
+    function clDraw() {
+      if(!ctx) return;
+      ctx.fillStyle = '#02040a';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)'; ctx.lineWidth = 1;
+      ctx.beginPath();
+      for(let c = 1; c < CL_COLS; c++) { ctx.moveTo(c * CL_BLOCK - 0.5, 0); ctx.lineTo(c * CL_BLOCK - 0.5, CL_ROWS * CL_BLOCK); }
+      for(let r = 1; r < CL_ROWS; r++) { ctx.moveTo(0, r * CL_BLOCK - 0.5); ctx.lineTo(CL_COLS * CL_BLOCK, r * CL_BLOCK - 0.5); }
+      ctx.stroke();
+      for(let r = 0; r < CL_ROWS; r++) for(let c = 0; c < CL_COLS; c++) if(clGrid[r] && clGrid[r][c]) drawGlossyBlock(ctx, c * CL_BLOCK, r * CL_BLOCK, CL_BLOCK - 1, clGrid[r][c]);
+      const flashLeft = clFlashUntil - performance.now();
+      if(flashLeft > 0) {
+        ctx.fillStyle = `rgba(255, 255, 255, ${0.6 * flashLeft / 260})`;
+        clFlashRows.forEach(r => ctx.fillRect(0, r * CL_BLOCK, canvas.width, CL_BLOCK));
+      }
+      if(clPiece && !isGameOver) {
+        let gy = clY;
+        while(clCanMove(clX, gy + 1, clPiece.shape)) gy++;
+        if(gy > clY) clPiece.shape.forEach((row, r) => row.forEach((v, c) => { if(v) drawGhostBlock(ctx, (clX + c) * CL_BLOCK, (gy + r) * CL_BLOCK, CL_BLOCK - 1, clPiece.color); }));
+        clPiece.shape.forEach((row, r) => row.forEach((v, c) => { if(v) drawGlossyBlock(ctx, (clX + c) * CL_BLOCK, (clY + r) * CL_BLOCK, CL_BLOCK - 1, clPiece.color); }));
+      }
+      puzzleChrome(!!clPiece);
+    }
+    function clDrawNext() {
+      const nc = document.getElementById('puzzle-next');
+      if(!nc) return;
+      const n = nc.getContext('2d');
+      n.fillStyle = '#02040a';
+      n.fillRect(0, 0, nc.width, nc.height);
+      if(!clNext) return;
+      const b = 12, sh = clNext.shape;
+      const ox = (nc.width - sh[0].length * b) / 2, oy = (nc.height - sh.length * b) / 2;
+      sh.forEach((row, r) => row.forEach((v, c) => { if(v) drawGlossyBlock(n, ox + c * b, oy + r * b, b - 1, clNext.color); }));
+    }
+    function clMove(dir) {
+      if(isPaused || isGameOver || !clPiece) return;
+      if(clCanMove(clX + dir, clY, clPiece.shape)) { clX += dir; drawBoard(); }
+    }
+    function clRotate() {
+      if(isPaused || isGameOver || !clPiece) return;
+      const rotated = clPiece.shape[0].map((_, i) => clPiece.shape.map(row => row[i]).reverse());
+      for(const kick of [0, -1, 1, -2, 2]) {
+        if(clCanMove(clX + kick, clY, rotated)) { clX += kick; clPiece.shape = rotated; drawBoard(); return; }
+      }
+    }
+    function clSoft() {
+      if(isPaused || isGameOver || !clPiece) return;
+      if(clCanMove(clX, clY + 1, clPiece.shape)) { clY++; score += 1; updatePuzzleStats(); drawBoard(); }
+      else clTick();
+    }
+    function clDrop() {
+      if(isPaused || isGameOver || !clPiece) return;
+      while(clCanMove(clX, clY + 1, clPiece.shape)) { clY++; score += 2; }
+      drawBoard();
+      clTick();
+    }
+
+    // ----- Ink Blocks: drag shapes onto an 8 x 8 sheet; full rows and columns dissolve. Nothing falls.
+    const INK_N = 8, INK_CELL = 24, INK_BX = 4, INK_BY = 4, INK_TRAY_Y = INK_BY + INK_N * INK_CELL + 14, INK_TS = 15;
+    const INK_SHAPES = [
+      [[0, 0]], [[0, 0], [1, 0]], [[0, 0], [0, 1]], [[0, 0], [1, 0], [2, 0]], [[0, 0], [0, 1], [0, 2]],
+      [[0, 0], [1, 0], [2, 0], [3, 0]], [[0, 0], [0, 1], [0, 2], [0, 3]], [[0, 0], [1, 0], [0, 1], [1, 1]],
+      [[0, 0], [1, 0], [2, 0], [0, 1], [1, 1], [2, 1], [0, 2], [1, 2], [2, 2]],
+      [[0, 0], [0, 1], [1, 1]], [[1, 0], [0, 1], [1, 1]], [[0, 0], [1, 0], [0, 1]], [[0, 0], [1, 0], [1, 1]],
+      [[0, 0], [0, 1], [0, 2], [1, 2]], [[1, 0], [1, 1], [1, 2], [0, 2]], [[0, 0], [1, 0], [2, 0], [1, 1]],
+      [[0, 0], [1, 0], [1, 1], [2, 1]], [[1, 0], [2, 0], [0, 1], [1, 1]], [[0, 0], [1, 0], [2, 0], [0, 1], [0, 2]]
+    ];
+    let inkBoard = null, inkTray = [], inkDrag = null, inkClearing = [];
+    function inkNewPiece() {
+      const cells = INK_SHAPES[Math.floor(Math.random() * INK_SHAPES.length)];
+      return { cells, col: INKS[Math.floor(Math.random() * INKS.length)], seed: Math.random() * 100,
+               w: Math.max(...cells.map(c => c[0])) + 1, h: Math.max(...cells.map(c => c[1])) + 1 };
+    }
+    const inkFits = (p, gx, gy) => p.cells.every(([dx, dy]) => {
+      const x = gx + dx, y = gy + dy;
+      return x >= 0 && y >= 0 && x < INK_N && y < INK_N && !inkBoard[y][x];
+    });
+    const inkAnyFit = p => { for(let y = 0; y < INK_N; y++) for(let x = 0; x < INK_N; x++) if(inkFits(p, x, y)) return true; return false; };
+    function inkSlot(i) {
+      const p = inkTray[i], sw = canvas.width / 3;
+      return { x: sw * i + (sw - p.w * INK_TS) / 2, y: INK_TRAY_Y + (canvas.height - INK_TRAY_Y - p.h * INK_TS) / 2 };
+    }
+    // An inkblot square: wobbly mirror-symmetric edge, soaked-in gradient and veins down the fold
+    function inkSquare(x, y, sz, col, alpha = 1, seed = 0) {
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      const cx = x + sz / 2, cy = y + sz / 2, r = sz * 0.44;
+      ctx.beginPath();
+      for(let i = 0; i <= 28; i++) {
+        const a = i / 28 * Math.PI * 2;
+        const sq = Math.min(1 / Math.max(Math.abs(Math.cos(a)), Math.abs(Math.sin(a))), 1.25);
+        const wob = 1 + 0.06 * Math.sin(3 * a + seed) * Math.abs(Math.cos(a)) + 0.04 * Math.sin(5 * Math.abs(Math.cos(a)) + seed * 2);
+        const px = cx + Math.cos(a) * r * sq * wob, py = cy + Math.sin(a) * r * sq * wob;
+        i ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
+      }
+      ctx.closePath();
+      const gr = ctx.createRadialGradient(cx, cy - sz * 0.15, sz * 0.05, cx, cy, sz * 0.7);
+      gr.addColorStop(0, shadeHex(col, 0.28)); gr.addColorStop(0.6, col); gr.addColorStop(1, shadeHex(col, -0.35));
+      ctx.fillStyle = gr;
+      ctx.fill();
+      ctx.clip();
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.18)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(cx, y + sz * 0.15); ctx.lineTo(cx, y + sz * 0.85); ctx.stroke();
+      [-1, 1].forEach(d => { ctx.beginPath(); ctx.moveTo(cx, cy - sz * 0.05); ctx.quadraticCurveTo(cx + d * sz * 0.18, cy + sz * 0.05, cx + d * sz * 0.3, cy + sz * 0.25); ctx.stroke(); });
+      ctx.restore();
+    }
+    function inkNewBoard() {
+      inkBoard = Array.from({ length: INK_N }, () => Array(INK_N).fill(null));
+      inkTray = [inkNewPiece(), inkNewPiece(), inkNewPiece()];
+      inkDrag = null; inkClearing = [];
+    }
+    function inkPlace(p, gx, gy) {
+      p.cells.forEach(([dx, dy]) => { inkBoard[gy + dy][gx + dx] = { col: p.col, seed: p.seed + dx * 7 + dy * 13 }; });
+      score += p.cells.length;
+      const rows = [], cols = [];
+      for(let i = 0; i < INK_N; i++) {
+        if(inkBoard[i].every(Boolean)) rows.push(i);
+        if(inkBoard.every(r => r[i])) cols.push(i);
+      }
+      const lines = rows.length + cols.length;
+      if(lines) {
+        const cells = new Map(), t = performance.now();
+        rows.forEach(y => { for(let x = 0; x < INK_N; x++) cells.set(x + ',' + y, [x, y]); });
+        cols.forEach(x => { for(let y = 0; y < INK_N; y++) cells.set(x + ',' + y, [x, y]); });
+        cells.forEach(([x, y]) => { inkClearing.push({ x, y, cell: inkBoard[y][x], t, delay: (Math.abs(x - gx) + Math.abs(y - gy)) * 25 }); inkBoard[y][x] = null; });
+        score += lines * 10 * lines; // more lines at once are worth more
+        totalClearedLines += lines;
+        bump('puzzle-score'); bump('puzzle-lines');
+        if(navigator.vibrate) { try { navigator.vibrate(18); } catch(e) {} }
+        (function step() { drawBoard(); if(inkClearing.length) requestAnimationFrame(step); })();
+      }
+      updatePuzzleStats();
+    }
+    function inkDraw() {
+      if(!ctx || !inkBoard) return;
+      ctx.fillStyle = '#121829';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#f1e9db';
+      ctx.fillRect(INK_BX - 2, INK_BY - 2, INK_CELL * INK_N + 4, INK_CELL * INK_N + 4);
+      ctx.strokeStyle = 'rgba(120, 100, 80, 0.15)'; ctx.lineWidth = 1;
+      ctx.beginPath();
+      for(let i = 1; i < INK_N; i++) {
+        ctx.moveTo(INK_BX + i * INK_CELL, INK_BY); ctx.lineTo(INK_BX + i * INK_CELL, INK_BY + INK_N * INK_CELL);
+        ctx.moveTo(INK_BX, INK_BY + i * INK_CELL); ctx.lineTo(INK_BX + INK_N * INK_CELL, INK_BY + i * INK_CELL);
+      }
+      ctx.stroke();
+      for(let y = 0; y < INK_N; y++) for(let x = 0; x < INK_N; x++) {
+        const c = inkBoard[y][x];
+        if(c) inkSquare(INK_BX + x * INK_CELL, INK_BY + y * INK_CELL, INK_CELL, c.col, 1, c.seed);
+      }
+      // Where the dragged shape would land, and the lines it would complete
+      if(inkDrag && inkDrag.snap && inkFits(inkDrag.p, inkDrag.snap.gx, inkDrag.snap.gy)) {
+        const { gx, gy } = inkDrag.snap, p = inkDrag.p, tmp = inkBoard.map(r => r.slice());
+        p.cells.forEach(([dx, dy]) => { tmp[gy + dy][gx + dx] = true; });
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.16)';
+        for(let i = 0; i < INK_N; i++) {
+          if(tmp[i].every(Boolean)) ctx.fillRect(INK_BX, INK_BY + i * INK_CELL, INK_N * INK_CELL, INK_CELL);
+          if(tmp.every(r => r[i])) ctx.fillRect(INK_BX + i * INK_CELL, INK_BY, INK_CELL, INK_N * INK_CELL);
+        }
+        p.cells.forEach(([dx, dy]) => inkSquare(INK_BX + (gx + dx) * INK_CELL, INK_BY + (gy + dy) * INK_CELL, INK_CELL, p.col, 0.3, p.seed + dx * 7 + dy * 13));
+      }
+      // Dissolving squares: the ink spreads, pales and fades
+      const now = performance.now();
+      inkClearing = inkClearing.filter(c => {
+        const k = (now - c.t - c.delay) / 380;
+        if(k >= 1) return false;
+        const grow = k < 0 ? 0 : k, sz = INK_CELL * (1 + grow * 0.5), o = (sz - INK_CELL) / 2;
+        inkSquare(INK_BX + c.x * INK_CELL - o, INK_BY + c.y * INK_CELL - o, sz, c.cell.col, k < 0 ? 1 : (1 - k) * 0.9, c.cell.seed);
+        return true;
+      });
+      // Tray on paper, shapes that can't fit anywhere are faded
+      ctx.fillStyle = 'rgba(241, 233, 219, 0.85)';
+      ctx.fillRect(INK_BX - 2, INK_TRAY_Y - 6, INK_CELL * INK_N + 4, canvas.height - INK_TRAY_Y + 2);
+      inkTray.forEach((p, i) => {
+        if(!p || (inkDrag && inkDrag.i === i)) return;
+        const r = inkSlot(i), dim = !inkAnyFit(p);
+        p.cells.forEach(([dx, dy]) => inkSquare(r.x + dx * INK_TS, r.y + dy * INK_TS, INK_TS, p.col, dim ? 0.3 : 1, p.seed + dx * 7 + dy * 13));
+      });
+      if(inkDrag) inkDrag.p.cells.forEach(([dx, dy]) => inkSquare(inkDrag.px + dx * INK_CELL, inkDrag.py + dy * INK_CELL, INK_CELL, inkDrag.p.col, 0.95, inkDrag.p.seed + dx * 7 + dy * 13));
+      puzzleChrome(true);
+    }
+    // Dragging (canvas coordinates; the shape floats above your finger so you can see it)
+    (function setupInkDrag() {
+      const c = canvas;
+      if(!c) return;
+      const pos = e => { const r = c.getBoundingClientRect(); return [(e.clientX - r.left) * c.width / r.width, (e.clientY - r.top) * c.height / r.height]; };
+      const move = (x, y) => {
+        inkDrag.px = x - inkDrag.p.w * INK_CELL / 2;
+        inkDrag.py = y - inkDrag.p.h * INK_CELL - INK_CELL * 0.9;
+        inkDrag.snap = { gx: Math.round((inkDrag.px - INK_BX) / INK_CELL), gy: Math.round((inkDrag.py - INK_BY) / INK_CELL) };
+        drawBoard();
+      };
+      c.addEventListener('pointerdown', e => {
+        if(puzzleMode !== 'ink' || isGameOver) return;
+        e.preventDefault();
+        if(isPaused || !tInterval) { togglePuzzlePause(); return; }
+        const [x, y] = pos(e);
+        for(let i = 0; i < 3; i++) {
+          const p = inkTray[i];
+          if(!p) continue;
+          const r = inkSlot(i), pad = 14;
+          if(x >= r.x - pad && x <= r.x + p.w * INK_TS + pad && y >= INK_TRAY_Y - 6) {
+            inkDrag = { i, p };
+            try { c.setPointerCapture(e.pointerId); } catch(err) {}
+            move(x, y);
+            return;
+          }
+        }
+      });
+      c.addEventListener('pointermove', e => { if(puzzleMode === 'ink' && inkDrag) move(...pos(e)); });
+      const drop = () => {
+        if(puzzleMode !== 'ink' || !inkDrag) return;
+        const { gx, gy } = inkDrag.snap || {};
+        if(!isPaused && !isGameOver && inkDrag.snap && inkFits(inkDrag.p, gx, gy)) {
+          inkPlace(inkDrag.p, gx, gy);
+          inkTray[inkDrag.i] = null;
+          if(inkTray.every(t => !t)) inkTray = [inkNewPiece(), inkNewPiece(), inkNewPiece()];
+          if(!inkTray.some(t => t && inkAnyFit(t))) setTimeout(() => gameOver(), 450);
+        }
+        inkDrag = null;
+        drawBoard();
+      };
+      c.addEventListener('pointerup', drop);
+      c.addEventListener('pointercancel', () => { inkDrag = null; drawBoard(); });
+    })();
+
+    // ----- The three games behind one set of controls
+    const PUZZLE_ENGINES = {
+      honeycomb: {
+        name: 'Honeycomb', unitWord: 'Blots', unitLabel: 'BLOTS', bestKey: 'aq_puzzle_best', cols: COLS, next: true,
+        hint: 'Turn pieces so matching inks touch: 6 joined hexes dissolve. Picture each turn in your mind first.',
+        why: "Honeycomb's hexagons turn six ways, so they ask for a lot of mental rotation, which is the part that helps.",
+        draw: hcDrawBoard, tick: hcUpdate, move: hcMove, rotate: hcRotate, drop: hcDrop, soft: hcSoftDrop, drawNext: hcDrawNext,
+        started: () => !!currentPiece,
+        newBoard() { grid = Array(ROWS).fill().map(() => Array(COLS).fill(0)); currentPiece = null; nextPiece = null; hcSpawn(); }
+      },
+      classic: {
+        name: 'Classic Blocks', unitWord: 'Lines', unitLabel: 'LINES', bestKey: 'aq_puzzle_best_classic', cols: CL_COLS, next: true,
+        hint: 'Fill a whole row to clear it. Picture each turn in your mind before you make it.',
+        why: 'Turning the falling blocks in your mind is the part that helps.',
+        draw: clDraw, tick: clTick, move: clMove, rotate: clRotate, drop: clDrop, soft: clSoft, drawNext: clDrawNext,
+        started: () => !!clPiece,
+        newBoard() { clGrid = Array(CL_ROWS).fill().map(() => Array(CL_COLS).fill(0)); clPiece = null; clNext = null; clSpawn(); }
+      },
+      ink: {
+        name: 'Ink Blocks', unitWord: 'Lines', unitLabel: 'LINES', bestKey: 'aq_puzzle_best_ink', cols: INK_N, next: false,
+        hint: 'Drag shapes onto the sheet. Full rows and columns dissolve. Picture where each fits first.',
+        why: 'Picturing where each shape fits before you drag it is the part that helps.',
+        draw: inkDraw, tick() {}, move() {}, rotate() {}, drop() {}, soft() {}, drawNext() {},
+        started: () => !!inkBoard,
+        newBoard: inkNewBoard
+      }
+    };
+    let puzzleMode = PUZZLE_ENGINES[localStorage.getItem('aq_puzzle_mode')] ? localStorage.getItem('aq_puzzle_mode') : 'honeycomb';
+    function PE() { return PUZZLE_ENGINES[puzzleMode]; }
+    function drawBoard() { PE().draw(); }
+    function updatePuzzle() { PE().tick(); }
+    function spawnPiece() { PE().newBoard(); }
+    function movePuzzle(dir) { PE().move(dir); }
+    function rotatePuzzle() { PE().rotate(); }
+    function dropPuzzle() { PE().drop(); }
+    function softDropPuzzle() { PE().soft(); }
+    function drawNextPiece() { PE().drawNext(); }
+
+    // Labels, hint and "why" for the chosen game
+    function applyPuzzleModeText() {
+      const e = PE();
+      PUZZLE_MILESTONES[0][1] = e.hint;
+      const lbl = document.getElementById('puzzle-unit-label'); if(lbl) lbl.innerText = e.unitLabel;
+      const why = document.getElementById('puzzle-why-mode'); if(why) why.innerText = e.why;
+      const nx = document.getElementById('puzzle-next-stat'); if(nx) nx.style.display = e.next ? '' : 'none';
+      const ms = document.getElementById('puzzle-milestone');
+      if(ms && timeLeft >= SESSION_SECONDS) ms.innerText = e.hint;
+      bestScore = parseInt(localStorage.getItem(e.bestKey) || '0');
+    }
+    function setPuzzleMode(mode) {
+      if(!PUZZLE_ENGINES[mode] || mode === puzzleMode) return;
+      pausePuzzle();
+      puzzleMode = mode;
+      localStorage.setItem('aq_puzzle_mode', mode);
+      isGameOver = false;
+      document.getElementById('game-over-screen').style.display = 'none';
+      score = 0;
+      totalClearedLines = 0;
+      applyPuzzleModeText();
+      PE().newBoard();
+      isPaused = true; // the session clock keeps its time; tap the board to play
+      updatePuzzleStats();
+      drawNextPiece();
+      drawBoard();
+      renderPuzzleModeSettings();
+    }
+    function renderPuzzleModeSettings() {
+      const el = document.getElementById('puzzle-mode-opts');
+      if(!el) return;
+      el.innerHTML = Object.entries(PUZZLE_ENGINES).map(([k, e]) =>
+        `<button type="button" class="tag-chip ${puzzleMode === k ? 'selected' : ''}" onclick="setPuzzleMode('${k}')">${e.name}</button>`).join('');
+    }
+    applyPuzzleModeText();
 
     // Initial render: runs last so every variable above is already declared
     document.getElementById('vagus-count').innerText = vagusCount;
@@ -7040,6 +8800,7 @@
     drawSky(performance.now());
     requestAnimationFrame(skyLoop);
     setupHamsterTap();
+    applySpiritBackdrop();
     renderHamsterName();
     renderIncidents();
     renderPatterns();
