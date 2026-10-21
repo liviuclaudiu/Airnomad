@@ -443,6 +443,61 @@
       margin: 0 auto;
     }
 
+    .tetris-timer-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; text-align: left; }
+    .tetris-ring {
+      position: relative;
+      width: 64px;
+      height: 64px;
+      flex-shrink: 0;
+      padding: 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+    .tetris-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .tetris-ring circle { fill: none; stroke-width: 5; }
+    .tetris-ring .ring-bg { stroke: rgba(255, 255, 255, 0.08); }
+    .tetris-ring .ring-fg { stroke: var(--theme-primary); stroke-linecap: round; transition: stroke-dashoffset 0.9s linear, stroke 0.4s ease; }
+    .tetris-ring #tetris-timer {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--theme-primary);
+    }
+    .tetris-timer-info { font-size: 0.78rem; line-height: 1.35; color: var(--text-main); }
+    .tetris-window-chip { margin-top: 5px; font-size: 0.68rem; color: var(--text-muted); background: var(--tint); border-radius: 8px; padding: 2px 8px; }
+    .tetris-why {
+      text-align: left;
+      font-size: 0.8rem;
+      line-height: 1.45;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      background: var(--tint);
+      border-left: 3px solid var(--theme-primary);
+      border-radius: 8px;
+      animation: cardIn 0.3s ease both;
+    }
+    .tetris-pp {
+      align-self: center;
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(10, 18, 38, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      z-index: 11;
+      cursor: pointer;
+    }
+    .tetris-pp svg { width: 14px; height: 14px; fill: #e6f3ff; }
+    #tetris-canvas { touch-action: none; }
     #tetris-canvas {
       background: #02040a;
       display: block;
@@ -781,18 +836,39 @@
     }
     .moon-view.open { display: flex; }
     #moon-view-canvas {
-      width: min(92vw, 380px);
-      height: min(92vw, 380px);
+      width: min(94vw, 52vh, 440px);
+      height: min(94vw, 52vh, 440px);
+      flex-shrink: 0;
       /* Soft round fade so clouds drift in and out instead of being cut at the edge */
       -webkit-mask-image: radial-gradient(circle, #000 55%, transparent 71%);
       mask-image: radial-gradient(circle, #000 55%, transparent 71%);
     }
-    .moon-view-name { font-size: 1.4rem; font-weight: 800; color: #fff6d8; margin-top: 8px; }
-    .moon-view-sub { font-size: 0.85rem; color: rgba(255, 246, 216, 0.65); margin-top: 4px; }
-    .moon-view-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: min(92vw, 380px); margin-top: 18px; }
-    .moon-view-facts div { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 246, 216, 0.15); border-radius: 12px; padding: 10px; }
-    .moon-view-facts b { display: block; color: #fff6d8; font-size: 1rem; }
-    .moon-view-facts span { font-size: 0.7rem; color: rgba(255, 246, 216, 0.6); }
+    .moon-view-name { font-size: 1.25rem; font-weight: 800; color: #fff6d8; margin-top: 4px; }
+    .moon-view-sub { font-size: 0.78rem; color: rgba(255, 246, 216, 0.65); margin-top: 2px; }
+    .moon-view-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; width: min(92vw, 340px); margin-top: 10px; }
+    .moon-view-facts div { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 246, 216, 0.12); border-radius: 10px; padding: 6px 8px; }
+    .moon-view-facts .mv-wide { grid-column: span 2; display: flex; justify-content: center; align-items: baseline; gap: 8px; }
+    .moon-view-facts b { display: block; color: #fff6d8; font-size: 0.88rem; }
+    .moon-view-facts span { font-size: 0.64rem; color: rgba(255, 246, 216, 0.6); }
+    .moon-view { overflow-y: auto; justify-content: flex-start; }
+    .moon-view > canvas { margin-top: calc(24px + env(safe-area-inset-top)); }
+    .moon-view-weather {
+      width: min(92vw, 340px);
+      margin-top: 6px;
+      padding: 8px 10px;
+      text-align: left;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 246, 216, 0.15);
+      border-radius: 12px;
+      color: #fff6d8;
+      font-size: 0.85rem;
+    }
+    .mv-weather-main { display: flex; align-items: center; gap: 10px; }
+    .mv-weather-main b { display: block; font-size: 0.88rem; }
+    .mv-weather-main span { font-size: 0.68rem; color: rgba(255, 246, 216, 0.65); }
+    .mv-weather-icon { font-size: 1.4rem; }
+    .mv-tonight { margin: 5px 0 3px; font-size: 0.78rem; }
+    .mv-muted { font-size: 0.68rem; color: rgba(255, 246, 216, 0.5); }
     .moon-view-close {
       position: absolute;
       top: calc(14px + env(safe-area-inset-top));
@@ -954,34 +1030,33 @@
     @keyframes unspongeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
     .unsponge-tap.reveal #unsponge-text { display: inline-block; animation: unspongeIn 0.45s ease both; }
 
-    .biff-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
-    .biff-block {
+    .recovery-row {
+      padding: 10px 12px;
       background: rgba(5, 10, 22, 0.6);
       border: 1px solid var(--border-color);
       border-radius: 10px;
-      padding: 10px 12px;
       margin-bottom: 8px;
-      font-size: 0.85rem;
-      line-height: 1.45;
-      animation: cardIn 0.3s ease both;
+      font-size: 0.82rem;
     }
-    .biff-label { font-size: 0.68rem; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
-    .biff-reply { font-size: 0.95rem; color: var(--text-main); }
-    .biff-emergency { border-color: rgba(239, 68, 68, 0.85); background: rgba(239, 68, 68, 0.16); }
-    .biff-call {
-      display: block;
-      text-align: center;
-      text-decoration: none;
-      background: linear-gradient(135deg, #ef4444, #f97316);
-      color: #fff;
-      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.35);
+    .day-chip { display: inline-block; font-size: 0.65rem; font-weight: 700; padding: 1px 7px; border-radius: 8px; margin: 0 4px; }
+    .day-chip.red { background: rgba(239, 68, 68, 0.25); color: #fca5a5; }
+    .day-chip.incident { background: rgba(249, 115, 22, 0.25); color: #fdba74; }
+    .day-chip.black { background: #000; color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.6); }
+
+    .past-periods { margin-top: 8px; max-height: 180px; overflow-y: auto; }
+
+    .usage-row { display: flex; justify-content: space-between; font-size: 0.82rem; padding: 5px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+
+    .note-tag-btn {
+      margin-top: 6px;
+      background: none;
+      border: none;
+      padding: 0;
+      color: var(--theme-primary);
+      font-size: 0.72rem;
+      cursor: pointer;
     }
-    .anchor-gen { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border-color); }
-    .anchor-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 8px; }
-    #anchor-script { background: var(--tint); border-radius: 10px; padding: 10px 12px; }
-    .biff-log-head { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border-color); }
-    #biff-log { margin-top: 10px; }
-    .biff-safety { border-color: rgba(239, 68, 68, 0.6); background: rgba(239, 68, 68, 0.12); }
+
 
     .theme-reason {
       display: flex;
@@ -1187,13 +1262,13 @@
   </header>
 
   <nav>
-    <button class="tab-btn active" onclick="switchTab(0)">Vagus</button>
-    <button class="tab-btn" onclick="switchTab(1)">Journey</button>
-    <button class="tab-btn" onclick="switchTab(2)">Tetris</button>
-    <button class="tab-btn" onclick="switchTab(3)">Recover</button>
-    <button class="tab-btn" onclick="switchTab(4)" id="hamster-tab">Spirit</button>
-    <button class="tab-btn" onclick="switchTab(5)">Calm</button>
-    <button class="tab-btn" onclick="switchTab(6)">Practise</button>
+    <button class="tab-btn active" data-tab="journey" onclick="switchTab('journey')">Journey</button>
+    <button class="tab-btn" data-tab="tetris" onclick="switchTab('tetris')">Tetris</button>
+    <button class="tab-btn" data-tab="spirit" onclick="switchTab('spirit')" id="hamster-tab">Spirit</button>
+    <button class="tab-btn" data-tab="vagus" onclick="switchTab('vagus')">Vagus</button>
+    <button class="tab-btn" data-tab="recover" onclick="switchTab('recover')">Recover</button>
+    <button class="tab-btn" data-tab="calm" onclick="switchTab('calm')">Calm</button>
+    <button class="tab-btn" data-tab="practise" onclick="switchTab('practise')">Practise</button>
   </nav>
 
   <div id="tetris-window-banner" class="window-banner" style="display:none;">
@@ -1212,28 +1287,8 @@
       <div class="foryou-actions" id="for-you-actions"></div>
     </div>
 
-    <!-- TAB 1: VAGUS -->
-    <div class="tab-content active">
-      <div class="card">
-        <h2>Vagus Nerve Reset</h2>
-        <div class="subtitle">Keep head centered forward. Hold gaze far right until you yawn/swallow, then far left until you yawn/swallow.</div>
-        
-        <div style="text-align: center; padding: 10px 0;">
-          <div class="head-diagram">
-            <div class="head-indicator" id="eye-pos"><span class="eye-ball"></span></div>
-          </div>
-          <div style="font-size:0.9rem; font-weight:600; color:var(--theme-primary);" id="eye-status">1. Look Far Right (Hold)</div>
-          <div class="counter-badge" id="vagus-count">0</div>
-          <div class="subtitle">Resets Completed Today</div>
-        </div>
-
-        <button class="btn-action" onclick="stepVagus()">Next Gaze Step ▶</button>
-        <button class="btn-action btn-secondary" onclick="incrementVagus()" style="margin-top:8px;">Mark Yawn / Reset Done (+1)</button>
-      </div>
-    </div>
-
     <!-- TAB 2: JOURNEY -->
-    <div class="tab-content">
+    <div class="tab-content active" id="tab-journey">
       <div class="card">
         <h2>New Entry</h2>
         <textarea id="note-input" placeholder="Type thoughts or event details..."></textarea>
@@ -1329,10 +1384,25 @@
     </div>
 
     <!-- TAB 3: TETRIS -->
-    <div class="tab-content">
+    <div class="tab-content" id="tab-tetris">
       <div class="card" style="text-align: center;">
-        <div style="display:flex; justify-content:center; align-items:center; margin-bottom:10px;">
-          <span id="tetris-timer" style="color:var(--theme-primary); font-weight:700;">10:00</span>
+        <div class="tetris-timer-wrap">
+          <button class="tetris-ring" onclick="toggleTetrisWhy()" aria-label="Session timer: tap to learn why Tetris helps">
+            <svg viewBox="0 0 64 64">
+              <circle cx="32" cy="32" r="28" class="ring-bg"></circle>
+              <circle cx="32" cy="32" r="28" class="ring-fg" id="tetris-ring-fg"></circle>
+            </svg>
+            <span id="tetris-timer">10:00</span>
+          </button>
+          <div class="tetris-timer-info">
+            <div id="tetris-milestone">Rotate the pieces in your mind before you place them. That is the part that helps.</div>
+            <div id="tetris-window-chip" class="tetris-window-chip" style="display:none;"></div>
+          </div>
+        </div>
+        <div class="tetris-why" id="tetris-why" style="display:none;">
+          <b>Why Tetris?</b> Right after something upsetting, your brain spends a few hours "saving" the memory, mostly as vivid pictures.
+          Tetris keeps that same visual part of your brain busy, so the memory gets stored less vividly and pops back into your head less often.
+          You still remember what happened; it just intrudes less. It works best within about 6 hours, for 10 to 20 minutes, while really focusing on rotating the pieces in your mind.
         </div>
         
         <div class="tetris-area">
@@ -1345,6 +1415,7 @@
           </div>
         </div>
         <div class="tetris-side">
+          <button class="tetris-pp" id="tetris-pp" onclick="toggleTetrisPause()" aria-label="Pause or play"></button>
           <div class="tetris-stat">
             <div class="tetris-stat-label">NEXT</div>
             <canvas id="tetris-next" width="64" height="48"></canvas>
@@ -1364,19 +1435,7 @@
         </div>
         </div>
 
-        <div class="tetris-controls">
-          <button class="t-btn" id="t-left">◀</button>
-          <button class="t-btn" onclick="rotateTetris()">↻</button>
-          <button class="t-btn" id="t-right">▶</button>
-          <button class="t-btn" id="t-soft">▼ Soft</button>
-          <button class="t-btn" style="grid-column: span 2;" onclick="dropTetris()">⤓ HARD DROP</button>
-        </div>
-
-        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:6px; margin-top:10px;">
-          <button class="btn-action btn-secondary" style="margin-top:0;" onclick="pauseTetris()">Pause</button>
-          <button class="btn-action" style="margin-top:0;" onclick="resumeTetris()">Resume</button>
-          <button class="btn-action btn-secondary" style="margin-top:0; color:var(--color-red); border-color:rgba(239,68,68,0.4);" onclick="resetTetris()">Reset</button>
-        </div>
+        <button class="btn-action btn-secondary" style="margin-top:12px; color:var(--color-red); border-color:rgba(239,68,68,0.4);" onclick="resetTetris()">Reset</button>
 
         <div style="margin-top: 14px;">
           <a href="https://youtu.be/GYJkSLTJAv0?si=Xkk5F3I9TuIqr_ii" target="_blank" style="color:var(--theme-secondary); font-size:0.8rem; text-decoration:none;">🎵 Open Bilateral Audio Track</a>
@@ -1384,69 +1443,8 @@
       </div>
     </div>
 
-    <!-- TAB 4: RECOVER -->
-    <div class="tab-content">
-      <div class="card">
-        <h2>BIFF Reply Helper</h2>
-        <textarea id="biff-input" placeholder='e.g. "You used me up, what solutions do you have to fix me?!"'></textarea>
-        <div style="display:grid; grid-template-columns: 2fr 1fr; gap:8px;">
-          <button class="btn-action" onclick="generateBiff()">Get a calm reply</button>
-          <button class="btn-action btn-secondary" onclick="clearBiff()">Clear</button>
-        </div>
-        <div id="biff-output" style="display:none; margin-top:12px;"></div>
-
-        <div class="anchor-gen">
-          <div class="biff-label">Need to step away? Anchor script</div>
-          <div class="anchor-chips">
-            <button class="tag-chip" onclick="makeAnchor(10)">10 min</button>
-            <button class="tag-chip" onclick="makeAnchor(20)">20 min</button>
-            <button class="tag-chip" onclick="makeAnchor(30)">30 min</button>
-            <button class="tag-chip" onclick="makeAnchor(60)">1 hour</button>
-          </div>
-          <div class="biff-reply" id="anchor-script" style="display:none;"></div>
-        </div>
-
-        <div class="biff-log-head">
-          <div class="biff-label" style="margin:0;">BIFF Log <span id="biff-log-count"></span></div>
-          <button class="icon-btn" onclick="toggleBiffLog()" id="biff-log-btn">Show</button>
-        </div>
-        <div id="biff-log" style="display:none;"></div>
-      </div>
-
-      <div class="card" style="text-align: center;">
-        <h2>Discreet Bathroom Reset</h2>
-        <div class="subtitle">Execute silently during a bathroom break. Do not raise suspicion.</div>
-
-        <div style="margin-top: 15px;">
-          <div style="font-weight:600; font-size:0.9rem; color:var(--theme-primary);">1. Adrenaline Discharge (Silent Shake)</div>
-          <div class="subtitle">Lightly shake wrists, arms, jaw, and ankles while standing on bathmat or sitting.</div>
-          
-          <div class="shake-circle" id="shake-box">30s</div>
-          <button class="btn-action" onclick="startShakeTimer(30)">Start 30s Shake Pacer</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <div style="font-weight:600; font-size:0.9rem; color:var(--theme-primary); margin-bottom:6px;">2. Cold Water Heart-Rate Drop</div>
-        <div class="subtitle">Turn on tap water for natural background noise. Splash ice water on cheeks/eyes or hold cold wet towel to face for 30 seconds.</div>
-        <button class="btn-action btn-secondary" onclick="startColdTimer()">30s Cold Hold Timer</button>
-        <div id="cold-status" style="text-align:center; font-weight:700; margin-top:8px; color:var(--theme-secondary);"></div>
-      </div>
-
-      <div class="card">
-        <div style="font-weight:600; font-size:0.9rem; color:var(--theme-primary); margin-bottom:8px;">3. Emotional Un-Sponging</div>
-        <div class="subtitle">Tap the card to read the next one and leave her weather behind:</div>
-
-        <div class="unsponge-card unsponge-tap" id="unsponge-card" onclick="nextUnsponge()">
-          <span id="unsponge-text">"I held the line and remained calm. Now I return her emotional load back to her."</span>
-          <div class="unsponge-hint">Tap for the next one</div>
-        </div>
-      </div>
-
-    </div>
-
     <!-- TAB 5: COUNT -->
-    <div class="tab-content">
+    <div class="tab-content" id="tab-spirit">
       <div class="hamster-card">
         <div class="hamster-canvas-container">
           <canvas id="hamster-canvas" width="320" height="150" style="width:100%; height:100%;"></canvas>
@@ -1530,8 +1528,62 @@
       </div>
     </div>
 
+    <!-- TAB 1: VAGUS -->
+    <div class="tab-content" id="tab-vagus">
+      <div class="card">
+        <h2>Vagus Nerve Reset</h2>
+        <div class="subtitle">Keep head centered forward. Hold gaze far right until you yawn/swallow, then far left until you yawn/swallow.</div>
+        
+        <div style="text-align: center; padding: 10px 0;">
+          <div class="head-diagram">
+            <div class="head-indicator" id="eye-pos"><span class="eye-ball"></span></div>
+          </div>
+          <div style="font-size:0.9rem; font-weight:600; color:var(--theme-primary);" id="eye-status">1. Look Far Right (Hold)</div>
+          <div class="counter-badge" id="vagus-count">0</div>
+          <div class="subtitle">Resets Completed Today</div>
+        </div>
+
+        <button class="btn-action" onclick="stepVagus()">Next Gaze Step ▶</button>
+        <button class="btn-action btn-secondary" onclick="incrementVagus()" style="margin-top:8px;">Mark Yawn / Reset Done (+1)</button>
+      </div>
+    </div>
+
+    <!-- TAB 4: RECOVER -->
+    <div class="tab-content" id="tab-recover">
+      <div class="card" style="text-align: center;">
+        <h2>Discreet Bathroom Reset</h2>
+        <div class="subtitle">Execute silently during a bathroom break. Do not raise suspicion.</div>
+
+        <div style="margin-top: 15px;">
+          <div style="font-weight:600; font-size:0.9rem; color:var(--theme-primary);">1. Adrenaline Discharge (Silent Shake)</div>
+          <div class="subtitle">Lightly shake wrists, arms, jaw, and ankles while standing on bathmat or sitting.</div>
+          
+          <div class="shake-circle" id="shake-box">30s</div>
+          <button class="btn-action" onclick="startShakeTimer(30)">Start 30s Shake Pacer</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="font-weight:600; font-size:0.9rem; color:var(--theme-primary); margin-bottom:6px;">2. Cold Water Heart-Rate Drop</div>
+        <div class="subtitle">Turn on tap water for natural background noise. Splash ice water on cheeks/eyes or hold cold wet towel to face for 30 seconds.</div>
+        <button class="btn-action btn-secondary" onclick="startColdTimer()">30s Cold Hold Timer</button>
+        <div id="cold-status" style="text-align:center; font-weight:700; margin-top:8px; color:var(--theme-secondary);"></div>
+      </div>
+
+      <div class="card">
+        <div style="font-weight:600; font-size:0.9rem; color:var(--theme-primary); margin-bottom:8px;">3. Emotional Un-Sponging</div>
+        <div class="subtitle">Tap the card to read the next one and leave her weather behind:</div>
+
+        <div class="unsponge-card unsponge-tap" id="unsponge-card" onclick="nextUnsponge()">
+          <span id="unsponge-text">"I held the line and remained calm. Now I return her emotional load back to her."</span>
+          <div class="unsponge-hint">Tap for the next one</div>
+        </div>
+      </div>
+
+    </div>
+
     <!-- TAB 6: CALM -->
-    <div class="tab-content">
+    <div class="tab-content" id="tab-calm">
       <div class="card">
         <h2>Statements</h2>
         <div style="font-style:italic; text-align:center; min-height:60px; display:flex; align-items:center; justify-content:center; color:var(--theme-primary); font-size:1rem; padding:10px; background:rgba(5,10,22,0.5); border-radius:10px;" id="quote-display">
@@ -1603,46 +1655,17 @@
     </div>
 
     <!-- TAB 7: PRACTISE -->
-    <div class="tab-content">
+    <div class="tab-content" id="tab-practise">
       <div class="card">
-        <h2>Vagus Nerve Reset</h2>
+        <h2>Time on Exercises</h2>
         <div class="stat-grid">
-          <div class="stat-box"><div class="stat-box-val" id="p-vagus-today">0</div><div class="stat-box-label">Today</div></div>
-          <div class="stat-box"><div class="stat-box-val" id="p-vagus-week">0</div><div class="stat-box-label">Last 7 days</div></div>
-          <div class="stat-box"><div class="stat-box-val" id="p-vagus-total">0</div><div class="stat-box-label">All time</div></div>
-          <div class="stat-box"><div class="stat-box-val" id="p-vagus-streak">0</div><div class="stat-box-label">Day streak</div></div>
+          <div class="stat-box"><div class="stat-box-val" id="p-vagus-total">0</div><div class="stat-box-label">Vagus resets</div></div>
+          <div class="stat-box"><div class="stat-box-val" id="p-tetris-min-total">0</div><div class="stat-box-label">Tetris minutes</div></div>
+          <div class="stat-box"><div class="stat-box-val" id="p-breath-min-total">0</div><div class="stat-box-label">Breathing minutes</div></div>
+          <div class="stat-box"><div class="stat-box-val" id="p-tools-total">0</div><div class="stat-box-label">Calm games &amp; tools</div></div>
         </div>
-        <button class="btn-action" onclick="incrementVagus()">Mark Reset Done (+1)</button>
-      </div>
-
-      <div class="card">
-        <h2>Tetris Focus</h2>
-        <div class="subtitle">A session counts when the 10:00 timer finishes.</div>
-        <div class="stat-grid">
-          <div class="stat-box"><div class="stat-box-val" id="p-tetris-today">0</div><div class="stat-box-label">Sessions today</div></div>
-          <div class="stat-box"><div class="stat-box-val" id="p-tetris-total">0</div><div class="stat-box-label">Sessions all time</div></div>
-          <div class="stat-box"><div class="stat-box-val" id="p-tetris-min-today">0</div><div class="stat-box-label">Minutes today</div></div>
-          <div class="stat-box"><div class="stat-box-val" id="p-tetris-min-total">0</div><div class="stat-box-label">Minutes all time</div></div>
-        </div>
-        <button class="btn-action btn-secondary" onclick="switchTab(2)">Start a Tetris Session ▶</button>
-      </div>
-
-      <div class="card">
-        <h2>Breathing</h2>
-        <div class="subtitle">A round counts each time the pacer completes a full breath cycle.</div>
-        <div class="stat-grid">
-          <div class="stat-box"><div class="stat-box-val" id="p-breath-today">0</div><div class="stat-box-label">Rounds today</div></div>
-          <div class="stat-box"><div class="stat-box-val" id="p-breath-total">0</div><div class="stat-box-label">Rounds all time</div></div>
-          <div class="stat-box"><div class="stat-box-val" id="p-breath-min-today">0</div><div class="stat-box-label">Minutes today</div></div>
-          <div class="stat-box"><div class="stat-box-val" id="p-breath-min-total">0</div><div class="stat-box-label">Minutes all time</div></div>
-        </div>
-        <button class="btn-action btn-secondary" onclick="goTool('breathe')">Start Breathing ▶</button>
-      </div>
-
-      <div class="card">
-        <h2>Last 7 Days</h2>
-        <div class="week-row" style="color:var(--text-muted);"><span></span><span>Vagus</span><span>Tetris min</span><span>Breaths</span></div>
-        <div id="p-week"></div>
+        <div class="validation-breakdown" id="p-week-line"></div>
+        <div id="p-help"></div>
       </div>
     </div>
   </main>
@@ -1703,6 +1726,7 @@
     <div class="moon-view-name" id="moon-view-name"></div>
     <div class="moon-view-sub" id="moon-view-sub"></div>
     <div class="moon-view-facts" id="moon-view-facts"></div>
+    <div class="moon-view-weather" id="moon-view-weather"></div>
   </div>
 
   <div class="modal" id="settings-modal">
@@ -1725,6 +1749,15 @@
       </div>
 
       <div class="form-group">
+        <label>Past period start dates (makes the cycle patterns accurate):</label>
+        <div style="display:flex; gap:8px;">
+          <input type="date" id="cfg-past-period" style="flex:1;">
+          <button class="icon-btn" type="button" onclick="addPastPeriod()">+ Add</button>
+        </div>
+        <div id="past-periods" class="past-periods"></div>
+      </div>
+
+      <div class="form-group">
         <label>Next Office Day Date:</label>
         <input type="date" id="cfg-office">
       </div>
@@ -1738,8 +1771,13 @@
         <input type="file" id="backup-file" accept="application/json,.json" style="display:none;" onchange="importBackup(this)">
       </div>
 
+      <div class="form-group">
+        <label>App usage (private, only on this device):</label>
+        <div id="usage-settings"></div>
+      </div>
+
       <button class="btn-action" onclick="saveSettings()">Save & Update</button>
-      <button class="btn-action btn-secondary" onclick="showOniScreen()" style="margin-top:8px;">Show Oni Start Screen</button>
+      <button class="btn-action btn-secondary" onclick="showOniScreen()" style="margin-top:8px;">Show Start Screen</button>
       <button class="btn-action btn-secondary" onclick="closeSettings()" style="margin-top:8px;">Cancel</button>
     </div>
   </div>
@@ -2371,24 +2409,22 @@
       if(!oniAnimFrame) animateOni();
     }
 
-    function switchTab(index) {
-      document.querySelectorAll('.tab-btn').forEach((btn, i) => {
-        btn.classList.toggle('active', i === index);
-      });
-      document.querySelectorAll('.tab-content').forEach((ct, i) => {
-        ct.classList.toggle('active', i === index);
-      });
-      if(index === 2) { if(!isGameOver) startTetris(); }
-      else pauseTetris();
-      if(index === 4) {
+    // Tabs (in order): journey, tetris, spirit, vagus, recover, calm, practise
+    function switchTab(name) {
+      if(typeof usageTab === 'function') usageTab(name);
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === name));
+      document.querySelectorAll('.tab-content').forEach(ct => ct.classList.toggle('active', ct.id === 'tab-' + name));
+      // A brand-new game starts by itself; one you left stays paused until you tap Resume
+      if(name === 'tetris') { if(!isGameOver && !currentPiece) startTetris(); else drawBoard(); }
+      else if(tInterval) pauseTetris();
+      if(name === 'spirit') {
         updateCountMeters();
         drawHamster();
         renderFeedButton(); // a new day unlocks a new seed
       }
-      if(index === 6) renderPractice();
-      if(index === 3) toggleBiffLog(false);
-      if(index === 1) { toggleJournal(false); toggleIncidents(false); }
-      if(index === 5) initChaosGame();
+      if(name === 'practise') renderPractice();
+      if(name === 'journey') { toggleJournal(false); toggleIncidents(false); }
+      if(name === 'calm') initChaosGame();
       else if(typeof stopBreathing === 'function' && breathTimer) stopBreathing();
     }
 
@@ -2404,8 +2440,79 @@
       }
     }
 
+    // CYCLE HISTORY: past period start dates (YYYY-MM-DD), used instead of assuming 28 days
+    let pastPeriods = JSON.parse(localStorage.getItem('aq_cycles') || '[]');
+    function savePastPeriods() {
+      pastPeriods = [...new Set(pastPeriods)].sort();
+      localStorage.setItem('aq_cycles', JSON.stringify(pastPeriods));
+      renderPastPeriods();
+      updateCountMeters();
+    }
+    function addPastPeriod() {
+      const input = document.getElementById('cfg-past-period');
+      if(!input.value) return;
+      pastPeriods.push(input.value);
+      input.value = '';
+      savePastPeriods();
+    }
+    function removePastPeriod(d) {
+      pastPeriods = pastPeriods.filter(x => x !== d);
+      savePastPeriods();
+    }
+    function renderPastPeriods() {
+      const el = document.getElementById('past-periods');
+      if(!el) return;
+      const info = cycleInfo();
+      const list = pastPeriods.slice().reverse();
+      el.innerHTML = (list.length ? list.map((d, i) => {
+        const next = list[i - 1];
+        const len = next ? Math.round((parseDay(next) - parseDay(d)) / DAY) : null;
+        return `<div class="usage-row"><span>${parseDay(d).toDateString()}${len ? ` <span class="insight-note">· ${len}-day cycle</span>` : ''}</span>
+          <button class="mood-del" type="button" onclick="removePastPeriod('${d}')">✕</button></div>`;
+      }).join('') : '<div class="insight-note">No past dates yet.</div>') +
+      `<div class="insight-note" style="margin-top:6px;">Average cycle: ${info.measured ? `${Math.round(info.avg)} days (from ${info.measured} cycle${info.measured === 1 ? '' : 's'})` : 'assumed 28 days until you add at least 2 dates'}</div>`;
+    }
+    function parseDay(s) { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); }
+
+    // All known starts (past + the upcoming date from Settings) and the average cycle length
+    function cycleInfo() {
+      const starts = [...new Set([...pastPeriods, ...(dates.period ? [dates.period] : [])])].sort().map(parseDay);
+      const lens = [];
+      for(let i = 1; i < starts.length; i++) {
+        const l = Math.round((starts[i] - starts[i - 1]) / DAY);
+        if(l >= 15 && l <= 45) lens.push(l); // skip gaps where a period wasn't entered
+      }
+      return { starts, avg: lens.length ? lens.reduce((a, b) => a + b, 0) / lens.length : 28, measured: lens.length };
+    }
+
+    // How many days before the next period a date falls (0 = the start day), using real dates where known
+    function daysBeforePeriod(date, info = cycleInfo()) {
+      const d = new Date(date); d.setHours(0, 0, 0, 0);
+      const { starts, avg } = info;
+      if(!starts.length) return null;
+      let next = starts.find(s => s >= d);
+      if(!next) {
+        // After the last known start: project forward by the average cycle
+        next = new Date(starts[starts.length - 1]);
+        while(next < d) next = new Date(next.getTime() + avg * DAY);
+      } else {
+        const prev = [...starts].reverse().find(s => s < d);
+        if(!prev) {
+          // Before the first known start: project backwards
+          while(next.getTime() - avg * DAY >= d.getTime()) next = new Date(next.getTime() - avg * DAY);
+        } else if((next - prev) / DAY > 45) {
+          // A gap with missing dates in between: project from the previous start
+          next = new Date(prev);
+          while(next < d) next = new Date(next.getTime() + avg * DAY);
+        }
+      }
+      return Math.round((next - d) / DAY);
+    }
+
     function openSettings() {
       renderThemeReason();
+      renderPastPeriods();
+      if(typeof renderUsageSettings === 'function') renderUsageSettings();
       document.getElementById('cfg-therapy').value = dates.therapy || '';
       document.getElementById('cfg-period').value = dates.period || '';
       document.getElementById('cfg-office').value = dates.office || '';
@@ -2481,8 +2588,30 @@
           <div class="note-date">${escapeHtml(n.date)}</div>
           <div class="note-text">${escapeHtml(n.text)}</div>
           ${tagPills(n.tags)}
+          ${editingNoteId === n.id ? `
+            <div class="tag-picker">${allTags().map(t =>
+              `<button type="button" class="tag-chip ${(n.tags || []).includes(t) ? 'selected' : ''}" onclick="toggleNoteTag(${n.id}, '${t}')">#${escapeHtml(t)}</button>`).join('')}
+            </div>
+            <button class="icon-btn" style="margin-top:6px;" onclick="editNoteTags(null)">Done</button>`
+          : `<button class="note-tag-btn" onclick="editNoteTags(${n.id})">${(n.tags || []).length ? '✎ Edit tags' : '+ Add tags'}</button>`}
         </div>
       `).join('');
+    }
+
+    // Tag older journal entries after the fact
+    let editingNoteId = null;
+    function editNoteTags(id) {
+      editingNoteId = id;
+      renderNotes();
+    }
+    function toggleNoteTag(id, t) {
+      const n = notes.find(x => x.id === id);
+      if(!n) return;
+      n.tags = n.tags || [];
+      n.tags = n.tags.includes(t) ? n.tags.filter(x => x !== t) : [...n.tags, t];
+      localStorage.setItem('aq_notes', JSON.stringify(notes));
+      renderNotes();
+      if(typeof renderCorrelations === 'function') { renderCorrelations(); renderValidation(); }
     }
 
     let calViewYear = new Date().getFullYear();
@@ -2585,9 +2714,18 @@
       //  green +1, plus +1 for every 3 green days in a row
       //  red -1, black -2, and bad days fade with age (full this week, then 3/4, 1/2, 1/4)
       //  each yellow cancels 1 bad point
-      //  self-care heals damage: +0.5 per vagus reset, Tetris session or reset tool (max +2 a day),
+      //  self-care heals damage: +0.5 per vagus reset, Tetris session, reset tool, journal entry or
+      //  incident logged, and for checking in with an oni that day (max +2 a day),
       //  Healing can undo damage but not add on top.
       let badPoints = 0, streak = 0, streakBonus = 0, healing = 0, todayHealing = 0;
+      // Logging is self-care too: each journal entry or incident logged, plus checking in with an oni (once a day)
+      const logsByDay = {};
+      const addLog = (ts, n = 1) => { const k = dayKey(new Date(ts)); logsByDay[k] = (logsByDay[k] || 0) + n; };
+      notes.forEach(n => addLog(n.id));
+      incidents.forEach(e => addLog(e.ts));
+      const checkinDays = new Set(moodLog.map(m => dayKey(new Date(m.ts))));
+      checkinDays.forEach(k => { logsByDay[k] = (logsByDay[k] || 0) + 1; });
+      let badDays10 = 0, blackDays10 = 0; // red/black days in the last 10 days
       for(let i = 29; i >= 0; i--) {
         const d = new Date(today);
         d.setDate(d.getDate() - i);
@@ -2595,10 +2733,15 @@
         const w = i < 7 ? 1 : i < 14 ? 0.75 : i < 21 ? 0.5 : 0.25;
         if(st === 'status-red') badPoints += w;
         if(st === 'status-black') badPoints += 2 * w;
+        if(i < 10 && (st === 'status-red' || st === 'status-black')) {
+          badDays10++;
+          if(st === 'status-black') blackDays10++;
+        }
         if(st === 'status-green') { streak++; if(streak % 3 === 0) streakBonus++; } else streak = 0;
-        const pr = practice[k];
-        if(pr) {
-          const h = Math.min(2, 0.5 * ((pr.vagus || 0) + (pr.tetrisSessions || 0) + (pr.tools || 0)));
+        const pr = practice[k] || {};
+        const acts = (pr.vagus || 0) + (pr.tetrisSessions || 0) + (pr.tools || 0) + (logsByDay[k] || 0);
+        if(acts) {
+          const h = Math.min(2, 0.5 * acts);
           healing += h;
           if(i === 0) todayHealing = h;
         }
@@ -2606,16 +2749,16 @@
       const cancelled = Math.min(recentYellow, badPoints);
       const damage = Math.max(0, badPoints - cancelled - healing);
       const hamsterScore = recentGood + streakBonus - damage;
-      hamsterWound = hamsterScore <= -4 ? 'fresh'
-        : hamsterScore <= -2 ? 'stitched'
+      // Zombified only when hard days pile up: 2+ red/black days within 10 days, in any combination.
+      // A single red or black day leaves him bruised (and bandaged/sleepy if his health dips), never zombified.
+      const zombify = badDays10 >= 2;
+      hamsterWound = zombify ? ((badDays10 >= 3 || blackDays10 >= 2) ? 'fresh' : 'stitched')
         : hamsterScore < 0 ? 'bandaged'
         : (badPoints > 0 && hamsterScore < 2) ? 'scars' : 'none';
-      // However quickly his score recovers, he isn't fully healed until 2 weeks after the last red/black day:
-      // bandages for the first days (longer after a black day), then cuts and bruises that fade out.
+      // However quickly his score recovers, cuts and bruises stay until 2 weeks after the last red/black day.
       hamsterHealDays = lastConflictDate ? Math.round((today - lastConflictDate) / 86400000) : 99;
       const WOUND_RANK = { none: 0, scars: 1, bandaged: 2, stitched: 3, fresh: 4 };
-      const woundFloor = hamsterHealDays < (lastConflictBlack ? 8 : 5) ? 'bandaged'
-        : hamsterHealDays < 14 ? 'scars' : 'none';
+      const woundFloor = hamsterHealDays < 14 ? 'scars' : 'none';
       if(WOUND_RANK[woundFloor] > WOUND_RANK[hamsterWound]) hamsterWound = woundFloor;
       hamsterHasData = recentGood + recentBad + recentYellow > 0 || !!lastConflictDate;
       document.getElementById('m-good-days').innerText = greenCount;
@@ -2643,16 +2786,17 @@
       let hDesc = document.getElementById('hamster-desc');
       let hAdvice = document.getElementById('hamster-advice');
 
-      if(hamsterScore <= -2) {
+      if(zombify) {
         hamsterMood = 'stressed';
         hStatus.innerText = "Zombified / High Strain";
         hStatus.style.color = "#ef4444";
-        hDesc.innerText = "Hard days outweigh the good ones this month. Go easy on yourself.";
+        hDesc.innerText = "Several hard days close together. Go easy on yourself.";
         
         let randomAdvice = hamsterAdvices[Math.floor(Math.random() * hamsterAdvices.length)];
         hAdvice.style.display = 'block';
         hAdvice.innerText = `💡 Reminder: ${randomAdvice}`;
       } else if(hamsterScore < 0) {
+        // Includes a single bad day that would once have zombified him: bruised and sleepy instead
         hamsterMood = 'recovering';
         hStatus.innerText = "Wilted / Recovering";
         hStatus.style.color = "#f59e0b";
@@ -3088,6 +3232,15 @@
       ctx.clip();
       spots.forEach(([x, y, r], i) => {
         if(hamsterWound === 'bandaged') {
+          // A bruise peeking out from under each bandage
+          const bx = x + r * 0.55, by = y + r * 0.6;
+          const bg = ctx.createRadialGradient(bx, by, 0, bx, by, r * 0.8);
+          bg.addColorStop(0, 'rgba(105, 60, 120, 0.6)');
+          bg.addColorStop(1, 'rgba(105, 60, 120, 0)');
+          ctx.fillStyle = bg;
+          ctx.beginPath();
+          ctx.ellipse(bx, by, r * 0.8, r * 0.6, 0.3, 0, Math.PI * 2);
+          ctx.fill();
           ctx.save();
           ctx.translate(x, y);
           ctx.rotate(i % 2 ? 0.5 : -0.4);
@@ -3699,7 +3852,7 @@
           shakeTimer = null;
           box.classList.remove('shake-active');
           box.innerText = "Done ✓";
-          logPractice('tools', 1);
+          logPractice('tools', 1, 'shake');
         }
       }, 1000);
     }
@@ -3717,7 +3870,7 @@
         if(left <= 0) {
           clearInterval(coldTimer);
           st.innerText = "Heart Rate Reset Complete ✓";
-          logPractice('tools', 1);
+          logPractice('tools', 1, 'cold');
         }
       }, 1000);
     }
@@ -3810,7 +3963,7 @@
         }
         if(navigator.vibrate) { try { navigator.vibrate(20); } catch(err) {} }
         updateChaosCounter();
-        if(clearedCount === totalChaos) logPractice('tools', 1);
+        if(clearedCount === totalChaos) logPractice('tools', 1, 'chaos');
       };
 
       if(chaosAnimFrame) cancelAnimationFrame(chaosAnimFrame);
@@ -3897,62 +4050,63 @@
     // PRACTICE LOG: { "YYYY-M-D": { vagus, tetrisSec, tetrisSessions } }
     let practice = JSON.parse(localStorage.getItem('aq_practice') || '{}');
 
-    function logPractice(field, amount) {
+    // ACTIVITY TIMELINE: when each self-care action happened (for Pattern Correlation)
+    let activityLog = JSON.parse(localStorage.getItem('aq_activity') || '[]');
+    const LOGGED_FIELDS = { vagus: 'vagus', tetrisSessions: 'tetris', breathRounds: 'breath', tools: null };
+
+    function logPractice(field, amount, kind) {
       const k = dayKey(new Date());
       practice[k] = practice[k] || { vagus: 0, tetrisSec: 0, tetrisSessions: 0 };
       practice[k][field] = (practice[k][field] || 0) + amount;
       localStorage.setItem('aq_practice', JSON.stringify(practice));
+      if(field in LOGGED_FIELDS) {
+        activityLog.push({ ts: Date.now(), k: kind || LOGGED_FIELDS[field] || field });
+        if(activityLog.length > 3000) activityLog = activityLog.slice(-3000);
+        localStorage.setItem('aq_activity', JSON.stringify(activityLog));
+      }
       if(field !== 'tetrisSec' || practice[k].tetrisSec % 60 === 0) renderPractice();
       if(field === 'tetrisSec') tetrisWindowTick(amount);
       else if(typeof updateCountMeters === 'function') updateCountMeters();
     }
 
+    // Practise: totals, plus whether exercises actually shorten your recovery after hard days
     function renderPractice() {
-      const el = document.getElementById('p-week');
-      if(!el) return;
-      const day = k => practice[k] || { vagus: 0, tetrisSec: 0, tetrisSessions: 0 };
+      const box = document.getElementById('p-help');
+      if(!box) return;
       const all = Object.values(practice);
       const sum = (arr, f) => arr.reduce((a, d) => a + (d[f] || 0), 0);
-      const today = dayKey(new Date());
-
       const last7 = [];
-      for(let i = 6; i >= 0; i--) {
+      for(let i = 0; i < 7; i++) {
         const d = startOfToday();
         d.setDate(d.getDate() - i);
-        last7.push({ date: d, ...day(dayKey(d)) });
+        last7.push(practice[dayKey(d)] || {});
       }
-
-      // Streak: consecutive days with a vagus reset, ending today (or yesterday if none yet today)
-      let streak = 0;
-      const cur = startOfToday();
-      if(!day(dayKey(cur)).vagus) cur.setDate(cur.getDate() - 1);
-      while(day(dayKey(cur)).vagus > 0) { streak++; cur.setDate(cur.getDate() - 1); }
-
-      const set = (id, v) => document.getElementById(id).innerText = v;
-      set('p-vagus-today', day(today).vagus);
-      set('p-vagus-week', sum(last7, 'vagus'));
+      const set = (id, v) => { const el = document.getElementById(id); if(el) el.innerText = v; };
       set('p-vagus-total', sum(all, 'vagus'));
-      set('p-vagus-streak', streak);
-      set('p-tetris-today', day(today).tetrisSessions);
-      set('p-tetris-total', sum(all, 'tetrisSessions'));
-      set('p-tetris-min-today', Math.floor(day(today).tetrisSec / 60));
       set('p-tetris-min-total', Math.floor(sum(all, 'tetrisSec') / 60));
-      set('p-breath-today', day(today).breathRounds || 0);
-      set('p-breath-total', sum(all, 'breathRounds'));
-      set('p-breath-min-today', Math.floor((day(today).breathSec || 0) / 60));
       set('p-breath-min-total', Math.floor(sum(all, 'breathSec') / 60));
+      set('p-tools-total', sum(all, 'tools'));
+      set('p-week-line', `Last 7 days: ${sum(last7, 'vagus')} vagus · ${Math.floor(sum(last7, 'tetrisSec') / 60)} min Tetris · ` +
+        `${Math.floor(sum(last7, 'breathSec') / 60)} min breathing · ${sum(last7, 'tools')} games & tools`);
 
-      const maxV = Math.max(1, ...last7.map(d => d.vagus));
-      const maxT = Math.max(1, ...last7.map(d => d.tetrisSec));
-      const maxB = Math.max(1, ...last7.map(d => d.breathRounds || 0));
-      const names = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-      el.innerHTML = last7.map(d => `
-        <div class="week-row">
-          <span style="color:var(--text-muted);">${names[d.date.getDay()]}</span>
-          <div class="week-bar"><span style="width:${d.vagus / maxV * 100}%; background:var(--theme-secondary); opacity:0.55;"></span><em>${d.vagus}</em></div>
-          <div class="week-bar"><span style="width:${d.tetrisSec / maxT * 100}%; background:var(--theme-accent); opacity:0.8;"></span><em>${Math.floor(d.tetrisSec / 60)}</em></div>
-          <div class="week-bar"><span style="width:${(d.breathRounds || 0) / maxB * 100}%; background:var(--color-green); opacity:0.55;"></span><em>${d.breathRounds || 0}</em></div>
-        </div>`).join('');
+      const EXERCISE = ['Tetris within 6 hours', 'Tetris session', 'Breathing', 'Vagus reset', 'A Calm game', 'Shake or cold water', 'Unsent Defense', 'Reset tools'];
+      const evs = hardDayEvents();
+      const rec = evs.map((ev, i) => ({ ms: recoveryTime(ev, evs[i + 1] && evs[i + 1].start), f: recoveryFactors(ev) })).filter(r => r.ms !== null);
+      const avg = list => list.reduce((a, r) => a + r.ms, 0) / list.length;
+      const compare = (label, test) => {
+        const yes = rec.filter(test), no = rec.filter(r => !test(r));
+        return yes.length && no.length
+          ? `• <b>${label}</b>: okay in ${fmtDuration(avg(yes))} vs ${fmtDuration(avg(no))} without (${yes.length} vs ${no.length} times)`
+          : '';
+      };
+      const lines = [
+        compare('Exercises within 24 hours', r => r.f.some(x => EXERCISE.includes(x))),
+        compare('Writing about it', r => r.f.includes('Wrote in the journal')),
+        compare('Checking in with an oni', r => r.f.includes('Checked in'))
+      ].filter(Boolean);
+      box.innerHTML = insightCard('🧪', lines.length
+        ? 'How it helps you after hard days:<br>' + lines.join('<br>') + '<br><span class="insight-note">From your own records. On good days you don\'t need any of this, and that\'s fine.</span>'
+        : 'Once there are a few hard days with and without exercises, this will show whether they shorten your recovery. On good days you don\'t need them, and that\'s fine.');
     }
 
     // LEAVES ON A STREAM (the same stream renderer also carries Unsent Defense words away)
@@ -3963,7 +4117,7 @@
       lastAmbient: 0,
       onGone() {
         leavesReleased++;
-        logPractice('tools', 1);
+        logPractice('tools', 1, 'leaves');
         document.getElementById('leaf-counter').innerText = `Thoughts released: ${leavesReleased}`;
         bump('leaf-counter');
       }
@@ -4122,7 +4276,7 @@
         else pond.agitation = Math.min(1, pond.agitation + 0.0005);
         if(pond.agitation <= 0.02) {
           pond.settled = true;
-          logPractice('tools', 1);
+          logPractice('tools', 1, 'pond');
           if(navigator.vibrate) { try { navigator.vibrate([30, 60, 30]); } catch(e) {} }
         }
         // Wind ripples while the water is still restless
@@ -4318,7 +4472,7 @@
           lanterns.push({ x: c.width / 2, y: c.height - 46, size: 1, fill: lanternHold.fill, phase: Math.random() * 6,
                           vy: 0.45 + lanternHold.fill * 0.35, drift: (Math.random() - 0.5) * 0.3, alpha: 1 });
           lanternsReleased++;
-          logPractice('tools', 1);
+          logPractice('tools', 1, 'lanterns');
           document.getElementById('lantern-counter').innerText = `Lanterns released: ${lanternsReleased}`;
           bump('lantern-counter');
         }
@@ -4519,7 +4673,7 @@
         fogCleared = clear / total;
         if(fogCleared > 0.85 && !fogDone) {
           fogDone = true;
-          logPractice('tools', 1);
+          logPractice('tools', 1, 'fog');
           if(navigator.vibrate) { try { navigator.vibrate([30, 60, 30]); } catch(e) {} }
         }
         document.getElementById('fog-status').innerText = fogDone ? 'Clear view ✓' : `Cleared: ${Math.round(fogCleared * 100)}%`;
@@ -4786,10 +4940,68 @@
       ctx.ellipse(cx, cy, Math.abs(k) * r, r, 0, Math.PI / 2, -Math.PI / 2, (waxing ? 1 : -1) * k > 0);
     }
 
-    // ---------- MOON VIEW: the real moon tonight, with clouds drifting past ----------
+    // ---------- MOON VIEW: tonight's real moon, real sunrise/sunset and the live weather ----------
     let moonViewFrame = null;
     let moonClouds = [];
-    const moonViewStars = Array.from({ length: 60 }, () => [Math.random(), Math.random(), Math.random() * 1.6 + 0.4, Math.random() * 6]);
+    let moonRain = [];
+    const moonViewStars = Array.from({ length: 70 }, () => [Math.random(), Math.random(), Math.random() * 1.6 + 0.4, Math.random() * 6]);
+
+    // Weather: Open-Meteo (free, no account). Only a rough location is sent; the last result is kept for offline use.
+    let weatherCache = JSON.parse(localStorage.getItem('aq_weather') || 'null');
+    const WMO = {
+      0: ['☀️', 'Clear'], 1: ['🌤️', 'Mainly clear'], 2: ['⛅', 'Partly cloudy'], 3: ['☁️', 'Overcast'],
+      45: ['🌫️', 'Fog'], 48: ['🌫️', 'Freezing fog'], 51: ['🌦️', 'Light drizzle'], 53: ['🌦️', 'Drizzle'], 55: ['🌧️', 'Heavy drizzle'],
+      56: ['🌧️', 'Freezing drizzle'], 57: ['🌧️', 'Freezing drizzle'], 61: ['🌧️', 'Light rain'], 63: ['🌧️', 'Rain'], 65: ['🌧️', 'Heavy rain'],
+      66: ['🌧️', 'Freezing rain'], 67: ['🌧️', 'Freezing rain'], 71: ['🌨️', 'Light snow'], 73: ['🌨️', 'Snow'], 75: ['❄️', 'Heavy snow'],
+      77: ['🌨️', 'Snow grains'], 80: ['🌦️', 'Showers'], 81: ['🌧️', 'Showers'], 82: ['⛈️', 'Heavy showers'],
+      85: ['🌨️', 'Snow showers'], 86: ['🌨️', 'Snow showers'], 95: ['⛈️', 'Thunderstorm'], 96: ['⛈️', 'Thunderstorm'], 99: ['⛈️', 'Thunderstorm']
+    };
+    const isRain = code => (code >= 51 && code <= 67) || (code >= 80 && code <= 82) || code >= 95;
+    const isSnow = code => (code >= 71 && code <= 77) || code === 85 || code === 86;
+
+    async function fetchWeather() {
+      if(weatherCache && Date.now() - weatherCache.at < 30 * 60000) return weatherCache;
+      if(!navigator.onLine) return weatherCache;
+      const [lat, lon] = skyLatLon();
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat.toFixed(1)}&longitude=${lon.toFixed(1)}` +
+        '&current=temperature_2m,weather_code,cloud_cover,wind_speed_10m&hourly=cloud_cover&forecast_days=2&timezone=auto';
+      try {
+        const res = await fetch(url);
+        if(!res.ok) return weatherCache;
+        const j = await res.json();
+        // Tonight = 21:00 to 03:00
+        const now = new Date();
+        const start = new Date(now);
+        start.setHours(21, 0, 0, 0);
+        if(now.getHours() < 6) start.setDate(start.getDate() - 1);
+        const end = start.getTime() + 6 * 3600e3;
+        const tonight = j.hourly.time.map((t, i) => [new Date(t).getTime(), j.hourly.cloud_cover[i]])
+          .filter(([t]) => t >= start.getTime() && t < end).map(([, c]) => c);
+        weatherCache = {
+          at: Date.now(), temp: j.current.temperature_2m, code: j.current.weather_code,
+          cloud: j.current.cloud_cover, wind: j.current.wind_speed_10m,
+          tonight: tonight.length ? tonight.reduce((a, b) => a + b, 0) / tonight.length : null
+        };
+        localStorage.setItem('aq_weather', JSON.stringify(weatherCache));
+      } catch(e) { /* offline or blocked: keep the last result */ }
+      return weatherCache;
+    }
+
+    function renderWeather(w) {
+      const el = document.getElementById('moon-view-weather');
+      if(!w) { el.innerHTML = '<span class="mv-muted">Weather appears here when you are online.</span>'; return; }
+      const [icon, label] = WMO[w.code] || ['🌡️', 'Weather'];
+      const mins = Math.round((Date.now() - w.at) / 60000);
+      const tonight = w.tonight == null ? ''
+        : w.tonight < 25 ? 'Clear skies tonight, a good night to see the moon.'
+        : w.tonight < 60 ? 'Some clouds tonight; the moon will peek through.'
+        : 'Cloudy tonight; the moon may stay hidden.';
+      el.innerHTML = `
+        <div class="mv-weather-main"><span class="mv-weather-icon">${icon}</span>
+          <div><b>${Math.round(w.temp)}°C · ${label}</b><span>Wind ${Math.round(w.wind)} km/h · ${Math.round(w.cloud)}% cloud</span></div></div>
+        ${tonight ? `<div class="mv-tonight">${tonight}</div>` : ''}
+        <span class="mv-muted">${mins < 2 ? 'Updated just now' : mins < 60 ? `Updated ${mins} min ago` : `Updated ${Math.round(mins / 60)} h ago`} · Open-Meteo</span>`;
+    }
 
     function makeMoonCloud(W, H, x, front) {
       const size = 0.7 + Math.random() * 0.9;
@@ -4803,6 +5015,17 @@
       };
     }
 
+    // Clouds follow the real cloud cover (a few wisps when unknown)
+    function setMoonClouds(w) {
+      const c = document.getElementById('moon-view-canvas');
+      const n = w ? Math.round(Math.min(100, w.cloud) / 100 * 9) : 4;
+      moonClouds = [];
+      for(let i = 0; i < n; i++) moonClouds.push(makeMoonCloud(c.width, c.height, Math.random() * c.width * 1.2 - c.width * 0.1, i % 2 === 0));
+      moonRain = (w && (isRain(w.code) || isSnow(w.code)))
+        ? Array.from({ length: isSnow(w.code) ? 70 : 110 }, () => ({ x: Math.random() * c.width, y: Math.random() * c.height, v: 6 + Math.random() * 6 }))
+        : [];
+    }
+
     function openMoonView() {
       const age = moonAge();
       const p = age / SYNODIC;
@@ -4810,15 +5033,28 @@
       const toFull = ((SYNODIC / 2 - age) % SYNODIC + SYNODIC) % SYNODIC;
       const toNew = SYNODIC - age;
       const fmt = days => new Date(Date.now() + days * 86400000).toLocaleDateString([], { weekday: 'short', day: 'numeric', month: 'short' });
+      const time = d => d ? d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—';
+
+      // Sunset today
+      const [lat, lon] = skyLatLon();
+      const now = new Date();
+      const sunset = sunEvent(now, lat, lon, false);
+
       document.getElementById('moon-view-name').innerText = moonPhaseName(age);
       document.getElementById('moon-view-sub').innerText = `${lit}% lit · ${Math.floor(age)} days into the cycle`;
       document.getElementById('moon-view-facts').innerHTML = `
         <div><b>${toFull < 0.5 || toFull > SYNODIC - 0.5 ? 'Tonight' : Math.round(toFull) + ' days'}</b><span>Next full moon · ${fmt(toFull)}</span></div>
-        <div><b>${Math.round(toNew)} days</b><span>Next new moon · ${fmt(toNew)}</span></div>`;
+        <div><b>${Math.round(toNew)} days</b><span>Next new moon · ${fmt(toNew)}</span></div>
+        <div class="mv-wide"><b>${time(sunset)}</b><span>Sunset${sunset && sunset < now ? ' (today)' : ''}</span></div>`;
 
       const c = document.getElementById('moon-view-canvas');
-      moonClouds = [];
-      for(let i = 0; i < 6; i++) moonClouds.push(makeMoonCloud(c.width, c.height, Math.random() * c.width * 1.2 - c.width * 0.1, i % 2 === 0));
+      setMoonClouds(weatherCache);
+      renderWeather(weatherCache);
+      fetchWeather().then(w => {
+        if(!document.getElementById('moon-view').classList.contains('open')) return;
+        renderWeather(w);
+        if(w && (!weatherCache || w !== weatherCache || moonClouds.length !== Math.round(Math.min(100, w.cloud) / 100 * 9))) setMoonClouds(w);
+      });
       document.getElementById('moon-view').classList.add('open');
       if(!moonViewFrame) moonViewLoop();
     }
@@ -4849,10 +5085,9 @@
       const ctx = c.getContext('2d');
       const W = c.width, H = c.height, t = performance.now();
       const age = moonAge();
-      const cx = W / 2, cy = H / 2, r = W * 0.26;
+      const cx = W / 2, cy = H / 2, r = W * 0.36;
       ctx.clearRect(0, 0, W, H);
 
-      // Stars
       moonViewStars.forEach(([x, y, s, ph]) => {
         ctx.fillStyle = `rgba(255, 255, 255, ${0.3 + 0.5 * (0.5 + 0.5 * Math.sin(t / 900 + ph))})`;
         ctx.beginPath();
@@ -4860,13 +5095,12 @@
         ctx.fill();
       });
 
-      // Clouds behind the moon
       moonClouds.filter(cl => !cl.front).forEach(cl => drawCloud(ctx, cl, false));
 
       // Halo, dark side, lit side, craters
       const lit = (1 - Math.cos(2 * Math.PI * age / SYNODIC)) / 2;
-      const halo = ctx.createRadialGradient(cx, cy, r * 0.9, cx, cy, W * 0.48); // fades out before the canvas edge
-      halo.addColorStop(0, `rgba(255, 246, 216, ${0.12 + 0.25 * lit})`);
+      const halo = ctx.createRadialGradient(cx, cy, r * 0.9, cx, cy, W * 0.48);
+      halo.addColorStop(0, `rgba(255, 246, 216, ${0.1 + 0.25 * lit})`);
       halo.addColorStop(1, 'rgba(255, 246, 216, 0)');
       ctx.fillStyle = halo;
       ctx.fillRect(0, 0, W, H);
@@ -4894,12 +5128,25 @@
       ctx.restore();
       ctx.restore();
 
-      // Clouds drifting in front, lit by the moon
       moonClouds.filter(cl => cl.front).forEach(cl => drawCloud(ctx, cl, true));
       moonClouds = moonClouds.map(cl => {
         if(!reduceMotion) cl.x += cl.speed;
         return cl.x - 140 * cl.size > W ? makeMoonCloud(W, H, undefined, cl.front) : cl;
       });
+
+      // Rain streaks or falling snow when that's the real weather
+      if(moonRain.length) {
+        const snow = weatherCache && isSnow(weatherCache.code);
+        ctx.strokeStyle = 'rgba(190, 210, 255, 0.35)';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+        ctx.lineWidth = 1.5;
+        moonRain.forEach(d => {
+          if(snow) { ctx.beginPath(); ctx.arc(d.x, d.y, 2.2, 0, Math.PI * 2); ctx.fill(); }
+          else { ctx.beginPath(); ctx.moveTo(d.x, d.y); ctx.lineTo(d.x - 3, d.y + 14); ctx.stroke(); }
+          if(!reduceMotion) { d.y += snow ? d.v * 0.25 : d.v; d.x += snow ? Math.sin(t / 600 + d.v) * 0.6 : -0.6; }
+          if(d.y > H) { d.y = -15; d.x = Math.random() * W; }
+        });
+      }
 
       if(!reduceMotion) moonViewFrame = requestAnimationFrame(moonViewLoop);
     }
@@ -4953,8 +5200,9 @@
     function startTetrisWindow() {
       closeHardDayPrompt();
       if(!tetrisWindow || tetrisWindow.until < Date.now()) setTetrisWindow();
-      switchTab(2);
+      switchTab('tetris');
       if(isGameOver) resetTetris();
+      else resumeTetris();
       window.scrollTo(0, 0);
     }
     function remindTetrisWindow() {
@@ -5132,6 +5380,7 @@
     }
 
     function renderPatterns() {
+      const allInc = allIncidents();
       const el = document.getElementById('patterns');
       if(!el) return;
       const bands = [['Morning', 5, 12], ['Afternoon', 12, 17], ['Evening', 17, 22], ['Night', 22, 29]];
@@ -5156,7 +5405,7 @@
       // 2. Hard days by weekday (calendar Red/Black + incident days)
       const hardDays = new Set();
       Object.keys(calData).forEach(k => { if(calData[k] === 'status-red' || calData[k] === 'status-black') hardDays.add(k); });
-      incidents.filter(e => e.severity !== 'tense').forEach(e => hardDays.add(dayKey(new Date(e.ts))));
+      allInc.filter(e => e.severity !== 'tense').forEach(e => hardDays.add(dayKey(new Date(e.ts))));
       const hardDates = [...hardDays].map(k => { const [y, m, d] = k.split('-').map(Number); return new Date(y, m - 1, d); }).filter(d => d <= today);
       if(hardDates.length >= 3) {
         const wd = weekdays.map(() => 0);
@@ -5168,26 +5417,26 @@
         html += `<div class="pat-insight"><b>${weekdays[top]}</b> has the most hard days (${wd[top]} of ${hardDates.length}).</div>`;
 
         // 4. Around her cycle (estimate, 28-day cycle from the next period date)
-        if(dates.period) {
-          const [py, pm, pd] = dates.period.split('-').map(Number);
-          const P = new Date(py, pm - 1, pd);
+        const info = cycleInfo();
+        if(info.starts.length) {
           let pre = 0, during = 0;
           hardDates.forEach(d => {
-            const before = ((Math.round((P - d) / 86400000) % 28) + 28) % 28;
+            const before = daysBeforePeriod(d, info);
             if(before >= 1 && before <= 7) pre++;
-            else if(before === 0 || before >= 24) during++;
+            else if(before === 0 || before >= Math.round(info.avg) - 4) during++;
           });
           const pct = Math.round(pre / hardDates.length * 100);
-          html += `<div class="pat-title">Around her cycle <span style="font-weight:500; color:var(--text-muted);">(estimate, 28-day cycle)</span></div>
+          const chance = Math.round(7 / info.avg * 100);
+          html += `<div class="pat-title">Around her cycle <span style="font-weight:500; color:var(--text-muted);">(${info.measured ? `from ${info.starts.length} real dates, ${Math.round(info.avg)}-day average` : 'estimate, 28-day cycle'})</span></div>
             <div class="pat-insight">${pre} of ${hardDates.length} hard days (${pct}%) fell in the 7 days before a period, and ${during} during one.
-            By chance alone you'd expect about 25% before.${pct >= 40 ? ' <b>That looks like a pattern worth planning around.</b>' : ''}</div>`;
+            By chance alone you'd expect about ${chance}% before.${pct >= chance * 1.6 ? ' <b>That looks like a pattern worth planning around.</b>' : ''}</div>`;
         }
       }
 
       // 3. Incidents by time of day
-      if(incidents.length >= 3) {
+      if(allInc.length >= 3) {
         const ib = bands.map(() => 0);
-        incidents.forEach(e => ib[bandOf(new Date(e.ts).getHours())]++);
+        allInc.forEach(e => ib[bandOf(new Date(e.ts).getHours())]++);
         const max = Math.max(1, ...ib);
         html += `<div class="pat-title">Incidents by time of day</div>` +
           barRows(bands.map(([label], i) => ({ label, parts: [{ n: ib[i], color: '#f97316' }] })), max);
@@ -5199,7 +5448,16 @@
     }
 
     // ---------- QUICK TAGS (journal + incident log) ----------
-    const DEFAULT_TAGS = ['screaming', 'insults', 'silent_treatment', 'away_from_home', 'morning_dread', 'period_window', 'held_boundary'];
+    const DEFAULT_TAGS = ['incident', 'screaming', 'insults', 'silent_treatment', 'away_from_home', 'morning_dread', 'period_window', 'held_boundary'];
+
+    // Incident log entries plus journal entries tagged #incident, so both count in the analysis
+    function allIncidents() {
+      const fromJournal = notes.filter(n => (n.tags || []).includes('incident')).map(n => ({
+        id: 'n' + n.id, ts: n.id, severity: 'journal', tags: (n.tags || []).filter(t => t !== 'incident'),
+        calm: (n.tags || []).includes('held_boundary'), fromJournal: true
+      }));
+      return [...incidents, ...fromJournal].sort((a, b) => a.ts - b.ts);
+    }
     let customTags = JSON.parse(localStorage.getItem('aq_custom_tags') || '[]');
     const tagSelections = { journal: new Set(), incident: new Set() };
     const tagFilters = { journal: null, incident: null };
@@ -5279,7 +5537,7 @@
         delete this.groups[lf.group];
         unsentCount++;
         localStorage.setItem('aq_unsent_count', unsentCount);
-        logPractice('tools', 1);
+        logPractice('tools', 1, 'unsent');
         renderUnsentCount();
         bump('unsent-count');
         if(!Object.keys(this.groups).length) {
@@ -5344,6 +5602,156 @@
       });
     }
 
+    // ---------- RECOVERY ANALYSIS: what helped you bounce back after hard days ----------
+    const TOOL_NAMES = {
+      vagus: 'Vagus reset', tetris: 'Tetris session', breath: 'Breathing round', breathing: 'Breathing session',
+      shake: 'Shake it out', cold: 'Cold water', chaos: 'Chaos Release', leaves: 'Leaves on a Stream',
+      pond: 'Still Pond', lanterns: 'Sky Lanterns', fog: 'Clear the Fog', unsent: 'Unsent Defense'
+    };
+    const CALM_GAMES = ['chaos', 'leaves', 'pond', 'lanterns', 'fog'];
+
+    // Each red/black day, starting at the first serious incident logged that day (or midday if none)
+    function hardDayEvents() {
+      const allInc = allIncidents();
+      const today = startOfToday();
+      // Red/black calendar days, plus days with a serious incident (logged or a #incident journal entry)
+      const keys = new Set(Object.keys(calData).filter(k => calData[k] === 'status-red' || calData[k] === 'status-black'));
+      allInc.filter(e => e.severity !== 'tense').forEach(e => keys.add(dayKey(new Date(e.ts))));
+      return [...keys].map(k => {
+        const [y, m, d] = k.split('-').map(Number);
+        const day = new Date(y, m - 1, d);
+        if(day > today) return null;
+        const first = allInc.filter(e => dayKey(new Date(e.ts)) === k && e.severity !== 'tense').sort((a, b) => a.ts - b.ts)[0];
+        const kind = calData[k] === 'status-black' ? 'black' : calData[k] === 'status-red' ? 'red' : 'incident';
+        return { key: k, day, start: first ? first.ts : day.getTime() + 12 * 3600e3, black: kind === 'black', kind };
+      }).filter(Boolean).sort((a, b) => a.start - b.start);
+    }
+
+    // "Okay again" = your first Calm or Happy oni pick afterwards, or the next green day, whichever is first
+    function recoveryTime(ev, nextHardStart) {
+      const limit = Math.min(nextHardStart || Infinity, ev.start + 14 * DAY, Date.now());
+      const pick = moodLog.find(m => m.ts > ev.start && m.ts < limit && (m.mood === 'calm' || m.mood === 'happy'));
+      let green = null;
+      for(let i = 1; i <= 14; i++) {
+        const d = new Date(ev.day);
+        d.setDate(d.getDate() + i);
+        if(d.getTime() >= limit) break;
+        if(calData[dayKey(d)] === 'status-green') { green = d.getTime(); break; }
+      }
+      const t = [pick && pick.ts, green].filter(Boolean);
+      return t.length ? Math.min(...t) - ev.start : null;
+    }
+
+    // What you did in the first 24 hours after it started
+    function recoveryFactors(ev) {
+      const allInc = allIncidents();
+      const from = ev.start, to = ev.start + DAY;
+      const acts = activityLog.filter(a => a.ts >= from && a.ts <= to);
+      const f = new Set();
+      if(acts.length) {
+        const has = k => acts.some(a => a.k === k);
+        if(acts.some(a => a.k === 'tetris' && a.ts <= from + 6 * 3600e3)) f.add('Tetris within 6 hours');
+        else if(has('tetris')) f.add('Tetris session');
+        if(acts.filter(a => a.k === 'breath').length >= 2 || has('breathing')) f.add('Breathing');
+        if(has('vagus')) f.add('Vagus reset');
+        if(acts.some(a => CALM_GAMES.includes(a.k))) f.add('A Calm game');
+        if(has('shake') || has('cold')) f.add('Shake or cold water');
+        if(has('unsent')) f.add('Unsent Defense');
+      } else {
+        // Before the timeline existed: that day's and the next day's totals
+        const next = new Date(ev.day);
+        next.setDate(next.getDate() + 1);
+        [ev.key, dayKey(next)].map(k => practice[k]).filter(Boolean).forEach(p => {
+          if(p.tetrisSessions) f.add('Tetris session');
+          if(p.breathRounds) f.add('Breathing');
+          if(p.vagus) f.add('Vagus reset');
+          if(p.tools) f.add('Reset tools');
+        });
+      }
+      const near = x => x >= from - 12 * 3600e3 && x <= to;
+      const nearNotes = notes.filter(n => near(n.id));
+      const nearInc = allInc.filter(e => near(e.ts));
+      if(notes.some(n => n.id >= from && n.id <= to)) f.add('Wrote in the journal');
+      // Checking in while still struggling (the Calm/Happy pick that ends the recovery doesn't count)
+      if(moodLog.some(m => m.ts >= from && m.ts <= to && HARD_ONI.includes(m.mood))) f.add('Checked in');
+      if(nearInc.length) f.add('Logged the incident');
+      if(nearInc.some(e => e.calm || (e.tags || []).includes('held_boundary')) || nearNotes.some(n => (n.tags || []).includes('held_boundary'))) f.add('Held your boundary');
+      [...nearNotes, ...nearInc].forEach(x => (x.tags || [])
+        .filter(t => t !== 'held_boundary' && t !== 'unsent_defense' && t !== 'incident')
+        .forEach(t => f.add('#' + t)));
+      return [...f];
+    }
+
+    function fmtDuration(ms) {
+      const h = ms / 3600e3;
+      if(h < 1) return 'under an hour';
+      if(h < 24) { const r = Math.round(h); return `${r} hour${r === 1 ? '' : 's'}`; }
+      const d = Math.round(h / 12) / 2; // nearest half day
+      return `${d} day${d === 1 ? '' : 's'}`;
+    }
+
+    function buildRecoveryHtml() {
+      const evs = hardDayEvents();
+      const rec = evs.map((ev, i) => ({ ev, ms: recoveryTime(ev, evs[i + 1] && evs[i + 1].start), factors: recoveryFactors(ev) }))
+        .filter(r => r.ms !== null);
+      let html = '';
+
+      if(rec.length) {
+        html += '<div class="pat-title">What helped you recover</div>' + rec.slice(-4).reverse().map(r => `
+          <div class="recovery-row">
+            <div><b>${r.ev.day.toLocaleDateString([], { weekday: 'short', day: 'numeric', month: 'short' })}</b>
+              <span class="day-chip ${r.ev.kind}">${r.ev.kind}</span>
+              okay again in <b>${fmtDuration(r.ms)}</b></div>
+            <div class="tag-pills">${r.factors.length
+              ? r.factors.map(f => `<span class="tag-pill">${escapeHtml(f)}</span>`).join('')
+              : '<span class="insight-note">No self-care logged in the first 24 hours</span>'}</div>
+          </div>`).join('');
+
+        if(rec.length >= 2) {
+          const fastest = rec.reduce((a, b) => b.ms < a.ms ? b : a);
+          const others = rec.filter(r => r !== fastest);
+          const avg = others.reduce((s, r) => s + r.ms, 0) / others.length;
+          const share = f => others.filter(r => r.factors.includes(f)).length / others.length;
+          const different = fastest.factors.filter(f => share(f) <= 0.5);
+          html += insightCard('⚡', `Your fastest recovery was after <b>${fastest.ev.day.toLocaleDateString([], { weekday: 'long', day: 'numeric', month: 'short' })}</b>: okay in <b>${fmtDuration(fastest.ms)}</b>, compared with ${fmtDuration(avg)} on average.` +
+            (different.length ? ` What was different that time: <b>${different.map(escapeHtml).join(', ')}</b>.` : ' Nothing you logged stood out as different that time.'));
+        }
+
+        if(rec.length >= 3) {
+          // Each factor: average time to feel okay when it was there vs when it wasn't
+          const rows = [...new Set(rec.flatMap(r => r.factors))].map(f => {
+            const yes = rec.filter(r => r.factors.includes(f)), no = rec.filter(r => !r.factors.includes(f));
+            if(yes.length < 2 || !no.length) return null;
+            const a = yes.reduce((s, r) => s + r.ms, 0) / yes.length, b = no.reduce((s, r) => s + r.ms, 0) / no.length;
+            return { f, a, b, n: yes.length, gain: b - a };
+          }).filter(r => r && r.gain > 3600e3).sort((x, y) => y.gain - x.gain).slice(0, 3);
+          if(rows.length) html += insightCard('🌱', 'Linked with quicker recoveries:<br>' +
+            rows.map(r => `• <b>${escapeHtml(r.f)}</b>: okay in ${fmtDuration(r.a)} vs ${fmtDuration(r.b)} without (${r.n} times)`).join('<br>') +
+            '<br><span class="insight-note">A pattern in your own records, not proof.</span>');
+        }
+      }
+
+      // What lifts your mood: tools used between a hard oni pick and your next pick (within 12 hours)
+      const picks = moodLog.slice().sort((a, b) => a.ts - b.ts);
+      const stats = {};
+      for(let i = 0; i < picks.length - 1; i++) {
+        const a = picks[i], b = picks[i + 1];
+        if(!HARD_ONI.includes(a.mood) || b.ts - a.ts > 12 * 3600e3) continue;
+        const lifted = b.mood === 'calm' || b.mood === 'happy';
+        new Set(activityLog.filter(x => x.ts > a.ts && x.ts < b.ts).map(x => CALM_GAMES.includes(x.k) ? 'calmgame' : x.k))
+          .forEach(k => { stats[k] = stats[k] || { n: 0, up: 0 }; stats[k].n++; if(lifted) stats[k].up++; });
+      }
+      const lifts = Object.entries(stats).filter(([, s]) => s.n >= 2)
+        .map(([k, s]) => ({ k, rate: s.up / s.n, n: s.n }))
+        .sort((x, y) => y.rate - x.rate || y.n - x.n).slice(0, 3);
+      if(lifts.length) {
+        const name = k => k === 'calmgame' ? 'a Calm game' : (TOOL_NAMES[k] || k);
+        html += insightCard('🎈', 'What lifts your mood. After a hard check-in, your next pick was Calm or Happy:<br>' +
+          lifts.map(l => `• <b>${Math.round(l.rate * 100)}%</b> of the time after <b>${escapeHtml(name(l.k))}</b> (${l.n} times)`).join('<br>'));
+      }
+      return html;
+    }
+
     // ---------- PATTERN CORRELATION ----------
     const DAY = 86400000;
     function taggedEntries() {
@@ -5360,6 +5768,7 @@
     }
 
     function renderCorrelations() {
+      const allInc = allIncidents();
       const el = document.getElementById('correlations');
       if(!el) return;
       const cards = [];
@@ -5383,13 +5792,9 @@
       }
 
       // 2. Incidents relative to the period date (estimate, 28-day cycle)
-      if(dates.period && incidents.length >= 3) {
-        const [py, pm, pd] = dates.period.split('-').map(Number);
-        const P = new Date(py, pm - 1, pd);
-        const before = incidents.map(e => {
-          const d = new Date(e.ts); d.setHours(0, 0, 0, 0);
-          return ((Math.round((P - d) / DAY) % 28) + 28) % 28;
-        });
+      const cyc = cycleInfo();
+      if(cyc.starts.length && allInc.length >= 3) {
+        const before = allInc.map(e => daysBeforePeriod(e.ts, cyc));
         const buckets = {};
         before.filter(b => b >= 1 && b <= 14).forEach(b => {
           const lo = b % 2 ? b : b - 1;
@@ -5398,21 +5803,21 @@
         const top = Object.entries(buckets).sort((a, b) => b[1] - a[1])[0];
         if(top && top[1] >= 2) {
           const lo = +top[0];
-          cards.push(insightCard('🌙', `Conflict incidents spike <b>${lo}–${lo + 1} days before</b> the set period date (${top[1]} of ${incidents.length} incidents). <span class="insight-note">Estimate, assumes a 28-day cycle.</span>`));
+          cards.push(insightCard('🌙', `Conflict incidents spike <b>${lo}–${lo + 1} days before</b> a period (${top[1]} of ${allInc.length} incidents). <span class="insight-note">${cyc.measured ? `Based on ${cyc.starts.length} real period dates.` : 'Estimate, assumes a 28-day cycle. Add past period dates in Settings to make it accurate.'}</span>`));
         }
       }
 
       // 3. Most frequent incident window
-      if(incidents.length >= 3) {
+      if(allInc.length >= 3) {
         const counts = {};
-        incidents.forEach(e => { const b = bandName(new Date(e.ts).getHours()); counts[b] = (counts[b] || 0) + 1; });
+        allInc.forEach(e => { const b = bandName(new Date(e.ts).getHours()); counts[b] = (counts[b] || 0) + 1; });
         const [band, n] = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
-        cards.push(insightCard('⏰', `Most frequent incident window: <b>${band[0].toUpperCase() + band.slice(1)}</b> (${Math.round(n / incidents.length * 100)}% of incidents).`));
+        cards.push(insightCard('⏰', `Most frequent incident window: <b>${band[0].toUpperCase() + band.slice(1)}</b> (${Math.round(n / allInc.length * 100)}% of incidents).`));
       }
 
       // 4. Most common tag and the weekday it shows up most
       const tagCounts = {};
-      entries.forEach(e => e.tags.filter(t => t !== 'unsent_defense').forEach(t => { tagCounts[t] = (tagCounts[t] || 0) + 1; }));
+      entries.forEach(e => e.tags.filter(t => t !== 'unsent_defense' && t !== 'incident').forEach(t => { tagCounts[t] = (tagCounts[t] || 0) + 1; }));
       const topTag = Object.entries(tagCounts).sort((a, b) => b[1] - a[1])[0];
       if(topTag && topTag[1] >= 3) {
         const wd = [0, 0, 0, 0, 0, 0, 0];
@@ -5421,12 +5826,15 @@
         cards.push(insightCard('🏷️', `Your most used tag is <b>#${escapeHtml(topTag[0])}</b> (${topTag[1]} times), most often on <b>${day}s</b>.`));
       }
 
-      el.innerHTML = cards.length ? cards.join('')
-        : '<div class="subtitle" style="margin:0;">Not enough data yet. Tag journal entries and incidents, pick an oni when you open the app, and insights will appear here.</div>';
+      const recovery = buildRecoveryHtml();
+      el.innerHTML = (recovery || cards.length)
+        ? recovery + (cards.length ? (recovery ? '<div class="pat-title">Other patterns</div>' : '') + cards.join('') : '')
+        : '<div class="subtitle" style="margin:0;">Not enough data yet. Mark hard days on the calendar, pick an oni when you open the app and use the tools, and insights will appear here.</div>';
     }
 
     // ---------- OBJECTIVE VALIDATION ----------
     function renderValidation() {
+      const allInc = allIncidents();
       const el = document.getElementById('validation');
       if(!el) return;
       const boundaryIncidents = incidents.filter(e => e.calm || (e.tags || []).includes('held_boundary')).length;
@@ -5436,6 +5844,7 @@
       const all = Object.values(practice);
       const sum = f => all.reduce((a, d) => a + (d[f] || 0), 0);
       const vagus = sum('vagus'), tetris = sum('tetrisSessions'), tools = sum('tools');
+      const logged = notes.length + incidents.length + new Set(moodLog.map(m => dayKey(new Date(m.ts)))).size;
 
       const cutoff = startOfToday().getTime() - 29 * DAY;
       const peaceful = Object.keys(calData).filter(k => {
@@ -5444,7 +5853,7 @@
         const t = new Date(y, m - 1, d).getTime();
         return t >= cutoff && t <= Date.now();
       }).length;
-      const recentIncidents = incidents.filter(e => e.ts >= cutoff);
+      const recentIncidents = allInc.filter(e => e.ts >= cutoff);
       const composed = recentIncidents.filter(e => e.calm || (e.tags || []).includes('held_boundary')).length;
 
       const sentence = (peaceful || recentIncidents.length)
@@ -5454,30 +5863,30 @@
       el.innerHTML = `
         <div class="stat-grid">
           <div class="stat-box"><div class="stat-box-val">${boundaries}</div><div class="stat-box-label">Calm boundaries maintained</div></div>
-          <div class="stat-box"><div class="stat-box-val">${vagus + tetris + tools}</div><div class="stat-box-label">Self-regulation interventions</div></div>
+          <div class="stat-box"><div class="stat-box-val">${vagus + tetris + tools + logged}</div><div class="stat-box-label">Self-regulation interventions</div></div>
         </div>
-        <div class="validation-breakdown">Vagus resets ${vagus} · Tetris sessions ${tetris} · Reset tools ${tools}</div>
+        <div class="validation-breakdown">Logging ${logged} · Vagus resets ${vagus} · Tetris sessions ${tetris} · Reset tools ${tools}</div>
         <div class="validation-reality"><div class="validation-label">Reality verification</div>${sentence}</div>`;
     }
 
     // ---------- TAILORED TO TODAY'S ONI ----------
     // Suggestions, journal prompts and statements follow the oni you picked today.
     const TOOLS = {
-      shake:    { label: '🫨 Shake it out (30s)', tab: 3, el: () => document.getElementById('shake-box') },
-      cold:     { label: '🧊 Cold water',          tab: 3, el: () => document.querySelector('[onclick="startColdTimer()"]') },
-      unsent:   { label: '🍂 Unsent Defense',      tab: 1, el: () => document.getElementById('unsent-wrap') },
-      exhale:   { label: '🌬️ Long-exhale breathing', tab: 5, el: () => document.getElementById('breath-circle'),
+      shake:    { label: '🫨 Shake it out (30s)', tab: 'recover', el: () => document.getElementById('shake-box') },
+      cold:     { label: '🧊 Cold water',          tab: 'recover', el: () => document.querySelector('[onclick="startColdTimer()"]') },
+      unsent:   { label: '🍂 Unsent Defense',      tab: 'journey', el: () => document.getElementById('unsent-wrap') },
+      exhale:   { label: '🌬️ Long-exhale breathing', tab: 'calm', el: () => document.getElementById('breath-circle'),
                   before: () => { stopBreathing(); document.getElementById('breath-pattern').value = 'calm'; } },
-      breathe:  { label: '🌬️ Breathing pacer',  tab: 5, el: () => document.getElementById('breath-circle') },
-      pond:     { label: '🌙 Still Pond',          tab: 5, el: () => document.getElementById('pond-canvas') },
-      fog:      { label: '🪟 Clear the Fog',       tab: 5, el: () => document.getElementById('fog-canvas') },
-      lanterns: { label: '🏮 Sky Lanterns',        tab: 5, el: () => document.getElementById('lantern-canvas') },
-      words:    { label: '💬 Comforting words',    tab: 5, el: () => document.getElementById('quote-display') },
-      write:    { label: '✍️ Write what went well', tab: 1, el: () => document.getElementById('note-input'),
+      breathe:  { label: '🌬️ Breathing pacer',  tab: 'calm', el: () => document.getElementById('breath-circle') },
+      pond:     { label: '🌙 Still Pond',          tab: 'calm', el: () => document.getElementById('pond-canvas') },
+      fog:      { label: '🪟 Clear the Fog',       tab: 'calm', el: () => document.getElementById('fog-canvas') },
+      lanterns: { label: '🏮 Sky Lanterns',        tab: 'calm', el: () => document.getElementById('lantern-canvas') },
+      words:    { label: '💬 Comforting words',    tab: 'calm', el: () => document.getElementById('quote-display') },
+      write:    { label: '✍️ Write what went well', tab: 'journey', el: () => document.getElementById('note-input'),
                   after: el => el.focus() },
       green:    { label: '🟢 Mark today green',    action: markTodayGreen },
-      vagus:    { label: '👀 Vagus reset',         tab: 0, el: () => document.getElementById('eye-pos') },
-      tetris:   { label: '🧩 Tetris',              tab: 2, el: () => document.getElementById('tetris-canvas') }
+      vagus:    { label: '👀 Vagus reset',         tab: 'vagus', el: () => document.getElementById('eye-pos') },
+      tetris:   { label: '🧩 Tetris',              tab: 'tetris', el: () => document.getElementById('tetris-canvas') }
     };
 
     const ONI_TAILOR = {
@@ -5636,221 +6045,210 @@
       return t ? t.words : encouragements;
     }
 
-    // ---------- BIFF REPLY HELPER ----------
-    // Offline, rule-based: matches common high-conflict patterns and suggests a
-    // Brief, Informative, Friendly, Firm reply. Nothing typed here is ever saved.
-    const BIFF_RULES = [
-      {
-        key: 'selfharm', label: 'Self-harm statement', priority: 100, safety: true, emergency: true,
-        anchor: "I love you, and I'm calling for help right now because your safety matters.",
-        test: /\b(kill (myself|me)|end (it|my life)|hurt myself|suicid|don'?t want to (live|be here)|want to die|better off (dead|without me)|cut myself|overdose|take (all )?(my|the) pills)\b/i,
-        replies: [
-          "I care about you and I take this seriously. I'm getting help right now so you're safe.",
-          "I'm worried about your safety. I'm calling for help now because I want you to be okay."
-        ],
-        exit: 'If there is any immediate danger, call 112 now. You don\'t have to handle this alone or decide if it\'s "real". If you feel unsafe yourself, go to another room or outside and call from there.'
-      },
-      {
-        key: 'physical', label: 'Physical danger', priority: 95, safety: true, emergency: true,
-        anchor: "I'm leaving now to keep us both safe, and I'm getting help.",
-        test: /\b(hit(ting)? me|hits me|punch|slap|kick(ed|ing)? me|push(ed|ing)? me|shov|chok|strangl|grab(bed|bing)? (me|my)|knife|weapon|gun|throw(ing|s)? (things|stuff|it at)|threw (something|it|things)|smash|block(ing|ed)? the door|won'?t let me (leave|out)|lock(ed)? me (in|out)|hurting me)\b/i,
-        replies: [
-          "I'm leaving now to keep us both safe.",
-          "I'm going somewhere safe now. We can talk when things are calm."
-        ],
-        exit: 'Get to safety first: leave the room or the home, go to a neighbour, a public place or your car with the doors locked. Call 112. Log it privately later, when you are safe.'
-      },
-      {
-        key: 'threat', label: 'Threat toward you', priority: 90, safety: true,
-        test: /\b(i'?ll (hit|hurt|kill|destroy|ruin) you|you'?ll (regret|pay)|watch what (i|happens)|i swear i'?ll|or else|you'?re dead|throw you out|take (the kids|everything))\b/i,
-        replies: [
-          "I'm not going to continue this conversation while there are threats. I'm leaving now.",
-          "I won't stay while I'm being threatened. We can talk when things are calm."
-        ],
-        exit: 'Leave calmly now: go somewhere safe (outside, a neighbour, your car with doors locked). If you are in danger, call 112. Log it privately afterwards.'
-      },
-      {
-        key: 'guilt', label: 'Guilt trap', priority: 60,
-        test: /\b(used me|after (everything|all) i|because of you|your fault|fix me|you (ruined|destroyed)|you make me|you did this|look what you|you owe me|how could you|you don'?t care)\b/i,
-        replies: [
-          "I'm sorry you're feeling this way. I can't fix it on my own, but I do care how you feel. I'd like us to find support together, maybe with a therapist.",
-          "I hear that you're hurting. I'm not able to take responsibility for all of it, but I'm willing to talk calmly about what would help.",
-          "That sounds really hard for you. I care, and I also can't carry this alone. Let's talk about getting support."
-        ]
-      },
-      {
-        key: 'attack', label: 'Tone / character attack', priority: 55, exit: true,
-        test: /\b(stupid|idiot|pathetic|worthless|useless|selfish|liar|disgusting|loser|failure|crazy|psycho|moron|hate you|shut up|f+u+c+k|bitch|bastard)\b/i,
-        replies: [
-          "I'm willing to talk about this when we can both speak respectfully. I'm going to take a break now.",
-          "I want to hear what's wrong, but not while I'm being called names. Let's continue when things are calmer.",
-          "I'll step away for now. I'm happy to talk when we can do it without insults."
-        ]
-      },
-      {
-        key: 'demand', label: 'Demand / pressure to answer now', priority: 45,
-        test: /\b(answer me|right now|why (aren'?t|won'?t) you (answer|reply|respond|say)|say something|look at me|don'?t ignore|immediately|this instant)\b/i,
-        replies: [
-          "I've heard you. I want to give you a proper answer, so I'll reply in a little while once I've thought about it.",
-          "I'm not ignoring you. I need a few minutes to think, and then I'll answer."
-        ]
-      },
-      {
-        key: 'task', label: 'Task complaint', priority: 40,
-        test: /\b(never help|don'?t do anything|do nothing|dishes|clean(ing)?|laundry|cook(ing)?|chores|lazy|always have to|i do everything|bins?|groceries|shopping|tidy|mess)\b/i,
-        replies: [
-          "I hear that you want more help around the house. I'll take care of {task} tonight.",
-          "You're right that this needs doing. I'll do {task} today, and we can agree on a plan for the rest.",
-          "Thanks for telling me. I'll handle {task}, and I'm open to splitting things more fairly."
-        ]
-      },
-      {
-        key: 'history', label: 'Old grievance', priority: 35,
-        test: /\b(always|never|last time|remember when|every time|years ago|again\b|like you did|you used to)\b/i,
-        replies: [
-          "I understand that still hurts. I'm not going to go back over the past tonight, but I'm happy to talk about what we can do now.",
-          "I know that was painful. Let's focus on what would help right now."
-        ]
-      },
-      {
-        key: 'money', label: 'Money', priority: 30,
-        test: /\b(money|pay|paid|spend|spent|bills?|rent|salary|afford|cost)\b/i,
-        replies: [
-          "Let's look at the numbers together when we're both calm. I can sit down with you tomorrow evening.",
-          "I want to sort this out properly. Let's go through it together at a calm moment."
-        ]
+    // ---------- USAGE TRACKER (private, stays on this device) ----------
+    // Records app opens, session length, time per tab and which features you use, so the app can be
+    // trimmed and tuned around how you actually use it.
+    const TAB_KEYS = ['journey', 'tetris', 'spirit', 'vagus', 'recover', 'calm', 'practise'];
+    const TAB_LABEL = { journey: 'Journey', tetris: 'Tetris', spirit: 'Spirit', vagus: 'Vagus', recover: 'Recover', calm: 'Calm', practise: 'Practise' };
+    // Time recorded before tabs had names (by their old position)
+    const OLD_TAB = { 0: 'vagus', 1: 'journey', 2: 'tetris', 3: 'recover', 4: 'spirit', 5: 'calm', 6: 'practise' };
+    const FEATURE_LABELS = {
+      stepVagus: 'Vagus: gaze steps', incrementVagus: 'Vagus: mark reset done',
+      saveNote: 'Journal: add entry', toggleJournal: 'Journal: show entries', editNoteTags: 'Journal: tag old entries',
+      setTagFilter: 'Tag filters', toggleTag: 'Tags', addCustomTag: 'Custom tags',
+      releaseUnsent: 'Unsent Defense',
+      openIncidentForm: 'Incident log: open form', saveIncident: 'Incident log: save', toggleIncidents: 'Incident log: show entries',
+      exportIncidents: 'Incident log: export',
+      toggleCalendarView: 'Calendar: show', calendarDay: 'Calendar: mark a day', changeCalMonth: 'Calendar: change month',
+      toggleMoodCalendar: 'Emotional State calendar', moodCalendarDay: 'Emotional State: view a day', changeMoodMonth: 'Emotional State: change month',
+      tetrisPlay: 'Tetris: play', pauseTetris: 'Tetris: pause', resumeTetris: 'Tetris: resume', resetTetris: 'Tetris: reset',
+      startShakeTimer: 'Shake reset', startColdTimer: 'Cold water timer', nextUnsponge: 'Un-Sponging phrases',
+      feedHamster: 'Spirit: give seed', 'canvas:hamster-canvas': 'Spirit: tap / pet', renameHamster: 'Spirit: rename',
+      nextQuote: 'Statements', toggleBreathing: 'Breathing pacer',
+      'canvas:chaos-canvas': 'Chaos Release', initChaosGame: 'Chaos Release: new round',
+      addLeaf: 'Leaves on a Stream', 'canvas:pond-canvas': 'Still Pond', resetPond: 'Still Pond: stir',
+      'canvas:lantern-canvas': 'Sky Lanterns', 'canvas:fog-canvas': 'Clear the Fog', resetFog: 'Clear the Fog: reset',
+      goTool: 'For You suggestions', dismissForYou: 'For You: dismiss',
+      openMoonView: 'Moon view', openSettings: 'Settings', exportBackup: 'Backup: export',
+      showOniScreen: 'Start screen from Settings'
+    };
+    // The main features, so the card can point out the ones you haven't used lately
+    const KEY_FEATURES = ['incrementVagus', 'saveNote', 'releaseUnsent', 'saveIncident', 'calendarDay', 'toggleMoodCalendar',
+      'tetrisPlay', 'startShakeTimer', 'startColdTimer', 'nextUnsponge', 'nextQuote', 'toggleBreathing',
+      'canvas:chaos-canvas', 'addLeaf', 'canvas:pond-canvas', 'canvas:lantern-canvas', 'canvas:fog-canvas',
+      'feedHamster', 'canvas:hamster-canvas', 'openMoonView', 'goTool', 'editNoteTags'];
+    const GROUP = { moveTetris: 'tetrisPlay', rotateTetris: 'tetrisPlay', dropTetris: 'tetrisPlay' };
+    const IGNORE = new Set(['switchTab', 'enterApp', 'pickOni', 'closeSettings', 'saveSettings', 'previewTheme', 'closeIncidentForm',
+      'selectSeverity', 'selectMoodDay', 'closeMoonView', 'closeHardDayPrompt', 'if', 'document', 'event']);
+
+    let usage = JSON.parse(localStorage.getItem('aq_usage') || 'null') || {};
+    usage.since = usage.since || Date.now();
+    usage.events = usage.events || [];   // [timestamp, featureId]
+    usage.tabMs = usage.tabMs || {};     // { dayKey: { tabIndex: ms } }
+    usage.sessions = usage.sessions || []; // [start, end]
+    let usageSaveTimer = null;
+    function saveUsage() {
+      clearTimeout(usageSaveTimer);
+      usageSaveTimer = setTimeout(() => {
+        const cutoff = Date.now() - 120 * DAY;
+        usage.events = usage.events.filter(e => e[0] >= cutoff).slice(-8000);
+        usage.sessions = usage.sessions.filter(s => s[1] >= cutoff).slice(-2000);
+        Object.keys(usage.tabMs).forEach(k => {
+          const [y, m, d] = k.split('-').map(Number);
+          if(new Date(y, m - 1, d).getTime() < cutoff) delete usage.tabMs[k];
+        });
+        localStorage.setItem('aq_usage', JSON.stringify(usage));
+      }, 800);
+    }
+    function usageEvent(id) {
+      id = GROUP[id] || id;
+      if(IGNORE.has(id)) return;
+      const last = usage.events[usage.events.length - 1];
+      if(last && last[1] === id && Date.now() - last[0] < 1500) return; // ignore rapid repeats (e.g. Tetris taps)
+      usage.events.push([Date.now(), id]);
+      saveUsage();
+    }
+
+    // Sessions: a new one starts when the app opens or comes back after 30+ minutes away
+    let curTab = 'journey', tabSince = Date.now(), hiddenAt = null;
+    function startSession() { usage.sessions.push([Date.now(), Date.now()]); saveUsage(); }
+    function touchSession() {
+      const s = usage.sessions[usage.sessions.length - 1];
+      if(s) s[1] = Date.now();
+    }
+    function flushTab() {
+      const now = Date.now();
+      if(!document.hidden) {
+        const k = dayKey(new Date());
+        usage.tabMs[k] = usage.tabMs[k] || {};
+        usage.tabMs[k][curTab] = (usage.tabMs[k][curTab] || 0) + Math.min(now - tabSince, 30 * 60000);
       }
-    ];
-    const BIFF_FALLBACK = [
-      "I hear that you're upset. I'll think about what you said and come back to it when we're both calmer.",
-      "I can see this matters to you. Let's talk about it calmly in a little while."
-    ];
-    const BODY_CHECKS = [
-      'Unclench your jaw and let your tongue drop from the roof of your mouth.',
-      'Drop your shoulders away from your ears.',
-      'Breathe out slowly, longer than you breathe in. Twice.',
-      'Feel both feet on the floor.',
-      'Open your hands. Let your fingers relax.',
-      'Soften your eyes and forehead.'
-    ];
-    let biffVariant = 0;
-
-    function biffTask(text) {
-      const m = text.match(/\b(dishes|laundry|cooking|cleaning|bins?|groceries|shopping|tidying|the mess)\b/i);
-      return m ? 'the ' + m[1].toLowerCase().replace(/^the /, '') : 'that';
+      tabSince = now;
+      touchSession();
+      saveUsage();
     }
-
-    function generateBiff(again) {
-      const input = document.getElementById('biff-input');
-      const text = input.value.trim();
-      const out = document.getElementById('biff-output');
-      if(!text) { input.focus(); return; }
-      biffVariant = again ? biffVariant + 1 : 0;
-
-      const hits = BIFF_RULES.filter(r => r.test.test(text)).sort((a, b) => b.priority - a.priority);
-      const main = hits[0];
-      const shouting = (text.replace(/[^A-Za-z]/g, '').length > 8 && text === text.toUpperCase()) || /[!?]{2,}/.test(text);
-      const pool = main ? main.replies : BIFF_FALLBACK;
-      const reply = pool[biffVariant % pool.length].replace('{task}', biffTask(text));
-
-      // Step away when it's unsafe, insulting or escalating
-      let exit = '';
-      if(main && typeof main.exit === 'string') exit = main.exit;
-      else if(hits.some(h => h.exit === true) || shouting) {
-        exit = `Say: "${anchorText(20)}" Then leave the room calmly. A bathroom break works.`;
+    function usageTab(index) {
+      flushTab();
+      curTab = index;
+      usage.events.push([Date.now(), 'tab:' + index]);
+      saveUsage();
+    }
+    document.addEventListener('visibilitychange', () => {
+      if(document.hidden) { flushTab(); hiddenAt = Date.now(); }
+      else {
+        if(hiddenAt && Date.now() - hiddenAt > 30 * 60000) startSession();
+        tabSince = Date.now();
+        hiddenAt = null;
       }
-      const body = BODY_CHECKS[(Math.floor(Date.now() / 1000) + biffVariant) % BODY_CHECKS.length];
+    });
+    setInterval(() => { if(!document.hidden) flushTab(); }, 30000);
 
-      const labels = (hits.length ? hits.map(h => h.label) : ['General upset']).concat(shouting ? ['Escalating tone'] : []);
-      lastBiff = { trigger: text, labels, reply: main && main.emergency ? main.anchor : reply };
-      const actions = `
-          <div style="display:flex; gap:6px; margin-top:8px; flex-wrap:wrap;">
-            ${main && main.emergency ? '' : '<button class="icon-btn" onclick="generateBiff(true)">Another version</button>'}
-            <button class="icon-btn" id="biff-save-btn" onclick="saveBiff(this)">Save to log</button>
-          </div>`;
-      out.innerHTML = `
-        <div class="biff-tags">${labels.map(l => `<span class="tag-pill">${l}</span>`).join('')}</div>
-        ${main && main.emergency ? `
-        <div class="biff-block biff-emergency">
-          <div class="biff-label">🚨 Emergency protocol</div>
-          <div>Treat this as a medical and safety emergency. You don't have to handle it alone.</div>
-          <a class="btn-action biff-call" href="tel:112">📞 Call 112</a>
-          <div style="margin-top:8px;">${escapeHtml(main.exit)}</div>
-          <div class="biff-label" style="margin-top:10px;">Safety anchor script</div>
-          <div class="biff-reply" id="biff-reply">"${escapeHtml(main.anchor)}"</div>
-          ${actions}
-        </div>` : `
-        ${main && main.safety ? `<div class="biff-block biff-safety"><div class="biff-label">⚠️ Safety first</div>${escapeHtml(main.exit)}</div>` : ''}
-        <div class="biff-block">
-          <div class="biff-label">BIFF reply</div>
-          <div class="biff-reply" id="biff-reply">${escapeHtml(reply)}</div>
-          ${actions}
-        </div>`}
-        ${exit && !(main && main.safety) ? `<div class="biff-block"><div class="biff-label">Exit script</div>${escapeHtml(exit)}</div>` : ''}
-        <div class="biff-block"><div class="biff-label">Body check</div>${escapeHtml(body)}</div>`;
-      out.style.display = 'block';
-    }
+    // Feature use: any tap on a control, calendar day or game canvas
+    const canvasSeen = {};
+    document.addEventListener('click', e => {
+      const el = e.target.closest('[onclick]');
+      if(el) {
+        const m = el.getAttribute('onclick').match(/([A-Za-z_]\w*)\s*\(/);
+        if(m) usageEvent(m[1]);
+        return;
+      }
+      const day = e.target.closest('.cal-day:not(.empty)');
+      if(day) usageEvent(day.closest('#mood-grid') ? 'moodCalendarDay' : 'calendarDay');
+    }, true);
+    document.addEventListener('pointerdown', e => {
+      const c = e.target.closest('canvas[id]');
+      if(!c || !['hamster-canvas', 'chaos-canvas', 'pond-canvas', 'lantern-canvas', 'fog-canvas'].includes(c.id)) return;
+      if(Date.now() - (canvasSeen[c.id] || 0) < 10000) return; // count a play session, not every tap
+      canvasSeen[c.id] = Date.now();
+      usageEvent('canvas:' + c.id);
+    }, true);
 
-    // Anchor script: a calm, timed exit with a real return time
-    function anchorText(minutes) {
-      const back = new Date(Date.now() + minutes * 60000);
-      back.setMinutes(Math.ceil(back.getMinutes() / 5) * 5, 0, 0); // round up to the next 5 minutes
-      const time = back.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-      return `I care about you, but I'm stepping out to cool off. I'll be back at ${time}.`;
-    }
-    function makeAnchor(minutes) {
-      const el = document.getElementById('anchor-script');
-      el.innerText = `"${anchorText(minutes)}"`;
-      el.style.display = 'block';
-      bump('anchor-script');
+    function usageStats(days) {
+      const from = Date.now() - days * DAY;
+      const sessions = usage.sessions.filter(s => s[0] >= from);
+      const events = usage.events.filter(e => e[0] >= from);
+      const tabMs = Object.fromEntries(TAB_KEYS.map(k => [k, 0]));
+      Object.entries(usage.tabMs).forEach(([k, v]) => {
+        const [y, m, d] = k.split('-').map(Number);
+        if(new Date(y, m - 1, d).getTime() >= from - DAY) Object.entries(v).forEach(([t, ms]) => {
+          const key = t in OLD_TAB ? OLD_TAB[t] : t;
+          if(key in tabMs) tabMs[key] += ms;
+        });
+      });
+      const features = {};
+      events.filter(e => !String(e[1]).startsWith('tab:')).forEach(e => { features[e[1]] = (features[e[1]] || 0) + 1; });
+      const bands = { morning: 0, afternoon: 0, evening: 0, night: 0 };
+      sessions.forEach(s => { bands[bandName(new Date(s[0]).getHours())]++; });
+      const trackedDays = Math.max(1, Math.min(days, Math.ceil((Date.now() - usage.since) / DAY)));
+      const avgSession = sessions.length ? sessions.reduce((a, s) => a + (s[1] - s[0]), 0) / sessions.length : 0;
+      return { sessions, tabMs, features, bands, trackedDays, avgSession };
     }
 
-    // BIFF LOG: only what you choose to save, for review in a quiet moment
-    let biffLog = JSON.parse(localStorage.getItem('aq_biff_log') || '[]');
-    let lastBiff = null;
-    function saveBiff(btn) {
-      if(!lastBiff) return;
-      biffLog.push({ id: Date.now(), ts: Date.now(), ...lastBiff });
-      localStorage.setItem('aq_biff_log', JSON.stringify(biffLog));
-      lastBiff = null;
-      btn.innerText = 'Saved ✓';
-      btn.disabled = true;
-      renderBiffLog();
+    function fmtMin(ms) {
+      const m = Math.round(ms / 60000);
+      return m < 60 ? `${m} min` : `${Math.floor(m / 60)}h ${m % 60}m`;
     }
-    function deleteBiff(id) {
-      if(!confirm('Delete this log entry?')) return;
-      biffLog = biffLog.filter(e => e.id !== id);
-      localStorage.setItem('aq_biff_log', JSON.stringify(biffLog));
-      renderBiffLog();
-    }
-    function toggleBiffLog(forceOpen) {
-      const el = document.getElementById('biff-log');
-      const open = forceOpen !== undefined ? forceOpen : el.style.display === 'none';
-      el.style.display = open ? 'block' : 'none';
-      document.getElementById('biff-log-btn').innerText = open ? 'Hide' : 'Show';
-    }
-    function renderBiffLog() {
-      const el = document.getElementById('biff-log');
+    const featureName = id => FEATURE_LABELS[id] || id.replace(/^canvas:/, '').replace(/([A-Z])/g, ' $1').toLowerCase();
+
+    // Settings: which features you use most, which you haven't touched, and the export
+    function renderUsageSettings() {
+      const el = document.getElementById('usage-settings');
       if(!el) return;
-      document.getElementById('biff-log-count').innerText = biffLog.length ? `(${biffLog.length})` : '';
-      el.innerHTML = biffLog.length ? biffLog.slice().sort((a, b) => b.ts - a.ts).map(e => {
-        const d = new Date(e.ts);
-        return `<div class="incident-item" style="border-left-color: var(--theme-primary);">
-          <div class="incident-head">
-            <span>${d.toLocaleDateString()} ${d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-            <button class="mood-del" onclick="deleteBiff(${e.id})">✕</button>
-          </div>
-          <div class="note-text" style="color:var(--text-muted);">They said: ${escapeHtml(e.trigger)}</div>
-          <div class="note-text" style="margin-top:4px;">Reply: ${escapeHtml(e.reply)}</div>
-          <div class="tag-pills">${(e.labels || []).map(l => `<span class="tag-pill">${escapeHtml(l)}</span>`).join('')}</div>
-        </div>`;
-      }).join('') : '<div class="subtitle" style="margin:8px 0 0;">Nothing saved yet.</div>';
+      const s = usageStats(30);
+      const top = Object.entries(s.features).sort((a, b) => b[1] - a[1]).slice(0, 8);
+      const unused = KEY_FEATURES.filter(f => !s.features[f]);
+      const topBand = Object.entries(s.bands).sort((a, b) => b[1] - a[1])[0];
+      const maxTab = Math.max(1, ...Object.values(s.tabMs));
+      const tracked = s.trackedDays;
+      el.innerHTML = `
+        <div class="stat-grid">
+          <div class="stat-box"><div class="stat-box-val">${s.sessions.length}</div><div class="stat-box-label">Opens (${tracked < 30 ? tracked + ' days' : '30 days'})</div></div>
+          <div class="stat-box"><div class="stat-box-val">${(s.sessions.length / tracked).toFixed(1)}</div><div class="stat-box-label">Opens per day</div></div>
+          <div class="stat-box"><div class="stat-box-val">${fmtMin(s.avgSession)}</div><div class="stat-box-label">Average visit</div></div>
+          <div class="stat-box"><div class="stat-box-val" style="font-size:1.1rem;">${topBand && topBand[1] ? topBand[0][0].toUpperCase() + topBand[0].slice(1) : '–'}</div><div class="stat-box-label">Usual time</div></div>
+        </div>
+        <div class="pat-title">Time per tab</div>
+        ${TAB_KEYS.map(k => `
+          <div class="pat-row">
+            <span class="pat-label">${k === 'spirit' ? escapeHtml(hamsterName) : TAB_LABEL[k]}</span>
+            <div class="pat-bar"><span style="width:${s.tabMs[k] / maxTab * 100}%; background:var(--theme-primary); opacity:0.7;"></span></div>
+            <span class="pat-num" style="width:auto;">${fmtMin(s.tabMs[k])}</span>
+          </div>`).join('')}
+        ${tracked < 7 ? `<div class="insight-note" style="margin-top:8px;">Tracking started ${tracked === 1 ? 'today' : tracked + ' days ago'}. Give it a week or two for a clear picture.</div>` : ''}
+        <div class="pat-title">Most used (30 days)</div>
+        ${top.length ? top.map(([id, n]) => `<div class="usage-row"><span>${escapeHtml(featureName(id))}</span><b>${n}</b></div>`).join('') : '<div class="subtitle" style="margin:0;">Nothing yet.</div>'}
+        <div class="pat-title">Not used in the last 30 days</div>
+        <div class="tag-pills">${unused.length ? unused.map(f => `<span class="tag-pill">${escapeHtml(featureName(f))}</span>`).join('') : '<span class="insight-note">You have used everything.</span>'}</div>
+        <button class="btn-action btn-secondary" onclick="exportUsage()">Export usage report (.txt)</button>`;
     }
 
-    function clearBiff() {
-      document.getElementById('biff-input').value = '';
-      document.getElementById('biff-output').style.display = 'none';
-      document.getElementById('biff-output').innerHTML = '';
+    function exportUsage() {
+      flushTab();
+      const s = usageStats(30);
+      const lines = [
+        `AirNomad usage report, ${new Date().toLocaleString()}`,
+        `Tracked for ${s.trackedDays} day(s) (last 30 days max)`,
+        '',
+        `Opens: ${s.sessions.length} (${(s.sessions.length / s.trackedDays).toFixed(1)} per day), average visit ${fmtMin(s.avgSession)}`,
+        `When: ${Object.entries(s.bands).map(([b, n]) => `${b} ${n}`).join(', ')}`,
+        '',
+        'Time per tab:',
+        ...TAB_KEYS.map(k => `  ${k === 'spirit' ? hamsterName : TAB_LABEL[k]}: ${fmtMin(s.tabMs[k])}`),
+        '',
+        'Features used (times):',
+        ...Object.entries(s.features).sort((a, b) => b[1] - a[1]).map(([id, n]) => `  ${featureName(id)}: ${n}`),
+        '',
+        'Not used in the last 30 days:',
+        ...KEY_FEATURES.filter(f => !s.features[f]).map(f => `  ${featureName(f)}`)
+      ];
+      const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `airnomad-usage-${dayKey(new Date())}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
     }
 
     // BACKUP / RESTORE
@@ -5945,7 +6343,7 @@
     }
 
     function stopBreathing() {
-      if(breathTimer && breathRounds > 0) logPractice('tools', 1);
+      if(breathTimer && breathRounds > 0) logPractice('tools', 1, 'breathing');
       if(breathTimer) clearInterval(breathTimer);
       breathTimer = null;
       const circle = document.getElementById('breath-circle');
@@ -6012,9 +6410,8 @@
       const sh = nextPiece.shape;
       const ox = (nc.width - sh[0].length * b) / 2;
       const oy = (nc.height - sh.length * b) / 2;
-      nctx.fillStyle = nextPiece.color;
       sh.forEach((row, r) => row.forEach((v, c) => {
-        if(v) nctx.fillRect(ox + c * b, oy + r * b, b - 1, b - 1);
+        if(v) drawGlossyBlock(nctx, ox + c * b, oy + r * b, b - 1, nextPiece.color);
       }));
     }
 
@@ -6050,7 +6447,7 @@
 
     // Keyboard controls for Tetris
     window.addEventListener('keydown', (e) => {
-      if(document.querySelectorAll('.tab-content')[2].classList.contains('active')) {
+      if(document.getElementById('tab-tetris').classList.contains('active')) {
         // Stop Space from also pressing a focused button (e.g. Reset)
         if(document.activeElement && document.activeElement.tagName === 'BUTTON') document.activeElement.blur();
         if(e.key === 'ArrowLeft') { moveTetris(-1); e.preventDefault(); }
@@ -6081,6 +6478,7 @@
             let s = timeLeft % 60;
             let timerEl = document.getElementById('tetris-timer');
             if(timerEl) timerEl.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+            updateTetrisRing();
             if(timeLeft <= 0) {
               logPractice('tetrisSessions', 1);
               gameOver('session');
@@ -6097,7 +6495,96 @@
       isPaused = true;
       clearInterval(tInterval);
       tInterval = null;
+      drawBoard();
     }
+    document.addEventListener('visibilitychange', () => { if(document.hidden && tInterval) pauseTetris(); });
+
+    // Session ring: fills over the 10 minutes, with a line that changes as you go
+    const TETRIS_MILESTONES = [
+      [0, 'Rotate the pieces in your mind before you place them. That is the part that helps.'],
+      [60, 'One minute in. Your visual brain is busy with shapes now.'],
+      [180, 'Three minutes. Keep your focus on the falling pieces.'],
+      [300, 'Halfway there. Notice your breathing slowing down.'],
+      [480, 'Two minutes left. Stay with the shapes.'],
+      [600, 'Session complete ✓ Well done for looking after yourself.']
+    ];
+    function updateTetrisRing() {
+      const fg = document.getElementById('tetris-ring-fg');
+      if(!fg) return;
+      const done = Math.min(SESSION_SECONDS, SESSION_SECONDS - timeLeft);
+      const frac = done / SESSION_SECONDS;
+      const len = 2 * Math.PI * 28;
+      fg.style.strokeDasharray = len;
+      fg.style.strokeDashoffset = len * (1 - frac);
+      fg.style.stroke = frac >= 1 ? 'var(--color-green)' : 'var(--theme-primary)';
+      const line = TETRIS_MILESTONES.filter(([s]) => done >= s).pop()[1];
+      const el = document.getElementById('tetris-milestone');
+      if(el && el.innerText !== line) { el.innerText = line; bump('tetris-milestone'); }
+      // Inside the 6-hour window after a hard moment?
+      const chip = document.getElementById('tetris-window-chip');
+      if(chip) {
+        if(tetrisWindow && tetrisWindow.until > Date.now()) {
+          const left = tetrisWindow.until - Date.now();
+          chip.innerText = `⏳ Inside your 6-hour window · ${Math.floor(left / 3600000)}h ${Math.floor((left % 3600000) / 60000)}m left`;
+          chip.style.display = 'inline-block';
+        } else chip.style.display = 'none';
+      }
+    }
+    function toggleTetrisWhy() {
+      const el = document.getElementById('tetris-why');
+      const show = el.style.display === 'none';
+      el.style.display = show ? 'block' : 'none';
+      if(show && tInterval) pauseTetris(); // reading pauses the game; tap the board or ▶ to continue
+    }
+
+    function toggleTetrisPause() {
+      if(isGameOver) return;
+      if(tInterval && !isPaused) pauseTetris();
+      else resumeTetris();
+      drawBoard();
+    }
+
+    // Touch controls on the board: tap = rotate (or resume), swipe left/right = move, press and hold = fall fast
+    (function setupTetrisTouch() {
+      const c = document.getElementById('tetris-canvas');
+      if(!c) return;
+      let start = null, holdTimer = null, dropTimer = null;
+      const stopDrop = () => { clearTimeout(holdTimer); clearInterval(dropTimer); holdTimer = dropTimer = null; };
+      c.addEventListener('pointerdown', e => {
+        e.preventDefault();
+        try { c.setPointerCapture(e.pointerId); } catch(err) {}
+        start = { x: e.clientX, y: e.clientY, stepX: e.clientX, t: Date.now(), moved: false };
+        stopDrop();
+        holdTimer = setTimeout(() => {
+          if(!start || start.moved || isPaused || isGameOver) return;
+          start.dropping = true;
+          softDropTetris();
+          dropTimer = setInterval(softDropTetris, 50);
+        }, 280);
+      });
+      c.addEventListener('pointermove', e => {
+        if(!start || start.dropping) return;
+        const cell = c.getBoundingClientRect().width / COLS;
+        if(Math.abs(e.clientX - start.x) > 10 || Math.abs(e.clientY - start.y) > 14) {
+          start.moved = true;
+          clearTimeout(holdTimer);
+        }
+        while(e.clientX - start.stepX >= cell) { moveTetris(1); start.stepX += cell; }
+        while(start.stepX - e.clientX >= cell) { moveTetris(-1); start.stepX -= cell; }
+      });
+      const end = () => {
+        if(!start) return;
+        const wasTap = !start.moved && !start.dropping && Date.now() - start.t < 280;
+        stopDrop();
+        start = null;
+        if(!wasTap) return;
+        if(isGameOver) return;
+        if(isPaused || !tInterval) toggleTetrisPause();
+        else rotateTetris();
+      };
+      c.addEventListener('pointerup', end);
+      c.addEventListener('pointercancel', () => { stopDrop(); start = null; });
+    })();
 
     function resumeTetris() {
       if(isGameOver) return;
@@ -6119,6 +6606,7 @@
       updateTetrisStats();
       let timerEl = document.getElementById('tetris-timer');
       if(timerEl) timerEl.innerText = formatTime(SESSION_SECONDS);
+      updateTetrisRing();
       currentPiece = null;
       spawnPiece();
       drawBoard();
@@ -6263,10 +6751,7 @@
 
       for(let r=0; r<ROWS; r++) {
         for(let c=0; c<COLS; c++) {
-          if(grid[r][c]) {
-            ctx.fillStyle = grid[r][c];
-            ctx.fillRect(c*BLOCK, r*BLOCK, BLOCK-1, BLOCK-1);
-          }
+          if(grid[r][c]) drawGlossyBlock(ctx, c * BLOCK, r * BLOCK, BLOCK - 1, grid[r][c]);
         }
       }
 
@@ -6278,15 +6763,86 @@
       }
 
       if(currentPiece && !isGameOver) {
-        ctx.fillStyle = currentPiece.color;
-        for(let r=0; r<currentPiece.shape.length; r++) {
-          for(let c=0; c<currentPiece.shape[r].length; c++) {
-            if(currentPiece.shape[r][c]) {
-              ctx.fillRect((pieceX + c)*BLOCK, (pieceY + r)*BLOCK, BLOCK-1, BLOCK-1);
-            }
-          }
+        // Ghost piece: where it will land if dropped now
+        let ghostY = pieceY;
+        while(canMove(pieceX, ghostY + 1, currentPiece.shape)) ghostY++;
+        if(ghostY > pieceY) {
+          currentPiece.shape.forEach((row, r) => row.forEach((v, c) => {
+            if(v) drawGhostBlock(ctx, (pieceX + c) * BLOCK, (ghostY + r) * BLOCK, BLOCK - 1, currentPiece.color);
+          }));
         }
+        currentPiece.shape.forEach((row, r) => row.forEach((v, c) => {
+          if(v) drawGlossyBlock(ctx, (pieceX + c) * BLOCK, (pieceY + r) * BLOCK, BLOCK - 1, currentPiece.color);
+        }));
       }
+
+      // Corner button: pause symbol while playing, play symbol otherwise
+      const pp = document.getElementById('tetris-pp');
+      if(pp) {
+        const playing = !!tInterval && !isPaused && !isGameOver;
+        if(pp.dataset.state !== String(playing)) {
+          pp.dataset.state = String(playing);
+          pp.innerHTML = playing
+            ? '<svg viewBox="0 0 12 12"><rect x="2" y="1" width="3" height="10" rx="1"/><rect x="7" y="1" width="3" height="10" rx="1"/></svg>'
+            : '<svg viewBox="0 0 12 12"><path d="M3 1.5 L10.5 6 L3 10.5 Z"/></svg>';
+        }
+        pp.style.display = isGameOver ? 'none' : 'flex';
+      }
+
+      // Paused: dim the board until Resume
+      if(isPaused && currentPiece && !isGameOver) {
+        ctx.fillStyle = 'rgba(2, 4, 10, 0.72)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#e6f3ff';
+        ctx.font = 'bold 22px -apple-system, sans-serif';
+        ctx.fillText('Paused', canvas.width / 2, canvas.height / 2 - 6);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
+        ctx.font = '13px -apple-system, sans-serif';
+        ctx.fillText('Tap to continue', canvas.width / 2, canvas.height / 2 + 18);
+      }
+    }
+
+    // Shade a hex colour: f > 0 lightens towards white, f < 0 darkens towards black
+    function shadeHex(hex, f) {
+      const n = parseInt(hex.slice(1), 16);
+      const ch = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map(v => Math.round(f > 0 ? v + (255 - v) * f : v * (1 + f)));
+      return `rgb(${ch.join(', ')})`;
+    }
+
+    // A glossy block: gradient body, bright top-left bevel, dark bottom-right bevel, and a shine
+    function drawGlossyBlock(g, x, y, s, color) {
+      const body = g.createLinearGradient(x, y, x, y + s);
+      body.addColorStop(0, shadeHex(color, 0.28));
+      body.addColorStop(0.5, color);
+      body.addColorStop(1, shadeHex(color, -0.28));
+      g.fillStyle = body;
+      g.fillRect(x, y, s, s);
+      const e = Math.max(1, s * 0.12);
+      g.fillStyle = 'rgba(255, 255, 255, 0.35)';
+      g.fillRect(x, y, s, e);
+      g.fillRect(x, y, e, s);
+      g.fillStyle = 'rgba(0, 0, 0, 0.3)';
+      g.fillRect(x, y + s - e, s, e);
+      g.fillRect(x + s - e, y, e, s);
+      const shine = g.createLinearGradient(x, y, x, y + s * 0.55);
+      shine.addColorStop(0, 'rgba(255, 255, 255, 0.45)');
+      shine.addColorStop(1, 'rgba(255, 255, 255, 0)');
+      g.fillStyle = shine;
+      g.beginPath();
+      g.ellipse(x + s * 0.42, y + s * 0.26, s * 0.3, s * 0.15, -0.3, 0, Math.PI * 2);
+      g.fill();
+    }
+
+    // The ghost: a faint tinted outline
+    function drawGhostBlock(g, x, y, s, color) {
+      g.fillStyle = shadeHex(color, -0.55).replace('rgb', 'rgba').replace(')', ', 0.35)');
+      g.fillRect(x, y, s, s);
+      g.strokeStyle = color;
+      g.globalAlpha = 0.55;
+      g.lineWidth = 1.5;
+      g.strokeRect(x + 0.75, y + 0.75, s - 1.5, s - 1.5);
+      g.globalAlpha = 1;
     }
 
     function moveTetris(dir) {
@@ -6343,7 +6899,8 @@
     renderTagPicker('journal');
     renderTagPicker('incident');
     renderUnsentCount();
-    renderBiffLog();
+    startSession();
+    updateTetrisRing();
     applyOniTailoring();
     // When a pick goes stale while the app is open, everything falls back
     let lastOniSeen = todaysOni();
