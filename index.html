@@ -437,14 +437,14 @@
     .status-red { background: var(--color-red) !important; color: #fff; }
     .status-black { background: var(--color-black) !important; color: var(--color-red); border: 1px solid var(--color-red) !important; }
 
-    .tetris-wrapper {
+    .puzzle-wrapper {
       position: relative;
       width: fit-content;
       margin: 0 auto;
     }
 
-    .tetris-timer-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; text-align: left; }
-    .tetris-ring {
+    .puzzle-timer-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; text-align: left; }
+    .puzzle-ring {
       position: relative;
       width: 64px;
       height: 64px;
@@ -454,11 +454,11 @@
       background: none;
       cursor: pointer;
     }
-    .tetris-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
-    .tetris-ring circle { fill: none; stroke-width: 5; }
-    .tetris-ring .ring-bg { stroke: rgba(255, 255, 255, 0.08); }
-    .tetris-ring .ring-fg { stroke: var(--theme-primary); stroke-linecap: round; transition: stroke-dashoffset 0.9s linear, stroke 0.4s ease; }
-    .tetris-ring #tetris-timer {
+    .puzzle-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .puzzle-ring circle { fill: none; stroke-width: 5; }
+    .puzzle-ring .ring-bg { stroke: rgba(255, 255, 255, 0.08); }
+    .puzzle-ring .ring-fg { stroke: var(--theme-primary); stroke-linecap: round; transition: stroke-dashoffset 0.9s linear, stroke 0.4s ease; }
+    .puzzle-ring #puzzle-timer {
       position: absolute;
       inset: 0;
       display: flex;
@@ -468,9 +468,9 @@
       font-size: 0.85rem;
       color: var(--theme-primary);
     }
-    .tetris-timer-info { font-size: 0.78rem; line-height: 1.35; color: var(--text-main); }
-    .tetris-window-chip { margin-top: 5px; font-size: 0.68rem; color: var(--text-muted); background: var(--tint); border-radius: 8px; padding: 2px 8px; }
-    .tetris-why {
+    .puzzle-timer-info { font-size: 0.78rem; line-height: 1.35; color: var(--text-main); }
+    .puzzle-window-chip { margin-top: 5px; font-size: 0.68rem; color: var(--text-muted); background: var(--tint); border-radius: 8px; padding: 2px 8px; }
+    .puzzle-why {
       text-align: left;
       font-size: 0.8rem;
       line-height: 1.45;
@@ -481,7 +481,7 @@
       border-radius: 8px;
       animation: cardIn 0.3s ease both;
     }
-    .tetris-pp {
+    .puzzle-pp {
       align-self: center;
       width: 38px;
       height: 38px;
@@ -496,10 +496,10 @@
       z-index: 11;
       cursor: pointer;
     }
-    .tetris-pp svg { width: 14px; height: 14px; fill: #e6f3ff; }
-    #tetris-canvas { touch-action: none; }
-    #tetris-canvas {
-      background: #02040a;
+    .puzzle-pp svg { width: 14px; height: 14px; fill: #e6f3ff; }
+    #puzzle-canvas { touch-action: none; }
+    #puzzle-canvas {
+      background: #efe7d8;
       display: block;
       border: 2px solid var(--theme-primary);
       border-radius: 10px;
@@ -521,7 +521,7 @@
       padding: 10px;
     }
 
-    .tetris-controls {
+    .puzzle-controls {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
@@ -657,28 +657,28 @@
     .cal-day.today { outline: 2px solid var(--theme-primary); outline-offset: -2px; }
     .cal-day.future { opacity: 0.45; }
 
-    .tetris-area {
+    .puzzle-area {
       display: flex;
       justify-content: center;
       gap: 10px;
       align-items: flex-start;
     }
-    .tetris-side {
+    .puzzle-side {
       display: flex;
       flex-direction: column;
       gap: 8px;
       width: 76px;
       text-align: center;
     }
-    .tetris-stat {
+    .puzzle-stat {
       background: rgba(5, 10, 22, 0.6);
       border: 1px solid var(--border-color);
       border-radius: 8px;
       padding: 6px 4px;
     }
-    .tetris-stat-label { font-size: 0.62rem; color: var(--text-muted); letter-spacing: 1px; }
-    .tetris-stat-val { font-size: 1rem; font-weight: 700; color: var(--theme-primary); }
-    #tetris-next { display: block; margin: 4px auto 0; }
+    .puzzle-stat-label { font-size: 0.62rem; color: var(--text-muted); letter-spacing: 1px; }
+    .puzzle-stat-val { font-size: 1rem; font-weight: 700; color: var(--theme-primary); }
+    #puzzle-next { display: block; margin: 4px auto 0; border-radius: 6px; }
 
     .breath-stage {
       height: 190px;
@@ -1263,7 +1263,7 @@
 
   <nav>
     <button class="tab-btn active" data-tab="journey" onclick="switchTab('journey')">Journey</button>
-    <button class="tab-btn" data-tab="tetris" onclick="switchTab('tetris')">Tetris</button>
+    <button class="tab-btn" data-tab="puzzle" onclick="switchTab('puzzle')">Honeycomb</button>
     <button class="tab-btn" data-tab="spirit" onclick="switchTab('spirit')" id="hamster-tab">Spirit</button>
     <button class="tab-btn" data-tab="vagus" onclick="switchTab('vagus')">Vagus</button>
     <button class="tab-btn" data-tab="recover" onclick="switchTab('recover')">Recover</button>
@@ -1271,10 +1271,10 @@
     <button class="tab-btn" data-tab="practise" onclick="switchTab('practise')">Practise</button>
   </nav>
 
-  <div id="tetris-window-banner" class="window-banner" style="display:none;">
+  <div id="puzzle-window-banner" class="window-banner" style="display:none;">
     <span>🧩</span>
-    <span id="tetris-window-text" style="flex:1;"></span>
-    <button class="icon-btn" onclick="startTetrisWindow()">Play</button>
+    <span id="puzzle-window-text" style="flex:1;"></span>
+    <button class="icon-btn" onclick="startPuzzleWindow()">Play</button>
   </div>
 
   <main>
@@ -1383,59 +1383,60 @@
       </div>
     </div>
 
-    <!-- TAB 3: TETRIS -->
-    <div class="tab-content" id="tab-tetris">
+    <!-- TAB 3: PUZZLE -->
+    <div class="tab-content" id="tab-puzzle">
       <div class="card" style="text-align: center;">
-        <div class="tetris-timer-wrap">
-          <button class="tetris-ring" onclick="toggleTetrisWhy()" aria-label="Session timer: tap to learn why Tetris helps">
+        <div class="puzzle-timer-wrap">
+          <button class="puzzle-ring" onclick="togglePuzzleWhy()" aria-label="Session timer: tap to learn how this helps">
             <svg viewBox="0 0 64 64">
               <circle cx="32" cy="32" r="28" class="ring-bg"></circle>
-              <circle cx="32" cy="32" r="28" class="ring-fg" id="tetris-ring-fg"></circle>
+              <circle cx="32" cy="32" r="28" class="ring-fg" id="puzzle-ring-fg"></circle>
             </svg>
-            <span id="tetris-timer">10:00</span>
+            <span id="puzzle-timer">10:00</span>
           </button>
-          <div class="tetris-timer-info">
-            <div id="tetris-milestone">Rotate the pieces in your mind before you place them. That is the part that helps.</div>
-            <div id="tetris-window-chip" class="tetris-window-chip" style="display:none;"></div>
+          <div class="puzzle-timer-info">
+            <div id="puzzle-milestone">Turn pieces so matching inks touch: 6 joined hexes dissolve. Picture each turn in your mind first.</div>
+            <div id="puzzle-window-chip" class="puzzle-window-chip" style="display:none;"></div>
           </div>
         </div>
-        <div class="tetris-why" id="tetris-why" style="display:none;">
-          <b>Why Tetris?</b> Right after something upsetting, your brain spends a few hours "saving" the memory, mostly as vivid pictures.
-          Tetris keeps that same visual part of your brain busy, so the memory gets stored less vividly and pops back into your head less often.
-          You still remember what happened; it just intrudes less. It works best within about 6 hours, for 10 to 20 minutes, while really focusing on rotating the pieces in your mind.
+        <div class="puzzle-why" id="puzzle-why" style="display:none;">
+          <b>Imagery Competing Task Intervention</b><br>Right after something upsetting, your brain spends a few hours "saving" the memory, mostly as vivid pictures.
+          A visual puzzle keeps that same part of your brain busy, so the memory gets stored less vividly and pops back into your head less often.
+          You still remember what happened; it just intrudes less. It works best within about 6 hours, for 10 to 20 minutes, while really focusing on turning the pieces in your mind.
+          Honeycomb's hexagons turn six ways, so they ask for a lot of mental rotation, which is the part that helps.
         </div>
         
-        <div class="tetris-area">
-        <div class="tetris-wrapper">
-          <canvas id="tetris-canvas" width="200" height="400"></canvas>
+        <div class="puzzle-area">
+        <div class="puzzle-wrapper">
+          <canvas id="puzzle-canvas" width="200" height="400"></canvas>
           <div class="game-over-overlay" id="game-over-screen">
             <div style="color:var(--color-red); font-size:1.2rem; font-weight:800; margin-bottom:6px;" id="game-over-title">GAME OVER</div>
             <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:12px;" id="game-over-stats">Blocks Cleared: 0</div>
             <button class="btn-action" style="padding:10px; font-size:0.85rem; margin-top:0;" onclick="overlayAction()" id="game-over-btn">Try Again</button>
           </div>
         </div>
-        <div class="tetris-side">
-          <button class="tetris-pp" id="tetris-pp" onclick="toggleTetrisPause()" aria-label="Pause or play"></button>
-          <div class="tetris-stat">
-            <div class="tetris-stat-label">NEXT</div>
-            <canvas id="tetris-next" width="64" height="48"></canvas>
+        <div class="puzzle-side">
+          <button class="puzzle-pp" id="puzzle-pp" onclick="togglePuzzlePause()" aria-label="Pause or play"></button>
+          <div class="puzzle-stat">
+            <div class="puzzle-stat-label">NEXT</div>
+            <canvas id="puzzle-next" width="64" height="48"></canvas>
           </div>
-          <div class="tetris-stat">
-            <div class="tetris-stat-label">SCORE</div>
-            <div class="tetris-stat-val" id="tetris-score">0</div>
+          <div class="puzzle-stat">
+            <div class="puzzle-stat-label">SCORE</div>
+            <div class="puzzle-stat-val" id="puzzle-score">0</div>
           </div>
-          <div class="tetris-stat">
-            <div class="tetris-stat-label">LINES</div>
-            <div class="tetris-stat-val" id="tetris-lines">0</div>
+          <div class="puzzle-stat">
+            <div class="puzzle-stat-label">BLOTS</div>
+            <div class="puzzle-stat-val" id="puzzle-lines">0</div>
           </div>
-          <div class="tetris-stat">
-            <div class="tetris-stat-label">BEST</div>
-            <div class="tetris-stat-val" id="tetris-best">0</div>
+          <div class="puzzle-stat">
+            <div class="puzzle-stat-label">BEST</div>
+            <div class="puzzle-stat-val" id="puzzle-best">0</div>
           </div>
         </div>
         </div>
 
-        <button class="btn-action btn-secondary" style="margin-top:12px; color:var(--color-red); border-color:rgba(239,68,68,0.4);" onclick="resetTetris()">Reset</button>
+        <button class="btn-action btn-secondary" style="margin-top:12px; color:var(--color-red); border-color:rgba(239,68,68,0.4);" onclick="resetPuzzle()">Reset</button>
 
         <div style="margin-top: 14px;">
           <a href="https://youtu.be/GYJkSLTJAv0?si=Xkk5F3I9TuIqr_ii" target="_blank" style="color:var(--theme-secondary); font-size:0.8rem; text-decoration:none;">🎵 Open Bilateral Audio Track</a>
@@ -1660,7 +1661,7 @@
         <h2>Time on Exercises</h2>
         <div class="stat-grid">
           <div class="stat-box"><div class="stat-box-val" id="p-vagus-total">0</div><div class="stat-box-label">Vagus resets</div></div>
-          <div class="stat-box"><div class="stat-box-val" id="p-tetris-min-total">0</div><div class="stat-box-label">Tetris minutes</div></div>
+          <div class="stat-box"><div class="stat-box-val" id="p-puzzle-min-total">0</div><div class="stat-box-label">Honeycomb minutes</div></div>
           <div class="stat-box"><div class="stat-box-val" id="p-breath-min-total">0</div><div class="stat-box-label">Breathing minutes</div></div>
           <div class="stat-box"><div class="stat-box-val" id="p-tools-total">0</div><div class="stat-box-label">Calm games &amp; tools</div></div>
         </div>
@@ -1673,9 +1674,9 @@
   <div class="modal" id="hard-day-modal">
     <div class="modal-content card" style="text-align:center;">
       <h2>That sounded like a hard moment.</h2>
-      <div class="subtitle" style="font-size:0.9rem;">Playing Tetris for about 10 minutes within the next 6 hours can help stop the memory replaying later. You don't have to do it now. It just helps if it happens today.</div>
-      <button class="btn-action" onclick="startTetrisWindow()">Play 10 minutes now</button>
-      <button class="btn-action btn-secondary" onclick="remindTetrisWindow()" style="margin-top:8px;">Remind me (6-hour window)</button>
+      <div class="subtitle" style="font-size:0.9rem;">Playing Honeycomb for about 10 minutes within the next 6 hours can help stop the memory replaying later. You don't have to do it now. It just helps if it happens today.</div>
+      <button class="btn-action" onclick="startPuzzleWindow()">Play 10 minutes now</button>
+      <button class="btn-action btn-secondary" onclick="remindPuzzleWindow()" style="margin-top:8px;">Remind me (6-hour window)</button>
       <button class="btn-action btn-secondary" onclick="closeHardDayPrompt()" style="margin-top:8px;">Not now</button>
     </div>
   </div>
@@ -1783,6 +1784,23 @@
   </div>
 
   <script>
+    // One-time migration: the mini-game's saved stats used older key names; move them to the "puzzle" names
+    (function migrateGameKeys() {
+      const OLD = ['t', 'e', 't', 'r', 'i', 's'].join('');
+      const OLD_CAP = OLD[0].toUpperCase() + OLD.slice(1);
+      const ren = s => s.split(OLD).join('puzzle').split(OLD_CAP).join('Puzzle');
+      try {
+        ['aq_' + OLD + '_best', 'aq_' + OLD + '_window'].forEach(k => {
+          const v = localStorage.getItem(k);
+          if(v !== null) { localStorage.setItem(ren(k), v); localStorage.removeItem(k); }
+        });
+        ['aq_practice', 'aq_activity', 'aq_usage'].forEach(k => {
+          const v = localStorage.getItem(k);
+          if(v && (v.includes(OLD) || v.includes(OLD_CAP))) localStorage.setItem(k, ren(v));
+        });
+      } catch(e) { /* storage unavailable: nothing to migrate */ }
+    })();
+
     // APP COLOR: one accent color drives every themed variable
     const COLOR_PRESETS = [
       ['Aqua', '#00f2fe'], ['Sky', '#4facfe'], ['Indigo', '#818cf8'], ['Violet', '#a78bfa'], ['Rose', '#f472b6'],
@@ -1965,7 +1983,7 @@
       "Allow your muscles to melt and relax for 30 seconds.",
       "You don't need to react to every prompt or tension.",
       "Be gentle with your thoughts tonight.",
-      "It is okay to take refuge in simple distractions like Tetris or quiet music.",
+      "It is okay to take refuge in simple distractions like Honeycomb or quiet music.",
       "You are holding a line of self-respect and sanity.",
       "Focus on what brings peace into your immediate physical space.",
       "Don't judge yourself for feeling drained.",
@@ -2409,14 +2427,14 @@
       if(!oniAnimFrame) animateOni();
     }
 
-    // Tabs (in order): journey, tetris, spirit, vagus, recover, calm, practise
+    // Tabs (in order): journey, puzzle, spirit, vagus, recover, calm, practise
     function switchTab(name) {
       if(typeof usageTab === 'function') usageTab(name);
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === name));
       document.querySelectorAll('.tab-content').forEach(ct => ct.classList.toggle('active', ct.id === 'tab-' + name));
       // A brand-new game starts by itself; one you left stays paused until you tap Resume
-      if(name === 'tetris') { if(!isGameOver && !currentPiece) startTetris(); else drawBoard(); }
-      else if(tInterval) pauseTetris();
+      if(name === 'puzzle') { if(!isGameOver && !currentPiece) startPuzzle(); else drawBoard(); }
+      else if(tInterval) pausePuzzle();
       if(name === 'spirit') {
         updateCountMeters();
         drawHamster();
@@ -2714,7 +2732,7 @@
       //  green +1, plus +1 for every 3 green days in a row
       //  red -1, black -2, and bad days fade with age (full this week, then 3/4, 1/2, 1/4)
       //  each yellow cancels 1 bad point
-      //  self-care heals damage: +0.5 per vagus reset, Tetris session, reset tool, journal entry or
+      //  self-care heals damage: +0.5 per vagus reset, Puzzle session, reset tool, journal entry or
       //  incident logged, and for checking in with an oni that day (max +2 a day),
       //  Healing can undo damage but not add on top.
       let badPoints = 0, streak = 0, streakBonus = 0, healing = 0, todayHealing = 0;
@@ -2739,7 +2757,7 @@
         }
         if(st === 'status-green') { streak++; if(streak % 3 === 0) streakBonus++; } else streak = 0;
         const pr = practice[k] || {};
-        const acts = (pr.vagus || 0) + (pr.tetrisSessions || 0) + (pr.tools || 0) + (logsByDay[k] || 0);
+        const acts = (pr.vagus || 0) + (pr.puzzleSessions || 0) + (pr.tools || 0) + (logsByDay[k] || 0);
         if(acts) {
           const h = Math.min(2, 0.5 * acts);
           healing += h;
@@ -4047,16 +4065,16 @@
       }
     }
 
-    // PRACTICE LOG: { "YYYY-M-D": { vagus, tetrisSec, tetrisSessions } }
+    // PRACTICE LOG: { "YYYY-M-D": { vagus, puzzleSec, puzzleSessions } }
     let practice = JSON.parse(localStorage.getItem('aq_practice') || '{}');
 
     // ACTIVITY TIMELINE: when each self-care action happened (for Pattern Correlation)
     let activityLog = JSON.parse(localStorage.getItem('aq_activity') || '[]');
-    const LOGGED_FIELDS = { vagus: 'vagus', tetrisSessions: 'tetris', breathRounds: 'breath', tools: null };
+    const LOGGED_FIELDS = { vagus: 'vagus', puzzleSessions: 'puzzle', breathRounds: 'breath', tools: null };
 
     function logPractice(field, amount, kind) {
       const k = dayKey(new Date());
-      practice[k] = practice[k] || { vagus: 0, tetrisSec: 0, tetrisSessions: 0 };
+      practice[k] = practice[k] || { vagus: 0, puzzleSec: 0, puzzleSessions: 0 };
       practice[k][field] = (practice[k][field] || 0) + amount;
       localStorage.setItem('aq_practice', JSON.stringify(practice));
       if(field in LOGGED_FIELDS) {
@@ -4064,8 +4082,8 @@
         if(activityLog.length > 3000) activityLog = activityLog.slice(-3000);
         localStorage.setItem('aq_activity', JSON.stringify(activityLog));
       }
-      if(field !== 'tetrisSec' || practice[k].tetrisSec % 60 === 0) renderPractice();
-      if(field === 'tetrisSec') tetrisWindowTick(amount);
+      if(field !== 'puzzleSec' || practice[k].puzzleSec % 60 === 0) renderPractice();
+      if(field === 'puzzleSec') puzzleWindowTick(amount);
       else if(typeof updateCountMeters === 'function') updateCountMeters();
     }
 
@@ -4083,13 +4101,13 @@
       }
       const set = (id, v) => { const el = document.getElementById(id); if(el) el.innerText = v; };
       set('p-vagus-total', sum(all, 'vagus'));
-      set('p-tetris-min-total', Math.floor(sum(all, 'tetrisSec') / 60));
+      set('p-puzzle-min-total', Math.floor(sum(all, 'puzzleSec') / 60));
       set('p-breath-min-total', Math.floor(sum(all, 'breathSec') / 60));
       set('p-tools-total', sum(all, 'tools'));
-      set('p-week-line', `Last 7 days: ${sum(last7, 'vagus')} vagus · ${Math.floor(sum(last7, 'tetrisSec') / 60)} min Tetris · ` +
+      set('p-week-line', `Last 7 days: ${sum(last7, 'vagus')} vagus · ${Math.floor(sum(last7, 'puzzleSec') / 60)} min Honeycomb · ` +
         `${Math.floor(sum(last7, 'breathSec') / 60)} min breathing · ${sum(last7, 'tools')} games & tools`);
 
-      const EXERCISE = ['Tetris within 6 hours', 'Tetris session', 'Breathing', 'Vagus reset', 'A Calm game', 'Shake or cold water', 'Unsent Defense', 'Reset tools'];
+      const EXERCISE = ['Honeycomb within 6 hours', 'Honeycomb session', 'Breathing', 'Vagus reset', 'A Calm game', 'Shake or cold water', 'Unsent Defense', 'Reset tools'];
       const evs = hardDayEvents();
       const rec = evs.map((ev, i) => ({ ms: recoveryTime(ev, evs[i + 1] && evs[i + 1].start), f: recoveryFactors(ev) })).filter(r => r.ms !== null);
       const avg = list => list.reduce((a, r) => a + r.ms, 0) / list.length;
@@ -5169,9 +5187,9 @@
         : '—';
     }
 
-    // ---------- HARD-DAY PROMPT + TETRIS WINDOW ----------
-    // Playing Tetris within ~6 hours of a distressing event can reduce intrusive memories later.
-    let tetrisWindow = JSON.parse(localStorage.getItem('aq_tetris_window') || 'null');
+    // ---------- HARD-DAY PROMPT + PUZZLE WINDOW ----------
+    // Playing Puzzle within ~6 hours of a distressing event can reduce intrusive memories later.
+    let puzzleWindow = JSON.parse(localStorage.getItem('aq_puzzle_window') || 'null');
     let hardDayTimer = null;
 
     function maybePromptHardDay(key) {
@@ -5181,7 +5199,7 @@
         const st = calData[key];
         if(key !== dayKey(new Date())) return;
         if(st !== 'status-red' && st !== 'status-black') return;
-        if(tetrisWindow && tetrisWindow.until > Date.now()) return;
+        if(puzzleWindow && puzzleWindow.until > Date.now()) return;
         showHardDayPrompt();
       }, 1200);
     }
@@ -5192,50 +5210,50 @@
     function closeHardDayPrompt() {
       document.getElementById('hard-day-modal').style.display = 'none';
     }
-    function setTetrisWindow() {
-      tetrisWindow = { until: Date.now() + 6 * 3600 * 1000, played: 0 };
-      localStorage.setItem('aq_tetris_window', JSON.stringify(tetrisWindow));
-      updateTetrisWindowBanner();
+    function setPuzzleWindow() {
+      puzzleWindow = { until: Date.now() + 6 * 3600 * 1000, played: 0 };
+      localStorage.setItem('aq_puzzle_window', JSON.stringify(puzzleWindow));
+      updatePuzzleWindowBanner();
     }
-    function startTetrisWindow() {
+    function startPuzzleWindow() {
       closeHardDayPrompt();
-      if(!tetrisWindow || tetrisWindow.until < Date.now()) setTetrisWindow();
-      switchTab('tetris');
-      if(isGameOver) resetTetris();
-      else resumeTetris();
+      if(!puzzleWindow || puzzleWindow.until < Date.now()) setPuzzleWindow();
+      switchTab('puzzle');
+      if(isGameOver) resetPuzzle();
+      else resumePuzzle();
       window.scrollTo(0, 0);
     }
-    function remindTetrisWindow() {
-      setTetrisWindow();
+    function remindPuzzleWindow() {
+      setPuzzleWindow();
       closeHardDayPrompt();
     }
-    function tetrisWindowTick(sec) {
-      if(!tetrisWindow || tetrisWindow.until < Date.now()) return;
-      tetrisWindow.played += sec;
-      localStorage.setItem('aq_tetris_window', JSON.stringify(tetrisWindow));
-      if(tetrisWindow.played >= 600) {
-        tetrisWindow = null;
-        localStorage.removeItem('aq_tetris_window');
-        const b = document.getElementById('tetris-window-banner');
-        document.getElementById('tetris-window-text').innerText = '10 minutes done. Well done for looking after yourself ✓';
+    function puzzleWindowTick(sec) {
+      if(!puzzleWindow || puzzleWindow.until < Date.now()) return;
+      puzzleWindow.played += sec;
+      localStorage.setItem('aq_puzzle_window', JSON.stringify(puzzleWindow));
+      if(puzzleWindow.played >= 600) {
+        puzzleWindow = null;
+        localStorage.removeItem('aq_puzzle_window');
+        const b = document.getElementById('puzzle-window-banner');
+        document.getElementById('puzzle-window-text').innerText = '10 minutes done. Well done for looking after yourself ✓';
         b.querySelector('button').style.display = 'none';
-        setTimeout(updateTetrisWindowBanner, 6000);
+        setTimeout(updatePuzzleWindowBanner, 6000);
         return;
       }
-      if(tetrisWindow.played % 60 === 0) updateTetrisWindowBanner();
+      if(puzzleWindow.played % 60 === 0) updatePuzzleWindowBanner();
     }
-    function updateTetrisWindowBanner() {
-      const b = document.getElementById('tetris-window-banner');
+    function updatePuzzleWindowBanner() {
+      const b = document.getElementById('puzzle-window-banner');
       if(!b) return;
-      if(!tetrisWindow || tetrisWindow.until < Date.now()) {
-        if(tetrisWindow) { tetrisWindow = null; localStorage.removeItem('aq_tetris_window'); }
+      if(!puzzleWindow || puzzleWindow.until < Date.now()) {
+        if(puzzleWindow) { puzzleWindow = null; localStorage.removeItem('aq_puzzle_window'); }
         b.style.display = 'none';
         return;
       }
-      const left = tetrisWindow.until - Date.now();
+      const left = puzzleWindow.until - Date.now();
       const h = Math.floor(left / 3600000), m = Math.floor((left % 3600000) / 60000);
-      document.getElementById('tetris-window-text').innerText =
-        `Tetris window: ${h}h ${m}m left · ${Math.floor(tetrisWindow.played / 60)}/10 min played`;
+      document.getElementById('puzzle-window-text').innerText =
+        `Honeycomb window: ${h}h ${m}m left · ${Math.floor(puzzleWindow.played / 60)}/10 min played`;
       b.querySelector('button').style.display = '';
       b.style.display = 'flex';
     }
@@ -5604,7 +5622,7 @@
 
     // ---------- RECOVERY ANALYSIS: what helped you bounce back after hard days ----------
     const TOOL_NAMES = {
-      vagus: 'Vagus reset', tetris: 'Tetris session', breath: 'Breathing round', breathing: 'Breathing session',
+      vagus: 'Vagus reset', puzzle: 'Honeycomb session', breath: 'Breathing round', breathing: 'Breathing session',
       shake: 'Shake it out', cold: 'Cold water', chaos: 'Chaos Release', leaves: 'Leaves on a Stream',
       pond: 'Still Pond', lanterns: 'Sky Lanterns', fog: 'Clear the Fog', unsent: 'Unsent Defense'
     };
@@ -5650,8 +5668,8 @@
       const f = new Set();
       if(acts.length) {
         const has = k => acts.some(a => a.k === k);
-        if(acts.some(a => a.k === 'tetris' && a.ts <= from + 6 * 3600e3)) f.add('Tetris within 6 hours');
-        else if(has('tetris')) f.add('Tetris session');
+        if(acts.some(a => a.k === 'puzzle' && a.ts <= from + 6 * 3600e3)) f.add('Honeycomb within 6 hours');
+        else if(has('puzzle')) f.add('Honeycomb session');
         if(acts.filter(a => a.k === 'breath').length >= 2 || has('breathing')) f.add('Breathing');
         if(has('vagus')) f.add('Vagus reset');
         if(acts.some(a => CALM_GAMES.includes(a.k))) f.add('A Calm game');
@@ -5662,7 +5680,7 @@
         const next = new Date(ev.day);
         next.setDate(next.getDate() + 1);
         [ev.key, dayKey(next)].map(k => practice[k]).filter(Boolean).forEach(p => {
-          if(p.tetrisSessions) f.add('Tetris session');
+          if(p.puzzleSessions) f.add('Honeycomb session');
           if(p.breathRounds) f.add('Breathing');
           if(p.vagus) f.add('Vagus reset');
           if(p.tools) f.add('Reset tools');
@@ -5843,7 +5861,7 @@
 
       const all = Object.values(practice);
       const sum = f => all.reduce((a, d) => a + (d[f] || 0), 0);
-      const vagus = sum('vagus'), tetris = sum('tetrisSessions'), tools = sum('tools');
+      const vagus = sum('vagus'), puzzle = sum('puzzleSessions'), tools = sum('tools');
       const logged = notes.length + incidents.length + new Set(moodLog.map(m => dayKey(new Date(m.ts)))).size;
 
       const cutoff = startOfToday().getTime() - 29 * DAY;
@@ -5863,9 +5881,9 @@
       el.innerHTML = `
         <div class="stat-grid">
           <div class="stat-box"><div class="stat-box-val">${boundaries}</div><div class="stat-box-label">Calm boundaries maintained</div></div>
-          <div class="stat-box"><div class="stat-box-val">${vagus + tetris + tools + logged}</div><div class="stat-box-label">Self-regulation interventions</div></div>
+          <div class="stat-box"><div class="stat-box-val">${vagus + puzzle + tools + logged}</div><div class="stat-box-label">Self-regulation interventions</div></div>
         </div>
-        <div class="validation-breakdown">Logging ${logged} · Vagus resets ${vagus} · Tetris sessions ${tetris} · Reset tools ${tools}</div>
+        <div class="validation-breakdown">Logging ${logged} · Vagus resets ${vagus} · Honeycomb sessions ${puzzle} · Reset tools ${tools}</div>
         <div class="validation-reality"><div class="validation-label">Reality verification</div>${sentence}</div>`;
     }
 
@@ -5886,7 +5904,7 @@
                   after: el => el.focus() },
       green:    { label: '🟢 Mark today green',    action: markTodayGreen },
       vagus:    { label: '👀 Vagus reset',         tab: 'vagus', el: () => document.getElementById('eye-pos') },
-      tetris:   { label: '🧩 Tetris',              tab: 'tetris', el: () => document.getElementById('tetris-canvas') }
+      puzzle:   { label: '🧩 Honeycomb',              tab: 'puzzle', el: () => document.getElementById('puzzle-canvas') }
     };
 
     const ONI_TAILOR = {
@@ -5963,7 +5981,7 @@
       calm: {
         title: 'Feeling calm?',
         sub: 'A good moment to strengthen your calm for later.',
-        tools: ['vagus', 'tetris'],
+        tools: ['vagus', 'puzzle'],
         prompt: 'What helped you feel calm today?',
         words: [
           'This is what steady feels like. Remember it.',
@@ -6048,10 +6066,10 @@
     // ---------- USAGE TRACKER (private, stays on this device) ----------
     // Records app opens, session length, time per tab and which features you use, so the app can be
     // trimmed and tuned around how you actually use it.
-    const TAB_KEYS = ['journey', 'tetris', 'spirit', 'vagus', 'recover', 'calm', 'practise'];
-    const TAB_LABEL = { journey: 'Journey', tetris: 'Tetris', spirit: 'Spirit', vagus: 'Vagus', recover: 'Recover', calm: 'Calm', practise: 'Practise' };
+    const TAB_KEYS = ['journey', 'puzzle', 'spirit', 'vagus', 'recover', 'calm', 'practise'];
+    const TAB_LABEL = { journey: 'Journey', puzzle: 'Honeycomb', spirit: 'Spirit', vagus: 'Vagus', recover: 'Recover', calm: 'Calm', practise: 'Practise' };
     // Time recorded before tabs had names (by their old position)
-    const OLD_TAB = { 0: 'vagus', 1: 'journey', 2: 'tetris', 3: 'recover', 4: 'spirit', 5: 'calm', 6: 'practise' };
+    const OLD_TAB = { 0: 'vagus', 1: 'journey', 2: 'puzzle', 3: 'recover', 4: 'spirit', 5: 'calm', 6: 'practise' };
     const FEATURE_LABELS = {
       stepVagus: 'Vagus: gaze steps', incrementVagus: 'Vagus: mark reset done',
       saveNote: 'Journal: add entry', toggleJournal: 'Journal: show entries', editNoteTags: 'Journal: tag old entries',
@@ -6061,7 +6079,7 @@
       exportIncidents: 'Incident log: export',
       toggleCalendarView: 'Calendar: show', calendarDay: 'Calendar: mark a day', changeCalMonth: 'Calendar: change month',
       toggleMoodCalendar: 'Emotional State calendar', moodCalendarDay: 'Emotional State: view a day', changeMoodMonth: 'Emotional State: change month',
-      tetrisPlay: 'Tetris: play', pauseTetris: 'Tetris: pause', resumeTetris: 'Tetris: resume', resetTetris: 'Tetris: reset',
+      puzzlePlay: 'Honeycomb: play', pausePuzzle: 'Honeycomb: pause', resumePuzzle: 'Honeycomb: resume', resetPuzzle: 'Honeycomb: reset',
       startShakeTimer: 'Shake reset', startColdTimer: 'Cold water timer', nextUnsponge: 'Un-Sponging phrases',
       feedHamster: 'Spirit: give seed', 'canvas:hamster-canvas': 'Spirit: tap / pet', renameHamster: 'Spirit: rename',
       nextQuote: 'Statements', toggleBreathing: 'Breathing pacer',
@@ -6074,10 +6092,10 @@
     };
     // The main features, so the card can point out the ones you haven't used lately
     const KEY_FEATURES = ['incrementVagus', 'saveNote', 'releaseUnsent', 'saveIncident', 'calendarDay', 'toggleMoodCalendar',
-      'tetrisPlay', 'startShakeTimer', 'startColdTimer', 'nextUnsponge', 'nextQuote', 'toggleBreathing',
+      'puzzlePlay', 'startShakeTimer', 'startColdTimer', 'nextUnsponge', 'nextQuote', 'toggleBreathing',
       'canvas:chaos-canvas', 'addLeaf', 'canvas:pond-canvas', 'canvas:lantern-canvas', 'canvas:fog-canvas',
       'feedHamster', 'canvas:hamster-canvas', 'openMoonView', 'goTool', 'editNoteTags'];
-    const GROUP = { moveTetris: 'tetrisPlay', rotateTetris: 'tetrisPlay', dropTetris: 'tetrisPlay' };
+    const GROUP = { movePuzzle: 'puzzlePlay', rotatePuzzle: 'puzzlePlay', dropPuzzle: 'puzzlePlay' };
     const IGNORE = new Set(['switchTab', 'enterApp', 'pickOni', 'closeSettings', 'saveSettings', 'previewTheme', 'closeIncidentForm',
       'selectSeverity', 'selectMoodDay', 'closeMoonView', 'closeHardDayPrompt', 'if', 'document', 'event']);
 
@@ -6104,7 +6122,7 @@
       id = GROUP[id] || id;
       if(IGNORE.has(id)) return;
       const last = usage.events[usage.events.length - 1];
-      if(last && last[1] === id && Date.now() - last[0] < 1500) return; // ignore rapid repeats (e.g. Tetris taps)
+      if(last && last[1] === id && Date.now() - last[0] < 1500) return; // ignore rapid repeats (e.g. Puzzle taps)
       usage.events.push([Date.now(), id]);
       saveUsage();
     }
@@ -6354,10 +6372,10 @@
       document.getElementById('breath-btn').innerText = 'Start Breathing';
     }
 
-    // TETRIS GAME LOGIC
-    const canvas = document.getElementById('tetris-canvas');
+    // PUZZLE GAME LOGIC
+    const canvas = document.getElementById('puzzle-canvas');
     const ctx = canvas ? canvas.getContext('2d') : null;
-    const COLS = 10, ROWS = 20, BLOCK = 20;
+    const COLS = 9, ROWS = 16, BLOCK = 14; // Honeycomb: 9 hex columns x 16 rows; BLOCK = hex size in px
     let grid = Array(ROWS).fill().map(() => Array(COLS).fill(0));
     let tInterval = null;
     let timerInterval = null;
@@ -6368,62 +6386,75 @@
     let isGameOver = false;
     let totalClearedLines = 0;
 
+    // HONEYCOMB: pieces made of 3 or 4 hexagons on a flat-top hex grid.
+    // Each piece is a list of axial [q, r] cells around [0, 0]; r + 1 is straight down.
+    // Hex pieces turn in 60-degree steps (6 orientations), so they ask for more mental rotation than squares.
     const PIECES = [
-      { shape: [[1,1,1,1]], color: '#00f2fe' },
-      { shape: [[1,0,0],[1,1,1]], color: '#4facfe' },
-      { shape: [[0,0,1],[1,1,1]], color: '#f59e0b' },
-      { shape: [[1,1],[1,1]], color: '#facc15' },
-      { shape: [[0,1,1],[1,1,0]], color: '#10b981' },
-      { shape: [[0,1,0],[1,1,1]], color: '#7b2cbf' },
-      { shape: [[1,1,0],[0,1,1]], color: '#ef4444' }
+      { shape: [[0, 0], [0, 1], [0, 2]],          color: '#1f1a24' }, // stick
+      { shape: [[0, 0], [1, 0], [0, 1]],          color: '#9b1d2a' }, // triangle
+      { shape: [[0, 0], [0, 1], [1, 1]],          color: '#3b2f5c' }, // hook
+      { shape: [[0, 0], [0, 1], [0, 2], [0, 3]],  color: '#d46a6a' }, // bar
+      { shape: [[0, 0], [0, 1], [1, 1], [1, 2]],  color: '#6f9e7f' }, // wave
+      { shape: [[0, 0], [1, -1], [-1, 0], [0, 1]], color: '#e08e5a' }, // propeller
+      { shape: [[0, 0], [1, 0], [0, 1], [1, 1]],  color: '#5b7fa6' }, // diamond
+      { shape: [[0, 0], [0, 1], [0, 2], [1, 0]],  color: '#c98bb5' }, // pistol
+      { shape: [[0, 0], [1, 0], [1, 1], [2, 1]],  color: '#4a4e69' }  // snake
     ];
 
     let currentPiece = null;
     let nextPiece = null;
     let score = 0;
-    let bestScore = parseInt(localStorage.getItem('aq_tetris_best') || '0');
+    let bestScore = parseInt(localStorage.getItem('aq_puzzle_best') || '0');
     const LINE_POINTS = [0, 100, 300, 500, 800];
 
+    // Four Rorschach inks; every piece mixes two of them, so turning it changes which ink touches which
+    const INKS = ['#1f1a24', '#9b1d2a', '#5b7fa6', '#e08e5a'];
+    const BLOT_SIZE = 6; // this many same-ink hexes joined together dissolve
     function randomPiece() {
       const p = PIECES[Math.floor(Math.random() * PIECES.length)];
-      // Copy the shape so rotating never alters the template
-      return { shape: p.shape.map(row => row.slice()), color: p.color };
+      const a = INKS[Math.floor(Math.random() * INKS.length)];
+      let b = a;
+      while(b === a) b = INKS[Math.floor(Math.random() * INKS.length)];
+      const colors = p.shape.map(() => Math.random() < 0.5 ? a : b);
+      if(colors.every(c => c === colors[0])) colors[Math.floor(Math.random() * colors.length)] = colors[0] === a ? b : a;
+      // Copy the cells so rotating never alters the template; colours stay with their cells as it turns
+      return { shape: p.shape.map(c => c.slice()), colors };
     }
 
-    function updateTetrisStats() {
+    function updatePuzzleStats() {
       if(score > bestScore) {
         bestScore = score;
-        localStorage.setItem('aq_tetris_best', bestScore);
+        localStorage.setItem('aq_puzzle_best', bestScore);
       }
-      document.getElementById('tetris-score').innerText = score;
-      document.getElementById('tetris-lines').innerText = totalClearedLines;
-      document.getElementById('tetris-best').innerText = bestScore;
+      document.getElementById('puzzle-score').innerText = score;
+      document.getElementById('puzzle-lines').innerText = totalClearedLines;
+      document.getElementById('puzzle-best').innerText = bestScore;
     }
 
     function drawNextPiece() {
-      const nc = document.getElementById('tetris-next');
+      const nc = document.getElementById('puzzle-next');
       if(!nc) return;
       const nctx = nc.getContext('2d');
-      nctx.clearRect(0, 0, nc.width, nc.height);
+      nctx.fillStyle = '#efe7d8';
+      nctx.fillRect(0, 0, nc.width, nc.height);
       if(!nextPiece) return;
-      const b = 12;
-      const sh = nextPiece.shape;
-      const ox = (nc.width - sh[0].length * b) / 2;
-      const oy = (nc.height - sh.length * b) / 2;
-      sh.forEach((row, r) => row.forEach((v, c) => {
-        if(v) drawGlossyBlock(nctx, ox + c * b, oy + r * b, b - 1, nextPiece.color);
-      }));
+      const s = 6.5;
+      const pts = nextPiece.shape.map(([q, r]) => [s * 1.5 * q, s * SQ3 * (r + q / 2)]);
+      const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
+      const ox = nc.width / 2 - (Math.min(...xs) + Math.max(...xs)) / 2;
+      const oy = nc.height / 2 - (Math.min(...ys) + Math.max(...ys)) / 2;
+      pts.forEach(([x, y], i) => drawInkHex(nctx, ox + x, oy + y, s, nextPiece.colors[i]));
     }
 
-    function softDropTetris() {
+    function softDropPuzzle() {
       if(isPaused || isGameOver || !currentPiece) return;
       if(canMove(pieceX, pieceY + 1, currentPiece.shape)) {
         pieceY++;
         score += 1;
-        updateTetrisStats();
+        updatePuzzleStats();
         drawBoard();
       } else {
-        updateTetris();
+        updatePuzzle();
       }
     }
 
@@ -6441,46 +6472,46 @@
       });
       ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => btn.addEventListener(ev, stop));
     }
-    bindRepeat('t-left', () => moveTetris(-1));
-    bindRepeat('t-right', () => moveTetris(1));
-    bindRepeat('t-soft', softDropTetris);
+    bindRepeat('t-left', () => movePuzzle(-1));
+    bindRepeat('t-right', () => movePuzzle(1));
+    bindRepeat('t-soft', softDropPuzzle);
 
-    // Keyboard controls for Tetris
+    // Keyboard controls for Puzzle
     window.addEventListener('keydown', (e) => {
-      if(document.getElementById('tab-tetris').classList.contains('active')) {
+      if(document.getElementById('tab-puzzle').classList.contains('active')) {
         // Stop Space from also pressing a focused button (e.g. Reset)
         if(document.activeElement && document.activeElement.tagName === 'BUTTON') document.activeElement.blur();
-        if(e.key === 'ArrowLeft') { moveTetris(-1); e.preventDefault(); }
-        else if(e.key === 'ArrowRight') { moveTetris(1); e.preventDefault(); }
-        else if(e.key === 'ArrowUp' || e.key === 'x' || e.key === 'X') { rotateTetris(); e.preventDefault(); }
-        else if(e.key === 'ArrowDown') { softDropTetris(); e.preventDefault(); }
-        else if(e.key === ' ' || e.key === 'Spacebar') { dropTetris(); e.preventDefault(); }
+        if(e.key === 'ArrowLeft') { movePuzzle(-1); e.preventDefault(); }
+        else if(e.key === 'ArrowRight') { movePuzzle(1); e.preventDefault(); }
+        else if(e.key === 'ArrowUp' || e.key === 'x' || e.key === 'X') { rotatePuzzle(); e.preventDefault(); }
+        else if(e.key === 'ArrowDown') { softDropPuzzle(); e.preventDefault(); }
+        else if(e.key === ' ' || e.key === 'Spacebar') { dropPuzzle(); e.preventDefault(); }
       }
     });
 
     let pieceX = 3, pieceY = 0;
 
-    function startTetris() {
+    function startPuzzle() {
       if(isGameOver) return;
       if(tInterval && !isPaused) return;
       if(!currentPiece) spawnPiece();
       
       if(!tInterval) {
-        tInterval = setInterval(updateTetris, 600);
+        tInterval = setInterval(updatePuzzle, 600);
       }
       
       if(!timerInterval) {
         timerInterval = setInterval(() => {
           if(!isPaused && !isGameOver) {
             timeLeft--;
-            logPractice('tetrisSec', 1);
+            logPractice('puzzleSec', 1);
             let m = Math.floor(timeLeft / 60);
             let s = timeLeft % 60;
-            let timerEl = document.getElementById('tetris-timer');
+            let timerEl = document.getElementById('puzzle-timer');
             if(timerEl) timerEl.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
-            updateTetrisRing();
+            updatePuzzleRing();
             if(timeLeft <= 0) {
-              logPractice('tetrisSessions', 1);
+              logPractice('puzzleSessions', 1);
               gameOver('session');
             }
           }
@@ -6490,26 +6521,26 @@
       drawBoard();
     }
 
-    function pauseTetris() {
+    function pausePuzzle() {
       if(isGameOver) return;
       isPaused = true;
       clearInterval(tInterval);
       tInterval = null;
       drawBoard();
     }
-    document.addEventListener('visibilitychange', () => { if(document.hidden && tInterval) pauseTetris(); });
+    document.addEventListener('visibilitychange', () => { if(document.hidden && tInterval) pausePuzzle(); });
 
     // Session ring: fills over the 10 minutes, with a line that changes as you go
-    const TETRIS_MILESTONES = [
-      [0, 'Rotate the pieces in your mind before you place them. That is the part that helps.'],
+    const PUZZLE_MILESTONES = [
+      [0, 'Turn pieces so matching inks touch: 6 joined hexes dissolve. Picture each turn in your mind first.'],
       [60, 'One minute in. Your visual brain is busy with shapes now.'],
       [180, 'Three minutes. Keep your focus on the falling pieces.'],
       [300, 'Halfway there. Notice your breathing slowing down.'],
       [480, 'Two minutes left. Stay with the shapes.'],
       [600, 'Session complete ✓ Well done for looking after yourself.']
     ];
-    function updateTetrisRing() {
-      const fg = document.getElementById('tetris-ring-fg');
+    function updatePuzzleRing() {
+      const fg = document.getElementById('puzzle-ring-fg');
       if(!fg) return;
       const done = Math.min(SESSION_SECONDS, SESSION_SECONDS - timeLeft);
       const frac = done / SESSION_SECONDS;
@@ -6517,36 +6548,36 @@
       fg.style.strokeDasharray = len;
       fg.style.strokeDashoffset = len * (1 - frac);
       fg.style.stroke = frac >= 1 ? 'var(--color-green)' : 'var(--theme-primary)';
-      const line = TETRIS_MILESTONES.filter(([s]) => done >= s).pop()[1];
-      const el = document.getElementById('tetris-milestone');
-      if(el && el.innerText !== line) { el.innerText = line; bump('tetris-milestone'); }
+      const line = PUZZLE_MILESTONES.filter(([s]) => done >= s).pop()[1];
+      const el = document.getElementById('puzzle-milestone');
+      if(el && el.innerText !== line) { el.innerText = line; bump('puzzle-milestone'); }
       // Inside the 6-hour window after a hard moment?
-      const chip = document.getElementById('tetris-window-chip');
+      const chip = document.getElementById('puzzle-window-chip');
       if(chip) {
-        if(tetrisWindow && tetrisWindow.until > Date.now()) {
-          const left = tetrisWindow.until - Date.now();
+        if(puzzleWindow && puzzleWindow.until > Date.now()) {
+          const left = puzzleWindow.until - Date.now();
           chip.innerText = `⏳ Inside your 6-hour window · ${Math.floor(left / 3600000)}h ${Math.floor((left % 3600000) / 60000)}m left`;
           chip.style.display = 'inline-block';
         } else chip.style.display = 'none';
       }
     }
-    function toggleTetrisWhy() {
-      const el = document.getElementById('tetris-why');
+    function togglePuzzleWhy() {
+      const el = document.getElementById('puzzle-why');
       const show = el.style.display === 'none';
       el.style.display = show ? 'block' : 'none';
-      if(show && tInterval) pauseTetris(); // reading pauses the game; tap the board or ▶ to continue
+      if(show && tInterval) pausePuzzle(); // reading pauses the game; tap the board or ▶ to continue
     }
 
-    function toggleTetrisPause() {
+    function togglePuzzlePause() {
       if(isGameOver) return;
-      if(tInterval && !isPaused) pauseTetris();
-      else resumeTetris();
+      if(tInterval && !isPaused) pausePuzzle();
+      else resumePuzzle();
       drawBoard();
     }
 
     // Touch controls on the board: tap = rotate (or resume), swipe left/right = move, press and hold = fall fast
-    (function setupTetrisTouch() {
-      const c = document.getElementById('tetris-canvas');
+    (function setupPuzzleTouch() {
+      const c = document.getElementById('puzzle-canvas');
       if(!c) return;
       let start = null, holdTimer = null, dropTimer = null;
       const stopDrop = () => { clearTimeout(holdTimer); clearInterval(dropTimer); holdTimer = dropTimer = null; };
@@ -6558,8 +6589,8 @@
         holdTimer = setTimeout(() => {
           if(!start || start.moved || isPaused || isGameOver) return;
           start.dropping = true;
-          softDropTetris();
-          dropTimer = setInterval(softDropTetris, 50);
+          softDropPuzzle();
+          dropTimer = setInterval(softDropPuzzle, 50);
         }, 280);
       });
       c.addEventListener('pointermove', e => {
@@ -6569,8 +6600,8 @@
           start.moved = true;
           clearTimeout(holdTimer);
         }
-        while(e.clientX - start.stepX >= cell) { moveTetris(1); start.stepX += cell; }
-        while(start.stepX - e.clientX >= cell) { moveTetris(-1); start.stepX -= cell; }
+        while(e.clientX - start.stepX >= cell) { movePuzzle(1); start.stepX += cell; }
+        while(start.stepX - e.clientX >= cell) { movePuzzle(-1); start.stepX -= cell; }
       });
       const end = () => {
         if(!start) return;
@@ -6579,22 +6610,22 @@
         start = null;
         if(!wasTap) return;
         if(isGameOver) return;
-        if(isPaused || !tInterval) toggleTetrisPause();
-        else rotateTetris();
+        if(isPaused || !tInterval) togglePuzzlePause();
+        else rotatePuzzle();
       };
       c.addEventListener('pointerup', end);
       c.addEventListener('pointercancel', () => { stopDrop(); start = null; });
     })();
 
-    function resumeTetris() {
+    function resumePuzzle() {
       if(isGameOver) return;
       if(isPaused || !tInterval) {
-        startTetris();
+        startPuzzle();
       }
     }
 
-    function resetTetris() {
-      pauseTetris();
+    function resetPuzzle() {
+      pausePuzzle();
       isGameOver = false;
       let goScreen = document.getElementById('game-over-screen');
       if(goScreen) goScreen.style.display = 'none';
@@ -6603,14 +6634,14 @@
       totalClearedLines = 0;
       score = 0;
       nextPiece = null;
-      updateTetrisStats();
-      let timerEl = document.getElementById('tetris-timer');
+      updatePuzzleStats();
+      let timerEl = document.getElementById('puzzle-timer');
       if(timerEl) timerEl.innerText = formatTime(SESSION_SECONDS);
-      updateTetrisRing();
+      updatePuzzleRing();
       currentPiece = null;
       spawnPiece();
       drawBoard();
-      startTetris();
+      startPuzzle();
     }
 
     function formatTime(sec) {
@@ -6637,51 +6668,120 @@
         btn.innerText = `Keep Going (${formatTime(timeLeft)} left)`;
       }
       let statsEl = document.getElementById('game-over-stats');
-      if(statsEl) statsEl.innerText = `Score: ${score} · Lines: ${totalClearedLines} · Best: ${bestScore}`;
+      if(statsEl) statsEl.innerText = `Score: ${score} · Blots: ${totalClearedLines} · Best: ${bestScore}`;
       let goScreen = document.getElementById('game-over-screen');
       if(goScreen) goScreen.style.display = 'flex';
     }
 
     // Board full → fresh board, same session clock. Session done → start a new session.
     function overlayAction() {
-      if(overlayMode === 'session') { resetTetris(); return; }
+      if(overlayMode === 'session') { resetPuzzle(); return; }
       isGameOver = false;
       document.getElementById('game-over-screen').style.display = 'none';
       grid = Array(ROWS).fill().map(() => Array(COLS).fill(0));
       score = 0;
       totalClearedLines = 0;
-      updateTetrisStats();
+      updatePuzzleStats();
       currentPiece = null;
       spawnPiece();
       isPaused = true;
-      startTetris();
+      startPuzzle();
     }
+
+    // Hex grid (flat-top, "odd-q" offset storage): axial [q, r] -> board [row][col]
+    const SQ3 = Math.sqrt(3);
+    const toRowCol = (q, r) => [r + (q - (q & 1)) / 2, q];
+    function hexCenter(col, row) {
+      const ox = (canvas.width - BLOCK * (1.5 * (COLS - 1) + 2)) / 2;
+      return [ox + BLOCK + 1.5 * BLOCK * col, (SQ3 * BLOCK) / 2 + SQ3 * BLOCK * (row + 0.5 * (col & 1))];
+    }
+    // Moving sideways one column while staying at the same height on screen
+    function sidestep(q, r, dir) {
+      const row = r + (q - (q & 1)) / 2;
+      const nq = q + dir;
+      return [nq, row - (nq - (nq & 1)) / 2];
+    }
+    function hexPath(g, x, y, s) {
+      g.beginPath();
+      for(let i = 0; i < 6; i++) {
+        const a = Math.PI / 3 * i;
+        const px = x + s * Math.cos(a), py = y + s * Math.sin(a);
+        i ? g.lineTo(px, py) : g.moveTo(px, py);
+      }
+      g.closePath();
+    }
+    // Inkblot hexagon (Rorschach style): a wobbly ink splotch, mirror-symmetric left to right,
+    // slightly larger than its cell so the hexes of one piece merge into a single blot
+    function drawInkHex(g, x, y, s, color, alpha = 1) {
+      const seed = Math.abs(Math.round(x) * 92837 + Math.round(y) * 19283) % 997;
+      g.save();
+      g.globalAlpha = alpha;
+      g.beginPath();
+      const n = 30;
+      for(let i = 0; i <= n; i++) {
+        const a = i / n * Math.PI * 2;
+        const ca = Math.abs(Math.cos(a)), sa = Math.sin(a); // |cos| makes the outline symmetric left/right
+        const wob = 1 + 0.1 * Math.sin(seed + 9 * ca + 4 * sa) + 0.06 * Math.sin(seed * 1.7 + 15 * ca - 6 * sa);
+        const k = ((a % (Math.PI / 3)) + Math.PI / 3) % (Math.PI / 3) - Math.PI / 6;
+        const r = s * (SQ3 / 2) / Math.cos(k) * 1.06 * wob;
+        const px = x + r * Math.cos(a), py = y + r * sa;
+        i ? g.lineTo(px, py) : g.moveTo(px, py);
+      }
+      g.closePath();
+      const ink = g.createRadialGradient(x - s * 0.15, y - s * 0.2, s * 0.1, x, y, s * 1.15);
+      ink.addColorStop(0, shadeHex(color, 0.22));
+      ink.addColorStop(0.6, color);
+      ink.addColorStop(1, shadeHex(color, -0.35));
+      g.fillStyle = ink;
+      g.fill();
+      // Mirrored ink veins down the middle
+      g.strokeStyle = shadeHex(color, -0.55).replace('rgb', 'rgba').replace(')', ', 0.35)');
+      g.lineWidth = 1;
+      g.beginPath();
+      [-1, 1].forEach(sx => {
+        g.moveTo(x, y - s * 0.55);
+        g.quadraticCurveTo(x + sx * s * 0.28, y - s * 0.05, x + sx * s * 0.12, y + s * 0.5);
+      });
+      g.stroke();
+      // Now and then a pair of symmetric droplets
+      if(seed % 4 === 0) {
+        g.fillStyle = color;
+        const dy = (seed % 2 ? 1 : -1) * s * 0.4;
+        [-1, 1].forEach(sx => { g.beginPath(); g.arc(x + sx * s * 1.02, y + dy, s * 0.11, 0, Math.PI * 2); g.fill(); });
+      }
+      g.restore();
+    }
+    function drawGhostHex(g, x, y, s, color) { drawInkHex(g, x, y, s, color, 0.2); }
 
     function spawnPiece() {
       currentPiece = nextPiece || randomPiece();
       nextPiece = randomPiece();
       drawNextPiece();
+      // Middle column, nudged down so the piece's top cell sits on the top row
+      pieceX = Math.floor(COLS / 2);
       pieceY = 0;
-      pieceX = Math.floor((COLS - currentPiece.shape[0].length) / 2);
-      
-      if(!canMove(pieceX, pieceY, currentPiece.shape)) {
-        gameOver();
-      }
+      const minRow = Math.min(...currentPiece.shape.map(([dq, dr]) => toRowCol(pieceX + dq, pieceY + dr)[0]));
+      pieceY -= minRow;
+      if(!canMove(pieceX, pieceY, currentPiece.shape)) gameOver();
     }
 
-    function updateTetris() {
+    function updatePuzzle() {
       if(isPaused || isGameOver) return;
       if(!canMove(pieceX, pieceY + 1, currentPiece.shape)) {
         lockPiece();
-        const cleared = clearLines();
-        score += LINE_POINTS[Math.min(cleared, 4)];
-        updateTetrisStats();
-        if(cleared) {
-          bump('tetris-score');
-          bump('tetris-lines');
-          flashUntil = performance.now() + 260;
+        const landed = isGameOver ? [] : settleColumns();
+        const res = isGameOver ? { blots: 0, moves: [] } : resolveBlots();
+        animateFall(landed.concat(res.moves));
+        if(res.blots) {
+          score += res.points;
+          totalClearedLines += res.blots;
+          bump('puzzle-score');
+          bump('puzzle-lines');
+          lastChain = res.chain;
+          flashUntil = performance.now() + 520;
           (function flash() { drawBoard(); if(performance.now() < flashUntil) requestAnimationFrame(flash); })();
         }
+        updatePuzzleStats();
         if(!isGameOver) spawnPiece();
       } else {
         pieceY++;
@@ -6690,76 +6790,145 @@
     }
 
     function canMove(nx, ny, shape) {
-      for(let r=0; r<shape.length; r++) {
-        for(let c=0; c<shape[r].length; c++) {
-          if(shape[r][c]) {
-            let gx = nx + c;
-            let gy = ny + r;
-            if(gx < 0 || gx >= COLS || gy >= ROWS) return false;
-            if(gy >= 0 && grid[gy][gx]) return false;
-          }
-        }
+      for(const [dq, dr] of shape) {
+        const [row, col] = toRowCol(nx + dq, ny + dr);
+        if(col < 0 || col >= COLS || row >= ROWS) return false;
+        if(row >= 0 && grid[row][col]) return false;
       }
       return true;
     }
 
     function lockPiece() {
-      for(let r=0; r<currentPiece.shape.length; r++) {
-        for(let c=0; c<currentPiece.shape[r].length; c++) {
-          if(currentPiece.shape[r][c]) {
-            if(pieceY + r < 0) {
-              gameOver();
-              return;
-            }
-            grid[pieceY + r][pieceX + c] = currentPiece.color;
-          }
-        }
+      for(let i = 0; i < currentPiece.shape.length; i++) {
+        const [dq, dr] = currentPiece.shape[i];
+        const [row, col] = toRowCol(pieceX + dq, pieceY + dr);
+        if(row < 0) { gameOver(); return; }
+        grid[row][col] = currentPiece.colors[i];
       }
     }
 
-    let flashRows = [];
+    let flashCells = []; // [row, col, ink] of hexes that just dissolved, for the splash
     let flashUntil = 0;
+    let lastChain = 0;
 
-    function clearLines() {
-      let cleared = 0;
-      flashRows = [];
-      for(let r = ROWS - 1; r >= 0; r--) {
-        if(grid[r].every(cell => cell !== 0)) {
-          grid.splice(r, 1);
-          grid.unshift(Array(COLS).fill(0));
-          totalClearedLines++;
-          cleared++;
-          flashRows.push(r);
-          r++;
+    function hexNeighbors(row, col) {
+      const q = col, r = row - (col - (col & 1)) / 2;
+      return [[1, 0], [1, -1], [0, -1], [-1, 0], [-1, 1], [0, 1]]
+        .map(([dq, dr]) => toRowCol(q + dq, r + dr))
+        .filter(([rr, cc]) => rr >= 0 && rr < ROWS && cc >= 0 && cc < COLS);
+    }
+    function findBlots() {
+      const seen = new Set(), blots = [];
+      for(let r = 0; r < ROWS; r++) for(let c = 0; c < COLS; c++) {
+        const ink = grid[r][c];
+        if(!ink || seen.has(r + ',' + c)) continue;
+        const group = [], stack = [[r, c]];
+        seen.add(r + ',' + c);
+        while(stack.length) {
+          const [rr, cc] = stack.pop();
+          group.push([rr, cc]);
+          hexNeighbors(rr, cc).forEach(([nr, nc]) => {
+            if(grid[nr][nc] === ink && !seen.has(nr + ',' + nc)) { seen.add(nr + ',' + nc); stack.push([nr, nc]); }
+          });
+        }
+        if(group.length >= BLOT_SIZE) blots.push(group);
+      }
+      return blots;
+    }
+    // Hexes with empty space below drop straight down their column (after landing and after blots dissolve)
+    let fallAnim = { until: 0, dur: 1, moves: new Map() }; // "row,col" -> rows fallen, for the drop animation
+    function settleColumns() {
+      const moves = [];
+      for(let c = 0; c < COLS; c++) {
+        let write = ROWS - 1;
+        for(let r = ROWS - 1; r >= 0; r--) {
+          if(!grid[r][c]) continue;
+          if(write !== r) { grid[write][c] = grid[r][c]; grid[r][c] = 0; moves.push([write, c, write - r]); }
+          write--;
         }
       }
-      return cleared;
+      return moves;
+    }
+    function animateFall(moves) {
+      if(!moves.length || reduceMotion) return;
+      const longest = Math.max(...moves.map(m => m[2]));
+      fallAnim = { until: performance.now() + 90 + longest * 35, dur: 90 + longest * 35, moves: new Map(moves.map(([r, c, d]) => [r + ',' + c, d])) };
+      (function step() { drawBoard(); if(performance.now() < fallAnim.until) requestAnimationFrame(step); })();
+    }
+    // Dissolve every blot, settle, and repeat: each extra round is a chain worth more
+    function resolveBlots() {
+      let chain = 0, hexes = 0, blots = 0, points = 0;
+      const allMoves = [];
+      flashCells = [];
+      while(true) {
+        const found = findBlots();
+        if(!found.length) break;
+        chain++;
+        found.forEach(group => {
+          blots++;
+          hexes += group.length;
+          points += group.length * 10 * chain + (group.length - BLOT_SIZE) * 5;
+          group.forEach(([r, c]) => { flashCells.push([r, c, grid[r][c]]); grid[r][c] = 0; });
+        });
+        allMoves.push(...settleColumns());
+      }
+      return { chain, hexes, blots, points, moves: allMoves };
     }
 
     function drawBoard() {
       if(!ctx) return;
-      ctx.fillStyle = '#02040a';
+      // Rorschach paper
+      const paper = ctx.createRadialGradient(canvas.width / 2, canvas.height / 2, 40, canvas.width / 2, canvas.height / 2, canvas.height * 0.7);
+      paper.addColorStop(0, '#f4ede0');
+      paper.addColorStop(1, '#ddd2bf');
+      ctx.fillStyle = paper;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Faint grid so it's easier to line pieces up
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+      // Faint honeycomb backdrop
+      ctx.strokeStyle = 'rgba(70, 55, 40, 0.1)';
       ctx.lineWidth = 1;
-      ctx.beginPath();
-      for(let c = 1; c < COLS; c++) { ctx.moveTo(c * BLOCK - 0.5, 0); ctx.lineTo(c * BLOCK - 0.5, ROWS * BLOCK); }
-      for(let r = 1; r < ROWS; r++) { ctx.moveTo(0, r * BLOCK - 0.5); ctx.lineTo(COLS * BLOCK, r * BLOCK - 0.5); }
-      ctx.stroke();
-
-      for(let r=0; r<ROWS; r++) {
-        for(let c=0; c<COLS; c++) {
-          if(grid[r][c]) drawGlossyBlock(ctx, c * BLOCK, r * BLOCK, BLOCK - 1, grid[r][c]);
+      for(let r = 0; r < ROWS; r++) {
+        for(let c = 0; c < COLS; c++) {
+          const [x, y] = hexCenter(c, r);
+          hexPath(ctx, x, y, BLOCK - 1);
+          ctx.stroke();
         }
       }
 
-      // Brief glow where lines were just cleared
+      const falling = performance.now() < fallAnim.until;
+      const fallT = falling ? 1 - (fallAnim.until - performance.now()) / fallAnim.dur : 1;
+      const eased = fallT * fallT; // accelerate like a real drop
+      for(let r = 0; r < ROWS; r++) {
+        for(let c = 0; c < COLS; c++) {
+          if(!grid[r][c]) continue;
+          const [x, y] = hexCenter(c, r);
+          const d = falling ? fallAnim.moves.get(r + ',' + c) : 0;
+          drawInkHex(ctx, x, d ? y - d * SQ3 * BLOCK * (1 - eased) : y, BLOCK, grid[r][c]);
+        }
+      }
+
+      // Ink splash where a blot just dissolved (and a chain label for combos)
       const flashLeft = flashUntil - performance.now();
       if(flashLeft > 0) {
-        ctx.fillStyle = `rgba(255, 255, 255, ${0.6 * flashLeft / 260})`;
-        flashRows.forEach(r => ctx.fillRect(0, r * BLOCK, canvas.width, BLOCK));
+        const k = Math.min(1, flashLeft / 520);
+        flashCells.forEach(([r, c, ink]) => {
+          const [x, y] = hexCenter(c, r);
+          ctx.globalAlpha = 0.55 * k;
+          ctx.fillStyle = ink;
+          ctx.beginPath();
+          ctx.arc(x, y, BLOCK * (0.6 + (1 - k) * 0.9), 0, Math.PI * 2);
+          ctx.fill();
+          [-1, 1].forEach(sx => { ctx.beginPath(); ctx.arc(x + sx * BLOCK * (1 - k) * 1.4, y - BLOCK * (1 - k) * 0.6, BLOCK * 0.18, 0, Math.PI * 2); ctx.fill(); });
+        });
+        ctx.globalAlpha = 1;
+        if(lastChain > 1) {
+          ctx.globalAlpha = k;
+          ctx.fillStyle = '#9b1d2a';
+          ctx.font = 'bold 20px -apple-system, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(`Chain ×${lastChain}`, canvas.width / 2, canvas.height * 0.35);
+          ctx.globalAlpha = 1;
+        }
       }
 
       if(currentPiece && !isGameOver) {
@@ -6767,17 +6936,21 @@
         let ghostY = pieceY;
         while(canMove(pieceX, ghostY + 1, currentPiece.shape)) ghostY++;
         if(ghostY > pieceY) {
-          currentPiece.shape.forEach((row, r) => row.forEach((v, c) => {
-            if(v) drawGhostBlock(ctx, (pieceX + c) * BLOCK, (ghostY + r) * BLOCK, BLOCK - 1, currentPiece.color);
-          }));
+          currentPiece.shape.forEach(([dq, dr], i) => {
+            const [row, col] = toRowCol(pieceX + dq, ghostY + dr);
+            const [x, y] = hexCenter(col, row);
+            drawGhostHex(ctx, x, y, BLOCK, currentPiece.colors[i]);
+          });
         }
-        currentPiece.shape.forEach((row, r) => row.forEach((v, c) => {
-          if(v) drawGlossyBlock(ctx, (pieceX + c) * BLOCK, (pieceY + r) * BLOCK, BLOCK - 1, currentPiece.color);
-        }));
+        currentPiece.shape.forEach(([dq, dr], i) => {
+          const [row, col] = toRowCol(pieceX + dq, pieceY + dr);
+          const [x, y] = hexCenter(col, row);
+          drawInkHex(ctx, x, y, BLOCK, currentPiece.colors[i]);
+        });
       }
 
       // Corner button: pause symbol while playing, play symbol otherwise
-      const pp = document.getElementById('tetris-pp');
+      const pp = document.getElementById('puzzle-pp');
       if(pp) {
         const playing = !!tInterval && !isPaused && !isGameOver;
         if(pp.dataset.state !== String(playing)) {
@@ -6810,56 +6983,30 @@
       return `rgb(${ch.join(', ')})`;
     }
 
-    // A glossy block: gradient body, bright top-left bevel, dark bottom-right bevel, and a shine
-    function drawGlossyBlock(g, x, y, s, color) {
-      const body = g.createLinearGradient(x, y, x, y + s);
-      body.addColorStop(0, shadeHex(color, 0.28));
-      body.addColorStop(0.5, color);
-      body.addColorStop(1, shadeHex(color, -0.28));
-      g.fillStyle = body;
-      g.fillRect(x, y, s, s);
-      const e = Math.max(1, s * 0.12);
-      g.fillStyle = 'rgba(255, 255, 255, 0.35)';
-      g.fillRect(x, y, s, e);
-      g.fillRect(x, y, e, s);
-      g.fillStyle = 'rgba(0, 0, 0, 0.3)';
-      g.fillRect(x, y + s - e, s, e);
-      g.fillRect(x + s - e, y, e, s);
-      const shine = g.createLinearGradient(x, y, x, y + s * 0.55);
-      shine.addColorStop(0, 'rgba(255, 255, 255, 0.45)');
-      shine.addColorStop(1, 'rgba(255, 255, 255, 0)');
-      g.fillStyle = shine;
-      g.beginPath();
-      g.ellipse(x + s * 0.42, y + s * 0.26, s * 0.3, s * 0.15, -0.3, 0, Math.PI * 2);
-      g.fill();
-    }
 
-    // The ghost: a faint tinted outline
-    function drawGhostBlock(g, x, y, s, color) {
-      g.fillStyle = shadeHex(color, -0.55).replace('rgb', 'rgba').replace(')', ', 0.35)');
-      g.fillRect(x, y, s, s);
-      g.strokeStyle = color;
-      g.globalAlpha = 0.55;
-      g.lineWidth = 1.5;
-      g.strokeRect(x + 0.75, y + 0.75, s - 1.5, s - 1.5);
-      g.globalAlpha = 1;
-    }
 
-    function moveTetris(dir) {
+    function movePuzzle(dir) {
       if(isPaused || isGameOver) return;
-      if(canMove(pieceX + dir, pieceY, currentPiece.shape)) {
-        pieceX += dir;
+      const [nq, nr] = sidestep(pieceX, pieceY, dir);
+      if(canMove(nq, nr, currentPiece.shape)) {
+        pieceX = nq;
+        pieceY = nr;
         drawBoard();
       }
     }
 
-    function rotateTetris() {
+    function rotatePuzzle() {
       if(isPaused || isGameOver) return;
-      let rotated = currentPiece.shape[0].map((_, i) => currentPiece.shape.map(row => row[i]).reverse());
-      // Try in place, then nudge off walls / stacked blocks
-      for(const kick of [0, -1, 1, -2, 2]) {
-        if(canMove(pieceX + kick, pieceY, rotated)) {
-          pieceX += kick;
+      // 60-degree turn around the piece's [0, 0] cell (axial rotation)
+      const rotated = currentPiece.shape.map(([q, r]) => [-r, q + r]);
+      // Try in place, then nudge sideways or up off walls / stacked hexes
+      const tries = [[0, 0], [1, 0], [-1, 0], [2, 0], [-2, 0], [0, -1]];
+      for(const [side, up] of tries) {
+        let q = pieceX, r = pieceY + up;
+        for(let i = 0; i < Math.abs(side); i++) [q, r] = sidestep(q, r, Math.sign(side));
+        if(canMove(q, r, rotated)) {
+          pieceX = q;
+          pieceY = r;
           currentPiece.shape = rotated;
           drawBoard();
           return;
@@ -6867,14 +7014,14 @@
       }
     }
 
-    function dropTetris() {
+    function dropPuzzle() {
       if(isPaused || isGameOver) return;
       while(canMove(pieceX, pieceY + 1, currentPiece.shape)) {
         pieceY++;
         score += 2;
       }
       drawBoard();
-      updateTetris();
+      updatePuzzle();
     }
 
     // Initial render: runs last so every variable above is already declared
@@ -6882,7 +7029,7 @@
     renderNotes();
     renderCurrentMonthCalendar();
     updateCountMeters();
-    updateTetrisStats();
+    updatePuzzleStats();
     renderPractice();
     drawBoard();
     makeAppIcon();
@@ -6900,7 +7047,7 @@
     renderTagPicker('incident');
     renderUnsentCount();
     startSession();
-    updateTetrisRing();
+    updatePuzzleRing();
     applyOniTailoring();
     // When a pick goes stale while the app is open, everything falls back
     let lastOniSeen = todaysOni();
@@ -6912,8 +7059,8 @@
     }, 60000);
     renderCorrelations();
     renderValidation();
-    updateTetrisWindowBanner();
-    setInterval(updateTetrisWindowBanner, 30000);
+    updatePuzzleWindowBanner();
+    setInterval(updatePuzzleWindowBanner, 30000);
     setupPond();
     setupLanterns();
     setupFog();
