@@ -94,6 +94,64 @@
     }
 
     /* ONI START SCREEN */
+    .crisis-btn { position: absolute; top: calc(16px + env(safe-area-inset-top)); right: 16px; width: 34px; height: 34px; border-radius: 50%;
+                  border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.7);
+                  font-size: 0.95rem; font-weight: 800; cursor: pointer; z-index: 2; }
+    .crisis-btn:active { background: rgba(255, 255, 255, 0.25); }
+    .crisis-bar { position: sticky; top: 0; z-index: 30; margin: -14px -14px 14px; padding: 10px 14px 0; background: rgba(8, 4, 8, 0.92); backdrop-filter: blur(10px); }
+    .crisis-banner { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 14px; background: linear-gradient(90deg, #b91c1c, #7f1d1d); color: #fff;
+                     transition: background 1.6s ease, border-color 1.6s ease; border: 1px solid transparent; }
+    body.crisis-ice .crisis-banner { background: linear-gradient(90deg, rgba(30, 86, 130, 0.95), rgba(14, 46, 82, 0.95)); border-color: rgba(220, 242, 255, 0.55);
+                                     box-shadow: inset 0 0 14px rgba(220, 242, 255, 0.25); }
+    body.crisis-ice .crisis-dot { background: #e0f2fe; }
+    body.crisis-ice .crisis-tabs button.on { border-bottom-color: #bae6fd; }
+    body.crisis-ice .crisis-phrase { color: #e0f2fe; }
+    #frost { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 3; pointer-events: none; opacity: 0; transition: opacity 1.8s ease;
+             background: radial-gradient(ellipse at 50% 45%, rgba(186, 230, 253, 0.06) 40%, rgba(14, 50, 90, 0.35) 100%); }
+    body.crisis-ice #frost { opacity: 1; }
+    #crisis-spirit { position: fixed; left: 0; bottom: calc(70px + env(safe-area-inset-bottom)); width: 120px; height: 150px; z-index: 4; display: none;
+                     transform: translateX(-110%); transition: transform 1.4s cubic-bezier(.2, .8, .2, 1); cursor: pointer; }
+    body.crisis #crisis-spirit { display: block; }
+    body.crisis-ice #crisis-spirit { transform: translateX(0); }
+    #crisis-spirit.right { left: auto; right: 0; }
+    body.crisis-ice #crisis-spirit.away { transform: translateX(-110%); }
+    body.crisis-ice #crisis-spirit.right.away { transform: translateX(110%); }
+    .crisis-banner b { font-size: 0.95rem; }
+    .crisis-dot { width: 10px; height: 10px; border-radius: 50%; background: #fff; animation: crisisBlink 1.2s infinite; }
+    @keyframes crisisBlink { 50% { opacity: 0.25; } }
+    #crisis-timer { font-variant-numeric: tabular-nums; font-weight: 800; font-size: 1.05rem; }
+    .crisis-banner button { margin-left: auto; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.7); background: rgba(255, 255, 255, 0.15); color: #fff; font-weight: 700; font-size: 0.8rem; cursor: pointer; }
+    .crisis-tabs { display: grid; grid-template-columns: 1fr 1fr 1fr; margin-top: 8px; }
+    .crisis-phrase { cursor: pointer; user-select: none; text-align: center; font-size: 0.9rem; font-weight: 600; color: #fecaca; padding: 9px 6px 2px; min-height: 2.4em; transition: opacity 0.6s; }
+    body.crisis { --theme-primary: #f87171; --theme-secondary: #fca5a5; --accent-glow: rgba(239, 68, 68, 0.45); --tint: rgba(239, 68, 68, 0.12); --tint-strong: rgba(239, 68, 68, 0.22); }
+    body.crisis::before { content: ''; position: fixed; inset: 0; z-index: 1; pointer-events: none;
+                          background: radial-gradient(circle at 50% 40%, rgba(220, 38, 38, 0.32), rgba(80, 0, 0, 0.55) 75%); animation: crisisGlow 1s ease-in-out infinite;
+                          transition: opacity 1.6s ease; }
+    body.crisis-ice::before { animation: none; opacity: 0; }
+    @keyframes crisisGlow { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+    body.crisis main { position: relative; z-index: 2; }
+    body.crisis-red .card { border-color: rgba(239, 68, 68, 0.45); animation: crisisCard 1s ease-in-out infinite; }
+    body.crisis-ice .card { border-color: rgba(200, 235, 255, 0.4); box-shadow: inset 0 0 18px rgba(200, 235, 255, 0.08), 0 0 14px rgba(125, 211, 252, 0.12); }
+    @keyframes crisisCard { 0%, 100% { box-shadow: 0 0 0 rgba(239, 68, 68, 0); } 50% { box-shadow: 0 0 22px rgba(239, 68, 68, 0.35); } }
+    body.crisis-red .crisis-banner { animation: crisisBanner 1s ease-in-out infinite; }
+    @keyframes crisisBanner { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.25); } }
+    #crisis-record { width: 100%; min-height: 160px; font-size: 1rem; }
+    body.crisis-thaw #frost { opacity: 0 !important; transition: opacity 1.6s ease; }
+    body.crisis-thaw #crisis-spirit { animation: spiritHop 0.5s ease 2; }
+    @keyframes spiritHop { 50% { margin-bottom: 26px; } }
+    .crisis-followup { display: flex; align-items: center; gap: 10px; padding: 10px 14px; margin: 0 0 12px; border-radius: 14px; font-size: 0.85rem;
+                       background: linear-gradient(90deg, rgba(30, 86, 130, 0.6), rgba(14, 30, 50, 0.75)); border: 1px solid rgba(186, 230, 253, 0.4); }
+    .crisis-followup button { padding: 6px 10px; border-radius: 10px; border: 1px solid var(--border-color); background: rgba(255, 255, 255, 0.06); color: var(--text-main); font-size: 0.78rem; cursor: pointer; }
+    .crisis-tabs button { padding: 12px 0; border: 0; border-bottom: 2px solid transparent; background: none; color: var(--text-muted); font-weight: 700; font-size: 0.9rem; cursor: pointer; }
+    .crisis-tabs button.on { color: #fff; border-bottom-color: #ef4444; }
+    body.crisis > header, body.crisis > nav, body.crisis #dark-banner, body.crisis #for-you, body.crisis #puzzle-window-banner { display: none !important; }
+    .crisis-rate { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 1200; display: none; align-items: center; gap: 10px;
+                   padding: 10px 14px; border-radius: 16px; background: rgba(12, 16, 30, 0.96); border: 1px solid var(--border-color); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5); font-size: 0.85rem; white-space: nowrap; }
+    .crisis-rate button, .crisis-sum-row button { font-size: 1.2rem; padding: 4px 10px; border-radius: 10px; border: 1px solid var(--border-color); background: rgba(255, 255, 255, 0.05); cursor: pointer; }
+    .crisis-sum-row { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; }
+    .crisis-sum-row span { flex: 1; }
+    .crisis-sum-row button.on { border-color: var(--theme-primary); background: var(--tint-strong); }
+
     #oni-screen {
       position: fixed;
       inset: 0;
@@ -202,6 +260,75 @@
       border-bottom: 2px solid transparent;
       white-space: nowrap;
     }
+
+    .tab-btn svg { display: block; width: 18px; height: 18px; margin: 0 auto 3px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .card-label { font-size: 0.72rem !important; text-transform: uppercase; letter-spacing: 0.9px; color: var(--text-muted) !important; font-weight: 600; margin: 0 0 10px !important; }
+    .today-sub { font-size: 0.8rem; color: var(--text-muted); line-height: 1.45; }
+    .today-spirit-row { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+    .hamster-canvas-container.today-spirit-scene { width: 100%; max-width: none; margin: 0; border-radius: 14px; }
+    .today-spirit-card { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+    .today-spirit-go { flex: none; font-size: 2rem; line-height: 1; color: var(--text-muted); padding: 0 2px 4px; }
+    .today-spirit-name { font-weight: 700; font-size: 1rem; }
+    .today-cycle { display: flex; align-items: center; gap: 16px; }
+    .today-cycle svg { flex: none; }
+    .today-cycle .big { font-size: 1.45rem; font-weight: 700; }
+    .today-cycle .phase { font-size: 0.92rem; font-weight: 600; margin-bottom: 4px; }
+    .today-legend { display: flex; gap: 10px; flex-wrap: wrap; margin: 12px 0 8px; font-size: 0.66rem; color: var(--text-muted); }
+    .today-legend i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+    .today-q { font-size: 0.8rem; color: var(--text-muted); margin: 4px 0 8px; }
+    .today-moods { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; margin-bottom: 12px; }
+    .today-mood { background: none; border: 0; padding: 0; color: var(--text-muted); font-size: 0.6rem; cursor: pointer; }
+    .today-mood canvas { display: block; width: 46px; height: 46px; margin: 0 auto 2px; border-radius: 50%; }
+    .today-mood.sel canvas { box-shadow: 0 0 0 2px var(--theme-primary), 0 0 12px var(--accent-glow); }
+    .today-mood.sel { color: var(--text-main); font-weight: 700; }
+    .today-days { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .today-day { padding: 10px 0; border-radius: 12px; font-size: 0.74rem; font-weight: 600; border: 1px solid var(--border-color); background: rgba(255, 255, 255, 0.03); color: var(--text-main); cursor: pointer; }
+    .today-day.sel { border-color: var(--day-col); color: var(--day-col); background: color-mix(in srgb, var(--day-col) 18%, transparent); }
+    .today-coming { display: flex; justify-content: space-between; font-size: 0.85rem; padding: 4px 0; }
+    .calm-tiles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .calm-tile { text-align: left; padding: 14px; min-height: 100px; border-radius: 18px; background: var(--bg-card); border: 1px solid var(--border-color);
+                 backdrop-filter: blur(10px); color: var(--text-main); cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; }
+    .calm-tile b { font-size: 0.88rem; }
+    .calm-tile small { display: block; color: var(--text-muted); font-size: 0.72rem; margin-top: 4px; }
+    .calm-ic { width: 32px; height: 32px; border-radius: 10px; background: var(--tint-strong); display: flex; align-items: center; justify-content: center; font-size: 1rem; margin-bottom: 8px; }
+    .calm-back { display: none; margin: 0 0 12px; padding: 8px 14px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-main); font-size: 0.82rem; cursor: pointer; }
+    body:not(.crisis) #tab-calm:not(.calm-open) > .card:not(.calm-pinned) { display: none; }
+    body:not(.crisis) #tab-calm.calm-open > .card:not(.open):not(.calm-pinned) { display: none; }
+    #tab-calm > .card.calm-pinned { background: none; border: 0; box-shadow: none; backdrop-filter: none; padding: 0; margin-bottom: 14px; }
+    #tab-calm > .card.calm-pinned > h2 { display: none; }
+    #tab-calm > .card.calm-pinned #quote-display { cursor: pointer; }
+    body:not(.crisis) #tab-calm.calm-open > .card.calm-pinned { display: none; } /* out of the way while a tool is open */
+    body.calm-tool-open #dark-banner.good { display: none !important; } /* self-care nudge steps aside too */
+    body:not(.crisis) #tab-calm.calm-open > .calm-tiles { display: none; }
+    body:not(.crisis) #tab-calm.calm-open > .calm-back { display: inline-block; }
+    body.crisis #calm-tiles, body.crisis #calm-back { display: none; }
+    #tab-insights > .ins-card > h2 { cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 0; }
+    #tab-insights > .ins-card > h2::after { content: '▾'; color: var(--text-muted); font-size: 0.9rem; transition: transform 0.2s; }
+    #tab-insights > .ins-card.collapsed > h2::after { transform: rotate(-90deg); }
+    #tab-insights > .ins-card:not(.collapsed) > h2 { margin-bottom: 12px; }
+    #tab-insights > .ins-card.collapsed > :not(h2) { display: none !important; }
+    .header-gear { width: 36px; height: 36px; padding: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.05rem; flex: none; }
+    .header-crisis { width: 30px; height: 30px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.28); background: rgba(255, 255, 255, 0.08);
+                     color: rgba(255, 255, 255, 0.7); font-weight: 800; font-size: 0.85rem; cursor: pointer; margin-right: 8px; flex: none; }
+    .set-sec { border: 1px solid var(--border-color); border-radius: 14px; padding: 4px 12px; margin-bottom: 10px; background: rgba(255, 255, 255, 0.02); }
+    .set-sec > summary { cursor: pointer; font-weight: 700; font-size: 0.92rem; padding: 10px 0; list-style: none; display: flex; justify-content: space-between; }
+    .set-sec > summary::-webkit-details-marker { display: none; }
+    .set-sec > summary::after { content: '▾'; color: var(--text-muted); transition: transform 0.2s; }
+    .set-sec:not([open]) > summary::after { transform: rotate(-90deg); }
+    .set-sec[open] { padding-bottom: 10px; }
+    .today-setup { display: grid; grid-template-columns: 1fr 90px; gap: 8px; margin: 8px 0; }
+    .today-setup label { font-size: 0.72rem; color: var(--text-muted); display: block; margin-bottom: 4px; }
+    .today-setup input { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); font: inherit; font-size: 0.9rem; }
+    .trend-row { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; }
+    .trend-row:last-child { border-bottom: 0; }
+    .trend-row .t-name { flex: 1; color: var(--text-muted); }
+    .trend-row .t-val { font-weight: 700; }
+    .trend-row .t-cmp { width: 96px; text-align: right; font-size: 0.72rem; color: var(--text-muted); }
+    .trend-row .up { color: var(--color-green); }
+    .trend-row .down { color: #fbbf24; }
+    .journey-seg { display: flex; background: rgba(10, 16, 32, 0.88); border: 1px solid var(--border-color); border-radius: 14px; padding: 3px; margin-bottom: 12px; }
+    .journey-seg button { flex: 1; padding: 8px 0; font-size: 0.8rem; border-radius: 11px; border: 0; background: none; color: var(--text-muted); cursor: pointer; }
+    .journey-seg button.on { background: var(--tint-strong); color: var(--text-main); font-weight: 600; }
 
     .tab-btn.active {
       color: var(--theme-primary);
@@ -976,6 +1103,29 @@
     .spirit-opts .tag-chip { display: inline-flex; align-items: center; gap: 6px; }
     .spirit-level { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 2px; font-size: 0.72rem; color: var(--text-muted); }
     .spirit-level .lv { font-weight: 800; color: var(--theme-primary); }
+    .spirit-level .stage { font-weight: 700; }
+    #tab-spirit .hamster-canvas-container { position: relative; }
+    .spirit-thought { position: absolute; transform: translate(-50%, 0) scale(0.85); opacity: 0; pointer-events: none; transition: opacity 0.35s, transform 0.35s;
+                      background: rgba(255, 255, 255, 0.92); color: #1f2433; font-size: 0.7rem; font-weight: 600; padding: 4px 9px; border-radius: 12px;
+                      white-space: nowrap; max-width: 70%; overflow: hidden; text-overflow: ellipsis; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25); }
+    .spirit-thought::after { content: ''; position: absolute; left: 50%; bottom: -4px; width: 8px; height: 8px; margin-left: -4px; background: inherit; transform: rotate(45deg); }
+    .spirit-thought.show { opacity: 1; transform: translate(-50%, 0) scale(1); }
+    .together-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .together-tile { padding: 10px 8px; border-radius: 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-color); text-align: center;
+                     display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 74px; }
+    .together-tile b { font-size: 1.35rem; color: var(--theme-primary); line-height: 1.1; }
+    .together-tile span { font-size: 0.68rem; color: var(--text-muted); margin-top: 2px; }
+    .together-tile canvas { width: 40px; height: 40px; }
+    .spirit-shelf .shelf-row { display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px; padding: 4px 4px 2px; margin-bottom: 10px;
+                               border-bottom: 6px solid #8a5a36; border-radius: 2px; box-shadow: 0 4px 0 -1px #5e3c22; }
+    .shelf-item { display: flex; justify-content: center; align-items: flex-end; padding: 2px 0; border-radius: 8px; cursor: default; border: 1px solid transparent; }
+    .shelf-item canvas { width: 34px; height: 34px; }
+    .shelf-item.got { cursor: pointer; }
+    .shelf-item.placed { border-color: var(--theme-primary); background: rgba(255, 255, 255, 0.06); }
+    .diary-entry { display: flex; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--border-color); font-size: 0.84rem; text-align: left; }
+    .diary-entry:last-child { border-bottom: none; }
+    .diary-entry .d { flex: none; width: 48px; color: var(--text-muted); font-size: 0.74rem; padding-top: 1px; }
+    .spirit-find-note { font-size: 0.8rem; font-weight: 700; color: var(--theme-primary); min-height: 1.1em; margin-top: 4px; transition: opacity 0.4s; }
     .spirit-level .xp-bar { width: 90px; height: 5px; border-radius: 3px; background: rgba(255, 255, 255, 0.1); overflow: hidden; }
     .spirit-level .xp-bar i { display: block; height: 100%; background: var(--theme-primary); border-radius: 3px; }
     .spirit-level.levelup .lv { animation: lvPop 0.9s ease 3; }
@@ -1074,6 +1224,10 @@
     .moon-info { overflow: hidden; flex: 1 1 auto; margin-right: 8px; }
     .moon-info > div:not(.sun-info) { min-width: 0; overflow: hidden; }
     .moon-phase { overflow: hidden; text-overflow: ellipsis; }
+    /* Give the moon phase the room: the sunset shows as icon + time, pushed to the right */
+    .sun-info { margin-left: auto; flex: none; padding-left: 8px; gap: 4px; }
+    .sun-info .moon-next { display: none; }
+    .moon-info > div:not(.sun-info) { flex: 1 1 auto; }
 
     .unsponge-tap { cursor: pointer; min-height: 70px; }
     .unsponge-hint { font-size: 0.68rem; color: var(--text-muted); margin-top: 8px; }
@@ -1279,6 +1433,7 @@
 
   <!-- BLUE & RED ONI START SCREEN -->
   <div id="oni-screen">
+    <button class="crisis-btn" onclick="startCrisis()" title="Crisis mode" aria-label="Crisis mode">!</button>
     <div class="oni-grid">
       <div class="oni-tile" style="--c: 251, 191, 36;" onclick="pickOni('happy', this)"><canvas id="oni-happy-canvas" width="240" height="240"></canvas></div>
       <div class="oni-tile" style="--c: 0, 242, 254;" onclick="pickOni('calm', this)"><canvas id="oni-calm-canvas" width="240" height="240"></canvas></div>
@@ -1308,17 +1463,17 @@
         </div>
       </div>
     </div>
-    <button class="icon-btn" onclick="openSettings()">⚙️ Settings</button>
+    <button class="header-crisis" onclick="startCrisis()" title="Crisis mode" aria-label="Crisis mode">!</button>
+    <button class="icon-btn header-gear" onclick="openSettings()" title="Settings" aria-label="Settings">⚙️</button>
   </header>
 
   <nav>
-    <button class="tab-btn active" data-tab="journey" onclick="switchTab('journey')">Journey</button>
-    <button class="tab-btn" data-tab="puzzle" onclick="switchTab('puzzle')">Disrupt</button>
-    <button class="tab-btn" data-tab="spirit" onclick="switchTab('spirit')" id="hamster-tab">Spirit</button>
-    <button class="tab-btn" data-tab="vagus" onclick="switchTab('vagus')">Vagus</button>
-    <button class="tab-btn" data-tab="recover" onclick="switchTab('recover')">Recover</button>
-    <button class="tab-btn" data-tab="calm" onclick="switchTab('calm')">Calm</button>
-    <button class="tab-btn" data-tab="practise" onclick="switchTab('practise')">Practise</button>
+    <button class="tab-btn active" data-tab="today" onclick="switchTab('today')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>Today</button>
+    <button class="tab-btn" data-tab="journey" onclick="switchTab('journey')"><svg viewBox="0 0 24 24"><path d="M5 4h11l3 3v13H5z"/><path d="M8 10h8M8 14h8M8 18h5"/></svg>Journal</button>
+    <button class="tab-btn" data-tab="puzzle" onclick="switchTab('puzzle')"><svg viewBox="0 0 24 24"><path d="M12 3l7 4v10l-7 4-7-4V7z"/><path d="M12 12l7-5M12 12v9M12 12L5 7"/></svg>Disrupt</button>
+    <button class="tab-btn" data-tab="spirit" onclick="switchTab('spirit')" id="hamster-tab"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="7"/><circle cx="7" cy="6" r="2.5"/><circle cx="17" cy="6" r="2.5"/></svg>Spirit</button>
+    <button class="tab-btn" data-tab="calm" onclick="switchTab('calm')"><svg viewBox="0 0 24 24"><path d="M3 12c3-4 6-4 9 0s6 4 9 0"/><path d="M3 17c3-4 6-4 9 0s6 4 9 0"/><path d="M3 7c3-4 6-4 9 0s6 4 9 0"/></svg>Calm</button>
+    <button class="tab-btn" data-tab="insights" onclick="switchTab('insights')"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Insights</button>
   </nav>
 
   <div id="puzzle-window-banner" class="window-banner" style="display:none;">
@@ -1328,6 +1483,23 @@
   </div>
 
   <main>
+    <div class="crisis-bar" id="crisis-bar" style="display:none;">
+      <div class="crisis-banner">
+        <span class="crisis-dot"></span><b>Crisis</b><span id="crisis-timer">0:00</span>
+        <button onclick="finishCrisis()">Crisis finished</button>
+      </div>
+      <div class="crisis-tabs">
+        <button data-ct="calm" class="on" onclick="crisisTab('calm')">Regulation</button>
+        <button data-ct="puzzle" onclick="crisisTab('puzzle')">Disruption</button>
+        <button data-ct="record" onclick="crisisTab('record')">Record</button>
+      </div>
+      <div class="crisis-phrase" id="crisis-phrase" onclick="nextCrisisPhrase()" title="Tap for the next one"></div>
+    </div>
+    <div class="crisis-followup" id="crisis-followup" style="display:none;">
+      <span style="flex:1;">How are you after yesterday's crisis?</span>
+      <button onclick="crisisFollowup(true)">Better</button>
+      <button onclick="crisisFollowup(false)">Still shaky</button>
+    </div>
     <div class="dark-banner" id="dark-banner" style="display:none;" onclick="darkBannerTap()">
       <span id="dark-banner-icon">🌘</span>
       <span id="dark-banner-text" style="flex:1;"></span>
@@ -1342,8 +1514,48 @@
       <div class="foryou-actions" id="for-you-actions"></div>
     </div>
 
-    <!-- TAB 2: JOURNEY -->
-    <div class="tab-content active" id="tab-journey">
+    <!-- TODAY -->
+    <div class="tab-content active" id="tab-today">
+      <div class="card">
+        <h2 class="card-label">Her cycle</h2>
+        <div id="today-cycle"></div>
+      </div>
+      <div class="card">
+        <h2 class="card-label">Check in</h2>
+        <div class="today-q">How are you feeling?</div>
+        <div class="today-moods" id="today-moods"></div>
+        <div class="today-sub" id="today-checked" style="margin:-4px 0 12px;"></div>
+        <div class="today-q">How did today go?</div>
+        <div class="today-days" id="today-days"></div>
+      </div>
+      <div class="card today-spirit-card" onclick="switchTab('spirit')" title="Visit Spirit">
+        <div style="flex:1; min-width:0;">
+          <div class="hamster-canvas-container today-spirit-scene"><canvas id="today-spirit-canvas" width="320" height="150" style="width:100%; height:100%;"></canvas></div>
+          <div class="today-spirit-name" style="margin-top:8px;"><span id="today-spirit-name">Spirit</span> <span class="tag-pill" id="today-spirit-lv"></span>
+            <span class="today-sub" id="today-spirit-status" style="margin-left:4px;"></span></div>
+        </div>
+        <span class="today-spirit-go" aria-hidden="true">›</span>
+      </div>
+      <div class="card" id="today-backup-card" style="display:none;">
+        <div class="today-cycle" style="justify-content:space-between;">
+          <div class="today-sub" id="today-backup-text"></div>
+          <button class="icon-btn" onclick="exportBackup()">Back up</button>
+        </div>
+      </div>
+      <div class="card" id="today-coming-card" style="display:none;">
+        <h2 class="card-label">Coming up</h2>
+        <div id="today-coming"></div>
+      </div>
+    </div>
+
+    <!-- JOURNAL -->
+    <div class="tab-content" id="tab-journey">
+      <div class="journey-seg" id="journey-seg">
+        <button data-seg="write" class="on" onclick="showJourneySeg('write')">Write</button>
+        <button data-seg="journal" onclick="showJourneySeg('journal')">Journal</button>
+        <button data-seg="calendar" onclick="showJourneySeg('calendar')">Calendar</button>
+      </div>
+      <div data-seg="write">
       <div class="card">
         <h2>New Entry</h2>
         <textarea id="note-input" placeholder="Type thoughts or event details..."></textarea>
@@ -1351,22 +1563,24 @@
         <button class="btn-action" onclick="saveNote()">Add Entry</button>
         <div class="game-status" id="note-saved" style="display:none;">Saved to Journal ✓</div>
       </div>
-
+      </div>
+      <div data-seg="write">
       <div class="card" id="unsent-wrap" style="position: relative;">
-        <h2>Unsent Defense</h2>
-        <textarea id="unsent-input" placeholder="Type what you wanted to say or defend against. Get it out of your head."></textarea>
+        <h2>Unsaid Words</h2>
+        <textarea id="unsent-input" placeholder="Write what you wish you could say. Get it out of your head and onto the page."></textarea>
         <div class="unsent-options">
-          <label><input type="radio" name="unsent-mode" value="destroy" checked> Destroy completely without saving</label>
-          <label><input type="radio" name="unsent-mode" value="save"> Save to private journal archive before dissolving</label>
+          <label><input type="radio" name="unsent-mode" value="destroy" checked> Let it go without saving</label>
+          <label><input type="radio" name="unsent-mode" value="save"> Keep a copy in my journal, then let it go</label>
         </div>
         <button class="btn-action" onclick="releaseUnsent()">Release &amp; Let It Float Away</button>
         <div class="unsent-stream-box" id="unsent-stream-box">
           <canvas id="unsent-stream" class="game-canvas" width="280" height="200" style="touch-action: auto; cursor: default;"></canvas>
           <div class="game-status" id="unsent-note"></div>
         </div>
-        <div class="game-status" id="unsent-count">Unsent defenses released: 0</div>
+        <div class="game-status" id="unsent-count">Words let go: 0</div>
       </div>
-
+      </div>
+      <div data-seg="journal">
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <h2 style="margin:0;">Journal <span id="notes-count" style="font-size:0.75rem; color:var(--text-muted); font-weight:600;"></span></h2>
@@ -1374,7 +1588,8 @@
         </div>
         <div id="notes-list" style="display:none;"></div>
       </div>
-
+      </div>
+      <div data-seg="hidden" style="display:none;">
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
           <h2 style="margin:0;">Incident Log <span id="incident-count" style="font-size:0.75rem; color:var(--text-muted); font-weight:600;"></span></h2>
@@ -1385,7 +1600,8 @@
         </div>
         <div id="incident-list" style="display:none; margin-top:10px;"></div>
       </div>
-
+      </div>
+      <div data-seg="calendar">
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
           <h2 style="margin:0;">Calendar</h2>
@@ -1408,7 +1624,8 @@
           <div class="calendar-grid" id="cal-grid"></div>
         </div>
       </div>
-
+      </div>
+      <div data-seg="calendar">
       <div class="card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
           <h2 style="margin:0;">Emotional State</h2>
@@ -1436,11 +1653,13 @@
           <div id="mood-day-detail"></div>
         </div>
       </div>
+      </div>
     </div>
 
     <!-- TAB 3: PUZZLE -->
     <div class="tab-content" id="tab-puzzle">
       <div class="card" style="text-align: center;">
+        <div class="spirit-opts" id="puzzle-mode-opts" style="justify-content:center; margin-bottom:12px;"></div>
         <div class="puzzle-timer-wrap">
           <button class="puzzle-ring" onclick="togglePuzzleWhy()" aria-label="Session timer: tap to learn how this helps">
             <svg viewBox="0 0 64 64">
@@ -1499,99 +1718,46 @@
       </div>
     </div>
 
-    <!-- TAB 5: COUNT -->
+    <!-- SPIRIT -->
     <div class="tab-content" id="tab-spirit">
       <div class="hamster-card">
         <div class="hamster-canvas-container">
           <canvas id="hamster-canvas" width="320" height="150" style="width:100%; height:100%;"></canvas>
+          <div class="spirit-thought" id="spirit-thought"></div>
         </div>
         <div class="hamster-name" id="hamster-name" onclick="renameHamster()" title="Tap to rename">Spirit</div>
         <div class="spirit-level" id="spirit-level"></div>
         <div style="font-weight:700; color:var(--theme-primary); margin-top:2px;" id="hamster-status">Companion Status</div>
-        <div style="font-size:0.75rem; color:var(--text-muted);" id="hamster-desc">Reflects environment energy</div>
+        <div style="font-size:0.78rem; color:var(--text-muted);" id="hamster-desc">Reflects environment energy</div>
         <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;" id="hamster-trend"></div>
         <div class="spirit-strip" id="spirit-strip" title="Last 30 days"></div>
         <button class="icon-btn" id="feed-btn" onclick="feedHamster()" style="margin-top:8px;">Feed</button>
         <button class="icon-btn" id="trick-btn" onclick="spiritDoTrick()" style="margin-top:8px;">Trick</button>
+        <button class="icon-btn" id="walk-btn" onclick="spiritWalk()" style="margin-top:8px;">Walk</button>
+        <div class="spirit-find-note" id="spirit-find-note"></div>
         <div class="advice-bubble" id="hamster-advice" style="display:none;"></div>
       </div>
-
       <div class="card">
-        <h2>Monthly Summary</h2>
-        <div class="subtitle">Calendar days marked per month (last 6 months).</div>
-        <div id="monthly-summary"></div>
+        <h2>Together</h2>
+        <div class="together-grid" id="together-grid"></div>
+      </div>
+      <div class="card">
+        <h2>Finds <span class="today-sub" id="shelf-count"></span></h2>
+        <div class="today-sub" style="margin:-4px 0 10px;">He finds something when you check in, and a bonus after a calming exercise. Tap one to put it in his patch.</div>
+        <div class="spirit-shelf" id="spirit-shelf"></div>
+      </div>
+      <div class="card">
+        <h2>Diary</h2>
+        <div id="spirit-diary"></div>
       </div>
 
-      <div class="card">
-        <h2>Patterns</h2>
-        <div class="subtitle">Built from your oni picks, calendar and incident log.</div>
-        <div id="patterns"></div>
-      </div>
-
-      <div class="card">
-        <h2>Pattern Correlation</h2>
-        <div class="subtitle">How your days line up with the cycle and your tags. Calculated only on this device.</div>
-        <div id="correlations"></div>
-      </div>
-
-      <div class="card">
-        <h2>Objective Validation</h2>
-        <div class="subtitle">What your own records show, without judgement.</div>
-        <div id="validation"></div>
-      </div>
-
-      <div class="card">
-        <h2>Meters</h2>
-        
-        <div class="meter">
-          <div>
-            <div style="font-weight:600; color:var(--color-green);">Good Days Count</div>
-            <div style="font-size:0.7rem; color:var(--text-muted);">Total Green days marked</div>
-          </div>
-          <span class="meter-val" id="m-good-days" style="color:var(--color-green);">0</span>
-        </div>
-
-        <div class="meter">
-          <div>
-            <div style="font-weight:600;">Days Since Last Conflict</div>
-            <div style="font-size:0.7rem; color:var(--text-muted);">Red/Black calendar entries</div>
-          </div>
-          <span class="meter-val" id="m-last-conflict">0</span>
-        </div>
-
-        <div class="meter">
-          <div>
-            <div style="font-weight:600;">Days Until Next Period</div>
-            <div style="font-size:0.7rem; color:var(--text-muted);" id="lbl-period-date">Not set</div>
-          </div>
-          <span class="meter-val" id="m-period">--</span>
-        </div>
-
-        <div class="meter">
-          <div>
-            <div style="font-weight:600;">Days Until Therapy</div>
-            <div style="font-size:0.7rem; color:var(--text-muted);" id="lbl-therapy-date">Not set</div>
-          </div>
-          <span class="meter-val" id="m-therapy">--</span>
-        </div>
-
-        <div class="meter">
-          <div>
-            <div style="font-weight:600;">Days Until Office Day</div>
-            <div style="font-size:0.7rem; color:var(--text-muted);" id="lbl-office-date">Not set</div>
-          </div>
-          <span class="meter-val" id="m-office">--</span>
-        </div>
-
-        <button class="btn-action btn-secondary" onclick="openSettings()">Configure Dates & Theme</button>
-      </div>
     </div>
 
-    <!-- TAB 1: VAGUS -->
-    <div class="tab-content" id="tab-vagus">
+    <!-- CALM -->
+    <div class="tab-content" id="tab-calm">
       <div class="card">
         <h2>Vagus Nerve Reset</h2>
-        <div class="subtitle">Keep head centered forward. Hold gaze far right until you yawn/swallow, then far left until you yawn/swallow.</div>
+        <div class="subtitle">Head still. Look far right until you yawn or swallow, then far left.</div>
         
         <div style="text-align: center; padding: 10px 0;">
           <div class="head-diagram">
@@ -1599,50 +1765,42 @@
           </div>
           <div style="font-size:0.9rem; font-weight:600; color:var(--theme-primary);" id="eye-status">1. Look Far Right (Hold)</div>
           <div class="counter-badge" id="vagus-count">0</div>
-          <div class="subtitle">Resets Completed Today</div>
+          <div class="subtitle">Resets today</div>
         </div>
 
-        <button class="btn-action" onclick="stepVagus()">Next Gaze Step ▶</button>
-        <button class="btn-action btn-secondary" onclick="incrementVagus()" style="margin-top:8px;">Mark Yawn / Reset Done (+1)</button>
+        <button class="btn-action" onclick="stepVagus()">Next step ▶</button>
+        <button class="btn-action btn-secondary" onclick="incrementVagus()" style="margin-top:8px;">I yawned or swallowed (+1)</button>
       </div>
-    </div>
-
-    <!-- TAB 4: RECOVER -->
-    <div class="tab-content" id="tab-recover">
       <div class="card" style="text-align: center;">
-        <h2>Discreet Bathroom Reset</h2>
-        <div class="subtitle">Execute silently during a bathroom break. Do not raise suspicion.</div>
+        <h2>Quiet Reset</h2>
+        <div class="subtitle">A gentle two-minute reset, wherever you are.</div>
 
         <div style="margin-top: 15px;">
-          <div style="font-weight:600; font-size:0.9rem; color:var(--theme-primary);">1. Adrenaline Discharge (Silent Shake)</div>
-          <div class="subtitle">Lightly shake wrists, arms, jaw, and ankles while standing on bathmat or sitting.</div>
+          <div style="font-weight:600; font-size:0.9rem; color:var(--theme-primary);">1. Shake it off</div>
+          <div class="subtitle">Gently shake out your hands, arms, jaw and legs. Let the tension fall away.</div>
           
           <div class="shake-circle" id="shake-box">30s</div>
-          <button class="btn-action" onclick="startShakeTimer(30)">Start 30s Shake Pacer</button>
+          <button class="btn-action" onclick="startShakeTimer(30)">Shake for 30 seconds</button>
         </div>
       </div>
 
       <div class="card">
-        <div style="font-weight:600; font-size:0.9rem; color:var(--theme-primary); margin-bottom:6px;">2. Cold Water Heart-Rate Drop</div>
-        <div class="subtitle">Turn on tap water for natural background noise. Splash ice water on cheeks/eyes or hold cold wet towel to face for 30 seconds.</div>
-        <button class="btn-action btn-secondary" onclick="startColdTimer()">30s Cold Hold Timer</button>
+        <div style="font-weight:600; font-size:0.9rem; color:var(--theme-primary); margin-bottom:6px;">2. Cool water</div>
+        <div class="subtitle">Splash cool water on your face, or hold a cold wet cloth to it for 30 seconds. It helps your heart slow down.</div>
+        <button class="btn-action btn-secondary" onclick="startColdTimer()">Start 30 seconds</button>
         <div id="cold-status" style="text-align:center; font-weight:700; margin-top:8px; color:var(--theme-secondary);"></div>
       </div>
 
       <div class="card">
-        <div style="font-weight:600; font-size:0.9rem; color:var(--theme-primary); margin-bottom:8px;">3. Emotional Un-Sponging</div>
-        <div class="subtitle">Tap the card to read the next one and leave her weather behind:</div>
+        <div style="font-weight:600; font-size:0.9rem; color:var(--theme-primary); margin-bottom:8px;">3. Set it down</div>
+        <div class="subtitle">Tap the card for the next words.</div>
 
         <div class="unsponge-card unsponge-tap" id="unsponge-card" onclick="nextUnsponge()">
-          <span id="unsponge-text">"I held the line and remained calm. Now I return her emotional load back to her."</span>
+          <span id="unsponge-text">"I stayed calm, and that was enough. I can set her heaviness down now."</span>
           <div class="unsponge-hint">Tap for the next one</div>
         </div>
       </div>
 
-    </div>
-
-    <!-- TAB 6: CALM -->
-    <div class="tab-content" id="tab-calm">
       <div class="card">
         <h2>Statements</h2>
         <div style="font-style:italic; text-align:center; min-height:60px; display:flex; align-items:center; justify-content:center; color:var(--theme-primary); font-size:1rem; padding:10px; background:rgba(5,10,22,0.5); border-radius:10px;" id="quote-display">
@@ -1713,10 +1871,98 @@
       </div>
     </div>
 
-    <!-- TAB 7: PRACTISE -->
-    <div class="tab-content" id="tab-practise">
+    <!-- RECORD (crisis mode) -->
+    <div class="tab-content" id="tab-record">
       <div class="card">
-        <h2>Time on Exercises</h2>
+        <h2 class="card-label">Record</h2>
+        <textarea id="crisis-record" placeholder="Get it down: what was said, what you'd say back. No need for full sentences." oninput="localStorage.setItem('aq_crisis_draft', this.value)"></textarea>
+        <button class="btn-action" onclick="saveCrisisRecord()">Save</button>
+        <div class="today-sub" id="crisis-record-saved" style="margin-top:8px;"></div>
+      </div>
+    </div>
+
+    <!-- INSIGHTS -->
+    <div class="tab-content" id="tab-insights">
+      <div class="card" id="trend-card">
+        <h2 class="card-label">Past 30 days</h2>
+        <div id="trend-rows"></div>
+      </div>
+      <div class="card" id="week-card" style="display:none;">
+        <h2>Your week</h2>
+        <div id="week-summary"></div>
+      </div>
+
+      <div class="card">
+        <h2>Month by month</h2>
+        <div class="subtitle">Calendar days marked per month (last 6 months).</div>
+        <div id="monthly-summary"></div>
+      </div>
+
+      <div class="card">
+        <h2>Patterns</h2>
+        <div class="subtitle">Built from your oni picks, calendar and incident log.</div>
+        <div id="patterns"></div>
+      </div>
+
+      <div class="card">
+        <h2>Her cycle &amp; what helps you</h2>
+        <div class="subtitle">How your days line up with the cycle and your tags. Calculated only on this device.</div>
+        <div id="correlations"></div>
+      </div>
+
+      <div class="card">
+        <h2>Your records</h2>
+        <div class="subtitle">What your own records show, without judgement.</div>
+        <div id="validation"></div>
+      </div>
+
+      <div class="card">
+        <h2>Counters</h2>
+        
+        <div class="meter">
+          <div>
+            <div style="font-weight:600; color:var(--color-green);">Good Days Count</div>
+            <div style="font-size:0.7rem; color:var(--text-muted);">Total Green days marked</div>
+          </div>
+          <span class="meter-val" id="m-good-days" style="color:var(--color-green);">0</span>
+        </div>
+
+        <div class="meter">
+          <div>
+            <div style="font-weight:600;">Days Since Last Conflict</div>
+            <div style="font-size:0.7rem; color:var(--text-muted);">Red/Black calendar entries</div>
+          </div>
+          <span class="meter-val" id="m-last-conflict">0</span>
+        </div>
+
+        <div class="meter">
+          <div>
+            <div style="font-weight:600;">Days Until Next Period</div>
+            <div style="font-size:0.7rem; color:var(--text-muted);" id="lbl-period-date">Not set</div>
+          </div>
+          <span class="meter-val" id="m-period">--</span>
+        </div>
+
+        <div class="meter">
+          <div>
+            <div style="font-weight:600;">Days Until Therapy</div>
+            <div style="font-size:0.7rem; color:var(--text-muted);" id="lbl-therapy-date">Not set</div>
+          </div>
+          <span class="meter-val" id="m-therapy">--</span>
+        </div>
+
+        <div class="meter">
+          <div>
+            <div style="font-weight:600;">Days Until Office Day</div>
+            <div style="font-size:0.7rem; color:var(--text-muted);" id="lbl-office-date">Not set</div>
+          </div>
+          <span class="meter-val" id="m-office">--</span>
+        </div>
+
+        <button class="btn-action btn-secondary" onclick="openSettings()">Configure Dates & Theme</button>
+      </div>
+      <div class="card">
+        <h2>Time on exercises</h2>
         <div class="stat-grid">
           <div class="stat-box"><div class="stat-box-val" id="p-vagus-total">0</div><div class="stat-box-label">Vagus resets</div></div>
           <div class="stat-box"><div class="stat-box-val" id="p-puzzle-min-total">0</div><div class="stat-box-label">Disrupt minutes</div></div>
@@ -1727,7 +1973,27 @@
         <div id="p-help"></div>
       </div>
     </div>
+
   </main>
+
+  <canvas id="frost"></canvas>
+  <canvas id="crisis-spirit" width="240" height="300" onclick="crisisSpiritTap()" title="Spirit is here with you"></canvas>
+
+  <div class="crisis-rate" id="crisis-rate">
+    <span>Did <b id="crisis-rate-name"></b> help?</span>
+    <button onclick="rateCrisisItem(true)" aria-label="It helped">👍</button>
+    <button onclick="rateCrisisItem(false)" aria-label="It didn't help">👎</button>
+  </div>
+
+  <div class="modal" id="crisis-modal">
+    <div class="modal-content card">
+      <h2>Crisis finished</h2>
+      <div class="subtitle" id="crisis-sum-time"></div>
+      <div id="crisis-sum-list"></div>
+      <button class="btn-action" onclick="saveCrisis()">Save</button>
+      <button class="btn-action btn-secondary" style="margin-top:8px;" onclick="closeCrisisSummary()">Back to crisis mode</button>
+    </div>
+  </div>
 
   <div class="modal" id="hard-day-modal">
     <div class="modal-content card" style="text-align:center;">
@@ -1779,8 +2045,8 @@
     </div>
   </div>
 
-  <div class="moon-view" id="moon-view" onclick="if(event.target === this) closeMoonView()">
-    <button class="moon-view-close" onclick="closeMoonView()">✕</button>
+  <div class="moon-view" id="moon-view" onclick="closeMoonView()">
+    <button class="moon-view-close" onclick="event.stopPropagation(); closeMoonView()">✕</button>
     <canvas id="moon-view-canvas" width="760" height="760"></canvas>
     <div class="moon-view-name" id="moon-view-name"></div>
     <div class="moon-view-sub" id="moon-view-sub"></div>
@@ -1792,62 +2058,76 @@
     <div class="modal-content card">
       <h2>⚙️ Settings</h2>
 
-      <div class="form-group">
-        <label>App Color (adapts automatically):</label>
+      <details class="set-sec" open>
+        <summary>Her cycle</summary>
+        <div class="form-group">
+          <label>Next period date:</label>
+          <input type="date" id="cfg-period">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label>Past period start dates (makes the cycle patterns accurate):</label>
+          <div style="display:flex; gap:8px;">
+            <input type="date" id="cfg-past-period" style="flex:1;">
+            <button class="icon-btn" type="button" onclick="addPastPeriod()">+ Add</button>
+          </div>
+          <div id="past-periods" class="past-periods"></div>
+        </div>
+      </details>
+
+      <details class="set-sec">
+        <summary>Dates</summary>
+        <div class="form-group">
+          <label>Next therapy date:</label>
+          <input type="date" id="cfg-therapy">
+        </div>
+        <div class="form-group">
+          <label>Next office day:</label>
+          <input type="date" id="cfg-office">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label>Important dates (every year):</label>
+          <div id="important-dates" class="past-periods"></div>
+          <div style="display:flex; gap:8px; margin-top:6px;">
+            <input type="text" id="cfg-date-name" placeholder="Anniversary, birthday..." maxlength="30" style="flex:1;">
+            <input type="date" id="cfg-date-day" style="flex:1;">
+            <button class="icon-btn" type="button" onclick="addImportantDate()">+ Add</button>
+          </div>
+        </div>
+      </details>
+
+      <details class="set-sec">
+        <summary>Spirit <span id="spirit-settings-lv" class="today-sub" style="margin-left:auto; margin-right:8px;"></span></summary>
+        <div id="spirit-settings"></div>
+        <label class="spirit-check"><input type="checkbox" id="spirit-blush" onchange="setSpiritStyle('blush', this.checked)"> Rosy cheeks</label>
+        <label class="spirit-check"><input type="checkbox" id="spirit-house" onchange="setSpiritStyle('house', this.checked)"> His house</label>
+      </details>
+
+      <details class="set-sec">
+        <summary>Crises</summary>
+        <div class="insight-note" style="margin-bottom:6px;">Started one by accident? Delete it here.</div>
+        <div id="crisis-settings"></div>
+      </details>
+
+      <details class="set-sec">
+        <summary>Backup &amp; data</summary>
+        <div class="form-group">
+          <label>Backup (journal, calendar, dates, counters):</label>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <button class="btn-action btn-secondary" style="margin-top:0;" onclick="exportBackup()">Export Backup</button>
+            <button class="btn-action btn-secondary" style="margin-top:0;" onclick="document.getElementById('backup-file').click()">Import Backup</button>
+          </div>
+          <input type="file" id="backup-file" accept="application/json,.json" style="display:none;" onchange="importBackup(this)">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label>App usage (private, only on this device):</label>
+          <div id="usage-settings"></div>
+        </div>
+      </details>
+
+      <details class="set-sec">
+        <summary>App colour</summary>
         <div class="theme-reason" id="theme-reason"></div>
-      </div>
-
-      <div class="form-group">
-        <label>Next Therapy Date:</label>
-        <input type="date" id="cfg-therapy">
-      </div>
-
-      <div class="form-group">
-        <label>Next Period / Cycle Date:</label>
-        <input type="date" id="cfg-period">
-      </div>
-
-      <div class="form-group">
-        <label>Past period start dates (makes the cycle patterns accurate):</label>
-        <div style="display:flex; gap:8px;">
-          <input type="date" id="cfg-past-period" style="flex:1;">
-          <button class="icon-btn" type="button" onclick="addPastPeriod()">+ Add</button>
-        </div>
-        <div id="past-periods" class="past-periods"></div>
-      </div>
-
-      <div class="form-group">
-        <label>Next Office Day Date:</label>
-        <input type="date" id="cfg-office">
-      </div>
-
-      <div class="form-group">
-        <label>Disrupt game:</label>
-        <div class="spirit-opts" id="puzzle-mode-opts"></div>
-      </div>
-
-      <div class="form-group">
-        <details class="spirit-custom">
-          <summary>Customise Spirit <span id="spirit-settings-lv"></span></summary>
-          <div id="spirit-settings"></div>
-          <label class="spirit-check"><input type="checkbox" id="spirit-blush" onchange="setSpiritStyle('blush', this.checked)"> Rosy cheeks</label>
-          <label class="spirit-check"><input type="checkbox" id="spirit-house" onchange="setSpiritStyle('house', this.checked)"> His house</label>
-        </details>
-      </div>
-
-      <div class="form-group">
-        <label>Backup (journal, calendar, dates, counters):</label>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-          <button class="btn-action btn-secondary" style="margin-top:0;" onclick="exportBackup()">Export Backup</button>
-          <button class="btn-action btn-secondary" style="margin-top:0;" onclick="document.getElementById('backup-file').click()">Import Backup</button>
-        </div>
-        <input type="file" id="backup-file" accept="application/json,.json" style="display:none;" onchange="importBackup(this)">
-      </div>
-
-      <div class="form-group">
-        <label>App usage (private, only on this device):</label>
-        <div id="usage-settings"></div>
-      </div>
+      </details>
 
       <button class="btn-action" onclick="saveSettings()">Save & Update</button>
       <button class="btn-action btn-secondary" onclick="showOniScreen()" style="margin-top:8px;">Show Start Screen</button>
@@ -1921,6 +2201,7 @@
     }
 
     function applyAdaptiveTheme() {
+      if(document.body.classList.contains('crisis')) { applyColor(document.body.classList.contains('crisis-ice') ? '#7dd3fc' : '#ef4444'); return; } // crisis colours
       const recent = typeof currentOniEntry === 'function' ? currentOniEntry() : null;
       const ham = typeof hamsterMood !== 'undefined' ? hamsterMood : 'calm';
       let hex, reason;
@@ -2104,7 +2385,17 @@
       "Drop your shoulders. Unclench your jaw.",
       "You are stronger than this temporary strain.",
       "Focus entirely on your own inner anchor.",
-      "You deserve peace, safety, and rest."
+      "You deserve peace, safety, and rest.",
+      "Her emotions are hers. You can care without carrying them.",
+      "You can stay soft without staying silent about your needs.",
+      "You are not the cause of every storm.",
+      "Lower your voice, slow your words. You set your own pace.",
+      "You are allowed to take a break from a heated moment.",
+      "Notice it, name it, let it pass.",
+      "Your worth does not depend on how today goes.",
+      "You have survived every hard day so far.",
+      "Rest is not a reward. It is a need.",
+      "Being steady is enough. You don't have to be perfect."
     ];
     let qIdx = 0;
 
@@ -2529,6 +2820,7 @@
     // Tabs (in order): journey, puzzle, spirit, vagus, recover, calm, practise
     function switchTab(name) {
       if(typeof usageTab === 'function') usageTab(name);
+      if(name !== 'calm') document.body.classList.remove('calm-tool-open');
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === name));
       document.querySelectorAll('.tab-content').forEach(ct => ct.classList.toggle('active', ct.id === 'tab-' + name));
       // A brand-new game starts by itself; one you left stays paused until you tap Resume
@@ -2540,12 +2832,21 @@
         renderFeedButton();
         spiritCheer();
         renderSpiritLevel(true);
+        spiritHuskTick();
+        renderFindsButton();
+        spiritThoughtNext = performance.now() + 3000;
+        selfCareCache.at = 0; renderSpiritPanels();
         applySpiritBackdrop();
         if(spiritStyle.backdrop === 'weather') fetchWeather().then(applySpiritBackdrop);
       }
-      if(name === 'practise') renderPractice();
-      if(name === 'journey') { toggleJournal(false); toggleIncidents(false); }
-      if(name === 'calm') initChaosGame();
+      if(name === 'insights') {
+        updateCountMeters(); renderPractice();
+        const tc = document.getElementById('trend-card');
+        if(tc) tc.classList.remove('collapsed'); // the 30-day summary is open whenever you land here
+      }
+      if(name === 'today') { renderToday(); applySpiritBackdrop(); }
+      if(name === 'journey') showJourneySeg(journeySeg);
+      if(name === 'calm') { initChaosGame(); closeCalmGroup(); }
       else if(typeof stopBreathing === 'function' && breathTimer) stopBreathing();
     }
 
@@ -2635,7 +2936,9 @@
       renderPastPeriods();
       renderSpiritSettings();
       renderPuzzleModeSettings();
+      renderImportantDates();
       if(typeof renderUsageSettings === 'function') renderUsageSettings();
+      renderCrisisSettings();
       document.getElementById('cfg-therapy').value = dates.therapy || '';
       document.getElementById('cfg-period').value = dates.period || '';
       document.getElementById('cfg-office').value = dates.office || '';
@@ -2876,6 +3179,7 @@
       // Like red/black days, a yellow run stops counting 10 days after its last yellow day
       const yellowStill = yellowZombie && lastYellowAgo < 10;
       return { score: recentGood + streakBonus - damage, badPoints, todayHealing, streak, badDays10, blackDays10, hasData,
+               greenSince, yellowSince, greensAfterYellow, lastYellowAgo,
                zombify: badZombie || yellowStill, zombifyReason: badZombie ? 'bad' : yellowStill ? 'yellow' : null };
     }
     function spiritMoodOn(day, logsByDay) {
@@ -3015,6 +3319,7 @@
         hDesc.innerText = "Steady pacing and peaceful presence.";
         hAdvice.style.display = 'none';
       }
+      if(hamsterHasData) hDesc.innerText = spiritPlainWords(health);
 
       renderSpiritStrip();
       renderSpiritLevel(false);
@@ -3381,7 +3686,7 @@
       if(el) el.innerText = hamsterName;
       // The tab carries the hamster's name too
       const tab = document.getElementById('hamster-tab');
-      if(tab) tab.innerText = hamsterName;
+      if(tab) tab.lastChild.textContent = hamsterName; // keep the icon, change the label
       if(typeof renderFeedButton === 'function') renderFeedButton();
     }
     function renameHamster() {
@@ -3447,21 +3752,50 @@
         } else {
           // Cuts and bruises: fresh-looking at first, fading towards day 14
           const fade = Math.max(0.25, Math.min(1, (14 - hamsterHealDays) / 9));
-          const bruise = ctx.createRadialGradient(x + r * 0.2, y + r * 0.35, 0, x + r * 0.2, y + r * 0.35, r * 0.75);
-          bruise.addColorStop(0, `rgba(105, 60, 120, ${0.7 * fade})`);
+          const R = r * 1.5;
+          const bx = x + R * 0.15, by = y + R * 0.3;
+          const bruise = ctx.createRadialGradient(bx, by, 0, bx, by, R);
+          bruise.addColorStop(0, `rgba(105, 60, 120, ${0.65 * fade})`);
+          bruise.addColorStop(0.6, `rgba(120, 75, 130, ${0.35 * fade})`);
           bruise.addColorStop(1, 'rgba(110, 70, 120, 0)');
           ctx.fillStyle = bruise;
           ctx.beginPath();
-          ctx.ellipse(x + r * 0.2, y + r * 0.35, r * 0.75, r * 0.55, 0.3, 0, Math.PI * 2);
+          ctx.ellipse(bx, by, R, R * 0.75, 0.3, 0, Math.PI * 2);
           ctx.fill();
-          ctx.strokeStyle = `rgba(185, 60, 60, ${0.9 * fade})`;
-          ctx.lineWidth = 1.8;
-          ctx.beginPath();
-          ctx.moveTo(x - r * 0.7, y - r * 0.2);
-          ctx.lineTo(x - r * 0.2, y + r * 0.15);
-          ctx.lineTo(x + r * 0.2, y - r * 0.15);
-          ctx.lineTo(x + r * 0.7, y + r * 0.2);
-          ctx.stroke();
+          // A clear slash: thick in the middle, tapering at both ends, with a darker line down the centre
+          const slash = (sx, sy, len, w, rot) => {
+            ctx.save();
+            ctx.translate(sx, sy);
+            ctx.rotate(rot);
+            ctx.fillStyle = `rgba(190, 55, 55, ${0.85 * fade})`;
+            ctx.beginPath();
+            ctx.moveTo(-len, 0);
+            ctx.quadraticCurveTo(0, -w, len, 0);
+            ctx.quadraticCurveTo(0, w, -len, 0);
+            ctx.fill();
+            ctx.strokeStyle = `rgba(110, 20, 25, ${0.8 * fade})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(-len * 0.8, 0); ctx.lineTo(len * 0.8, 0); ctx.stroke();
+            ctx.restore();
+          };
+          if(i === 1) {
+            // A plaster over this one
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(-0.45);
+            ctx.globalAlpha = Math.max(0.6, fade);
+            ctx.fillStyle = '#efe2c8';
+            ctx.beginPath(); ctx.roundRect(-R, -R * 0.36, R * 2, R * 0.72, R * 0.3); ctx.fill();
+            ctx.strokeStyle = '#d6c3a0'; ctx.lineWidth = 1; ctx.stroke();
+            ctx.fillStyle = '#d9c7a4';
+            ctx.fillRect(-R * 0.32, -R * 0.36, R * 0.64, R * 0.72);
+            ctx.fillStyle = 'rgba(150, 120, 80, 0.35)';
+            [[-0.65, -0.12], [-0.65, 0.12], [0.65, -0.12], [0.65, 0.12]].forEach(([dx, dy]) => { ctx.beginPath(); ctx.arc(dx * R, dy * R, 0.9, 0, Math.PI * 2); ctx.fill(); });
+            ctx.restore();
+          } else {
+            slash(x, y, R * 0.8, R * 0.22, i % 2 ? -0.45 : 0.4);
+            if(i === 0) slash(x + R * 0.3, y + R * 0.4, R * 0.45, R * 0.14, 0.5);
+          }
         }
       });
       ctx.restore();
@@ -3496,6 +3830,10 @@
     function spiritFur(zombie) {
       if(zombie) return { fur: '#8d9b76', furDark: '#5d6b4f', cream: '#c8cfb4' };
       const base = SPIRIT_FURS[spiritStyle.fur] || SPIRIT_FURS.golden;
+      if(spiritStageNow[1] === 'Elder') { // a touch of grey with age
+        const g = '#d9d6cf';
+        return { fur: mixHexToHex(base.fur, g, 0.22), furDark: mixHexToHex(base.furDark, g, 0.25), cream: mixHexToHex(base.cream, '#f4f2ee', 0.4) };
+      }
       return { fur: base.fur, furDark: base.furDark, cream: base.cream };
     }
 
@@ -3538,15 +3876,15 @@
       return spiritDayCache.day;
     }
     function applySpiritBackdrop() {
-      const box = document.querySelector('.hamster-canvas-container');
-      if(!box) return;
+      const boxes = document.querySelectorAll('.hamster-canvas-container');
+      if(!boxes.length) return;
       let bd = spiritStyle.backdrop || 'weather';
       if(bd === 'weather') {
         const w = spiritWeatherNow();
         const dull = w && (w.code >= 3 || w.cloud > 70);
         bd = !spiritIsDay() ? 'wx-night' : dull ? 'wx-grey' : 'wx-day';
       }
-      box.dataset.backdrop = bd;
+      boxes.forEach(box => { box.dataset.backdrop = bd; });
     }
 
     // Level: earned from self-care over all time. Just for fun: it never changes his health.
@@ -3569,14 +3907,16 @@
       if(!el) return;
       const { xp, level, cur, next } = spiritLevelInfo();
       const pct = level >= 50 ? 100 : Math.round((xp - cur) / (next - cur) * 100);
-      el.innerHTML = `<span class="lv">Lv ${level}</span><span class="xp-bar"><i style="width:${pct}%"></i></span>`;
+      const stage = spiritStage(level), grew = stage !== spiritStageNow;
+      spiritStageNow = stage;
+      el.innerHTML = `<span class="lv">Lv ${level}</span><span class="stage">${stage[1]}</span><span class="xp-bar"><i style="width:${pct}%"></i></span>`;
       el.title = level >= 50 ? `${xp} XP` : `${xp} / ${next} XP`;
       const seen = +localStorage.getItem('aq_spirit_seen_lvl') || 0;
       if(!seen) { localStorage.setItem('aq_spirit_seen_lvl', level); return; }
       if(celebrate && level > seen) {
         localStorage.setItem('aq_spirit_seen_lvl', level);
         el.classList.remove('levelup'); void el.offsetWidth; el.classList.add('levelup');
-        el.innerHTML += ` <span>Level up!</span>`;
+        el.innerHTML += ` <span>${grew && stage[0] > 1 ? `${hamsterName} grew up!` : 'Level up!'}</span>`;
         [300, 1000].forEach(ms => setTimeout(() => { hamsterJumpStart = performance.now(); }, ms));
         setTimeout(careForHamster, 1000);
       }
@@ -3624,6 +3964,12 @@
         [30, 139, 25, 114, 33, 92], [39, 74, 45, 64, 45, 52], [45, 36, 56, 24, 80, 24]] },
       side: { start: [32, 132], segs: [
         [12, 122, 14, 74, 50, 64], [72, 56, 96, 48, 112, 55], [127, 60, 139, 74, 143, 86], [141, 97, 128, 100], [122, 112, 120, 132], [80, 140, 32, 132]] }
+    };
+    // Asleep: the same side silhouette with his head stretched forward and lowered onto the grass
+    const spiritSleepShift = x => Math.min(1, Math.max(0, (x - 95) / 25));
+    SPIRIT_SHAPES.sideSleep = {
+      start: SPIRIT_SHAPES.side.start,
+      segs: SPIRIT_SHAPES.side.segs.map(sg => sg.map((v, i) => i % 2 ? v + 10 * spiritSleepShift(sg[i - 1]) : v + 8 * spiritSleepShift(v)))
     };
     function traceSpiritShape(ctx, key) {
       const { start, segs } = SPIRIT_SHAPES[key];
@@ -3973,7 +4319,7 @@
     function spiritEatState() {
       if(!spiritEat) return null;
       const p = (performance.now() - spiritEat.start) / spiritEat.dur;
-      if(p >= 1) { spiritEat = null; careForHamster(); return null; }
+      if(p >= 1) { if(Math.random() < 0.6) addHusks(1 + Math.floor(Math.random() * 2), hamsterWalk.x); spiritEat = null; careForHamster(); return null; }
       return { food: spiritEat.food, p };
     }
     function feedHamster() {
@@ -3995,7 +4341,7 @@
       const ctx = c.getContext('2d');
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       if(spiritEatState() && Math.random() < 0.2) {
-        const S = 0.85 * (SPIRIT_SIZE[spiritStyle.size] || 1);
+        const S = spiritScale();
         spiritCrumbs.push({ x: hamsterWalk.x + (Math.random() - 0.5) * 12, y: 141 - 64 * S, vx: (Math.random() - 0.5) * 1.2, vy: -0.6 - Math.random() * 0.6 });
       }
       ctx.fillStyle = '#c8a46a';
@@ -4007,6 +4353,7 @@
     }
     function drawHearts() {
       drawSpiritCrumbs();
+      drawOutingFade();
       if(!hamsterHearts.length) return;
       const ctx = document.getElementById('hamster-canvas').getContext('2d');
       ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -4032,6 +4379,572 @@
       setTimeout(careForHamster, 1150);
     }
 
+    // ----- Like a little pet: bedtime, growing up, seed husks to sweep and a daily find. None of it touches his health.
+    // Growing up by level: [from level, name, size, pace]
+    const SPIRIT_STAGES = [[1, 'Baby', 0.72, 1.2], [5, 'Young', 0.86, 1.1], [12, 'Adult', 1, 1], [25, 'Elder', 1, 0.8]];
+    function spiritStage(level) { return SPIRIT_STAGES.filter(st => level >= st[0]).pop(); }
+    let spiritStageNow = SPIRIT_STAGES[2];
+    function spiritScale() { return 0.85 * (SPIRIT_SIZE[spiritStyle.size] || 1) * spiritStageNow[2]; }
+
+    // Asleep from midnight to 7:00, sleepy in the evening after sunset.
+    // During a crisis and for 2 hours after one he stays up with you.
+    function spiritHour() { const d = new Date(); return d.getHours() + d.getMinutes() / 60; }
+    function spiritAfterCrisis() {
+      try {
+        const last = crises[crises.length - 1];
+        return !!crisis || (!!last && Date.now() - (last.end || last.start) < 2 * 3600000);
+      } catch(e) { return false; }
+    }
+    function spiritAsleep() { return spiritHour() < 7 && !spiritAfterCrisis(); }
+    function spiritSleepy() { return !spiritAsleep() && spiritHour() >= 12 && !spiritIsDay(); }
+    let spiritGrumpUntil = 0, spiritCurled = false, spiritStretch = 0;
+    function drawSpiritZzz(ctx, now, x, y) {
+      ctx.save();
+      ctx.fillStyle = '#fff6e0';
+      for(let i = 0; i < 3; i++) {
+        const p = (now / 2400 + i / 3) % 1;
+        ctx.globalAlpha = Math.sin(p * Math.PI) * 0.85;
+        ctx.font = `700 ${7 + p * 6}px sans-serif`;
+        ctx.fillText('z', x + p * 12 + Math.sin(p * 6) * 2, y - p * 20);
+      }
+      ctx.restore();
+    }
+    // The first time you see him after he wakes up, he has a big stretch
+    function spiritMorningCheck() {
+      if(spiritSnapshotting || spiritStretch || spiritHour() >= 12 || spiritEat || spiritTrick) return;
+      const today = dayKey(new Date());
+      if(localStorage.getItem('aq_spirit_woke') === today) return;
+      localStorage.setItem('aq_spirit_woke', today);
+      if(reduceMotion) return;
+      const w = hamsterWalk;
+      w.walking = false; w.facing = 'front'; w.dir = -1; w.until = performance.now() + 3500;
+      spiritStretch = performance.now();
+    }
+
+    // Seed husks: a few drop after a snack or show up over the day. Tap to sweep them away.
+    let spiritHusks = [];
+    try { spiritHusks = JSON.parse(localStorage.getItem('aq_spirit_husks') || '[]'); } catch(e) {}
+    let spiritPuffs = [];
+    function addHusks(n, around) {
+      const maxX = spiritStyle.house !== false ? HOUSE.x - 12 : 304;
+      for(let i = 0; i < n && spiritHusks.length < 7; i++) {
+        const x = around == null ? 20 + Math.random() * (maxX - 20) : around + (Math.random() - 0.5) * 40;
+        spiritHusks.push({ x: Math.round(Math.min(maxX, Math.max(14, x))), r: +(Math.random() * 3).toFixed(2) });
+      }
+      localStorage.setItem('aq_spirit_husks', JSON.stringify(spiritHusks));
+    }
+    function spiritHuskTick() {
+      const last = +localStorage.getItem('aq_spirit_husk_at') || 0;
+      if(Date.now() - last < 8 * 3600000) return;
+      localStorage.setItem('aq_spirit_husk_at', String(Date.now()));
+      if(last) addHusks(1 + Math.floor(Math.random() * 2));
+    }
+    function drawSpiritHusks(ctx, now) {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      spiritHusks.forEach(h => {
+        [-1, 1].forEach(side => {
+          ctx.save();
+          ctx.translate(h.x + side * 2, 139);
+          ctx.rotate(h.r + side * 0.5);
+          ctx.fillStyle = '#4a3a2e'; ctx.beginPath(); ctx.ellipse(0, 0, 3.6, 1.7, 0, 0, Math.PI * 2); ctx.fill();
+          ctx.strokeStyle = '#d9c9a8'; ctx.lineWidth = 0.6;
+          ctx.beginPath(); ctx.moveTo(-2.6, 0); ctx.lineTo(2.6, 0); ctx.stroke();
+          ctx.restore();
+        });
+      });
+      spiritPuffs = spiritPuffs.filter(pf => now - pf.start < 600);
+      spiritPuffs.forEach(pf => {
+        const k = (now - pf.start) / 600;
+        ctx.fillStyle = `rgba(230, 225, 215, ${0.6 * (1 - k)})`;
+        for(let i = 0; i < 5; i++) {
+          const a = i / 5 * Math.PI - Math.PI;
+          ctx.beginPath(); ctx.arc(pf.x + Math.cos(a) * 10 * k, 138 + Math.sin(a) * 6 * k, 2.5 * (1 - k) + 1, 0, Math.PI * 2); ctx.fill();
+        }
+      });
+    }
+
+    // Finds: one mystery item a day, waiting on the ground until you pick it up. [id, name, rarity]
+    const SPIRIT_FINDS = [
+      ['leaf', 'Oak leaf', 1], ['acorn', 'Acorn', 1], ['pebble', 'Smooth pebble', 1], ['daisy', 'Daisy', 1],
+      ['feather', 'Feather', 1], ['seed', 'Sunflower seed', 1], ['berry', 'Wild berries', 1], ['twig', 'Forked twig', 1],
+      ['pinecone', 'Pinecone', 2], ['shell', 'Seashell', 2], ['mushroom', 'Tiny mushroom', 2], ['maple', 'Maple leaf', 2],
+      ['button', 'Lost button', 2], ['marble', 'Marble', 2], ['boat', 'Paper boat', 2], ['ribbon', 'Ribbon', 2],
+      ['clover', 'Four-leaf clover', 3], ['bell', 'Little bell', 3], ['key', 'Old key', 3], ['crystal', 'Crystal', 3],
+      ['heart', 'Heart stone', 3], ['star', 'Fallen star', 3], ['moonstone', 'Moonstone', 3], ['crown', 'Tiny crown', 4]
+    ];
+    const FIND_WEIGHT = { 1: 10, 2: 5, 3: 2, 4: 0.7 };
+    let spiritFinds = {}, spiritFind = null;
+    try { spiritFinds = JSON.parse(localStorage.getItem('aq_spirit_finds') || '{}'); } catch(e) {}
+    try { spiritFind = JSON.parse(localStorage.getItem('aq_spirit_find') || 'null'); } catch(e) {}
+    function pickFindId() {
+      const fresh = SPIRIT_FINDS.filter(f => !spiritFinds[f[0]]);
+      const pool = fresh.length && Math.random() < 0.75 ? fresh : SPIRIT_FINDS;
+      let r = Math.random() * pool.reduce((a, f) => a + FIND_WEIGHT[f[2]], 0);
+      return (pool.find(f => (r -= FIND_WEIGHT[f[2]]) < 0) || pool[0])[0];
+    }
+    function findSpotX(avoid) {
+      const maxX = spiritStyle.house !== false ? HOUSE.x - 24 : 290;
+      let x;
+      do { x = Math.round(30 + Math.random() * (maxX - 30)); } while(avoid != null && Math.abs(x - avoid) < 30);
+      return x;
+    }
+    function rollSpiritFind(today) {
+      spiritFind = { day: today, id: pickFindId(), x: findSpotX(), got: false };
+      localStorage.setItem('aq_spirit_find', JSON.stringify(spiritFind));
+    }
+    // What you've done for yourself today (cached for a couple of seconds, it's checked every frame)
+    let selfCareCache = { at: 0 };
+    function selfCareToday() {
+      const t = performance.now();
+      if(t - selfCareCache.at < 2000) return selfCareCache;
+      const k = dayKey(new Date()), pr = practice[k] || {}, t0 = startOfToday().getTime();
+      selfCareCache = { at: t, checked: moodLog.some(m => m.ts >= t0) || !!calData[k],
+                        ex: (pr.vagus || 0) + (pr.tools || 0) + (pr.puzzleSessions || 0) + (pr.breathRounds || 0) };
+      return selfCareCache;
+    }
+    let spiritBonus = null;
+    try { spiritBonus = JSON.parse(localStorage.getItem('aq_spirit_bonus') || 'null'); } catch(e) {}
+    const findToday = f => f && !f.got && f.day === dayKey(new Date());
+    function drawSpiritFind(ctx, now) {
+      if(spiritAsleep()) return; // he goes looking once he's up
+      const today = dayKey(new Date()), sc = selfCareToday();
+      if(sc.checked && (!spiritFind || spiritFind.day !== today)) rollSpiritFind(today);
+      if(sc.ex && (!spiritBonus || spiritBonus.day !== today)) {
+        spiritBonus = { day: today, id: pickFindId(), x: findSpotX(spiritFind && spiritFind.x), got: false };
+        localStorage.setItem('aq_spirit_bonus', JSON.stringify(spiritBonus));
+        setTimeout(() => sayThought('You looked after yourself. I found something!'), 1500);
+      }
+      if(findToday(spiritFind)) drawFindOnGround(ctx, now, spiritFind.id, spiritFind.x);
+      if(findToday(spiritBonus)) drawFindOnGround(ctx, now, spiritBonus.id, spiritBonus.x);
+    }
+    function drawFindOnGround(ctx, now, id, x) {
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.save();
+      ctx.translate(x, 132);
+      ctx.scale(0.7, 0.7);
+      drawFindItem(ctx, id);
+      ctx.restore();
+      // A little twinkle so you notice it
+      const tw = Math.max(0, Math.sin(now / 500));
+      if(tw > 0.05) {
+        const sx = x + 8, sy = 121, r = 4 * tw;
+        ctx.fillStyle = `rgba(255, 250, 210, ${tw})`;
+        ctx.beginPath();
+        ctx.moveTo(sx, sy - r); ctx.lineTo(sx + r * 0.25, sy - r * 0.25); ctx.lineTo(sx + r, sy); ctx.lineTo(sx + r * 0.25, sy + r * 0.25);
+        ctx.lineTo(sx, sy + r); ctx.lineTo(sx - r * 0.25, sy + r * 0.25); ctx.lineTo(sx - r, sy); ctx.lineTo(sx - r * 0.25, sy - r * 0.25);
+        ctx.closePath(); ctx.fill();
+      }
+    }
+    function collectSpiritFind() {
+      collectFindItem(spiritFind.id, () => {
+        spiritFind.got = true;
+        localStorage.setItem('aq_spirit_find', JSON.stringify(spiritFind));
+      });
+    }
+    function collectFindItem(id, markGot) {
+      const f = SPIRIT_FINDS.find(x => x[0] === id);
+      const isNew = !spiritFinds[f[0]];
+      spiritFinds[f[0]] = (spiritFinds[f[0]] || 0) + 1;
+      markGot();
+      localStorage.setItem('aq_spirit_finds', JSON.stringify(spiritFinds));
+      spiritLogDay('finds', f[0]);
+      careForHamster();
+      const note = document.getElementById('spirit-find-note');
+      if(note) {
+        note.innerText = `${hamsterName} found: ${f[1]}${isNew ? ' · New!' : ''}`;
+        note.style.opacity = 1;
+        clearTimeout(collectSpiritFind.t);
+        collectSpiritFind.t = setTimeout(() => { note.style.opacity = 0; }, 3500);
+      }
+      renderFindsButton();
+    }
+    // Taps on the ground: the find or a husk. `peek` only checks, for the press-and-hold handler.
+    function spiritGroundTap(e, peek) {
+      const c = document.getElementById('hamster-canvas');
+      const r = c.getBoundingClientRect();
+      const x = (e.clientX - r.left) * c.width / r.width, y = (e.clientY - r.top) * c.height / r.height;
+      if(y < 112) return false;
+      if(spiritOuting) {
+        const wf = spiritOuting.find;
+        if(wf && !wf.got && Math.abs(x - wf.x) < 14 && y > 116) { if(!peek) collectFindItem(wf.id, () => { wf.got = true; }); return true; }
+        return false;
+      }
+      if(findToday(spiritBonus) && !spiritAsleep() && Math.abs(x - spiritBonus.x) < 14 && y > 116) {
+        if(!peek) collectFindItem(spiritBonus.id, () => { spiritBonus.got = true; localStorage.setItem('aq_spirit_bonus', JSON.stringify(spiritBonus)); });
+        return true;
+      }
+      if(findToday(spiritFind) && !spiritAsleep() && Math.abs(x - spiritFind.x) < 14 && y > 116) {
+        if(!peek) collectSpiritFind();
+        return true;
+      }
+      if(y < 126) return false;
+      let best = -1, bd = 12;
+      spiritHusks.forEach((h, i) => { const d = Math.abs(h.x - x); if(d < bd) { bd = d; best = i; } });
+      if(best < 0) return false;
+      if(peek) return true;
+      spiritPuffs.push({ x: spiritHusks[best].x, start: performance.now() });
+      spiritHusks.splice(best, 1);
+      localStorage.setItem('aq_spirit_husks', JSON.stringify(spiritHusks));
+      if(!spiritHusks.length && !spiritHome.inside && !spiritCurled) hamsterJumpStart = performance.now(); // all clean: a happy hop
+      return true;
+    }
+    function renderFindsButton() { renderSpiritPanels(); }
+    // A find drawn into a small canvas; a grey silhouette until he has found it
+    function drawFindTile(cv, id, got, scale) {
+      const g = cv.getContext('2d');
+      g.clearRect(0, 0, cv.width, cv.height);
+      g.save(); g.translate(cv.width / 2, cv.height / 2); g.scale(scale, scale); drawFindItem(g, id); g.restore();
+      if(!got) {
+        g.globalCompositeOperation = 'source-in';
+        g.fillStyle = 'rgba(148, 163, 184, 0.45)';
+        g.fillRect(0, 0, cv.width, cv.height);
+        g.globalCompositeOperation = 'source-over';
+      }
+    }
+    function showSpiritNote(text) {
+      const note = document.getElementById('spirit-find-note');
+      if(!note) return;
+      note.innerText = text;
+      note.style.opacity = 1;
+      clearTimeout(showSpiritNote.t);
+      showSpiritNote.t = setTimeout(() => { note.style.opacity = 0; }, 3500);
+    }
+
+    // ----- His patch: up to 4 finds placed around the scene
+    let spiritDecor = [];
+    try { spiritDecor = JSON.parse(localStorage.getItem('aq_spirit_decor') || '[]'); } catch(e) {}
+    function decorSlots() { return spiritStyle.house !== false ? [18, 44, 190, 208] : [18, 44, 276, 302]; }
+    function toggleDecor(id) {
+      if(!spiritFinds[id]) return;
+      const i = spiritDecor.findIndex(d => d.id === id);
+      if(i >= 0) spiritDecor.splice(i, 1);
+      else {
+        const free = [0, 1, 2, 3].find(sl => !spiritDecor.some(d => d.slot === sl));
+        if(free == null) { showSpiritNote('His patch is full. Tap a placed one to take it back.'); return; }
+        spiritDecor.push({ id, slot: free });
+        showSpiritNote(`${SPIRIT_FINDS.find(f => f[0] === id)[1]} is in his patch now.`);
+      }
+      localStorage.setItem('aq_spirit_decor', JSON.stringify(spiritDecor));
+      renderSpiritPanels();
+    }
+    function drawSpiritDecor(ctx) {
+      const slots = decorSlots();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      spiritDecor.forEach(d => {
+        ctx.save();
+        ctx.translate(slots[d.slot], 131);
+        ctx.scale(0.8, 0.8);
+        drawFindItem(ctx, d.id);
+        ctx.restore();
+      });
+    }
+
+    // ----- Walks: a minute somewhere else (pond, forest edge, flower field), sometimes with an extra find
+    const OUTINGS = {
+      pond: { name: 'the pond', lines: ['Ooh, a pond!', 'Look, a lily pad.', 'Ripples…'] },
+      forest: { name: 'the forest edge', lines: ['Big trees!', 'Smells like pine.', 'So quiet here.'] },
+      field: { name: 'the flower field', lines: ['So many flowers!', 'A butterfly!', 'I love it here.'] }
+    };
+    const OUTING_MS = 45000, OUTING_FADE = 700;
+    let spiritOuting = null;
+    function spiritWalk() {
+      if(spiritOuting) { spiritOuting.until = Math.min(spiritOuting.until, performance.now() + OUTING_FADE); return; }
+      if(spiritAsleep()) { spiritGrumpUntil = performance.now() + 1600; sayThought('Too sleepy… tomorrow?'); return; }
+      if(spiritHome.anim || spiritTrick || spiritEat) return;
+      const sc = selfCareToday();
+      if(!sc.checked && !sc.ex) { sayThought('Check in with me first?'); showSpiritNote('Check in or do a calming exercise to go for a walk.'); return; }
+      callSpiritOut();
+      const places = Object.keys(OUTINGS), place = places[Math.floor(Math.random() * places.length)];
+      const today = dayKey(new Date());
+      let find = null;
+      if(localStorage.getItem('aq_spirit_walkfind') !== today && Math.random() < (sc.ex ? 0.6 : 0.3)) {
+        localStorage.setItem('aq_spirit_walkfind', today);
+        const pool = SPIRIT_FINDS.filter(f => f[2] < 4);
+        find = { id: pool[Math.floor(Math.random() * pool.length)][0], x: Math.round(60 + Math.random() * 100), got: false };
+      }
+      const now = performance.now();
+      spiritOuting = { place, start: now, until: now + OUTING_MS, find };
+      const w = hamsterWalk;
+      w.toHouse = false; w.walking = false; w.facing = 'front'; w.x = 110; w.until = now + 1500;
+      spiritLogDay('walk', place);
+      document.getElementById('walk-btn').innerText = 'Home';
+      setTimeout(() => sayThought(OUTINGS[place].lines[Math.floor(Math.random() * 3)]), OUTING_FADE + 300);
+      renderSpiritPanels();
+    }
+    function endOuting() {
+      spiritOuting = null;
+      hamsterWalk.x = 150; hamsterWalk.walking = false; hamsterWalk.facing = 'front'; hamsterWalk.until = performance.now() + 2000;
+      const btn = document.getElementById('walk-btn');
+      if(btn) btn.innerText = 'Walk';
+    }
+    function drawOutingFade() {
+      if(!spiritOuting) return;
+      const now = performance.now(), a = Math.max(0, 1 - (now - spiritOuting.start) / OUTING_FADE, 1 - (spiritOuting.until - now) / OUTING_FADE);
+      if(a <= 0) return;
+      const ctx = document.getElementById('hamster-canvas').getContext('2d');
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.fillStyle = `rgba(5, 8, 16, ${Math.min(1, a)})`;
+      ctx.fillRect(0, 0, 320, 150);
+    }
+    function drawSpiritOuting(ctx, now) {
+      if(performance.now() >= spiritOuting.until || spiritAsleep()) { endOuting(); return; }
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      const day = spiritIsDay(), t = now / 1000;
+      const E = (x, y, rx, ry, col, rot = 0) => { ctx.fillStyle = col; ctx.beginPath(); ctx.ellipse(x, y, rx, ry, rot, 0, Math.PI * 2); ctx.fill(); };
+      const place = spiritOuting.place;
+      if(place === 'pond') {
+        const g = ctx.createLinearGradient(0, 126, 0, 146);
+        g.addColorStop(0, day ? '#5aa7d8' : '#1f4a6e'); g.addColorStop(1, day ? '#2f6f9f' : '#122c44');
+        E(250, 137, 78, 10, g);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)'; ctx.lineWidth = 0.8;
+        for(let i = 0; i < 2; i++) {
+          const k = (t / 3 + i / 2) % 1;
+          ctx.globalAlpha = 1 - k;
+          ctx.beginPath(); ctx.ellipse(262, 137, 6 + k * 24, 1.5 + k * 4, 0, 0, Math.PI * 2); ctx.stroke();
+        }
+        ctx.globalAlpha = 1;
+        E(222, 139, 9, 2.6, '#4f9a45'); E(228, 138.5, 2.5, 1.2, day ? '#5aa7d8' : '#1f4a6e');
+        E(222, 137, 2.2, 1.6, '#f4a7c4');
+        ctx.strokeStyle = '#3f6e2e'; ctx.lineWidth = 1.4;
+        [[180, 0], [186, 1], [304, 2], [310, 3]].forEach(([x, i]) => {
+          const sw = Math.sin(t * 1.3 + i) * 1.5;
+          ctx.beginPath(); ctx.moveTo(x, 138); ctx.quadraticCurveTo(x + sw / 2, 120, x + sw, 104 + i * 3); ctx.stroke();
+          E(x + sw, 108 + i * 3, 1.8, 5, '#7a4a24');
+        });
+      } else if(place === 'forest') {
+        [[22, 1], [70, 0.8], [252, 0.9], [300, 1.1]].forEach(([x, k], i) => {
+          ctx.fillStyle = day ? '#6b4428' : '#3a2616';
+          ctx.fillRect(x - 4 * k, 132 - 50 * k, 8 * k, 50 * k);
+          const leaf = day ? ['#2f6b3a', '#3d8247'] : ['#16301c', '#1f4026'];
+          E(x, 132 - 62 * k, 24 * k, 20 * k, leaf[0]);
+          E(x - 12 * k, 132 - 52 * k, 16 * k, 13 * k, leaf[1]);
+          E(x + 12 * k, 132 - 54 * k, 16 * k, 13 * k, leaf[1]);
+          E(x + 3 * k, 132 - 74 * k, 14 * k, 11 * k, leaf[1]);
+        });
+        [[120, 0], [206, 1]].forEach(([x]) => { ctx.fillStyle = '#f3e6cf'; ctx.fillRect(x - 1, 134, 2, 4); ctx.fillStyle = '#c0503f'; ctx.beginPath(); ctx.ellipse(x, 134, 4, 3, 0, Math.PI, 0); ctx.fill(); });
+        if(!day) for(let i = 0; i < 6; i++) { // fireflies
+          ctx.fillStyle = `rgba(250, 240, 140, ${0.4 + 0.5 * Math.max(0, Math.sin(t * 2 + i * 1.7))})`;
+          ctx.beginPath(); ctx.arc(40 + rand01(i, 70) * 240 + Math.sin(t * 0.7 + i) * 10, 80 + rand01(i, 71) * 40 + Math.cos(t * 0.9 + i) * 6, 1.3, 0, Math.PI * 2); ctx.fill();
+        }
+      } else {
+        ctx.fillStyle = day ? '#9a7a56' : '#4a3a2a';
+        for(let x = 12; x < 320; x += 44) ctx.fillRect(x, 108, 3, 24);
+        ctx.fillRect(0, 113, 320, 2.5); ctx.fillRect(0, 122, 320, 2.5);
+        const cols = ['#f472b6', '#facc15', '#f8fafc', '#a78bfa', '#fb923c'];
+        for(let i = 0; i < 34; i++) {
+          const x = rand01(i, 80) * 320, y = 131 + rand01(i, 81) * 9, sw = Math.sin(t + i) * 0.8;
+          ctx.strokeStyle = '#3f7434'; ctx.lineWidth = 0.8;
+          ctx.beginPath(); ctx.moveTo(x, y + 4); ctx.lineTo(x + sw, y - 3); ctx.stroke();
+          E(x + sw, y - 4, 2, 2, cols[i % cols.length]);
+        }
+        if(day) { // a butterfly
+          const bx = 160 + Math.sin(t * 0.5) * 120, by = 90 + Math.sin(t * 1.3) * 14, f = Math.abs(Math.sin(t * 12));
+          E(bx - 3 * f, by, 3 * f + 0.6, 4, '#fb923c'); E(bx + 3 * f, by, 3 * f + 0.6, 4, '#fb923c');
+        }
+      }
+      const wf = spiritOuting.find;
+      if(wf && !wf.got) drawFindOnGround(ctx, now, wf.id, wf.x);
+    }
+
+    // ----- Thoughts: a little bubble now and then that fits the moment
+    let spiritThought = null, spiritThoughtNext = 0;
+    function spiritThoughtPool() {
+      if(spiritAsleep()) return ['Zzz…', 'zz… sunflower seeds…', 'zz…'];
+      const t = [];
+      if(spiritOuting) t.push(...OUTINGS[spiritOuting.place].lines);
+      if(spiritSleepy()) t.push('Getting sleepy…', '*yawn*');
+      const oni = todaysOni();
+      if(HARD_ONI.includes(oni)) t.push("I'm right here.", 'Take your time.', "We'll get through today.");
+      if(oni === 'happy') t.push('You seem happy!', 'Yay!');
+      if(oni === 'calm') t.push('This is nice.');
+      const wx = spiritWeatherNow();
+      if(wx) {
+        const c = wx.code;
+        if(isSnow(c)) t.push('Snow!');
+        else if(c >= 95) t.push('Thunder… stay close.');
+        else if((c >= 51 && c < 70) || (c >= 80 && c < 83)) t.push('Rain sounds cozy.');
+        else if(spiritIsDay() && wx.cloud < 40) t.push('Warm sun today.');
+        else if(!spiritIsDay() && wx.cloud < 60) t.push('The stars are out.');
+      }
+      const moon = (document.getElementById('moon-next') || {}).innerText || '';
+      if(/full moon/i.test(moon)) t.push(moon + '.');
+      if(!spiritOuting && spiritHusks.length) t.push('I made a little mess…');
+      if(!spiritOuting && (findToday(spiritFind) || findToday(spiritBonus))) t.push('I found something!', 'Look what I found!');
+      const sc = selfCareToday();
+      if(!sc.checked) t.push('How are you today?', 'Check in with me?');
+      else if(!sc.ex) t.push('Breathe with me for a bit?');
+      if(hamsterMood === 'stressed') t.push('Just resting today.');
+      if(hamsterMood === 'recovering') t.push('Slowly getting better.');
+      if(hamsterMood === 'thriving') t.push('Feeling great!');
+      try { const ds = computeDarkStretch(); if(ds && ds.inWindow) t.push('Be gentle with yourself today.'); } catch(e) {}
+      if(!t.length || Math.random() < 0.3) t.push('Hi.', '*sniff sniff*', 'Thinking about seeds.', 'Hmm…');
+      return t;
+    }
+    function sayThought(text) {
+      const el = document.getElementById('spirit-thought');
+      if(!el) return;
+      spiritThought = { text, until: performance.now() + 5000 };
+      el.innerText = text;
+      el.classList.add('show');
+      spiritThoughtNext = performance.now() + 22000 + Math.random() * 20000;
+    }
+    function updateSpiritThought() {
+      const el = document.getElementById('spirit-thought');
+      if(!el) return;
+      const now = performance.now();
+      if(spiritThought && now > spiritThought.until) { spiritThought = null; el.classList.remove('show'); }
+      if(!spiritThought && now > spiritThoughtNext && !spiritTrick && !spiritHome.anim) {
+        const pool = spiritThoughtPool();
+        sayThought(pool[Math.floor(Math.random() * pool.length)]);
+      }
+      if(!spiritThought) return;
+      const S = spiritScale();
+      const x = spiritHome.inside ? HOUSE.door : hamsterWalk.x;
+      const top = spiritHome.inside ? 44 : spiritCurled ? 141 - 66 * S : 141 - 130 * S;
+      el.style.left = Math.min(84, Math.max(16, x / 320 * 100)) + '%';
+      el.style.bottom = Math.min(88, (150 - top) / 150 * 100) + '%';
+    }
+
+    // ----- Plain words: why he looks the way he does, and what brings him back
+    function spiritPlainWords(h) {
+      const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
+      if(h.zombifyReason === 'bad') {
+        const need = 6 - (h.greenSince * 3 + h.yellowSince * 2), g = Math.ceil(need / 3), y = Math.ceil(need / 2);
+        const lead = h.greenSince + h.yellowSince ? 'Healing from a hard day.' : 'A hard day hit him.';
+        return g === y ? `${lead} One more good or tense day and he's back.` : `${lead} ${g === 1 ? 'One more good day' : plural(g, 'good day')} (or ${y} tense) and he's back.`;
+      }
+      if(h.zombifyReason === 'yellow') {
+        const g = 2 - h.greensAfterYellow, fade = 10 - h.lastYellowAgo;
+        return `Many tense days in a row wore him out. ${g === 1 ? 'One good day' : '2 good days'} and he's back, or it fades in ${plural(fade, 'day')}.`;
+      }
+      if(h.score < 0) return 'A few more hard days than good lately. Good days and a little self-care help him heal.';
+      if(h.score >= 5) return h.streak >= 2 ? `${h.streak} good days in a row. He's thriving.` : "Lots of good days lately. He's thriving.";
+      return h.streak >= 2 ? `${h.streak} good days in a row. Keep going and he'll thrive.` : 'Steady days keep him balanced. Good days help him thrive.';
+    }
+
+    // ----- Diary, together tiles and the shelf
+    let spiritLog = {};
+    try { spiritLog = JSON.parse(localStorage.getItem('aq_spirit_log') || '{}'); } catch(e) {}
+    function spiritLogDay(field, value) {
+      const k = dayKey(new Date()), e = spiritLog[k] = spiritLog[k] || {};
+      if(field === 'finds') (e.finds = e.finds || []).push(value);
+      else e[field] = value;
+      localStorage.setItem('aq_spirit_log', JSON.stringify(spiritLog));
+    }
+    let diaryAll = false;
+    function spiritDiaryLine(d) {
+      const k = dayKey(d), st = calData[k], pr = practice[k] || {}, log = spiritLog[k] || {};
+      const pick = list => list[Math.abs(Math.round(rand01(d.getDate(), d.getMonth()) * 1000)) % list.length];
+      const parts = [];
+      if(st === 'status-green') parts.push(pick(['A good day.', 'A calm, good day.', 'Nice and easy today.']));
+      if(st === 'status-yellow') parts.push(pick(['A bit tense. We took it slow.', 'A tense day, but we got through it.']));
+      if(st === 'status-red') parts.push(pick(['A hard one. I stayed close.', 'A hard day. We rested.']));
+      if(st === 'status-black') parts.push(pick(['A really heavy day. We held on.', 'A very hard day. I stayed right by you.']));
+      const ex = (pr.vagus || 0) + (pr.tools || 0) + (pr.puzzleSessions || 0);
+      if(ex) parts.push(`You did ${ex} calming exercise${ex === 1 ? '' : 's'}.`);
+      const day0 = d.getTime(), checks = moodLog.filter(m => m.ts >= day0 && m.ts < day0 + DAY);
+      const last = checks.length ? checks[checks.length - 1].mood : null;
+      if(last === 'happy') parts.push('You felt happy.');
+      if(last === 'calm') parts.push('You felt calm.');
+      if(log.walk && OUTINGS[log.walk]) parts.push(`We walked to ${OUTINGS[log.walk].name}.`);
+      (log.finds || []).forEach(id => { const f = SPIRIT_FINDS.find(x => x[0] === id); if(f) parts.push(`Found: ${f[1].toLowerCase()}.`); });
+      return parts.join(' ');
+    }
+    function renderSpiritPanels() {
+      if(!document.getElementById('together-grid')) return;
+      const today = startOfToday();
+      // Together: days since the first thing logged, best run of good days, finds, next stage
+      const firsts = Object.keys(calData).map(k => { const [y, m, d] = k.split('-').map(Number); return new Date(y, m - 1, d).getTime(); })
+        .concat(moodLog.map(m => m.ts), notes.map(n => +n.id).filter(Boolean));
+      const first = firsts.length ? Math.min(...firsts) : Date.now();
+      const together = Math.max(1, Math.round((today - new Date(first).setHours(0, 0, 0, 0)) / DAY) + 1);
+      let best = 0, run = 0;
+      for(let d = new Date(first); d <= today; d = addDays(d, 1)) {
+        if(calData[dayKey(d)] === 'status-green') best = Math.max(best, ++run); else run = 0;
+      }
+      const L = spiritLevelInfo().level, next = SPIRIT_STAGES.find(st => st[0] > L);
+      const got = Object.keys(spiritFinds).length;
+      document.getElementById('together-grid').innerHTML =
+        `<div class="together-tile"><b>${together}</b><span>days together</span></div>` +
+        `<div class="together-tile"><b>${best}</b><span>best run of good days</span></div>` +
+        `<div class="together-tile"><b>${got}/${SPIRIT_FINDS.length}</b><span>finds</span></div>` +
+        `<div class="together-tile">${next ? `<canvas id="next-stage" width="80" height="80"></canvas><span>${next[1]} at Lv ${next[0]}</span>` : `<b>${spiritStageNow[1]}</b><span>all grown up</span>`}</div>`;
+      const ns = document.getElementById('next-stage');
+      if(ns) {
+        const g = ns.getContext('2d'), k = 0.5 * next[2];
+        try {
+          g.save(); g.translate(40 - 80 * k, 78 - 141 * k); g.scale(k, k); drawHamsterFront(g, 0, 0, 1); g.restore();
+          g.globalCompositeOperation = 'source-in';
+          g.fillStyle = 'rgba(148, 163, 184, 0.5)';
+          g.fillRect(0, 0, 80, 80);
+        } catch(e) {}
+      }
+      const sc = selfCareToday(), wb = document.getElementById('walk-btn');
+      if(wb) wb.style.opacity = sc.checked || sc.ex || spiritOuting ? '' : '0.5';
+      // Shelf: three rows of eight; found ones in colour, tap to place in his patch
+      document.getElementById('shelf-count').innerText = `· ${got}/${SPIRIT_FINDS.length}`;
+      const shelf = document.getElementById('spirit-shelf');
+      let html = '';
+      for(let r = 0; r < SPIRIT_FINDS.length; r += 8) {
+        html += '<div class="shelf-row">' + SPIRIT_FINDS.slice(r, r + 8).map(f => {
+          const has = !!spiritFinds[f[0]], placed = spiritDecor.some(d => d.id === f[0]);
+          return `<div class="shelf-item ${has ? 'got' : ''} ${placed ? 'placed' : ''}" title="${has ? f[1] + (spiritFinds[f[0]] > 1 ? ' ×' + spiritFinds[f[0]] : '') : '???'}"` +
+            `${has ? ` onclick="toggleDecor('${f[0]}')"` : ''}><canvas width="68" height="68" data-find="${f[0]}"></canvas></div>`;
+        }).join('') + '</div>';
+      }
+      shelf.innerHTML = html;
+      shelf.querySelectorAll('canvas').forEach(cv => drawFindTile(cv, cv.dataset.find, !!spiritFinds[cv.dataset.find], 2.3));
+      // Diary: a line a day from what you logged, newest first
+      const entries = [];
+      for(let i = 0; i < 60 && entries.length < (diaryAll ? 30 : 7); i++) {
+        const d = addDays(today, -i), line = spiritDiaryLine(d);
+        if(line) entries.push(`<div class="diary-entry"><span class="d">${i === 0 ? 'Today' : d.toLocaleDateString([], { month: 'short', day: 'numeric' })}</span><span>${line}</span></div>`);
+      }
+      document.getElementById('spirit-diary').innerHTML = entries.length
+        ? entries.join('') + (!diaryAll && entries.length >= 7 ? `<button class="icon-btn" style="margin-top:8px;" onclick="diaryAll = true; renderSpiritPanels();">Show more</button>` : '')
+        : '<div class="today-sub">Nothing here yet. Check in or log a day and he\'ll write about it.</div>';
+    }
+
+    // Each find, drawn around (0, 0) within about ±12px
+    function drawFindItem(ctx, id) {
+      const E = (x, y, rx, ry, col, rot = 0) => { ctx.fillStyle = col; ctx.beginPath(); ctx.ellipse(x, y, rx, ry, rot, 0, Math.PI * 2); ctx.fill(); };
+      const P = (pts, col) => { ctx.fillStyle = col; ctx.beginPath(); pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.closePath(); ctx.fill(); };
+      const L = (pts, col, w = 1) => { ctx.strokeStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round'; ctx.beginPath(); pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke(); };
+      const star = (n, ro, ri, col, rot = -Math.PI / 2) => P(Array.from({ length: n * 2 }, (_, i) => {
+        const r = i % 2 ? ri : ro, a = rot + i * Math.PI / n; return [Math.cos(a) * r, Math.sin(a) * r];
+      }), col);
+      switch(id) {
+        case 'leaf': E(0, 0, 11, 6, '#6aa84f', -0.5); L([[-9, 5], [9, -5]], '#3f6e2e'); L([[11, -6], [13, -8]], '#7a5a32', 1.4); break;
+        case 'acorn': E(0, 3, 7, 8, '#c08a4a'); E(0, -4, 8.5, 4.5, '#7a4a24'); L([[0, -8], [1.5, -11]], '#5a3518', 1.6); E(-2.5, 3, 1.5, 3, 'rgba(255,255,255,0.25)'); break;
+        case 'pebble': ctx.fillStyle = '#9aa3ad'; ctx.beginPath(); ctx.moveTo(-11, 4); ctx.bezierCurveTo(-12, -4, -4, -7, 2, -6); ctx.bezierCurveTo(9, -6, 12, -1, 11, 4); ctx.bezierCurveTo(9, 8, -9, 9, -11, 4); ctx.fill(); E(-3, -2, 4, 1.8, 'rgba(255,255,255,0.35)', -0.2); break;
+        case 'daisy': for(let i = 0; i < 8; i++) E(Math.cos(i * Math.PI / 4) * 6, Math.sin(i * Math.PI / 4) * 6, 4.5, 2.2, '#ffffff', i * Math.PI / 4); E(0, 0, 3.5, 3.5, '#f5c518'); break;
+        case 'feather': E(0, 0, 4.5, 12, '#d9d2f0', 0.5); L([[5.5, -11], [-5.5, 11]], '#8a7fb0', 1.2); L([[-1, -3], [3, -5]], '#ffffff', 0.8); L([[-3, 2], [1, 0]], '#ffffff', 0.8); break;
+        case 'seed': E(0, 0, 5, 10, '#2f2a26', 0.3); L([[-1.5, -8], [2, 8]], '#e8e2d4', 1); L([[1.5, -8], [4, 6]], '#e8e2d4', 0.8); break;
+        case 'berry': L([[0, -10], [0, -4]], '#4a7a34', 1.2); E(3, -9, 4, 2, '#5f9e4a', 0.4); E(-4, 2, 4.5, 4.5, '#5b2a6e'); E(4, 2, 4.5, 4.5, '#6a3280'); E(0, -3, 4.5, 4.5, '#7a3a92'); E(-1, -4.5, 1.2, 1.2, 'rgba(255,255,255,0.5)'); break;
+        case 'twig': L([[-2, 11], [0, 0], [-7, -10]], '#7a5232', 2.4); L([[0, 0], [7, -9]], '#7a5232', 2); L([[-4, -5], [-9, -5]], '#7a5232', 1.4); break;
+        case 'pinecone': for(let row = 0; row < 5; row++) for(let k = -1; k <= 1; k++) { const w = 7 - Math.abs(row - 2) * 1.4; E(k * w * 0.6, -8 + row * 4, w * 0.5, 2.6, row % 2 ? '#8a5a30' : '#a06a3a'); } break;
+        case 'shell': P([[0, 9], [-11, -3], [-7, -9], [0, -11], [7, -9], [11, -3]], '#f5b89a'); for(let i = -2; i <= 2; i++) L([[0, 8], [i * 4.5, -9]], '#d98c6a', 0.8); E(0, 9, 3, 2, '#e8a080'); break;
+        case 'mushroom': P([[-3, 0], [3, 0], [3.5, 10], [-3.5, 10]], '#f3e6cf'); ctx.fillStyle = '#d6453a'; ctx.beginPath(); ctx.ellipse(0, 0, 11, 9, 0, Math.PI, 0); ctx.fill(); [[-5, -4], [2, -6], [6, -2]].forEach(([x, y]) => E(x, y, 1.8, 1.5, '#ffffff')); break;
+        case 'maple': star(5, 11, 5, '#e2702e'); L([[0, 4], [0, 12]], '#a04a1e', 1.4); break;
+        case 'button': ctx.fillStyle = '#4a8fd8'; ctx.beginPath(); ctx.arc(0, 0, 10, 0, Math.PI * 2);
+          [[-2.8, -2.8], [2.8, -2.8], [-2.8, 2.8], [2.8, 2.8]].forEach(([x, y]) => { ctx.moveTo(x + 1.7, y); ctx.arc(x, y, 1.7, 0, Math.PI * 2); });
+          ctx.fill('evenodd'); ctx.strokeStyle = '#3a78bd'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(0, 0, 7.5, 0, Math.PI * 2); ctx.stroke(); break;
+        case 'marble': { const g = ctx.createRadialGradient(-3, -3, 1, 0, 0, 9); g.addColorStop(0, '#bfe8ff'); g.addColorStop(1, '#2b6cb0'); E(0, 0, 9, 9, g); L([[-5, 3], [-1, -1], [4, 2]], '#f59e0b', 1.5); E(-3, -4, 2, 1.2, 'rgba(255,255,255,0.7)'); break; }
+        case 'boat': P([[-12, 2], [12, 2], [7, 9], [-7, 9]], '#e8eef5'); P([[-3, 2], [0, -11], [6, 2]], '#ffffff'); P([[0, -11], [6, 2], [2, 2]], '#cfd8e3'); break;
+        case 'ribbon': P([[0, 0], [-11, -7], [-11, 7]], '#ec6fa0'); P([[0, 0], [11, -7], [11, 7]], '#ec6fa0'); P([[-1, 1], [-5, 11], [-2, 11]], '#d4558a'); P([[1, 1], [5, 11], [2, 11]], '#d4558a'); E(0, 0, 3, 3, '#f59ac0'); break;
+        case 'clover': L([[0, 2], [3, 12]], '#3f7d2e', 1.4); [[0, -5], [5, 0], [0, 5], [-5, 0]].forEach(([x, y]) => E(x, y, 4.5, 4.5, '#4caf50')); E(0, 0, 1.5, 1.5, '#2e7d32'); break;
+        case 'bell': ctx.fillStyle = '#e8b923'; ctx.beginPath(); ctx.moveTo(-9, 6); ctx.quadraticCurveTo(-8, -9, 0, -9); ctx.quadraticCurveTo(8, -9, 9, 6); ctx.closePath(); ctx.fill(); E(0, 6, 10, 2.5, '#c99a12'); E(0, 9, 2.5, 2.5, '#a07a0a'); E(0, -10, 2.5, 2, '#c99a12'); E(-4, -3, 1.5, 4, 'rgba(255,255,255,0.4)'); break;
+        case 'key': ctx.strokeStyle = '#c9a24a'; ctx.lineWidth = 2.4; ctx.beginPath(); ctx.arc(-6, 0, 4.5, 0, Math.PI * 2); ctx.stroke(); L([[-1.5, 0], [11, 0]], '#c9a24a', 2.4); L([[8, 0], [8, 4]], '#c9a24a', 2); L([[5, 0], [5, 3]], '#c9a24a', 2); break;
+        case 'crystal': P([[0, -12], [6, -5], [6, 7], [0, 12], [-6, 7], [-6, -5]], '#7dd3fc'); P([[0, -12], [6, -5], [6, 7], [0, 12]], '#38bdf8'); L([[-3, -5], [-3, 6]], 'rgba(255,255,255,0.6)', 1); break;
+        case 'heart': ctx.fillStyle = '#f4a7b9'; ctx.beginPath(); ctx.moveTo(0, 10); ctx.bezierCurveTo(-14, 0, -8, -11, 0, -4); ctx.bezierCurveTo(8, -11, 14, 0, 0, 10); ctx.fill(); E(-4, -4, 2, 1.3, 'rgba(255,255,255,0.6)', -0.5); break;
+        case 'star': star(5, 12, 5, '#fde047'); star(5, 6, 2.5, '#fff7c2'); break;
+        case 'moonstone': { const g = ctx.createRadialGradient(-4, -3, 1, 0, 0, 11); g.addColorStop(0, '#f4f7ff'); g.addColorStop(1, '#9fb4d8');
+          ctx.save(); ctx.beginPath(); ctx.rect(-20, -20, 40, 40); ctx.arc(-6, -3, 8.5, 0, Math.PI * 2); ctx.clip('evenodd');
+          E(0, 0, 10.5, 10.5, g); ctx.restore(); break; }
+        case 'crown': P([[-11, 7], [-11, -6], [-5.5, 0], [0, -9], [5.5, 0], [11, -6], [11, 7]], '#f5c518'); E(0, 3, 2, 2, '#e5484d'); E(-6, 3, 1.5, 1.5, '#3b82f6'); E(6, 3, 1.5, 1.5, '#22c55e'); break;
+      }
+    }
+
     // His little house on the right. He wanders in now and then; tap it to call him in or out.
     const HOUSE = { x: 222, w: 90, door: 267 };
     const spiritHome = { inside: false, until: 0, anim: null }; // anim: squeezing in or out of the door
@@ -4045,6 +4958,7 @@
     function spiritHouseTap() {
       const w = hamsterWalk;
       if(spiritHome.anim || spiritTrick || spiritEat) return;
+      if(spiritAsleep()) { spiritGrumpUntil = performance.now() + 1600; return; }
       if(spiritHome.inside) { spiritHome.until = 0; return; }
       w.toHouse = true; // handled before moods and comfort mode, so a tap always sends him in
     }
@@ -4089,6 +5003,8 @@
     // Drawn last, in canvas coordinates: dizzy stars after a tail chase
     function drawSpiritOverlay(ctx, now, S) {
       ctx.setTransform(1, 0, 0, 1, 0, 0);
+      if(spiritCurled && performance.now() >= spiritGrumpUntil)
+        drawSpiritZzz(ctx, now, hamsterWalk.x + hamsterWalk.dir * 44 * S - 4, 141 - 76 * S);
       if(performance.now() < spiritDizzyUntil) {
         const hy = 141 - 120 * S, t = performance.now() / 260;
         ctx.fillStyle = '#fde047';
@@ -4135,9 +5051,18 @@
       ctx.fillStyle = '#3b2618';
       ctx.beginPath(); ctx.moveTo(mid - 20, base); ctx.lineTo(mid - 20, base - 24); ctx.arc(mid, base - 24, 20, Math.PI, 0); ctx.lineTo(mid + 20, base); ctx.closePath(); ctx.fill();
       // Two eyes peeking out of the dark when he's inside
-      if(spiritHome.inside && (now % 4000) > 150) {
+      const grumpy = performance.now() < spiritGrumpUntil;
+      if(spiritHome.inside && spiritAsleep() && !grumpy) {
+        ctx.strokeStyle = '#fff6e0'; ctx.lineWidth = 1.2;
+        [-5, 5].forEach(d => { ctx.beginPath(); ctx.arc(mid + d, base - 23, 2, 0.15 * Math.PI, 0.85 * Math.PI); ctx.stroke(); });
+        drawSpiritZzz(ctx, now, mid + 10, top - 22);
+      } else if(spiritHome.inside && (grumpy || (now % 4000) > 150)) {
         ctx.fillStyle = '#fff6e0';
         [-5, 5].forEach(d => { ctx.beginPath(); ctx.arc(mid + d, base - 22, 2, 0, Math.PI * 2); ctx.fill(); });
+        if(grumpy) {
+          ctx.strokeStyle = '#fff6e0'; ctx.lineWidth = 1.2;
+          ctx.beginPath(); ctx.moveTo(mid - 8, base - 28); ctx.lineTo(mid - 3, base - 26); ctx.moveTo(mid + 8, base - 28); ctx.lineTo(mid + 3, base - 26); ctx.stroke();
+        }
       }
       ctx.restore();
     }
@@ -4156,12 +5081,14 @@
       ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => c.addEventListener(ev, stopPet));
       c.addEventListener('pointerdown', e => {
         stopPet();
-        if(spiritHouseHit(e)) return;
+        if(spiritHouseHit(e) || spiritGroundTap(e, true)) return;
         petTimer = setTimeout(careForHamster, 600);
       });
       c.addEventListener('pointerdown', e => {
         if(spiritHouseHit(e)) { spiritHouseTap(); return; }
+        if(spiritGroundTap(e)) return;
         if(spiritHome.inside) return;
+        if(spiritCurled) { spiritGrumpUntil = performance.now() + 1600; return; }
         const now = performance.now();
         if(hamsterJumpStart >= 0 && now - hamsterJumpStart < 650) return; // already in the air
         hamsterJumpStart = now;
@@ -4172,7 +5099,7 @@
 
     function updateHamsterWalk(now, width, mood) {
       const w = hamsterWalk;
-      const hasHouse = spiritStyle.house !== false;
+      const hasHouse = spiritStyle.house !== false && !spiritOuting;
       if(!hasHouse && (spiritHome.inside || spiritHome.anim)) { spiritHome.inside = false; spiritHome.anim = null; } // house switched off
       if(spiritHome.anim) {
         // Squeezing through the door: stay put until it's done
@@ -4185,7 +5112,7 @@
         return;
       }
       if(spiritHome.inside) {
-        if(now > spiritHome.until && !reduceMotion) leaveHouse();
+        if((now > spiritHome.until || spiritAsleep()) && !reduceMotion) leaveHouse(); // at bedtime he comes out to sleep on the grass
         return;
       }
       const trick = spiritTrickState();
@@ -4218,9 +5145,20 @@
         }
         return;
       }
+      // Bedtime: he sleeps out on the grass, clear of his house (after a snack or a trick he settles back down)
+      if(spiritAsleep() && !spiritEat) {
+        w.toHouse = false;
+        const bed = hasHouse && !reduceMotion && w.x > HOUSE.x - 50 ? 140 : null;
+        if(bed != null && Math.abs(w.x - bed) > 1) {
+          w.facing = 'side'; w.dir = -1; w.walking = true; w.x -= 0.6; w.phase += 0.13;
+          return;
+        }
+        w.walking = false; w.facing = 'front'; return;
+      }
       if(reduceMotion || mood === 'recovering' || spiritEat) { w.walking = false; w.dir = -1; w.facing = 'front'; return; }
       const oni = todaysOni();
-      const oniSpeed = (oni === 'happy' ? 1.3 : (oni === 'sad' || oni === 'numb') ? 0.6 : 1) * (SPIRIT_PACE[spiritStyle.pace] || 1);
+      const oniSpeed = (oni === 'happy' ? 1.3 : (oni === 'sad' || oni === 'numb') ? 0.6 : 1) * (SPIRIT_PACE[spiritStyle.pace] || 1) *
+                       spiritStageNow[3] * (spiritSleepy() ? 0.7 : 1);
       if(HARD_ONI.includes(oni)) {
         // Comfort mode: he comes to the middle, faces you and stays close
         const mid = width / 2;
@@ -4243,8 +5181,9 @@
       if(!w.walking && w.facing === 'left' && now > w.turnAt) w.facing = 'front';
       if(!w.walking && now > w.until) {
         let target;
-        if(hasHouse && Math.random() < 0.25) { w.toHouse = true; return; }
-        do { target = 50 + Math.random() * ((hasHouse ? HOUSE.x : width) - 110); } while(Math.abs(target - w.x) < 50);
+        if(hasHouse && Math.random() < (spiritSleepy() ? 0.5 : 0.25)) { w.toHouse = true; return; }
+        const right = hasHouse ? HOUSE.x : spiritOuting && spiritOuting.place === 'pond' ? 210 : width;
+        do { target = 50 + Math.random() * (right - 110); } while(Math.abs(target - w.x) < 50);
         w.target = target;
         w.dir = target > w.x ? 1 : -1;
         w.walking = true;
@@ -4473,12 +5412,22 @@
       const jumpY = jumpT < 1 ? -Math.sin(jumpT * Math.PI) * jumpH : 0;
       const jumpK = jumpT < 1 ? Math.sin(jumpT * Math.PI) : 0;
 
-      const S = 0.85 * (SPIRIT_SIZE[spiritStyle.size] || 1);
+      const S = spiritScale();
       if(spiritStyle.backdrop === 'weather') drawSpiritWeather(ctx, now, hCanvas.width, hCanvas.height);
       drawSpiritGround(ctx, hCanvas.width, hCanvas.height);
       drawSpiritAmbient(ctx, now, hCanvas.width, hCanvas.height);
-      drawSpiritHouse(ctx, now);
+      if(spiritOuting) drawSpiritOuting(ctx, now);
+      else {
+        drawSpiritDecor(ctx);
+        drawSpiritHouse(ctx, now);
+        drawSpiritHusks(ctx, now);
+        drawSpiritFind(ctx, now);
+      }
+      spiritCurled = spiritAsleep() && !spiritHome.inside && !spiritHome.anim && !spiritEat && !spiritTrick && !hamsterWalk.walking;
+      const asleepPose = spiritCurled; // drawn with the side view below: no legs, squashed, head forward
+      const grumpy = performance.now() < spiritGrumpUntil;
       if(spiritHome.inside) return;
+      spiritMorningCheck();
       // Keep the backdrop in step with sunset, sunrise and new weather while you watch
       if(performance.now() - spiritBackdropAt > 60000) { spiritBackdropAt = performance.now(); applySpiritBackdrop(); }
 
@@ -4493,7 +5442,7 @@
         ctx.beginPath(); ctx.arc(hamsterWalk.x, gy, 72 * S, 0, Math.PI * 2); ctx.fill();
       }
       // Happy: little hops of joy every few seconds while he stands with you
-      if(oniNow === 'happy' && !walking && !spiritEat && mood !== 'stressed' && mood !== 'recovering' && !reduceMotion &&
+      if(oniNow === 'happy' && !walking && !asleepPose && !spiritEat && mood !== 'stressed' && mood !== 'recovering' && !reduceMotion &&
          performance.now() - Math.max(hamsterJumpStart, spiritLastHop) > 3400) {
         hamsterJumpStart = spiritLastHop = performance.now();
       }
@@ -4545,8 +5494,17 @@
         }
       }
 
-      if(!walking && hamsterWalk.facing === 'front') {
+      if(!walking && hamsterWalk.facing === 'front' && !asleepPose) {
         ctx.save();
+        if(spiritStretch) {
+          // Morning stretch: up tall twice, from his feet
+          const k = (performance.now() - spiritStretch) / 2200;
+          if(k >= 1) spiritStretch = 0;
+          else {
+            const e = Math.abs(Math.sin(k * Math.PI * 2));
+            ctx.translate(hamsterWalk.x, 141); ctx.scale(1 - 0.06 * e, 1 + 0.14 * e); ctx.translate(-hamsterWalk.x, -141);
+          }
+        }
         ctx.translate(hamsterWalk.x - 80 * S, 141 - 141 * S + jumpY);
         ctx.scale(S, S);
         drawHamsterFront(ctx, jumpY, jumpK, S);
@@ -4564,11 +5522,12 @@
 
       // Motion: breathing, sniffing nose, blinking; zombie sway; sleepy slump when recovering
       const B = spiritBody(now);
-      const breathe = 1 + Math.sin(now / B.speed) * (B.amp + 0.002);
+      const breathe = asleepPose ? 1 + Math.sin(now / 1400) * 0.03 : 1 + Math.sin(now / B.speed) * (B.amp + 0.002);
+      const HX = x => asleepPose ? 8 * spiritSleepShift(x) : 0, HY = x => asleepPose ? 10 * spiritSleepShift(x) : 0;
       const slump = mood === 'recovering' ? 0.9 : B.slump;
       const sway = zombie ? Math.sin(now / 700) * 0.05 : B.sway;
       const shiver = zombie ? Math.sin(now / 55) * 0.5 : todaysOni() === 'anxious' ? Math.sin(now / 45) * 0.6 : 0;
-      const sniff = !reduceMotion && (now % 2600) < 600 ? Math.sin(now / 45) * 0.9 : 0;
+      const sniff = !reduceMotion && !asleepPose && (now % 2600) < 600 ? Math.sin(now / 45) * 0.9 : 0;
       const blink = !reduceMotion && (mood === 'calm' || mood === 'thriving') && (now % 4200) < 140;
 
       const { fur, furDark, cream } = spiritFur(zombie);
@@ -4588,19 +5547,21 @@
       ctx.save();
       ctx.translate(82 + shiver, ground - B.bob);
       ctx.rotate(sway);
-      ctx.scale(breathe * B.puff, slump / breathe);
+      ctx.scale(breathe * B.puff * (asleepPose ? 1.06 : 1), slump / breathe * (asleepPose ? 0.8 : 1));
       ctx.translate(-82, -ground);
 
       // Far-side legs and ear (behind the body, darker)
-      oval(48 + legA, ground - 2, 9, 4.5, zombie ? '#8a6a6a' : '#d98c8c');
-      oval(110 - legA, ground - 2, 6, 4, zombie ? '#8a6a6a' : '#d98c8c');
-      oval(95, 50, 7, 9, furDark, -0.5);
+      if(!asleepPose) {
+        oval(48 + legA, ground - 2, 9, 4.5, zombie ? '#8a6a6a' : '#d98c8c');
+        oval(110 - legA, ground - 2, 6, 4, zombie ? '#8a6a6a' : '#d98c8c');
+      }
+      oval(95 + HX(95), 50 + HY(95), 7, 9, furDark, -0.5);
 
       // Tail stub
       oval(21, 112, 4.5, 3.5, furDark, 0.4);
 
       // Body + head silhouette: round rump on the left, snout on the right
-      const bodyPath = () => traceSpiritShape(ctx, 'side'); // laid out for ground = 138
+      const bodyPath = () => traceSpiritShape(ctx, asleepPose ? 'sideSleep' : 'side'); // laid out for ground = 138
       const bodyGrad = ctx.createLinearGradient(0, 50, 0, ground);
       bodyGrad.addColorStop(0, furDark);
       bodyGrad.addColorStop(0.35, fur);
@@ -4608,21 +5569,22 @@
       ctx.fillStyle = bodyGrad;
       bodyPath();
       ctx.fill();
-      drawSpiritFurStyle(ctx, SPIRIT_SIDE_OUTLINE(), mixHexToHex(fur, furDark, 0.4), furDark, (x, y) => y > ground - 12 || (x > 126 && y > 66));
+      const sideOutline = asleepPose ? spiritOutline('sideSleep', SPIRIT_SHAPES.sideSleep.start, SPIRIT_SHAPES.sideSleep.segs) : SPIRIT_SIDE_OUTLINE();
+      drawSpiritFurStyle(ctx, sideOutline, mixHexToHex(fur, furDark, 0.4), furDark, (x, y) => y > ground - 12 || (x > 126 + HX(126) && y > 66 + HY(126)));
 
       // Cream belly, chin and cheek (clipped to the body)
       ctx.save();
       bodyPath();
       ctx.clip();
       oval(88, ground - 6, 44, 16, cream);
-      oval(124, 92, 16, 11, cream, -0.3);
+      oval(124 + HX(124), 92 + HY(124), 16, 11, cream, -0.3);
       // Dark cheek bar typical of Syrian hamsters
       ctx.strokeStyle = furDark;
       ctx.globalAlpha = 0.45;
       ctx.lineWidth = 3;
       ctx.beginPath();
-      ctx.moveTo(106, 78);
-      ctx.quadraticCurveTo(108, 92, 104, 104);
+      ctx.moveTo(106 + HX(106), 78 + HY(106));
+      ctx.quadraticCurveTo(108 + HX(108), 92 + HY(108), 104 + HX(104), 104 + HY(104));
       ctx.stroke();
       ctx.globalAlpha = 1;
       ctx.restore();
@@ -4647,12 +5609,16 @@
 
       // Near ear
       const earTilt = zombie || B.earFlat ? -1.1 : -0.35;
-      oval(106, 50, 8.5, 10, furDark, earTilt);
-      oval(106.5, 51, 5, 6.5, '#f2a7a7', earTilt);
+      oval(106 + HX(106), 50 + HY(106), 8.5, 10, furDark, asleepPose ? -0.9 : earTilt);
+      oval(106.5 + HX(106), 51 + HY(106), 5, 6.5, '#f2a7a7', asleepPose ? -0.9 : earTilt);
 
-      // Eye
-      const ex = 122, ey = 72;
-      if(mood === 'recovering' || blink) {
+      // Eye (closed while he sleeps, unless you just woke him)
+      const ex = 122 + HX(122), ey = 72 + HY(122);
+      if(asleepPose && grumpy) {
+        oval(ex, ey, 3.2, 3.2, spiritEyeColour());
+        ctx.strokeStyle = '#2a1a10'; ctx.lineWidth = 1.6;
+        ctx.beginPath(); ctx.moveTo(ex - 5, ey - 6); ctx.lineTo(ex + 4, ey - 4); ctx.stroke();
+      } else if(mood === 'recovering' || blink || asleepPose) {
         ctx.strokeStyle = '#2a1a10';
         ctx.lineWidth = 2;
         ctx.beginPath();
@@ -4672,7 +5638,7 @@
       }
 
       // Nose (twitching) and mouth
-      const nx = 142 + sniff * 0.3, ny = 86 + sniff * 0.4;
+      const nx = 142 + HX(142) + sniff * 0.3, ny = 86 + HY(142) + sniff * 0.4;
       oval(nx, ny, 3, 2.4, '#e88a9a');
       ctx.strokeStyle = '#8a5a48';
       ctx.lineWidth = 1.1;
@@ -4692,7 +5658,9 @@
       });
 
       // Front paws: holding a seed up to the mouth, or flat on the ground when zombified
-      if(!zombie && !walking) {
+      if(asleepPose) {
+        // no paws showing: tucked under him
+      } else if(!zombie && !walking) {
         oval(136, 102, 3.8, 7, '#3d3226', 0.5);
         ctx.strokeStyle = '#d8cbb0';
         ctx.lineWidth = 0.8;
@@ -4707,9 +5675,11 @@
       }
 
       // Near hind foot
-      oval(64 - legA, ground - 2, 11, 4.5, pink);
-      ctx.fillStyle = zombie ? '#9a7272' : '#e48d8d';
-      [71, 74.5].forEach(x => { ctx.beginPath(); ctx.arc(x - legA, ground - 3, 1.3, 0, Math.PI * 2); ctx.fill(); });
+      if(!asleepPose) {
+        oval(64 - legA, ground - 2, 11, 4.5, pink);
+        ctx.fillStyle = zombie ? '#9a7272' : '#e48d8d';
+        [71, 74.5].forEach(x => { ctx.beginPath(); ctx.arc(x - legA, ground - 3, 1.3, 0, Math.PI * 2); ctx.fill(); });
+      }
 
       if(zombie) {
         // Jagged bite-shaped chunks taken out of the silhouette
@@ -4829,9 +5799,39 @@
       drawSpiritOverlay(ctx, now, S);
     }
 
+    // The Today card shows a still of him (like a screenshot), taken each time the app loads, so it doesn't distract
+    let spiritSnapshotting = false;
+    function takeTodaySnapshot(keepPose) {
+      const c = document.getElementById('hamster-canvas'), m = document.getElementById('today-spirit-canvas');
+      if(!c || !m) return;
+      const w = hamsterWalk;
+      if(!keepPose && !spiritHome.inside && !spiritHome.anim && !spiritOuting && !spiritEat && !spiritTrick) {
+        const right = spiritStyle.house !== false ? HOUSE.x - 50 : 280;
+        w.x = Math.round(50 + Math.random() * (right - 50));
+        w.walking = false; w.toHouse = false; w.dir = -1; w.until = performance.now() + 4000;
+        w.facing = spiritAsleep() ? 'side' : 'front';
+      }
+      const jump = hamsterJumpStart;
+      hamsterJumpStart = -1;
+      spiritSnapshotting = true;
+      drawHamster();
+      spiritSnapshotting = false;
+      hamsterJumpStart = jump;
+      const g = m.getContext('2d');
+      g.clearRect(0, 0, m.width, m.height);
+      g.drawImage(c, 0, 0, 320, 143, 0, 7, 320, 143); // a little lower in the frame
+      todaySnapX = w.x;
+    }
+    let todaySnapX = null;
+
     function hamsterLoop() {
       const c = document.getElementById('hamster-canvas');
-      if(c && c.offsetParent) { drawHamster(); drawHearts(); }
+      if(c && c.offsetParent) { drawHamster(); drawHearts(); updateSpiritThought(); }
+      const today = document.getElementById('tab-today');
+      if(c && today && today.classList.contains('active')) {
+        const t = reduceMotion ? 0 : performance.now();
+        ONI_KINDS.forEach(k => drawOniFace('today-oni-' + k, k, t));
+      }
       requestAnimationFrame(hamsterLoop);
     }
 
@@ -4881,33 +5881,33 @@
     function startColdTimer() {
       let st = document.getElementById('cold-status');
       let left = 30;
-      st.innerText = "Holding Cold Water: 30s";
+      st.innerText = "Cool water: 30s";
       
       if(coldTimer) clearInterval(coldTimer);
       coldTimer = setInterval(() => {
         left--;
-        st.innerText = `Holding Cold Water: ${left}s`;
+        st.innerText = `Cool water: ${left}s`;
         if(left <= 0) {
           clearInterval(coldTimer);
-          st.innerText = "Heart Rate Reset Complete ✓";
+          st.innerText = "Done. Your body is settling ✓";
           logPractice('tools', 1, 'cold');
         }
       }, 1000);
     }
 
 
-    // Emotional Un-Sponging: one phrase at a time, tap to reveal the next
+    // Set it down: one phrase at a time, tap to reveal the next
     const UNSPONGE = [
-      'I held the line and remained calm. Now I return her emotional load back to her.',
-      'Her storm belongs to her pain. My body is my house, not her storage container.',
-      'The bathroom door is shut. In this space, my nervous system is safe.',
+      'I stayed calm, and that was enough. I can set her heaviness down now.',
+      'Her storm comes from her pain. I can care for her without holding all of it.',
+      'This is a quiet moment just for me. Here, my body can feel safe.',
       'What she said came from her state, not from my worth.',
       'I can care about her without carrying her anger inside me.',
       'I breathe out her words. I breathe in my own calm.',
       'I did not create this storm, and I do not have to fix it right now.',
       'Her feelings are hers to hold. My job is to keep myself steady.',
       'I let the tension drain out through my feet into the floor.',
-      'I am allowed to step out of the line of fire and rest.'
+      'It\'s okay to step away for a moment and rest.'
     ];
     let unspongeIdx = 0;
     function nextUnsponge() {
@@ -5063,7 +6063,7 @@
         cCtx.fillStyle = 'rgba(0, 242, 254, 0.9)';
         cCtx.font = 'bold 14px sans-serif';
         cCtx.textAlign = 'center';
-        cCtx.fillText('Load Dispersed. Space Restored.', W / 2, H / 2);
+        cCtx.fillText('All clear. Breathe.', W / 2, H / 2);
       }
     }
 
@@ -5075,6 +6075,7 @@
     const LOGGED_FIELDS = { vagus: 'vagus', puzzleSessions: 'puzzle', breathRounds: 'breath', tools: null };
 
     function logPractice(field, amount, kind) {
+      if(typeof crisisTrack === 'function') crisisTrack(field, amount, kind);
       const k = dayKey(new Date());
       practice[k] = practice[k] || { vagus: 0, puzzleSec: 0, puzzleSessions: 0 };
       practice[k][field] = (practice[k][field] || 0) + amount;
@@ -5109,7 +6110,7 @@
       set('p-week-line', `Last 7 days: ${sum(last7, 'vagus')} vagus · ${Math.floor(sum(last7, 'puzzleSec') / 60)} min Disrupt · ` +
         `${Math.floor(sum(last7, 'breathSec') / 60)} min breathing · ${sum(last7, 'tools')} games & tools`);
 
-      const EXERCISE = ['Disrupt within 6 hours', 'Disrupt session', 'Breathing', 'Vagus reset', 'A Calm game', 'Shake or cold water', 'Unsent Defense', 'Reset tools'];
+      const EXERCISE = ['Disrupt within 6 hours', 'Disrupt session', 'Breathing', 'Vagus reset', 'A Calm game', 'Shake or cold water', 'Unsaid Words', 'Reset tools'];
       const evs = hardDayEvents();
       const rec = evs.map((ev, i) => ({ ms: recoveryTime(ev, evs[i + 1] && evs[i + 1].start), f: recoveryFactors(ev) })).filter(r => r.ms !== null);
       const avg = list => list.reduce((a, r) => a + r.ms, 0) / list.length;
@@ -5129,7 +6130,7 @@
         : 'Once there are a few hard days with and without exercises, this will show whether they shorten your recovery. On good days you don\'t need them, and that\'s fine.');
     }
 
-    // LEAVES ON A STREAM (the same stream renderer also carries Unsent Defense words away)
+    // LEAVES ON A STREAM (the same stream renderer also carries Unsaid Words words away)
     let leavesReleased = 0;
     const calmStream = {
       canvasId: 'stream-canvas',
@@ -5233,7 +6234,7 @@
                       rot: Math.random() * 3, phase: Math.random() * 6, alpha: 0.8, size: 10 });
       }
 
-      // Leaves waiting to be set on the water (Unsent Defense sends them one after another)
+      // Leaves waiting to be set on the water (Unsaid Words sends them one after another)
       if(s.queue && s.queue.length && t >= s.queue[0].spawnAt) s.leaves.push(s.queue.shift());
 
       s.leaves.forEach(lf => {
@@ -6541,7 +7542,7 @@
 
     function renderUnsentCount() {
       const el = document.getElementById('unsent-count');
-      if(el) el.innerText = `Unsent defenses released: ${unsentCount}`;
+      if(el) el.innerText = `Words let go: ${unsentCount}`;
     }
 
     // Each release becomes a group of leaves; when the last one has floated away, it counts
@@ -6626,7 +7627,7 @@
     const TOOL_NAMES = {
       vagus: 'Vagus reset', puzzle: 'Disrupt session', breath: 'Breathing round', breathing: 'Breathing session',
       shake: 'Shake it out', cold: 'Cold water', chaos: 'Chaos Release', leaves: 'Leaves on a Stream',
-      pond: 'Still Pond', lanterns: 'Sky Lanterns', fog: 'Clear the Fog', unsent: 'Unsent Defense'
+      pond: 'Still Pond', lanterns: 'Sky Lanterns', fog: 'Clear the Fog', unsent: 'Unsaid Words'
     };
     const CALM_GAMES = ['chaos', 'leaves', 'pond', 'lanterns', 'fog'];
 
@@ -6676,7 +7677,7 @@
         if(has('vagus')) f.add('Vagus reset');
         if(acts.some(a => CALM_GAMES.includes(a.k))) f.add('A Calm game');
         if(has('shake') || has('cold')) f.add('Shake or cold water');
-        if(has('unsent')) f.add('Unsent Defense');
+        if(has('unsent')) f.add('Unsaid Words');
       } else {
         // Before the timeline existed: that day's and the next day's totals
         const next = new Date(ev.day);
@@ -6998,7 +7999,7 @@
       if(last && (last.red + last.black + last.incidents)) {
         const parts = [last.black && `${last.black} black`, last.red && `${last.red} red`, last.yellow && `${last.yellow} yellow`,
                        last.incidents && `${last.incidents} incident${last.incidents === 1 ? '' : 's'}`].filter(Boolean).join(', ');
-        list.push(`Last dark stretch (${shortDate(last.from)} – ${shortDate(last.to)}) had ${parts}. That was a lot. Let your body and mind come down from it.`);
+        list.push(`Last time on the dark side of the moon (${shortDate(last.from)} – ${shortDate(last.to)}) had ${parts}. That was a lot. Let your body and mind come down from it.`);
         if(last.notes) list.push(`When you feel steady, re-read the ${last.notes} journal entr${last.notes === 1 ? 'y' : 'ies'} from those days and add anything you missed.`);
       }
       if(dates.therapy && parseDay(dates.therapy) >= ds.today) list.push(`Bring what happened to therapy on ${shortDate(parseDay(dates.therapy))}: read your entries out or show them.`);
@@ -7007,7 +8008,7 @@
         'Sleep and eat properly for a few days. Your body has been on alert.',
         'Look after any pain or injuries, and get them checked if they linger.',
         'Move your body gently: a walk, stretching, the gym. It helps the stress leave.',
-        'For memories that keep replaying: write them out in Unsent Defense, then let them float away.',
+        'For memories that keep replaying: write them out in Unsaid Words, then let them float away.',
         'Do something just for you this week, something that has nothing to do with her.',
         'Notice what helped you get through, and keep it for next time.'
       );
@@ -7017,6 +8018,8 @@
     // Strategies to keep yourself intact. Some adapt to what the data shows.
     function darkPlanGroups(ds) {
       const during = [];
+      const special = importantDatesIn(ds.upcomingStart, ds.upcomingEnd);
+      special.forEach(e => during.push(`Your ${escapeHtml(e.name)} (${shortDate(e.when)}) falls on day ${e.day}. Keep it simple and low-pressure: a quiet dinner, a film, a small gift. Celebrating a little early can be lovely too.`));
       if(ds.startsSeen.length >= 2 && ds.onsetHits / ds.startsSeen.length >= 0.5) {
         const before = addDays(ds.upcomingEnd, -1);
         during.push(`Treat ${shortDate(before)} and ${shortDate(ds.upcomingEnd)} (the day before and first day of her period) as rest days: nothing planned, nothing to fix.`);
@@ -7033,11 +8036,12 @@
       return [
         ['Recover and process', SPIRIT_RECOVERY_REMINDERS(ds)],
         ['Before it starts', [
-          `Put the next dark stretch in your calendar: ${shortDate(ds.upcomingStart)} – ${shortDate(ds.upcomingEnd)}.`,
+          `Put the next dark side of the moon in your calendar: ${shortDate(ds.upcomingStart)} – ${shortDate(ds.upcomingEnd)}.`,
           'Move anything stressful you can (big conversations, trips, deadlines) out of those dates.',
-          'Rest well in the days before, so you start it with a full tank.'
+          'Rest well in the days before, so you start it with a full tank.',
+          ...special.map(e => `Settle plans for your ${escapeHtml(e.name)} early, so nothing has to be decided on the day.`)
         ]],
-        ['During the dark stretch', during],
+        ['On the dark side of the moon', during],
         ['When it gets heated', [
           'Lower your voice and take a short break in another room until things cool down.',
           'Keep heated moments out of the kitchen.',
@@ -7075,16 +8079,16 @@
       });
 
       const now = ds.inWindow
-        ? `You're in the dark part of the month now: <b>day ${ds.dayIdx} of ${DARK_DAYS + 1}</b>, until ${shortDate(ds.nextStart)}.`
-        : ds.headsUp ? `The dark part of the month starts in <b>${ds.headsUp} day${ds.headsUp === 1 ? '' : 's'}</b> (${shortDate(ds.upcomingStart)} – ${shortDate(ds.upcomingEnd)}).`
-        : `Recovery stretch. Take care of yourself and process what happened last time. Next dark part of the month: <b>${shortDate(ds.upcomingStart)} – ${shortDate(ds.upcomingEnd)}</b>.`;
+        ? `You're on the dark side of the moon now: <b>day ${ds.dayIdx} of ${DARK_DAYS + 1}</b>, until ${shortDate(ds.nextStart)}.`
+        : ds.headsUp ? `The dark side of the moon starts in <b>${ds.headsUp} day${ds.headsUp === 1 ? '' : 's'}</b> (${shortDate(ds.upcomingStart)} – ${shortDate(ds.upcomingEnd)}).`
+        : `Recovery stretch. Take care of yourself and process what happened last time. Next dark side of the moon: <b>${shortDate(ds.upcomingStart)} – ${shortDate(ds.upcomingEnd)}</b>.`;
 
       const id = dayKey(ds.upcomingEnd), done = new Set(darkPlanState()[id] || []);
       const groups = darkPlanGroups(ds).map(([title, items], gi) => `<div class="plan-group">${title}</div>` + items.map((t, i) => {
         const key = gi + ':' + i;
         return `<label class="plan-item ${done.has(key) ? 'done' : ''}"><input type="checkbox" ${done.has(key) ? 'checked' : ''} onchange="toggleDarkPlan('${id}', '${key}')"><span>${t}</span></label>`;
       }).join('')).join('');
-      return `<div class="pat-title">Dark part of the month</div><div class="cyc-now">${now}</div>` +
+      return `<div class="pat-title">Dark side of the moon</div><div class="cyc-now">${now}</div>` +
         (facts.length ? `<ul class="dark-list">${facts.map(f => `<li>${f}</li>`).join('')}</ul>` : '') +
         `<details class="dark-plan" id="dark-plan"><summary>Your plan: recover, get ready, stay intact</summary>${groups}</details>`;
     }
@@ -7109,7 +8113,25 @@
       'Notice one thing you did well today.',
       'Stretch your neck and shoulders for a few minutes.',
       'Have a slow morning coffee without doing anything else.',
-      'Get a little extra sleep if you can.'
+      'Get a little extra sleep if you can.',
+      "Stretch for five minutes before bed.",
+      "Eat a meal sitting down, without your phone.",
+      "Go for a short walk without a destination.",
+      "Tidy one small corner. Just one.",
+      "Read a few pages of something you enjoy.",
+      "Sit in the sun for ten minutes.",
+      "Watch something that makes you laugh.",
+      "Breathe slowly for one minute, just because.",
+      "Spend time on a hobby that is only yours.",
+      "Make yourself a warm drink and enjoy it slowly.",
+      "Go to bed a little earlier tonight.",
+      "Write three things that went okay today.",
+      "Call or text someone who makes you feel good.",
+      "Put on clean, comfortable clothes.",
+      "Do something kind for your body: a stretch, a walk, a shower.",
+      "Take a break from screens for a while.",
+      "Listen to a song that lifts you up.",
+      "Plan a small treat for this weekend."
     ];
     function renderDarkBanner() {
       const el = document.getElementById('dark-banner');
@@ -7121,8 +8143,17 @@
       el.classList.toggle('good', !dark);
       el.dataset.mode = dark ? 'dark' : 'care';
       document.getElementById('dark-banner-icon').innerText = dark ? '🌘' : '🌿';
+      const today = startOfToday();
+      const soon = importantDates.map(e => ({ ...e, when: nextOccurrence(e.md), n: Math.round((nextOccurrence(e.md) - today) / DAY) }))
+        .filter(e => e.n <= 14).sort((a, b) => a.n - b.n)[0];
       if(dark) {
-        document.getElementById('dark-banner-text').innerHTML = `<b>Dark part of the month</b> · day ${ds.dayIdx} of ${DARK_DAYS + 1}. Go gently. Tap for your plan.`;
+        const todayNote = soon && soon.n === 0 ? ` Today is your ${escapeHtml(soon.name)}: keep it simple and sweet.` : '';
+        document.getElementById('dark-banner-text').innerHTML = `<b>Dark side of the moon</b> · day ${ds.dayIdx} of ${DARK_DAYS + 1}. Go gently.${todayNote} Tap for your plan.`;
+      } else if(soon && soon.n === 0 && selfCareShift === 0) { // only on the day itself, no countdown
+        const early = ds && ds.upcomingStart <= soon.when && soon.when <= ds.upcomingEnd ? ' A little early celebration could be lovely too.' : '';
+        document.getElementById('dark-banner-text').innerHTML = soon.n === 0
+          ? `<b>Happy ${escapeHtml(soon.name)}!</b> Enjoy it and keep it easy.`
+          : `<b>Your ${escapeHtml(soon.name)} is in ${soon.n} day${soon.n === 1 ? '' : 's'}</b> (${shortDate(soon.when)}). Something simple and sweet is perfect.${early}`;
       } else {
         const n = Math.floor(startOfToday().getTime() / DAY) + selfCareShift;
         document.getElementById('dark-banner-text').innerHTML = `<b>Self-care</b> · ${SELF_CARE_IDEAS[((n % SELF_CARE_IDEAS.length) + SELF_CARE_IDEAS.length) % SELF_CARE_IDEAS.length]}`;
@@ -7140,11 +8171,778 @@
       renderDarkBanner();
     }
     function openDarkPlan() {
-      switchTab('spirit');
+      switchTab('insights');
+      const pc = document.getElementById('correlations');
+      if(pc && pc.closest('.card')) pc.closest('.card').classList.remove('collapsed');
       setTimeout(() => {
         const p = document.getElementById('dark-plan');
         if(p) { p.open = true; p.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
       }, 60);
+    }
+
+    // ---------- IMPORTANT DATES (anniversaries, birthdays): month-day, every year ----------
+    let importantDates = null;
+    try { importantDates = JSON.parse(localStorage.getItem('aq_important_dates') || 'null'); } catch(e) {}
+    if(!Array.isArray(importantDates)) {
+      importantDates = [{ name: 'Anniversary', md: '11-14' }];
+      localStorage.setItem('aq_important_dates', JSON.stringify(importantDates));
+    }
+    // The next time a month-day comes round, today included
+    function nextOccurrence(md, from = startOfToday()) {
+      const [m, d] = md.split('-').map(Number);
+      let x = new Date(from.getFullYear(), m - 1, d);
+      if(x < from) x = new Date(from.getFullYear() + 1, m - 1, d);
+      return x;
+    }
+    function renderImportantDates() {
+      const el = document.getElementById('important-dates');
+      if(!el) return;
+      el.innerHTML = importantDates.length
+        ? importantDates.map((e, i) => `<span class="tag-pill">${escapeHtml(e.name)} · ${shortDate(nextOccurrence(e.md))} <button class="mood-del" onclick="removeImportantDate(${i})" title="Remove">✕</button></span>`).join(' ')
+        : '<span class="insight-note">None yet.</span>';
+    }
+    function addImportantDate() {
+      const name = document.getElementById('cfg-date-name').value.trim();
+      const day = document.getElementById('cfg-date-day').value; // YYYY-MM-DD
+      if(!name || !day) return;
+      const [, m, d] = day.split('-');
+      importantDates.push({ name, md: `${Number(m)}-${Number(d)}` });
+      localStorage.setItem('aq_important_dates', JSON.stringify(importantDates));
+      document.getElementById('cfg-date-name').value = '';
+      document.getElementById('cfg-date-day').value = '';
+      renderImportantDates();
+      renderDarkBanner();
+    }
+    function removeImportantDate(i) {
+      importantDates.splice(i, 1);
+      localStorage.setItem('aq_important_dates', JSON.stringify(importantDates));
+      renderImportantDates();
+      renderDarkBanner();
+    }
+    // Important dates inside a given range, with which day of it they fall on
+    function importantDatesIn(from, to) {
+      return importantDates.map(e => ({ ...e, when: nextOccurrence(e.md, from) }))
+        .filter(e => e.when <= to)
+        .map(e => ({ ...e, day: Math.round((e.when - from) / DAY) + 1 }));
+    }
+
+    // ---------- WEEKLY SUMMARY: shown on Sundays, for Monday to today ----------
+    function renderWeekSummary(allInc) {
+      const card = document.getElementById('week-card');
+      if(!card) return;
+      const today = startOfToday();
+      if(today.getDay() !== 0) { card.style.display = 'none'; return; }
+      const from = new Date(today); from.setDate(from.getDate() - 6);
+      const to = today.getTime() + DAY;
+      const inWeek = ts => ts >= from.getTime() && ts < to;
+      // How the days went (days you didn't mark count as okay)
+      const marks = { green: 0, yellow: 0, red: 0, black: 0 };
+      const hardDays = [];
+      for(let d = new Date(from); d <= today; d.setDate(d.getDate() + 1)) {
+        const st = (calData[dayKey(d)] || '').replace('status-', '');
+        if(marks[st] !== undefined) marks[st]++;
+        if(st === 'red' || st === 'black') hardDays.push(WEEKDAY[d.getDay()]);
+      }
+      const hard = marks.red + marks.black;
+      // Average feeling from oni check-ins
+      const picks = moodLog.filter(m => inWeek(m.ts) && MOODS[m.mood]);
+      const SCORE = { happy: 2, calm: 1, numb: -1, anxious: -1, sad: -1, angry: -2 };
+      const avg = picks.length ? picks.reduce((a, m) => a + SCORE[m.mood], 0) / picks.length : null;
+      const counts = {};
+      picks.forEach(m => { counts[m.mood] = (counts[m.mood] || 0) + 1; });
+      const topMood = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+      // What happened and what you did
+      const inc = allInc.filter(e => inWeek(e.ts));
+      const entries = notes.filter(n => inWeek(n.id)).length;
+      const tagCount = {};
+      taggedEntries().filter(e => inWeek(e.ts)).forEach(e => e.tags.filter(t => t !== 'incident').forEach(t => { tagCount[t] = (tagCount[t] || 0) + 1; }));
+      const tags = Object.entries(tagCount).sort((a, b) => b[1] - a[1]).slice(0, 3).map(t => '#' + escapeHtml(t[0]));
+      let disruptMin = 0, vagus = 0, tools = 0;
+      for(let d = new Date(from); d <= today; d.setDate(d.getDate() + 1)) {
+        const pr = practice[dayKey(d)] || {};
+        disruptMin += (pr.puzzleSec || 0) / 60; vagus += pr.vagus || 0; tools += pr.tools || 0;
+      }
+      const feel = avg === null ? null : avg >= 1 ? 'mostly good' : avg >= 0.2 ? 'mostly calm' : avg > -0.5 ? 'mixed' : 'heavy';
+      const headline = hard === 0 && (avg === null || avg >= 0.2) ? 'A calm week.'
+        : hard <= 1 ? 'A mostly okay week with a harder moment.'
+        : hard <= 3 ? 'A mixed week.' : 'A hard week. Be kind to yourself.';
+      const lines = [
+        `<b>Days:</b> ${marks.green} green · ${marks.yellow} yellow · ${marks.red} red · ${marks.black} black${7 - marks.green - marks.yellow - hard ? ` · ${7 - marks.green - marks.yellow - hard} unmarked` : ''}.` +
+          (hardDays.length ? ` Hardest: ${hardDays.join(', ')}.` : ''),
+        feel ? `<b>Feeling:</b> ${feel}, mostly ${MOODS[topMood[0]].name} (${topMood[1]} of ${picks.length} check-ins).` : '',
+        `<b>Events:</b> ${inc.length} incident${inc.length === 1 ? '' : 's'}, ${entries} journal entr${entries === 1 ? 'y' : 'ies'}${tags.length ? `; ${tags.join(', ')}` : ''}.`,
+        disruptMin + vagus + tools ? `<b>Self-care:</b> ${Math.round(disruptMin)} min Disrupt · ${vagus} vagus · ${tools} tools.` : '',
+        `<b>${escapeHtml(hamsterName)}:</b> ${document.getElementById('hamster-status').innerText}.`
+      ].filter(Boolean);
+      document.getElementById('week-summary').innerHTML =
+        `<div class="cyc-now">${headline} <span class="insight-note">${shortDate(from)} – ${shortDate(today)}</span></div><div class="cyc-sum" style="border:none; padding:0;">${lines.join('<br>')}</div>`;
+      card.style.display = 'block';
+    }
+
+    // ---------- CRISIS MODE ----------
+    // Started from the red button on the start screen. Only Regulation (calm tools) and Disruption (the game),
+    // a timer since the tap, a thumbs up/down after each exercise, and a #crisis journal entry when it's over.
+    let crisis = null, crisisTimer = null, crisisRateIdx = null, crisisRateHide = null;
+    try { crisis = JSON.parse(localStorage.getItem('aq_crisis_active') || 'null'); } catch(e) {}
+    let crises = [];
+    try { crises = JSON.parse(localStorage.getItem('aq_crises') || '[]'); } catch(e) {}
+    const saveCrisisState = () => localStorage.setItem('aq_crisis_active', JSON.stringify(crisis));
+    const crisisName = k => k === 'puzzle' ? 'Disrupt' : (TOOL_NAMES[k] || k);
+    const fmtDur = ms => { const m = Math.round(ms / 60000); return m < 1 ? 'under a minute' : m < 60 ? `${m} min` : `${Math.floor(m / 60)} h ${m % 60} min`; };
+    const fmtClock = ts => new Date(ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    const CRISIS_PHRASES = [
+      'This isn\'t your storm.',
+      'You don\'t have to fix this right now.',
+      'Her words come from her pain, not your worth.',
+      'Feet on the floor. You\'re here, you\'re okay.',
+      'Slow breath out. Let your shoulders drop.',
+      'You don\'t have to win this. Just stay steady.',
+      'You can stay quiet. Silence is allowed.',
+      'Speak low, move slow.',
+      'This will pass. It always does.',
+      'You can step away. That\'s not giving up.',
+      'Stay soft on the inside, steady on the outside.',
+      'Notice it, don\'t absorb it.',
+      'You are allowed to protect your peace.',
+      'One breath at a time.'
+    ];
+    // Encouragement, mixed in between the grounding lines
+    const CRISIS_ENCOURAGE = [
+      'You are strong.',
+      'You\'ve got through this before. You will again.',
+      'You\'re doing better than you think.',
+      'You\'re handling this.',
+      'You are enough, exactly as you are.',
+      'Pausing like this takes courage.',
+      'You\'re not alone in this.',
+      'You\'re allowed to take care of yourself.',
+      'Look how steady you\'re staying.',
+      'You deserve kindness, including your own.'
+    ];
+    let crisisPhraseAt = 0, crisisPhraseIdx = Math.floor(Math.random() * 14), crisisPhraseN = 0;
+    function showCrisisPhrase() {
+      const el = document.getElementById('crisis-phrase');
+      if(!el) return;
+      // Alternate: grounding, encouragement, grounding, ...
+      const n = crisisPhraseN++;
+      const text = n % 2 === 0
+        ? CRISIS_PHRASES[(crisisPhraseIdx + n / 2) % CRISIS_PHRASES.length]
+        : CRISIS_ENCOURAGE[((crisisPhraseIdx + n) >> 1) % CRISIS_ENCOURAGE.length];
+      el.style.opacity = 0;
+      setTimeout(() => { el.innerText = text; el.style.opacity = 1; }, 300);
+    }
+    // Tap the line for the next one (and restart the 12-second wait)
+    function nextCrisisPhrase() {
+      crisisPhraseAt = Date.now();
+      showCrisisPhrase();
+    }
+    function saveCrisisRecord() {
+      const box = document.getElementById('crisis-record');
+      const text = box.value.trim();
+      if(!text) return;
+      notes.unshift({ id: Date.now(), text, date: new Date().toLocaleString(), tags: ['crisis', 'unsent_defense'] });
+      localStorage.setItem('aq_notes', JSON.stringify(notes));
+      renderNotes();
+      if(crisis) { crisis.records = (crisis.records || 0) + 1; saveCrisisState(); }
+      box.value = '';
+      localStorage.removeItem('aq_crisis_draft');
+      document.getElementById('crisis-record-saved').innerText = `Saved at ${fmtClock(Date.now())}. It's in your journal, tagged #crisis.`;
+    }
+    // ----- Gentle milestones on the timer (5, 10, 20 minutes, and your usual crisis length once known)
+    function crisisMilestone(sec) {
+      if(!crisis) return;
+      const avg = crises.length >= 2 ? Math.round(crises.reduce((a, c) => a + (c.end - c.start), 0) / crises.length / 1000) : 0;
+      const marks = [[300, '5 minutes in. You\'re doing it.'], [600, '10 minutes in. The peak usually passes soon.'], [1200, '20 minutes. Still here, still steady.']];
+      if(avg > 120) marks.push([avg, 'This is about how long they usually last. You\'re nearly through.']);
+      const hit = marks.find(([t]) => sec >= t && sec < t + 2);
+      if(!hit || (crisis.marks || []).includes(hit[0])) return;
+      (crisis.marks = crisis.marks || []).push(hit[0]);
+      saveCrisisState();
+      const el = document.getElementById('crisis-phrase');
+      crisisPhraseAt = Date.now() + 8000; // keep the milestone up a little longer than a phrase
+      el.style.opacity = 0;
+      setTimeout(() => { el.innerText = hit[1]; el.style.opacity = 1; }, 300);
+    }
+
+    // ----- Follow-up: a check-in the morning after a crisis
+    function renderCrisisFollowup() {
+      const el = document.getElementById('crisis-followup');
+      if(!el) return;
+      const last = crises[crises.length - 1], done = localStorage.getItem('aq_crisis_followup_done');
+      const due = last && !crisis && String(last.start) !== done && startOfToday().getTime() > last.start &&
+                  new Date().getHours() >= 6 && Date.now() - last.start < 2 * 86400000;
+      el.style.display = due ? 'flex' : 'none';
+    }
+    function crisisFollowup(better) {
+      const last = crises[crises.length - 1];
+      if(last) localStorage.setItem('aq_crisis_followup_done', String(last.start));
+      renderCrisisFollowup();
+      if(!better) switchTab('calm');
+    }
+
+    function startCrisis() {
+      if(!crisis) { crisis = { start: Date.now(), items: [], disruptSec: 0 }; saveCrisisState(); }
+      enterApp();
+      enterCrisisUI();
+    }
+    // Frost: ice crystals growing in from the screen edges as you cool down
+    let frostAnim = null;
+    function growFrost() {
+      const c = document.getElementById('frost');
+      if(!c) return;
+      const k = devicePixelRatio || 1;
+      const W = c.width = innerWidth * k, H = c.height = innerHeight * k;
+      const g = c.getContext('2d');
+      const band = 64 * k; // how far the frost reaches in from each edge
+      const depth = (x, y) => Math.min(x, y, W - x, H - y);
+      const rand = (a, b) => a + Math.random() * (b - a);
+
+      // 1. Frosted glass: fine ice speckles, dense at the edge and thinning inward
+      const speckles = [];
+      for(let i = 0; i < 2600; i++) {
+        const side = i % 4, d = Math.pow(Math.random(), 2.2) * band, t = Math.random();
+        const x = side === 1 ? W - d : side === 3 ? d : t * W, y = side === 0 ? d : side === 2 ? H - d : t * H;
+        speckles.push([x, y, rand(0.4, 1.4) * k, 0.55 * (1 - d / band)]);
+      }
+      // 2. Ice ferns: a straight stem growing in from the edge, with short side spikes at 60 degrees
+      const ferns = [];
+      for(let i = 0; i < 34; i++) {
+        const side = i % 4, t = rand(0.03, 0.97), tilt = rand(-0.5, 0.5);
+        const [x, y, a] = side === 0 ? [t * W, 0, Math.PI / 2 + tilt] : side === 1 ? [W, t * H, Math.PI + tilt]
+                        : side === 2 ? [t * W, H, -Math.PI / 2 + tilt] : [0, t * H, tilt];
+        ferns.push({ x, y, a, len: rand(26, 56) * k });
+      }
+      // 3. Little six-pointed crystals scattered in the frost
+      const flakes = [];
+      for(let i = 0; i < 26; i++) {
+        const side = i % 4, d = rand(6, band * 0.8), t = Math.random();
+        flakes.push([side === 1 ? W - d : side === 3 ? d : t * W, side === 0 ? d : side === 2 ? H - d : t * H, rand(2.5, 5) * k, rand(0, Math.PI)]);
+      }
+
+      cancelAnimationFrame(frostAnim);
+      const t0 = performance.now();
+      (function step() {
+        const p = reduceMotion ? 1 : Math.min(1, (performance.now() - t0) / 1800);
+        const ease = 1 - Math.pow(1 - p, 3);
+        g.clearRect(0, 0, W, H);
+        // Soft white rime hugging the edges
+        [[0, 0, W, band, 0, 0, 0, band], [0, H - band, W, band, 0, H, 0, H - band], [0, 0, band, H, 0, 0, band, 0], [W - band, 0, band, H, W, 0, W - band, 0]]
+          .forEach(([x, y, w, h, x1, y1, x2, y2]) => {
+            const gr = g.createLinearGradient(x1, y1, x2, y2);
+            gr.addColorStop(0, `rgba(236, 248, 255, ${0.42 * ease})`); gr.addColorStop(0.5, `rgba(220, 240, 255, ${0.12 * ease})`); gr.addColorStop(1, 'rgba(220, 240, 255, 0)');
+            g.fillStyle = gr; g.fillRect(x, y, w, h);
+          });
+        // Speckles appear from the edge inward
+        speckles.forEach(([x, y, r, a]) => {
+          if(depth(x, y) > band * ease) return;
+          g.fillStyle = `rgba(245, 252, 255, ${a})`;
+          g.fillRect(x, y, r, r);
+        });
+        // Ferns: stem grows, side spikes follow
+        g.lineCap = 'round';
+        ferns.forEach(f => {
+          const L = f.len * ease, cx = Math.cos(f.a), sy = Math.sin(f.a);
+          g.strokeStyle = 'rgba(240, 250, 255, 0.55)';
+          g.lineWidth = 1.1 * k;
+          g.beginPath(); g.moveTo(f.x, f.y); g.lineTo(f.x + cx * L, f.y + sy * L); g.stroke();
+          g.lineWidth = 0.8 * k;
+          g.strokeStyle = 'rgba(240, 250, 255, 0.42)';
+          for(let d = 6 * k; d < L; d += 5 * k) {
+            const px = f.x + cx * d, py = f.y + sy * d, sl = (1 - d / f.len) * 9 * k + 2 * k;
+            [-1, 1].forEach(sgn => {
+              const a2 = f.a + sgn * Math.PI / 3;
+              g.beginPath(); g.moveTo(px, py); g.lineTo(px + Math.cos(a2) * sl, py + Math.sin(a2) * sl); g.stroke();
+            });
+          }
+        });
+        // Crystals
+        g.strokeStyle = `rgba(245, 252, 255, ${0.6 * ease})`;
+        g.lineWidth = 0.8 * k;
+        flakes.forEach(([x, y, r, rot]) => {
+          for(let i = 0; i < 3; i++) {
+            const a = rot + i * Math.PI / 3;
+            g.beginPath(); g.moveTo(x - Math.cos(a) * r, y - Math.sin(a) * r); g.lineTo(x + Math.cos(a) * r, y + Math.sin(a) * r); g.stroke();
+          }
+        });
+        if(p < 1) frostAnim = requestAnimationFrame(step);
+      })();
+    }
+    function clearFrost() {
+      cancelAnimationFrame(frostAnim);
+      const c = document.getElementById('frost');
+      if(c) c.getContext('2d').clearRect(0, 0, c.width, c.height);
+    }
+    // Spirit peeks in from the left edge and breathes with you: a slow breath in, then a long sigh
+    let crisisSpiritFrame = null;
+    function crisisSpiritLoop() {
+      const c = document.getElementById('crisis-spirit');
+      if(!c || !document.body.classList.contains('crisis')) { crisisSpiritFrame = null; return; }
+      const g = c.getContext('2d');
+      g.setTransform(1, 0, 0, 1, 0, 0);
+      g.clearRect(0, 0, c.width, c.height);
+      const t = reduceMotion ? 0 : performance.now(), ph = (t % 6500) / 6500;
+      // 0-45% breathe in, 45-58% hold, 58-100% sigh out
+      const inhale = ph < 0.45 ? ph / 0.45 : ph < 0.58 ? 1 : 1 - (ph - 0.58) / 0.42;
+      const S = 1.6, right = c.classList.contains('right');
+      g.save();
+      if(right) { g.translate(c.width, 0); g.scale(-1, 1); } // peeking in from the right edge
+      g.translate(32, c.height);
+      g.rotate(0.2 - inhale * 0.04);
+      g.scale(S * (1 + 0.02 * inhale), S * (1 + 0.045 * inhale));
+      g.translate(-80, -141);
+      drawHamsterFront(g, 0, 0, S);
+      // The sigh: a misty puff drifting away from his mouth
+      if(ph > 0.6 && ph < 0.98) {
+        const k = (ph - 0.6) / 0.38;
+        g.fillStyle = `rgba(230, 246, 255, ${0.55 * (1 - k)})`;
+        [[0, 0, 5], [7, -3, 4], [13, 1, 3.4]].forEach(([dx, dy, r]) => {
+          g.beginPath(); g.ellipse(96 + k * 34 + dx, 58 - k * 10 + dy, r * (1 + k), r * 0.75 * (1 + k), 0, 0, Math.PI * 2); g.fill();
+        });
+      }
+      g.restore();
+      if(!reduceMotion) crisisSpiritFrame = requestAnimationFrame(crisisSpiritLoop);
+    }
+    // Tap him: he ducks away, then peeks back in from the other side a couple of seconds later
+    let crisisSpiritBusy = false;
+    function crisisSpiritTap() {
+      const c = document.getElementById('crisis-spirit');
+      if(!c || crisisSpiritBusy) return;
+      crisisSpiritBusy = true;
+      nextCrisisPhrase();
+      c.classList.add('away');
+      setTimeout(() => {
+        // Jump to the other side while hidden (no slide across the screen), at a new height
+        c.style.transition = 'none';
+        c.classList.toggle('right');
+        c.style.bottom = `calc(${Math.round(70 + Math.random() * innerHeight * 0.45)}px + env(safe-area-inset-bottom))`;
+        void c.offsetWidth;
+        c.style.transition = '';
+        // ...then slide in from off the edge
+        setTimeout(() => { c.classList.remove('away'); crisisSpiritBusy = false; }, 1600);
+      }, 1400);
+    }
+    let crisisIceTimer = null;
+    function enterCrisisUI() {
+      document.body.classList.add('crisis', 'crisis-red');
+      document.body.classList.remove('crisis-ice');
+      applyColor('#ef4444');
+      // Two seconds of red, then it all cools into ice
+      clearTimeout(crisisIceTimer);
+      crisisIceTimer = setTimeout(() => {
+        document.body.classList.remove('crisis-red');
+        document.body.classList.add('crisis-ice');
+        applyColor('#7dd3fc');
+        growFrost();
+        if(!crisisSpiritFrame) crisisSpiritLoop();
+      }, 2000);
+      document.getElementById('crisis-bar').style.display = 'block';
+      crisisTab('calm');
+      const tick = () => {
+        if(!crisis) return;
+        const sec = Math.floor((Date.now() - crisis.start) / 1000);
+        document.getElementById('crisis-timer').innerText = sec >= 3600
+          ? `${Math.floor(sec / 3600)}:${String(Math.floor(sec % 3600 / 60)).padStart(2, '0')}:${String(sec % 60).padStart(2, '0')}`
+          : `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`;
+      };
+      tick();
+      showCrisisPhrase();
+      crisisPhraseAt = Date.now();
+      const box = document.getElementById('crisis-record');
+      if(box && !box.value) box.value = localStorage.getItem('aq_crisis_draft') || '';
+      clearInterval(crisisTimer);
+      crisisTimer = setInterval(() => {
+        tick();
+        if(Date.now() - crisisPhraseAt > 12000) { crisisPhraseAt = Date.now(); showCrisisPhrase(); }
+        if(crisis) crisisMilestone(Math.floor((Date.now() - crisis.start) / 1000));
+      }, 1000);
+    }
+    function crisisTab(name) {
+      // Leaving the game: ask whether it helped (once it has been played for a minute)
+      const was = document.querySelector('.crisis-tabs button.on');
+      if(was && was.dataset.ct === 'puzzle' && name !== 'puzzle') askCrisisRating(crisis && crisis.items.findIndex(i => i.k === 'puzzle' && i.rating === null));
+      document.querySelectorAll('.crisis-tabs button').forEach(b => b.classList.toggle('on', b.dataset.ct === name));
+      switchTab(name);
+      window.scrollTo(0, 0);
+    }
+    // Called from logPractice: a finished exercise becomes something to rate
+    function crisisTrack(field, amount, kind) {
+      if(!crisis) return;
+      if(field === 'puzzleSec') {
+        crisis.disruptSec = (crisis.disruptSec || 0) + amount;
+        if(crisis.disruptSec >= 60 && !crisis.items.some(i => i.k === 'puzzle')) { crisis.items.push({ k: 'puzzle', ts: Date.now(), rating: null }); saveCrisisState(); }
+        return;
+      }
+      const k = field === 'vagus' ? 'vagus' : field === 'tools' ? kind : null;
+      if(!k) return;
+      crisis.items.push({ k, ts: Date.now(), rating: null });
+      saveCrisisState();
+      askCrisisRating(crisis.items.length - 1);
+    }
+    function askCrisisRating(idx) {
+      if(!crisis || idx === null || idx < 0 || !crisis.items[idx]) return;
+      crisisRateIdx = idx;
+      document.getElementById('crisis-rate-name').innerText = crisisName(crisis.items[idx].k);
+      document.getElementById('crisis-rate').style.display = 'flex';
+      clearTimeout(crisisRateHide);
+      crisisRateHide = setTimeout(() => { document.getElementById('crisis-rate').style.display = 'none'; }, 25000); // unanswered ones are asked again at the end
+    }
+    function rateCrisisItem(helped) {
+      if(crisis && crisis.items[crisisRateIdx]) { crisis.items[crisisRateIdx].rating = helped; saveCrisisState(); }
+      document.getElementById('crisis-rate').style.display = 'none';
+    }
+
+    // Crisis finished: review the ratings, then save
+    function finishCrisis() {
+      if(!crisis) return;
+      document.getElementById('crisis-rate').style.display = 'none';
+      crisis.end = Date.now();
+      document.getElementById('crisis-sum-time').innerText = `Started ${fmtClock(crisis.start)} · lasted ${fmtDur(crisis.end - crisis.start)}`;
+      renderCrisisSummary();
+      document.getElementById('crisis-modal').style.display = 'block';
+    }
+    function renderCrisisSummary() {
+      document.getElementById('crisis-sum-list').innerHTML = crisis.items.length
+        ? '<div class="today-q">What helped?</div>' + crisis.items.map((it, i) =>
+          `<div class="crisis-sum-row"><span>${crisisName(it.k)} <small class="today-sub">${fmtClock(it.ts)}</small></span>` +
+          `<button class="${it.rating === true ? 'on' : ''}" onclick="setCrisisRating(${i}, true)">👍</button>` +
+          `<button class="${it.rating === false ? 'on' : ''}" onclick="setCrisisRating(${i}, false)">👎</button></div>`).join('')
+        : '<div class="today-sub">No exercises were finished this time. That\'s okay.</div>';
+    }
+    function setCrisisRating(i, helped) {
+      crisis.items[i].rating = crisis.items[i].rating === helped ? null : helped;
+      saveCrisisState();
+      renderCrisisSummary();
+    }
+    function closeCrisisSummary() {
+      if(crisis) delete crisis.end;
+      document.getElementById('crisis-modal').style.display = 'none';
+    }
+    function saveCrisis() {
+      if(!crisis) return;
+      const end = crisis.end || Date.now();
+      const record = { start: crisis.start, end, items: crisis.items, records: crisis.records || 0 };
+      crises.push(record);
+      localStorage.setItem('aq_crises', JSON.stringify(crises));
+      // Also as a journal entry, tagged #crisis, so it shows in the journal, calendar patterns and backups
+      const names = r => [...new Set(crisis.items.filter(i => i.rating === r).map(i => crisisName(i.k)))].join(', ');
+      const helped = names(true), didnt = names(false);
+      const text = `Crisis at ${fmtClock(crisis.start)}, lasted ${fmtDur(end - crisis.start)}.` +
+        (helped ? ` Helped: ${helped}.` : '') + (didnt ? ` Didn't help: ${didnt}.` : '') +
+        (crisis.records ? ` ${crisis.records} record${crisis.records === 1 ? '' : 's'} written.` : '');
+      notes.unshift({ id: crisis.start, text, date: new Date(crisis.start).toLocaleString(), tags: ['crisis'] });
+      localStorage.setItem('aq_notes', JSON.stringify(notes));
+      renderNotes();
+      crisis = null;
+      localStorage.removeItem('aq_crisis_active');
+      document.getElementById('crisis-modal').style.display = 'none';
+      if(!puzzleWindow || puzzleWindow.until < Date.now()) setPuzzleWindow(); // Disrupt works best within 6 hours
+      // The frost melts and Spirit gives a little hop before the normal app comes back
+      document.body.classList.add('crisis-thaw');
+      const phrase = document.getElementById('crisis-phrase');
+      if(phrase) phrase.innerText = 'You got through it.';
+      setTimeout(() => { document.body.classList.remove('crisis-thaw'); exitCrisisUI(); }, reduceMotion ? 0 : 1800);
+    }
+    function exitCrisisUI() {
+      clearInterval(crisisTimer);
+      clearTimeout(crisisIceTimer);
+      document.body.classList.remove('crisis', 'crisis-red', 'crisis-ice');
+      clearFrost();
+      applyAdaptiveTheme();
+      document.getElementById('crisis-bar').style.display = 'none';
+      switchTab('today');
+      updateCountMeters();
+    }
+    // If the app was closed mid-crisis, carry on where it left off
+    function resumeCrisisIfActive() {
+      if(!crisis) return;
+      document.getElementById('oni-screen').style.display = 'none';
+      enterCrisisUI();
+    }
+
+    // Settings: delete a crisis started by accident (its record and its #crisis journal entry). Tap twice to confirm.
+    let crisisDelArmed = null;
+    function renderCrisisSettings() {
+      const el = document.getElementById('crisis-settings');
+      if(!el) return;
+      const list = crises.slice().reverse().slice(0, 15);
+      el.innerHTML = list.length ? list.map(c => `<div class="usage-row" style="align-items:center;">
+          <span>${new Date(c.start).toLocaleDateString([], { month: 'short', day: 'numeric' })}, ${fmtClock(c.start)} <span class="insight-note">· ${fmtDur(c.end - c.start)}</span></span>
+          <button class="icon-btn" type="button" style="padding:4px 10px; font-size:0.75rem;${crisisDelArmed === c.start ? ' color:#ef4444; border-color:#ef4444;' : ''}"
+            onclick="deleteCrisis(${c.start})">${crisisDelArmed === c.start ? 'Tap to delete' : 'Delete'}</button></div>`).join('')
+        : '<div class="insight-note">No crises saved.</div>';
+    }
+    function deleteCrisis(start) {
+      if(crisisDelArmed !== start) {
+        crisisDelArmed = start;
+        renderCrisisSettings();
+        clearTimeout(deleteCrisis.t);
+        deleteCrisis.t = setTimeout(() => { crisisDelArmed = null; renderCrisisSettings(); }, 4000);
+        return;
+      }
+      crisisDelArmed = null;
+      crises = crises.filter(c => c.start !== start);
+      localStorage.setItem('aq_crises', JSON.stringify(crises));
+      notes = notes.filter(n => !(n.id === start && (n.tags || []).includes('crisis')));
+      localStorage.setItem('aq_notes', JSON.stringify(notes));
+      renderNotes();
+      renderCrisisSettings();
+      renderCrisisFollowup();
+      updateCountMeters();
+    }
+
+    // Insights: what has helped across crises
+    function buildCrisisHtml() {
+      if(!crises.length) return '';
+      const durs = crises.map(c => c.end - c.start);
+      const avg = durs.reduce((a, b) => a + b, 0) / durs.length;
+      const stats = {};
+      crises.forEach(c => c.items.forEach(it => {
+        const st = stats[it.k] = stats[it.k] || { up: 0, down: 0, used: 0 };
+        st.used++;
+        if(it.rating === true) st.up++;
+        if(it.rating === false) st.down++;
+      }));
+      const rows = Object.entries(stats).sort((a, b) => (b[1].up - b[1].down) - (a[1].up - a[1].down) || b[1].used - a[1].used).map(([k, st]) => {
+        const rated = st.up + st.down;
+        return `<div class="cyc-row ${st.up > st.down ? '' : ''}"><span class="cyc-name">${crisisName(k)}</span>` +
+          `<span class="cyc-bar"><i style="width:${rated ? Math.round(st.up / rated * 100) : 0}%; background:var(--color-green)"></i></span>` +
+          `<span class="cyc-val">👍 ${st.up} · 👎 ${st.down}</span></div>`;
+      }).join('');
+      const last = crises[crises.length - 1];
+      return `<div class="pat-title">What helps in a crisis</div>` +
+        `<div class="cyc-now">${crises.length} crisis${crises.length === 1 ? '' : 'es'} logged, usually over in <b>${fmtDur(avg)}</b>. Last one: ${new Date(last.start).toLocaleDateString()} at ${fmtClock(last.start)}, ${fmtDur(last.end - last.start)}.</div>` +
+        (rows || '<div class="insight-note">Finish an exercise during a crisis and rate it to see what works.</div>');
+    }
+
+    // ---------- TODAY ----------
+    const TODAY_DAYS = [['status-green', 'Good', 'var(--color-green)'], ['status-yellow', 'Tense', 'var(--color-yellow)'],
+                        ['status-red', 'Hard', 'var(--color-red)'], ['status-black', 'Very hard', '#c4b5fd']];
+    function buildTodayCycle() {
+      const cyc = cycleInfo();
+      if(!cyc.starts.length) return '<div class="today-sub">Set up her cycle to see where things are each day.</div>' +
+        '<div class="today-setup"><div><label>When did her last period start?</label><input type="date" id="today-period-start"></div>' +
+        '<div><label>Cycle length</label><input type="number" id="today-cycle-len" value="28" min="20" max="40"></div></div>' +
+        '<button class="btn-action" style="margin-top:4px;" onclick="todaySaveCycle()">Save</button>';
+      const ds = computeDarkStretch(), L = ds.L, day = ds.cdNow;
+      const dbp = daysBeforePeriod(startOfToday(), cyc);
+      const phase = day <= 5 && !ds.inWindow ? 'period' : ds.inWindow ? 'dark' : dbp >= 1 && dbp <= 13 ? 'luteal' : dbp >= 14 && dbp <= 16 ? 'ovulation' : 'follicular';
+      const TEXT = {
+        period:     ['Period', '#f87171', 'Things often ease after the first day or two.'],
+        follicular: ['Follicular · good stretch', 'var(--color-green)', 'Usually the calmest part of her month. Enjoy it together.'],
+        ovulation:  ['Ovulation', '#fbbf24', 'Usually still a good stretch.'],
+        luteal:     ['Luteal', '#a78bfa', 'Still an ok stretch. Be easy on each other.'],
+        dark:       [`Dark side of the moon · day ${ds.dayIdx} of ${DARK_DAYS + 1}`, '#a78bfa', 'Go gently. Your plan is in Insights.']
+      }[phase];
+      // Ring: period, follicular, ovulation and luteal arcs, with today marked
+      const cx = 56, cy = 56, r = 44;
+      const pt = d => { const a = (d - 1) / L * Math.PI * 2 - Math.PI / 2; return [cx + r * Math.cos(a), cy + r * Math.sin(a)]; };
+      const arcs = [[1, 5, '#f87171'], [6, L - 16, '#34d399'], [L - 15, L - 13, '#fbbf24'], [L - 12, L, '#a78bfa']];
+      let svg = `<circle cx="${cx}" cy="${cy}" r="${r}" stroke="rgba(255,255,255,0.06)" stroke-width="10" fill="none"/>`;
+      arcs.forEach(([a, b, c]) => {
+        const [x1, y1] = pt(a), [x2, y2] = pt(b + 0.9), large = (b + 0.9 - a) / L > 0.5 ? 1 : 0;
+        svg += `<path d="M${x1} ${y1} A${r} ${r} 0 ${large} 1 ${x2} ${y2}" stroke="${c}" stroke-width="10" fill="none" stroke-linecap="round" opacity="0.6"/>`;
+      });
+      const [tx, ty] = pt(Math.min(day, L) + 0.45);
+      svg += `<circle cx="${tx}" cy="${ty}" r="7" fill="#fff"/><circle cx="${tx}" cy="${ty}" r="4" fill="${TEXT[1].startsWith('var') ? '#34d399' : TEXT[1]}"/>`;
+      const label = cyc.measured >= 3 ? `Her pattern · ${cyc.starts.length} cycles logged` : `Typical PMDD timing · ${cyc.measured} of 3 cycles logged`;
+      return `<div class="today-cycle"><svg width="104" height="104" viewBox="0 0 112 112">${svg}</svg>` +
+        `<div><div class="big">Day ${day}</div><div class="phase" style="color:${TEXT[1]}">${TEXT[0]}</div><div class="today-sub">${TEXT[2]}</div></div></div>` +
+        `<div class="today-legend"><span><i style="background:#f87171"></i>Period</span><span><i style="background:#34d399"></i>Follicular</span><span><i style="background:#fbbf24"></i>Ovulation</span><span><i style="background:#a78bfa"></i>Luteal</span></div>` +
+        `<span class="tag-pill">${label}</span>`;
+    }
+    // First run: the last period start and cycle length are enough for the cycle view to work
+    function todaySaveCycle() {
+      const start = document.getElementById('today-period-start').value;
+      const len = Math.min(40, Math.max(20, parseInt(document.getElementById('today-cycle-len').value) || 28));
+      if(!start) return;
+      pastPeriods.push(start);
+      const next = parseDay(start);
+      while(next <= startOfToday()) next.setDate(next.getDate() + len);
+      dates.period = `${next.getFullYear()}-${String(next.getMonth() + 1).padStart(2, '0')}-${String(next.getDate()).padStart(2, '0')}`;
+      localStorage.setItem('aq_dates', JSON.stringify(dates));
+      savePastPeriods();
+      renderToday();
+    }
+    function renderToday() {
+      const el = document.getElementById('today-cycle');
+      if(!el) return;
+      document.getElementById('today-spirit-name').innerText = hamsterName;
+      document.getElementById('today-spirit-status').innerText = document.getElementById('hamster-status').innerText;
+      document.getElementById('today-spirit-lv').innerText = `Lv ${spiritLevelInfo().level}`;
+      el.innerHTML = buildTodayCycle();
+      const cur = todaysOni();
+      document.getElementById('today-moods').innerHTML = ONI_KINDS.map(k =>
+        `<button class="today-mood ${cur === k ? 'sel' : ''}" onclick="todayPick('${k}')"><canvas id="today-oni-${k}" width="96" height="96"></canvas>${MOODS[k].name}</button>`).join('');
+      ONI_KINDS.forEach(k => drawOniFace('today-oni-' + k, k, 0));
+      const lastPick = moodLog.length ? moodLog[moodLog.length - 1] : null;
+      document.getElementById('today-checked').innerText = lastPick && lastPick.ts >= startOfToday().getTime()
+        ? `Checked in: ${MOODS[lastPick.mood].name} · ${new Date(lastPick.ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
+        : 'Not checked in yet today.';
+      // Gentle backup reminder after two weeks (or once there is something worth keeping)
+      const lastBackup = +localStorage.getItem('aq_last_backup') || 0;
+      const daysSince = lastBackup ? Math.floor((Date.now() - lastBackup) / DAY) : null;
+      const needBackup = lastBackup ? daysSince >= 14 : notes.length + Object.keys(calData).length >= 10;
+      document.getElementById('today-backup-card').style.display = needBackup ? '' : 'none';
+      document.getElementById('today-backup-text').innerText = lastBackup ? `Last backup ${daysSince} days ago. Keep your records safe.` : 'No backup yet. Keep your records safe.';
+      const st = calData[dayKey(new Date())];
+      document.getElementById('today-days').innerHTML = TODAY_DAYS.map(([k, name, col]) =>
+        `<button class="today-day ${st === k ? 'sel' : ''}" style="--day-col:${col}" onclick="todaySetDay('${k}')">${name}</button>`).join('');
+      const today = startOfToday();
+      const soon = importantDates.map(e => ({ ...e, when: nextOccurrence(e.md) }))
+        .map(e => ({ ...e, n: Math.round((e.when - today) / DAY) })).filter(e => e.n <= 30).sort((a, b) => a.n - b.n);
+      document.getElementById('today-coming-card').style.display = 'none'; // countdowns to dates felt stressful
+      document.getElementById('today-coming').innerHTML = soon.map(e =>
+        `<div class="today-coming"><span>${escapeHtml(e.name)}</span><span class="today-sub">${shortDate(e.when)} · ${e.n === 0 ? 'today' : `in ${e.n} day${e.n === 1 ? '' : 's'}`}</span></div>`).join('');
+    }
+    // Check-in from Today: same as picking an oni on the start screen, and marking today on the calendar
+    function todayPick(kind) {
+      moodLog.push({ ts: Date.now(), mood: kind });
+      localStorage.setItem('aq_moods', JSON.stringify(moodLog));
+      renderMoodCalendar();
+      updateCountMeters();
+      applyOniTailoring();
+      renderToday();
+    }
+    function todaySetDay(status) {
+      const k = dayKey(new Date());
+      calData[k] = calData[k] === status ? '' : status; // tap again to clear
+      localStorage.setItem('aq_cal', JSON.stringify(calData));
+      renderCurrentMonthCalendar();
+      updateCountMeters();
+      renderToday();
+    }
+
+    // ---------- CALM AS TILES (normal mode): one tool open at a time ----------
+    const CALM_TILE = [['Vagus', '👁', '60 seconds'], ['Quiet Reset', '🌿', '2 minutes, anywhere'], ['Statements', '❝', 'Words to hold onto'],
+                       ['Breathing', '◯', 'Paced rounds'], ['Chaos', '✷', 'Shake it out'], ['Leaves', '🍃', 'Let thoughts pass'],
+                       ['Pond', '≈', 'Ripples settle'], ['Lanterns', '🏮', 'Release worries'], ['Fog', '🌫', 'Wipe the window clear']];
+    function setupCalmTiles() {
+      const tab = document.getElementById('tab-calm');
+      if(!tab || document.getElementById('calm-tiles')) return;
+      // Cards without a heading belong to the tool above them (e.g. the steps of the quiet reset)
+      // Statements stay open at the top, without a card; everything else becomes a tile
+      const titles = [];
+      let pinned = null;
+      tab.querySelectorAll(':scope > .card').forEach(c => {
+        const h = c.querySelector('h2');
+        if(h && h.innerText.trim() === 'Statements') {
+          pinned = c;
+          c.classList.add('calm-pinned');
+          document.getElementById('quote-display').onclick = nextQuote; // tap the words for the next one
+          return;
+        }
+        if(h) titles.push(h.innerText.trim());
+        c.dataset.calmGroup = Math.max(0, titles.length - 1);
+      });
+      const tiles = document.createElement('div');
+      tiles.id = 'calm-tiles';
+      tiles.className = 'calm-tiles';
+      tiles.innerHTML = titles.map((t, i) => {
+        const [, ic, sub] = CALM_TILE.find(([k]) => t.includes(k)) || ['', '•', ''];
+        return `<button class="calm-tile" onclick="openCalmGroup(${i})"><span class="calm-ic">${ic}</span><span><b>${escapeHtml(t)}</b><small>${sub}</small></span></button>`;
+      }).join('');
+      const back = document.createElement('button');
+      back.id = 'calm-back';
+      back.className = 'calm-back';
+      back.innerText = '← All tools';
+      back.onclick = closeCalmGroup;
+      tab.prepend(back);
+      tab.prepend(tiles);
+      if(pinned) tab.prepend(pinned);
+    }
+    function openCalmGroup(i) {
+      const tab = document.getElementById('tab-calm');
+      tab.classList.add('calm-open');
+      document.body.classList.add('calm-tool-open');
+      tab.querySelectorAll(':scope > .card').forEach(c => c.classList.toggle('open', +c.dataset.calmGroup === i));
+      window.scrollTo(0, 0);
+    }
+    function closeCalmGroup() {
+      const tab = document.getElementById('tab-calm');
+      if(!tab) return;
+      tab.classList.remove('calm-open');
+      document.body.classList.remove('calm-tool-open');
+      tab.querySelectorAll(':scope > .card.open').forEach(c => c.classList.remove('open'));
+    }
+
+    // ---------- INSIGHTS AS CARDS: titles only, tap to open ----------
+    function setupInsightCards() {
+      document.querySelectorAll('#tab-insights > .card').forEach(c => {
+        const h = c.querySelector(':scope > h2');
+        if(!h || c.classList.contains('ins-card')) return;
+        c.classList.add('ins-card');
+        if(c.id !== 'week-card' && c.id !== 'trend-card') c.classList.add('collapsed'); // the summaries start open
+        h.addEventListener('click', () => {
+          c.classList.toggle('collapsed');
+          // Opening another section folds the 30-day summary away
+          if(c.id !== 'trend-card' && !c.classList.contains('collapsed')) document.getElementById('trend-card').classList.add('collapsed');
+        });
+      });
+    }
+
+    // ---------- JOURNAL SECTIONS ----------
+    let journeySeg = 'write';
+    function showJourneySeg(seg) {
+      journeySeg = seg;
+      document.querySelectorAll('#tab-journey > [data-seg]').forEach(el => {
+        el.style.display = el.dataset.seg === seg ? '' : 'none';
+      });
+      document.querySelectorAll('#journey-seg button').forEach(b => b.classList.toggle('on', b.dataset.seg === seg));
+      if(seg === 'journal') toggleJournal(true);
+    }
+
+    // ---------- PAST 30 DAYS vs THE 30 BEFORE ----------
+    function renderTrend(allInc) {
+      const el = document.getElementById('trend-rows');
+      if(!el) return;
+      const now = startOfToday().getTime() + DAY, A = now - 30 * DAY, B = A - 30 * DAY;
+      const win = (from, to) => {
+        const r = { good: 0, tense: 0, hard: 0, inc: 0, crises: [], picks: [], disrupt: 0, tools: 0 };
+        Object.entries(calData).forEach(([k, st]) => {
+          const t = parseDay(k).getTime();
+          if(t < from || t >= to) return;
+          if(st === 'status-green') r.good++; else if(st === 'status-yellow') r.tense++; else if(st === 'status-red' || st === 'status-black') r.hard++;
+        });
+        r.inc = allInc.filter(e => e.ts >= from && e.ts < to).length;
+        r.crises = crises.filter(c => c.start >= from && c.start < to);
+        r.picks = moodLog.filter(m => m.ts >= from && m.ts < to && MOODS[m.mood]);
+        Object.entries(practice).forEach(([k, d]) => {
+          const t = parseDay(k).getTime();
+          if(t < from || t >= to) return;
+          r.disrupt += (d.puzzleSec || 0) / 60;
+          r.tools += (d.vagus || 0) + (d.tools || 0);
+        });
+        return r;
+      };
+      const cur = win(A, now), prev = win(B, A);
+      const SCORE = { happy: 2, calm: 1, numb: -1, anxious: -1, sad: -1, angry: -2 };
+      const feel = r => r.picks.length ? r.picks.reduce((a, m) => a + SCORE[m.mood], 0) / r.picks.length : null;
+      const feelWord = v => v === null ? '–' : v >= 1 ? 'Good' : v >= 0.2 ? 'Calm' : v > -0.5 ? 'Mixed' : 'Heavy';
+      const avgMin = r => r.crises.length ? Math.round(r.crises.reduce((a, c) => a + (c.end - c.start), 0) / r.crises.length / 60000) : null;
+      // [label, now, before, higher is better?, how to show the value]
+      const rows = [
+        ['Good days', cur.good, prev.good, true],
+        ['Yellow days', cur.tense, prev.tense, false],
+        ['Hard days', cur.hard, prev.hard, false],
+        ['Incidents', cur.inc, prev.inc, false],
+        ['Crises', cur.crises.length, prev.crises.length, false, v => v + (avgMin(cur) !== null ? ` · ~${avgMin(cur)} min` : '')],
+        ['Feeling', feel(cur), feel(prev), true, feelWord, feelWord],
+        ['Disrupt', Math.round(cur.disrupt), Math.round(prev.disrupt), true, v => `${v} min`, v => `${v} min`],
+        ['Calm tools used', cur.tools, prev.tools, true]
+      ];
+      const hasAny = cur.good + cur.tense + cur.hard + cur.inc + cur.picks.length + prev.good + prev.hard + prev.picks.length > 0;
+      el.innerHTML = !hasAny ? '<div class="today-sub">Mark days and check in, and this fills in.</div>' : rows.map(([name, a, b, upGood, fmt, fmtPrev]) => {
+        const show = fmt || (v => v), showPrev = fmtPrev || (v => v);
+        let arrow = '', cls = '';
+        if(a !== null && b !== null && a !== b) {
+          const better = upGood ? a > b : a < b;
+          arrow = a > b ? '↑' : '↓';
+          cls = better ? 'up' : 'down';
+        }
+        return `<div class="trend-row"><span class="t-name">${name}</span><span class="t-val">${a === null ? '–' : show(a)}</span>` +
+          `<span class="t-cmp"><span class="${cls}">${arrow || (a === b && a !== null ? '=' : '')}</span> before: ${b === null ? '–' : showPrev(b)}</span></div>`;
+      }).join('');
     }
 
     function renderCorrelations() {
@@ -7192,7 +8990,9 @@
 
       const recovery = buildRecoveryHtml();
       renderDarkBanner();
-      el.innerHTML = buildDarkHtml() + buildCycleHtml(allInc) + recovery +
+      renderWeekSummary(allInc);
+      renderTrend(allInc);
+      el.innerHTML = buildCrisisHtml() + buildDarkHtml() + buildCycleHtml(allInc) + recovery +
         (cards.length ? '<div class="pat-title">Other patterns</div>' + cards.join('') : '');
     }
 
@@ -7236,9 +9036,9 @@
     // ---------- TAILORED TO TODAY'S ONI ----------
     // Suggestions, journal prompts and statements follow the oni you picked today.
     const TOOLS = {
-      shake:    { label: '🫨 Shake it out (30s)', tab: 'recover', el: () => document.getElementById('shake-box') },
-      cold:     { label: '🧊 Cold water',          tab: 'recover', el: () => document.querySelector('[onclick="startColdTimer()"]') },
-      unsent:   { label: '🍂 Unsent Defense',      tab: 'journey', el: () => document.getElementById('unsent-wrap') },
+      shake:    { label: '🫨 Shake it out (30s)', tab: 'calm', el: () => document.getElementById('shake-box') },
+      cold:     { label: '🧊 Cold water',          tab: 'calm', el: () => document.querySelector('[onclick="startColdTimer()"]') },
+      unsent:   { label: '🍂 Unsaid Words',      tab: 'journey', el: () => document.getElementById('unsent-wrap') },
       exhale:   { label: '🌬️ Long-exhale breathing', tab: 'calm', el: () => document.getElementById('breath-circle'),
                   before: () => { stopBreathing(); document.getElementById('breath-pattern').value = 'calm'; } },
       breathe:  { label: '🌬️ Breathing pacer',  tab: 'calm', el: () => document.getElementById('breath-circle') },
@@ -7249,7 +9049,7 @@
       write:    { label: '✍️ Write what went well', tab: 'journey', el: () => document.getElementById('note-input'),
                   after: el => el.focus() },
       green:    { label: '🟢 Mark today green',    action: markTodayGreen },
-      vagus:    { label: '👀 Vagus reset',         tab: 'vagus', el: () => document.getElementById('eye-pos') },
+      vagus:    { label: '👀 Vagus reset',         tab: 'calm', el: () => document.getElementById('eye-pos') },
       puzzle:   { label: '🧩 Disrupt',              tab: 'puzzle', el: () => document.getElementById('puzzle-canvas') }
     };
 
@@ -7340,6 +9140,83 @@
       }
     };
 
+    // More statements for each oni, written for this situation and kept on the device
+    const MORE_WORDS = {
+      angry: [
+        "Feel it fully, then let it pass through. You do not have to act on it.",
+        "Walk away for five minutes. Coming back calmer is a strength.",
+        "Your voice can stay low even when the feeling is loud.",
+        "Being treated unfairly hurts. Your anger makes sense.",
+        "Write it out instead of saying it. Words on a page cannot escalate.",
+        "Unclench your fists, your jaw, your shoulders. Let the heat drain down.",
+        "You can protect your peace without proving anything.",
+        "Not every accusation deserves a reply.",
+        "Cold water on your wrists. Slow breath out. You are in charge of your body.",
+        "This feeling will peak and fall. Wait for the fall."
+      ],
+      anxious: [
+        "Your thoughts are racing ahead. Bring them back to this room.",
+        "Name five things you can see. Your mind will slow with your eyes.",
+        "Anxiety predicts the worst. It is often wrong.",
+        "You can only handle this moment, and this moment is manageable.",
+        "Hand on your chest. Feel it rise and fall. That is you, still here.",
+        "You don't need a plan for everything right now.",
+        "The knot in your stomach is your body trying to protect you. Thank it, then breathe.",
+        "Slow is safe. Move slowly, speak slowly, breathe slowly.",
+        "Whatever happens next, you will meet it one step at a time.",
+        "It is okay to not know how today will go."
+      ],
+      numb: [
+        "Numb is your mind turning the volume down. It will come back up.",
+        "Wrap yourself in something warm and just sit for a minute.",
+        "Eat something, drink some water. Your body still needs care.",
+        "You don't have to explain how you feel when you can't feel it.",
+        "Step outside for a moment. Notice the air on your face.",
+        "Put on one song you used to love. Let it do the work.",
+        "Feeling flat after a hard stretch is normal. It is recovery, not emptiness.",
+        "You can go through today on autopilot. That is allowed.",
+        "Stretch slowly. Feel where your body is tight.",
+        "Being gentle with yourself still counts, even if you can't feel it yet."
+      ],
+      sad: [
+        "Let it be heavy for a while. You don't have to rush it.",
+        "You are allowed to grieve how things are, even while you hope.",
+        "Missing the good days is a sign of how much you care.",
+        "Reach out to someone, even just with a short message.",
+        "Being kind to yourself right now is not selfish.",
+        "You are not too much, and you are not too little.",
+        "A warm drink, a blanket, an early night. Small comforts matter.",
+        "Some days are just sad. You can let this be one of them.",
+        "You are worthy of care, from others and from yourself.",
+        "The heaviness is passing through you. It is not who you are."
+      ],
+      happy: [
+        "Say out loud one thing you are grateful for right now.",
+        "Write down this moment, so you can find it on a harder day.",
+        "Share the good mood with someone. It grows when shared.",
+        "Let yourself relax into it. You don't have to brace for what's next.",
+        "You helped make today good. Notice your part in it.",
+        "Laughter is good medicine. Let it in.",
+        "Take a photo of something that made you smile today.",
+        "Plan something small to look forward to.",
+        "Enjoy the quiet moments together. They are real too.",
+        "Today counts. Hold onto it."
+      ],
+      calm: [
+        "Notice how your breath feels when nothing is wrong.",
+        "You built this calm. You can build it again.",
+        "This is a good moment to rest, not to plan.",
+        "Let your shoulders stay low. Remember what this feels like.",
+        "Calm days are not boring. They are healing.",
+        "Your body is learning that it is safe. Let it learn.",
+        "Enjoy the quiet. You don't need to fill it.",
+        "Small steady days add up to a steadier life.",
+        "You deserve days like this one.",
+        "Breathe in this peace. Store it for later."
+      ]
+    };
+    Object.entries(MORE_WORDS).forEach(([k, list]) => ONI_TAILOR[k].words.push(...list));
+
     function markTodayGreen() {
       const k = dayKey(new Date());
       if(!calData[k]) {
@@ -7357,8 +9234,13 @@
       if(tool.action) { tool.action(); return; }
       if(tool.before) tool.before();
       switchTab(tool.tab);
+      if(tool.tab === 'journey') showJourneySeg('write');
       const el = tool.el();
       if(!el) return;
+      if(tool.tab === 'calm' && !document.body.classList.contains('crisis')) {
+        const cc = el.closest('#tab-calm > .card');
+        if(cc) openCalmGroup(+cc.dataset.calmGroup);
+      }
       const card = el.closest('.card') || el;
       card.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
       card.classList.remove('spotlight');
@@ -7382,7 +9264,7 @@
       const card = document.getElementById('for-you');
       const entry = currentOniEntry();
       const dismissed = !!entry && localStorage.getItem('aq_foryou_dismissed') === String(entry.ts);
-      if(t && !dismissed) {
+      if(t && !dismissed && oni !== 'calm') { // feeling calm: no suggestions needed
         document.getElementById('for-you-title').innerText = `${t.title} For you right now`;
         document.getElementById('for-you-sub').innerText = t.sub;
         document.getElementById('for-you-actions').innerHTML = t.tools.map(k =>
@@ -7412,21 +9294,23 @@
     // ---------- USAGE TRACKER (private, stays on this device) ----------
     // Records app opens, session length, time per tab and which features you use, so the app can be
     // trimmed and tuned around how you actually use it.
-    const TAB_KEYS = ['journey', 'puzzle', 'spirit', 'vagus', 'recover', 'calm', 'practise'];
-    const TAB_LABEL = { journey: 'Journey', puzzle: 'Disrupt', spirit: 'Spirit', vagus: 'Vagus', recover: 'Recover', calm: 'Calm', practise: 'Practise' };
+    const TAB_KEYS = ['today', 'journey', 'puzzle', 'spirit', 'calm', 'insights'];
+    // Older tabs (vagus, recover, practise) keep their names so past usage still reads right
+    const TAB_LABEL = { today: 'Today', journey: 'Journal', puzzle: 'Disrupt', spirit: 'Spirit', calm: 'Calm', insights: 'Insights',
+                        vagus: 'Vagus', recover: 'Recover', practise: 'Practise' };
     // Time recorded before tabs had names (by their old position)
     const OLD_TAB = { 0: 'vagus', 1: 'journey', 2: 'puzzle', 3: 'recover', 4: 'spirit', 5: 'calm', 6: 'practise' };
     const FEATURE_LABELS = {
       stepVagus: 'Vagus: gaze steps', incrementVagus: 'Vagus: mark reset done',
       saveNote: 'Journal: add entry', toggleJournal: 'Journal: show entries', editNoteTags: 'Journal: tag old entries',
       setTagFilter: 'Tag filters', toggleTag: 'Tags', addCustomTag: 'Custom tags',
-      releaseUnsent: 'Unsent Defense',
+      releaseUnsent: 'Unsaid Words',
       openIncidentForm: 'Incident log: open form', saveIncident: 'Incident log: save', toggleIncidents: 'Incident log: show entries',
       exportIncidents: 'Incident log: export',
       toggleCalendarView: 'Calendar: show', calendarDay: 'Calendar: mark a day', changeCalMonth: 'Calendar: change month',
       toggleMoodCalendar: 'Emotional State calendar', moodCalendarDay: 'Emotional State: view a day', changeMoodMonth: 'Emotional State: change month',
       puzzlePlay: 'Disrupt: play', pausePuzzle: 'Disrupt: pause', resumePuzzle: 'Disrupt: resume', resetPuzzle: 'Disrupt: reset',
-      startShakeTimer: 'Shake reset', startColdTimer: 'Cold water timer', nextUnsponge: 'Un-Sponging phrases',
+      startShakeTimer: 'Shake reset', startColdTimer: 'Cold water timer', nextUnsponge: 'Set it down phrases',
       feedHamster: 'Spirit: feed', spiritDoTrick: 'Spirit: trick', 'canvas:hamster-canvas': 'Spirit: tap / pet', renameHamster: 'Spirit: rename',
       nextQuote: 'Statements', toggleBreathing: 'Breathing pacer',
       'canvas:chaos-canvas': 'Chaos Release', initChaosGame: 'Chaos Release: new round',
@@ -7628,6 +9512,8 @@
       const a = document.createElement('a');
       const t = new Date();
       a.href = URL.createObjectURL(blob);
+      localStorage.setItem('aq_last_backup', String(Date.now()));
+      setTimeout(() => { if(typeof renderToday === 'function') renderToday(); });
       a.download = `airnomad-backup-${t.getFullYear()}-${String(t.getMonth() + 1).padStart(2, '0')}-${String(t.getDate()).padStart(2, '0')}.json`;
       document.body.appendChild(a);
       a.click();
@@ -8800,7 +10686,16 @@
     drawSky(performance.now());
     requestAnimationFrame(skyLoop);
     setupHamsterTap();
+    spiritHuskTick();
+    renderFindsButton();
     applySpiritBackdrop();
+    setupCalmTiles();
+    setupInsightCards();
+    renderPuzzleModeSettings();
+    showJourneySeg('write');
+    renderToday();
+    resumeCrisisIfActive();
+    renderCrisisFollowup();
     renderHamsterName();
     renderIncidents();
     renderPatterns();
@@ -8828,6 +10723,12 @@
     renderMoodCalendar();
     calmLoop();
     if(!reduceMotion) hamsterLoop();
+    takeTodaySnapshot();
+    if(spiritStyle.backdrop === 'weather') fetchWeather().then(() => {
+      applySpiritBackdrop();
+      // Same pose, just with the real weather behind him
+      const x = hamsterWalk.x; hamsterWalk.x = todaySnapX; takeTodaySnapshot(true); hamsterWalk.x = x;
+    }); // again with the real weather
 
     // Home-screen icon drawn from the blue oni
     function makeAppIcon() {
