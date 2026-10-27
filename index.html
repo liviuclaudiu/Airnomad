@@ -326,6 +326,12 @@
     .trend-row .t-cmp { width: 96px; text-align: right; font-size: 0.72rem; color: var(--text-muted); }
     .trend-row .up { color: var(--color-green); }
     .trend-row .down { color: #fbbf24; }
+    .glance { margin-bottom: 10px; padding-bottom: 4px; border-bottom: 1px solid var(--border-color); }
+    .glance-line { display: flex; gap: 10px; align-items: baseline; padding: 6px 0; font-size: 0.88rem; line-height: 1.4; }
+    .glance-line i { flex: none; width: 8px; height: 8px; border-radius: 50%; transform: translateY(-1px); background: var(--text-muted); }
+    .glance-line i.good { background: var(--color-green); }
+    .glance-line i.watch { background: #fbbf24; }
+    .glance-line b { font-weight: 700; }
     .journey-seg { display: flex; background: rgba(10, 16, 32, 0.88); border: 1px solid var(--border-color); border-radius: 14px; padding: 3px; margin-bottom: 12px; }
     .journey-seg button { flex: 1; padding: 8px 0; font-size: 0.8rem; border-radius: 11px; border: 0; background: none; color: var(--text-muted); cursor: pointer; }
     .journey-seg button.on { background: var(--tint-strong); color: var(--text-main); font-weight: 600; }
@@ -1885,6 +1891,7 @@
     <div class="tab-content" id="tab-insights">
       <div class="card" id="trend-card">
         <h2 class="card-label">Past 30 days</h2>
+        <div class="glance" id="trend-glance"></div>
         <div id="trend-rows"></div>
       </div>
       <div class="card" id="week-card" style="display:none;">
@@ -8893,10 +8900,119 @@
     }
 
     // ---------- PAST 30 DAYS vs THE 30 BEFORE ----------
+    // At a glance: the few trends worth knowing, picked from your own data and written out, strongest first.
+    // A finding only shows when there's enough data behind it. [kind: good | watch | info, sentence, strength]
+    function glanceFindings() {
+      const out = [];
+      const today = startOfToday(), T = today.getTime() + DAY;
+      const st = d => calData[dayKey(d)];
+      const isHard = v => v === 'status-red' || v === 'status-black';
+      const daysBack = n => Array.from({ length: n }, (_, i) => addDays(today, -i));
+      const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
+
+      // 1. This month against the one before
+      const count = (from, to) => {
+        const r = { good: 0, hard: 0, marked: 0 };
+        for(let i = from; i < to; i++) { const v = st(addDays(today, -i)); if(!v) continue; r.marked++; if(v === 'status-green') r.good++; if(isHard(v)) r.hard++; }
+        return r;
+      };
+      const cur = count(0, 30), prev = count(30, 60);
+      if(cur.marked >= 5 && prev.marked >= 5) {
+        const diff = (cur.good - cur.hard) - (prev.good - prev.hard);
+        if(diff >= 2) out.push(['good', `<b>Better than the 30 days before:</b> ${cur.good} good days vs ${prev.good}` +
+          (cur.hard < prev.hard ? `, hard days down from ${prev.hard} to ${cur.hard}.` : '.'), 3 + diff / 3]);
+        else if(diff <= -2) out.push(['watch', `<b>Harder than the 30 days before:</b> ${plural(cur.hard, 'hard day')} vs ${prev.hard}` +
+          (cur.good < prev.good ? `, good days down from ${prev.good} to ${cur.good}.` : '.'), 3 + -diff / 3]);
+        else out.push(['info', `<b>About the same as the month before:</b> ${cur.good} good, ${cur.hard} hard.`, 1]);
+      }
+
+      // 2. Hard days and her cycle (the 8 days before her period and day 1)
+      const cyc = cycleInfo();
+      if(cyc.starts.length) {
+        const hard = daysBack(120).filter(d => isHard(st(d)));
+        if(hard.length >= 4) {
+          const inWin = hard.filter(d => { const b = daysBeforePeriod(d, cyc); return b !== null && b <= 8; }).length;
+          const share = inWin / hard.length, expected = 9 / cyc.avg;
+          if(share >= Math.max(0.5, expected * 1.4))
+            out.push(['watch', `<b>Hard days cluster before her period:</b> ${inWin} of your last ${hard.length} fell in that window.`, 3 + share * 2]);
+        }
+      }
+
+      // 3. Hardest weekday (last 90 days)
+      const wd = Array.from({ length: 7 }, () => ({ hard: 0, marked: 0 }));
+      daysBack(90).forEach(d => { const v = st(d); if(!v) return; wd[d.getDay()].marked++; if(isHard(v)) wd[d.getDay()].hard++; });
+      const totHard = wd.reduce((a, w) => a + w.hard, 0), totMarked = wd.reduce((a, w) => a + w.marked, 0);
+      if(totHard >= 5) {
+        const avgRate = totHard / totMarked;
+        const top = wd.map((w, i) => ({ i, rate: w.marked ? w.hard / w.marked : 0, hard: w.hard })).sort((a, b) => b.rate - a.rate)[0];
+        if(top.hard >= 3 && top.rate >= avgRate * 1.6) {
+          const name = new Date(2024, 0, 7 + top.i).toLocaleDateString('en-GB', { weekday: 'long' });
+          out.push(['info', `<b>${name}s are your hardest day:</b> ${top.hard} of ${totHard} hard days in the last 3 months.`, 2 + top.rate / avgRate / 2]);
+        }
+      }
+
+      // 4. What helps: the day after a tense or hard day, with and without a calm tool that day
+      const care = d => { const p = practice[dayKey(d)] || {}; return (p.vagus || 0) + (p.tools || 0) + (p.puzzleSessions || 0) + (p.breathRounds || 0) > 0; };
+      const withC = [0, 0], without = [0, 0];
+      daysBack(120).slice(1).forEach(d => {
+        const v = st(d), next = st(addDays(d, 1));
+        if(!(v === 'status-yellow' || isHard(v)) || !next) return;
+        const bucket = care(d) ? withC : without;
+        bucket[1]++; if(next === 'status-green') bucket[0]++;
+      });
+      if(withC[1] >= 4 && without[1] >= 4) {
+        const gap = withC[0] / withC[1] - without[0] / without[1];
+        if(gap >= 0.2) out.push(['good', `<b>Calm tools help:</b> after a rough day where you used one, the next day was good ${withC[0]} of ${withC[1]} times. Without, ${without[0]} of ${without[1]}.`, 3 + gap * 3]);
+      }
+
+      // 5. Good run
+      let run = 0;
+      for(let i = st(today) ? 0 : 1; i < 400 && st(addDays(today, -i)) === 'status-green'; i++) run++;
+      let best = 0, r2 = 0;
+      Object.keys(calData).map(parseDay).sort((a, b) => a - b).forEach((d, i, arr) => {
+        const consecutive = i && Math.round((d - arr[i - 1]) / DAY) === 1;
+        if(calData[dayKey(d)] === 'status-green') { r2 = consecutive && r2 ? r2 + 1 : 1; best = Math.max(best, r2); } else r2 = 0;
+      });
+      if(run >= 2) out.push(['good', run >= best && run >= 3 ? `<b>${run} good days in a row:</b> your best run yet.` : `<b>${run} good days in a row.</b> Your best is ${best}.`, 2 + run / 3]);
+
+      // 6. Days since the last hard day
+      const lastHard = daysBack(120).findIndex(d => isHard(st(d)));
+      if(lastHard >= 7) out.push(['good', `<b>${lastHard} days since the last hard day.</b>`, 2 + lastHard / 10]);
+
+      // 7. Crises getting shorter or longer (last 3 against the 3 before)
+      if(crises.length >= 4) {
+        const mins = c => (c.end - c.start) / 60000, avg = l => l.reduce((a, c) => a + mins(c), 0) / l.length;
+        const recent = crises.slice(-3), before = crises.slice(-6, -3);
+        const a = avg(recent), b = avg(before);
+        if(b > 0 && Math.abs(a - b) / b >= 0.25 && Math.abs(a - b) >= 3)
+          out.push(a < b ? ['good', `<b>Crises are getting shorter:</b> about ${Math.round(b)} min → ${Math.round(a)} min.`, 2.5]
+                         : ['watch', `<b>Recent crises lasted longer:</b> about ${Math.round(b)} min → ${Math.round(a)} min.`, 2.5]);
+      }
+
+      // 8. How you've mostly checked in this month
+      const picks = moodLog.filter(m => m.ts >= T - 30 * DAY && MOODS[m.mood]);
+      if(picks.length >= 8) {
+        const tally = {};
+        picks.forEach(m => { tally[m.mood] = (tally[m.mood] || 0) + 1; });
+        const [mood, n] = Object.entries(tally).sort((a, b) => b[1] - a[1])[0];
+        out.push([['happy', 'calm'].includes(mood) ? 'good' : 'info', `<b>You checked in ${MOODS[mood].name.toLowerCase()} most often</b> this month (${n} of ${picks.length}).`, 1.2]);
+      }
+      return out.sort((a, b) => b[2] - a[2]).slice(0, 4);
+    }
+    function renderGlance() {
+      const el = document.getElementById('trend-glance');
+      if(!el) return;
+      const f = glanceFindings();
+      el.innerHTML = f.length ? f.map(([kind, text]) => `<div class="glance-line"><i class="${kind}"></i><span>${text}</span></div>`).join('')
+        : '<div class="today-sub" style="padding:4px 0 8px;">Keep marking your days. Trends show up here after a couple of weeks.</div>';
+    }
+
     function renderTrend(allInc) {
+      renderGlance();
       const el = document.getElementById('trend-rows');
       if(!el) return;
-      const now = startOfToday().getTime() + DAY, A = now - 30 * DAY, B = A - 30 * DAY;
+      // Calendar days, so a clock change doesn't shift a day between the two windows
+      const today0 = startOfToday(), now = addDays(today0, 1).getTime(), A = addDays(today0, -29).getTime(), B = addDays(today0, -59).getTime();
       const win = (from, to) => {
         const r = { good: 0, tense: 0, hard: 0, inc: 0, crises: [], picks: [], disrupt: 0, tools: 0 };
         Object.entries(calData).forEach(([k, st]) => {
