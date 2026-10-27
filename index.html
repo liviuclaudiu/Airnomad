@@ -1478,8 +1478,8 @@
     <button class="tab-btn" data-tab="journey" onclick="switchTab('journey')"><svg viewBox="0 0 24 24"><path d="M5 4h11l3 3v13H5z"/><path d="M8 10h8M8 14h8M8 18h5"/></svg>Journal</button>
     <button class="tab-btn" data-tab="puzzle" onclick="switchTab('puzzle')"><svg viewBox="0 0 24 24"><path d="M12 3l7 4v10l-7 4-7-4V7z"/><path d="M12 12l7-5M12 12v9M12 12L5 7"/></svg>Disrupt</button>
     <button class="tab-btn" data-tab="spirit" onclick="switchTab('spirit')" id="hamster-tab"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="7"/><circle cx="7" cy="6" r="2.5"/><circle cx="17" cy="6" r="2.5"/></svg>Spirit</button>
-    <button class="tab-btn" data-tab="calm" onclick="switchTab('calm')"><svg viewBox="0 0 24 24"><path d="M3 12c3-4 6-4 9 0s6 4 9 0"/><path d="M3 17c3-4 6-4 9 0s6 4 9 0"/><path d="M3 7c3-4 6-4 9 0s6 4 9 0"/></svg>Calm</button>
     <button class="tab-btn" data-tab="insights" onclick="switchTab('insights')"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Insights</button>
+    <button class="tab-btn" data-tab="calm" onclick="switchTab('calm')"><svg viewBox="0 0 24 24"><path d="M3 12c3-4 6-4 9 0s6 4 9 0"/><path d="M3 17c3-4 6-4 9 0s6 4 9 0"/><path d="M3 7c3-4 6-4 9 0s6 4 9 0"/></svg>Calm</button>
   </nav>
 
   <div id="puzzle-window-banner" class="window-banner" style="display:none;">
@@ -1557,9 +1557,9 @@
     <!-- JOURNAL -->
     <div class="tab-content" id="tab-journey">
       <div class="journey-seg" id="journey-seg">
-        <button data-seg="write" class="on" onclick="showJourneySeg('write')">Write</button>
+        <button data-seg="calendar" class="on" onclick="showJourneySeg('calendar')">Calendar</button>
+        <button data-seg="write" onclick="showJourneySeg('write')">Write</button>
         <button data-seg="journal" onclick="showJourneySeg('journal')">Journal</button>
-        <button data-seg="calendar" onclick="showJourneySeg('calendar')">Calendar</button>
       </div>
       <div data-seg="write">
       <div class="card">
@@ -2066,6 +2066,13 @@
       <h2>⚙️ Settings</h2>
 
       <details class="set-sec" open>
+        <summary>Spirit <span id="spirit-settings-lv" class="today-sub" style="margin-left:auto; margin-right:8px;"></span></summary>
+        <div id="spirit-settings"></div>
+        <label class="spirit-check"><input type="checkbox" id="spirit-blush" onchange="setSpiritStyle('blush', this.checked)"> Rosy cheeks</label>
+        <label class="spirit-check"><input type="checkbox" id="spirit-house" onchange="setSpiritStyle('house', this.checked)"> His house</label>
+      </details>
+
+      <details class="set-sec">
         <summary>Her cycle</summary>
         <div class="form-group">
           <label>Next period date:</label>
@@ -2079,6 +2086,28 @@
           </div>
           <div id="past-periods" class="past-periods"></div>
         </div>
+      </details>
+
+      <details class="set-sec">
+        <summary>Backup &amp; data</summary>
+        <div class="form-group">
+          <label>Backup (journal, calendar, dates, counters):</label>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <button class="btn-action btn-secondary" style="margin-top:0;" onclick="exportBackup()">Export Backup</button>
+            <button class="btn-action btn-secondary" style="margin-top:0;" onclick="document.getElementById('backup-file').click()">Import Backup</button>
+          </div>
+          <input type="file" id="backup-file" accept="application/json,.json" style="display:none;" onchange="importBackup(this)">
+        </div>
+        <div class="form-group" style="margin-bottom:0;">
+          <label>App usage (private, only on this device):</label>
+          <div id="usage-settings"></div>
+        </div>
+      </details>
+
+      <details class="set-sec">
+        <summary>Crises</summary>
+        <div class="insight-note" style="margin-bottom:6px;">Started one by accident? Delete it here.</div>
+        <div id="crisis-settings"></div>
       </details>
 
       <details class="set-sec">
@@ -2099,35 +2128,6 @@
             <input type="date" id="cfg-date-day" style="flex:1;">
             <button class="icon-btn" type="button" onclick="addImportantDate()">+ Add</button>
           </div>
-        </div>
-      </details>
-
-      <details class="set-sec">
-        <summary>Spirit <span id="spirit-settings-lv" class="today-sub" style="margin-left:auto; margin-right:8px;"></span></summary>
-        <div id="spirit-settings"></div>
-        <label class="spirit-check"><input type="checkbox" id="spirit-blush" onchange="setSpiritStyle('blush', this.checked)"> Rosy cheeks</label>
-        <label class="spirit-check"><input type="checkbox" id="spirit-house" onchange="setSpiritStyle('house', this.checked)"> His house</label>
-      </details>
-
-      <details class="set-sec">
-        <summary>Crises</summary>
-        <div class="insight-note" style="margin-bottom:6px;">Started one by accident? Delete it here.</div>
-        <div id="crisis-settings"></div>
-      </details>
-
-      <details class="set-sec">
-        <summary>Backup &amp; data</summary>
-        <div class="form-group">
-          <label>Backup (journal, calendar, dates, counters):</label>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-            <button class="btn-action btn-secondary" style="margin-top:0;" onclick="exportBackup()">Export Backup</button>
-            <button class="btn-action btn-secondary" style="margin-top:0;" onclick="document.getElementById('backup-file').click()">Import Backup</button>
-          </div>
-          <input type="file" id="backup-file" accept="application/json,.json" style="display:none;" onchange="importBackup(this)">
-        </div>
-        <div class="form-group" style="margin-bottom:0;">
-          <label>App usage (private, only on this device):</label>
-          <div id="usage-settings"></div>
         </div>
       </details>
 
@@ -8845,7 +8845,11 @@
       const tiles = document.createElement('div');
       tiles.id = 'calm-tiles';
       tiles.className = 'calm-tiles';
-      tiles.innerHTML = titles.map((t, i) => {
+      const USE_ORDER = ['Breathing', 'Lanterns', 'Vagus', 'Quiet Reset']; // by how often you use them
+      const rank = t => { const r = USE_ORDER.findIndex(k => t.includes(k)); return r < 0 ? USE_ORDER.length : r; };
+      const order = titles.map((t, i) => i).sort((a, b) => rank(titles[a]) - rank(titles[b]) || a - b);
+      tiles.innerHTML = order.map(i => {
+        const t = titles[i];
         const [, ic, sub] = CALM_TILE.find(([k]) => t.includes(k)) || ['', '•', ''];
         return `<button class="calm-tile" onclick="openCalmGroup(${i})"><span class="calm-ic">${ic}</span><span><b>${escapeHtml(t)}</b><small>${sub}</small></span></button>`;
       }).join('');
@@ -8889,7 +8893,7 @@
     }
 
     // ---------- JOURNAL SECTIONS ----------
-    let journeySeg = 'write';
+    let journeySeg = 'calendar';
     function showJourneySeg(seg) {
       journeySeg = seg;
       document.querySelectorAll('#tab-journey > [data-seg]').forEach(el => {
@@ -10808,7 +10812,7 @@
     setupCalmTiles();
     setupInsightCards();
     renderPuzzleModeSettings();
-    showJourneySeg('write');
+    showJourneySeg('calendar');
     renderToday();
     resumeCrisisIfActive();
     renderCrisisFollowup();
