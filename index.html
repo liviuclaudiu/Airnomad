@@ -26,9 +26,9 @@
       --tint: rgba(0, 242, 254, 0.1);
       --tint-strong: rgba(0, 242, 254, 0.12);
 
-      --color-green: #10b981;
-      --color-yellow: #f59e0b;
-      --color-red: #ef4444;
+      --color-green: #5fc79a;
+      --color-yellow: #f2c46b;
+      --color-red: #ef8a7a;
       --color-black: #000000;
     }
 
@@ -47,8 +47,8 @@
       --border-color: rgba(255, 75, 75, 0.22);
     }
     body.theme-emerald {
-      --theme-primary: #10b981;
-      --theme-secondary: #34d399;
+      --theme-primary: #5fc79a;
+      --theme-secondary: #5fc79a;
       --theme-accent: #065f46;
       --accent-glow: rgba(16, 185, 129, 0.25);
       --border-color: rgba(16, 185, 129, 0.22);
@@ -123,7 +123,7 @@
     .crisis-banner button { margin-left: auto; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.7); background: rgba(255, 255, 255, 0.15); color: #fff; font-weight: 700; font-size: 0.8rem; cursor: pointer; }
     .crisis-tabs { display: grid; grid-template-columns: 1fr 1fr 1fr; margin-top: 8px; }
     .crisis-phrase { cursor: pointer; user-select: none; text-align: center; font-size: 0.9rem; font-weight: 600; color: #fecaca; padding: 9px 6px 2px; min-height: 2.4em; transition: opacity 0.6s; }
-    body.crisis { --theme-primary: #f87171; --theme-secondary: #fca5a5; --accent-glow: rgba(239, 68, 68, 0.45); --tint: rgba(239, 68, 68, 0.12); --tint-strong: rgba(239, 68, 68, 0.22); }
+    body.crisis { --theme-primary: #ef8a7a; --theme-secondary: #fca5a5; --accent-glow: rgba(239, 68, 68, 0.45); --tint: rgba(239, 68, 68, 0.12); --tint-strong: rgba(239, 68, 68, 0.22); }
     body.crisis::before { content: ''; position: fixed; inset: 0; z-index: 1; pointer-events: none;
                           background: radial-gradient(circle at 50% 40%, rgba(220, 38, 38, 0.32), rgba(80, 0, 0, 0.55) 75%); animation: crisisGlow 1s ease-in-out infinite;
                           transition: opacity 1.6s ease; }
@@ -266,6 +266,19 @@
     .today-sub { font-size: 0.8rem; color: var(--text-muted); line-height: 1.45; }
     .today-spirit-row { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
     .hamster-canvas-container.today-spirit-scene { width: 100%; max-width: none; margin: 0; border-radius: 14px; }
+    /* Today: Spirit on a little LCD screen, Tamagotchi style */
+    .hamster-canvas-container.today-spirit-scene.lcd { aspect-ratio: 448 / 244; background: #fff4e0 !important; position: relative;
+      box-shadow: inset 0 0 0 2px #c99a45, inset 0 6px 12px rgba(0, 0, 0, 0.15); border-color: transparent; }
+    .today-spirit-scene.lcd canvas { image-rendering: pixelated; }
+    #spirit-lcd { display: none; }
+    #tab-spirit .hamster-canvas-container.lcd { background: #e6f2ff !important; box-shadow: inset 0 0 0 2px #c99a45; border-color: transparent; }
+    #tab-spirit .hamster-canvas-container.lcd #spirit-lcd { display: block; position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; image-rendering: pixelated; }
+    #tab-spirit .hamster-canvas-container.lcd #hamster-canvas { opacity: 0; }
+    #tab-spirit .hamster-canvas-container.lcd::after { content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+      background: radial-gradient(70% 60% at 25% 15%, rgba(255, 255, 255, 0.3), transparent 60%); }
+    #tab-spirit .hamster-canvas-container.lcd .spirit-thought { z-index: 2; }
+    .today-spirit-scene.lcd::after { content: ''; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+      background: radial-gradient(70% 60% at 25% 15%, rgba(255, 255, 255, 0.35), transparent 60%); }
     .today-spirit-card { display: flex; align-items: center; gap: 10px; cursor: pointer; }
     .today-spirit-go { flex: none; font-size: 2rem; line-height: 1; color: var(--text-muted); padding: 0 2px 4px; }
     .today-spirit-name { font-weight: 700; font-size: 1rem; }
@@ -289,6 +302,23 @@
     .calm-tile { text-align: left; padding: 14px; min-height: 100px; border-radius: 18px; background: var(--bg-card); border: 1px solid var(--border-color);
                  backdrop-filter: blur(10px); color: var(--text-main); cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; }
     .calm-tile b { font-size: 0.88rem; }
+    .calm-more { grid-column: 1 / -1; margin-top: 4px; }
+    .calm-more > summary { list-style: none; cursor: pointer; text-align: center; font-size: 0.82rem; color: var(--text-muted); padding: 10px;
+                           border: 1px dashed var(--border-color); border-radius: 14px; }
+    .calm-more > summary::-webkit-details-marker { display: none; }
+    .calm-more > summary::after { content: ' ▾'; }
+    .calm-more[open] > summary { margin-bottom: 10px; }
+    .calm-more[open] > summary::after { content: ' ▴'; }
+    .calm-tile { position: relative; }
+    .calm-pin { position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+                font-size: 0.8rem; opacity: 0.35; filter: grayscale(1); }
+    .calm-pin.on { opacity: 1; filter: none; background: var(--tint-strong); }
+    .today-pin { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 14px; margin-bottom: 10px; border-radius: 16px; background: var(--bg-card);
+                 border: 1px solid var(--border-color); color: var(--text-main); cursor: pointer; text-align: left; font: inherit; backdrop-filter: blur(10px); }
+    .today-pin .calm-ic { margin: 0; flex: none; }
+    .today-pin b { font-size: 0.9rem; display: block; }
+    .today-pin small { color: var(--text-muted); font-size: 0.74rem; }
+    .today-pin .go { margin-left: auto; font-size: 1.6rem; color: var(--text-muted); line-height: 1; }
     .calm-tile small { display: block; color: var(--text-muted); font-size: 0.72rem; margin-top: 4px; }
     .calm-ic { width: 32px; height: 32px; border-radius: 10px; background: var(--tint-strong); display: flex; align-items: center; justify-content: center; font-size: 1rem; margin-bottom: 8px; }
     .calm-back { display: none; margin: 0 0 12px; padding: 8px 14px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-main); font-size: 0.82rem; cursor: pointer; }
@@ -325,12 +355,32 @@
     .trend-row .t-val { font-weight: 700; }
     .trend-row .t-cmp { width: 96px; text-align: right; font-size: 0.72rem; color: var(--text-muted); }
     .trend-row .up { color: var(--color-green); }
-    .trend-row .down { color: #fbbf24; }
-    .glance { margin-bottom: 10px; padding-bottom: 4px; border-bottom: 1px solid var(--border-color); }
+    .trend-row .down { color: #f2c46b; }
+    .glance { margin-bottom: 10px; }
+    /* Insights in a health-app layout: highlight cards, then big-number tiles */
+    .ins-sub { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin: 4px 0 8px; }
+    .hl { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-color); border-radius: 14px; padding: 11px 12px; margin-bottom: 8px; }
+    .hl-head { display: flex; align-items: center; gap: 8px; font-size: 0.72rem; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
+    .hl-ic { width: 22px; height: 22px; border-radius: 7px; display: flex; align-items: center; justify-content: center; flex: none; }
+    .hl-ic svg { width: 13px; height: 13px; stroke: #fff; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+    .hl-text { font-size: 0.9rem; font-weight: 600; line-height: 1.35; }
+    .hl-text b { font-weight: 700; }
+    .hl-spark { display: flex; align-items: flex-end; gap: 3px; height: 30px; margin-top: 8px; }
+    .hl-spark span { flex: 1; border-radius: 3px; min-height: 3px; }
+    .hl-strip { display: flex; gap: 3px; margin-top: 8px; }
+    .hl-strip span { flex: 1; height: 10px; border-radius: 3px; }
+    .tiles2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .tile2 { background: rgba(255, 255, 255, 0.04); border: 1px solid var(--border-color); border-radius: 14px; padding: 10px 12px; }
+    .tile2 .t-name { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); }
+    .tile2 .t-big { font-size: 1.45rem; font-weight: 800; margin-top: 2px; line-height: 1.15; }
+    .tile2 .t-big small { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); margin-left: 3px; }
+    .tile2 .t-delta { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
+    .tile2 .t-delta.up { color: var(--color-green); }
+    .tile2 .t-delta.down { color: #f2c46b; }
     .glance-line { display: flex; gap: 10px; align-items: baseline; padding: 6px 0; font-size: 0.88rem; line-height: 1.4; }
     .glance-line i { flex: none; width: 8px; height: 8px; border-radius: 50%; transform: translateY(-1px); background: var(--text-muted); }
     .glance-line i.good { background: var(--color-green); }
-    .glance-line i.watch { background: #fbbf24; }
+    .glance-line i.watch { background: #f2c46b; }
     .glance-line b { font-weight: 700; }
     .journey-seg { display: flex; background: rgba(10, 16, 32, 0.88); border: 1px solid var(--border-color); border-radius: 14px; padding: 3px; margin-bottom: 12px; }
     .journey-seg button { flex: 1; padding: 8px 0; font-size: 0.8rem; border-radius: 11px; border: 0; background: none; color: var(--text-muted); cursor: pointer; }
@@ -591,6 +641,10 @@
     .puzzle-ring circle { fill: none; stroke-width: 5; }
     .puzzle-ring .ring-bg { stroke: rgba(255, 255, 255, 0.08); }
     .puzzle-ring .ring-fg { stroke: var(--theme-primary); stroke-linecap: round; transition: stroke-dashoffset 0.9s linear, stroke 0.4s ease; }
+    /* Quarters: each quarter of the session lights up when it's done; no ticking clock */
+    .puzzle-ring .ring-q { stroke: rgba(255, 255, 255, 0.1); stroke-linecap: round; transition: stroke 0.6s ease; }
+    .puzzle-ring .ring-q.on { stroke: var(--theme-primary); }
+    .puzzle-ring .ring-q.all { stroke: var(--color-green); }
     .puzzle-ring #puzzle-timer {
       position: absolute;
       inset: 0;
@@ -813,6 +867,17 @@
     .puzzle-stat-label { font-size: 0.62rem; color: var(--text-muted); letter-spacing: 1px; }
     .puzzle-stat-val { font-size: 1rem; font-weight: 700; color: var(--theme-primary); }
     #puzzle-next { display: block; margin: 4px auto 0; border-radius: 6px; }
+    #puzzle-canvas.lcd-board { background: #0d1536; border-color: #c99a45; box-shadow: 0 0 0 2px rgba(201, 154, 69, 0.25), 0 6px 18px rgba(0, 0, 0, 0.35); image-rendering: pixelated; }
+    #puzzle-next.lcd-board { box-shadow: 0 0 0 2px #c99a45; image-rendering: pixelated; }
+    .puzzle-why ol { margin: 6px 0 8px; padding-left: 20px; }
+    .puzzle-why li { margin-bottom: 5px; }
+    .why-example { margin-top: 5px; padding: 7px 9px; border-radius: 9px; background: rgba(255, 255, 255, 0.05); border-left: 3px solid var(--theme-primary); font-size: 0.76rem; }
+    .why-more { margin-top: 4px; border-top: 1px solid var(--border-color); padding-top: 8px; }
+    .why-more > summary { cursor: pointer; font-weight: 700; list-style: none; color: var(--theme-primary); }
+    .why-more > summary::-webkit-details-marker { display: none; }
+    .why-more > summary::after { content: ' ▾'; }
+    .why-more[open] > summary { margin-bottom: 6px; }
+    .why-more[open] > summary::after { content: ' ▴'; }
 
     .breath-stage {
       height: 190px;
@@ -1135,7 +1200,7 @@
     .spirit-level .xp-bar { width: 90px; height: 5px; border-radius: 3px; background: rgba(255, 255, 255, 0.1); overflow: hidden; }
     .spirit-level .xp-bar i { display: block; height: 100%; background: var(--theme-primary); border-radius: 3px; }
     .spirit-level.levelup .lv { animation: lvPop 0.9s ease 3; }
-    @keyframes lvPop { 50% { transform: scale(1.35); color: #fbbf24; } }
+    @keyframes lvPop { 50% { transform: scale(1.35); color: #f2c46b; } }
     .tag-chip.locked { opacity: 0.45; cursor: default; }
     .spirit-custom summary { cursor: pointer; font-size: 0.85rem; color: var(--theme-primary); font-weight: 700; margin-bottom: 4px; }
     .hamster-canvas-container[data-backdrop="wx-day"] { background: linear-gradient(180deg, rgba(110, 180, 240, 0.55), rgba(170, 215, 245, 0.35) 70%, rgba(60, 90, 70, 0.5)); }
@@ -1432,6 +1497,113 @@
         transition-duration: 0.01ms !important;
       }
     }
+
+    /* ===================== POLISH =====================
+       Same theme, richer: glassy cards edged in the mood colour, card icons, a greeting, a glowing active tab and gentle motion. */
+    .card { position: relative; background: linear-gradient(180deg, rgba(20, 30, 58, 0.78), rgba(10, 18, 38, 0.84));
+      -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.07); }
+    .card::before { content: ''; position: absolute; left: 14%; right: 14%; top: 0; height: 1px; pointer-events: none;
+      background: linear-gradient(90deg, transparent, var(--theme-primary), transparent); opacity: 0.85; }
+    .tab-content.active > .card { animation: cardUp 0.45s ease both; }
+    .tab-content.active > .card:nth-of-type(2) { animation-delay: 0.05s; }
+    .tab-content.active > .card:nth-of-type(3) { animation-delay: 0.1s; }
+    .tab-content.active > .card:nth-of-type(4) { animation-delay: 0.15s; }
+    .tab-content.active > .card:nth-of-type(n+5) { animation-delay: 0.2s; }
+    @keyframes cardUp { from { opacity: 0; transform: translateY(10px); } }
+    .tab-btn.active { box-shadow: inset 0 -3px 0 var(--theme-primary); text-shadow: 0 0 10px var(--accent-glow); }
+    .btn-action, .icon-btn, .today-pin, .calm-tile, .tile2 { transition: transform 0.12s ease; }
+    .btn-action:active, .icon-btn:active, .today-pin:active, .calm-tile:active { transform: scale(0.97); }
+    #today-cycle svg { filter: drop-shadow(0 0 8px var(--accent-glow)); }
+    .card-ic { display: inline-flex; width: 22px; height: 22px; border-radius: 7px; align-items: center; justify-content: center; margin-right: 8px; vertical-align: -5px; flex: none; }
+    .card-ic svg { width: 13px; height: 13px; stroke: #fff; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+    .today-greet { padding: 4px 4px 12px; animation: cardUp 0.45s ease both; }
+    .today-greet small { display: block; color: var(--text-muted); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+    .today-greet h1 { margin: 2px 0 0; font-size: 1.65rem; font-weight: 800; letter-spacing: -0.3px; color: var(--text-main); }
+    .today-greet h1 em { font-style: normal; background: linear-gradient(90deg, var(--theme-primary), #c8b6ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    #tab-insights > .ins-card > h2 { justify-content: flex-start; }
+    #tab-insights > .ins-card > h2::after { margin-left: auto; }
+    /* Calendar: softer days */
+    #cal-grid .cal-day { border-radius: 12px; background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)); border: 1px solid rgba(255,255,255,0.07); position: relative; transition: transform 0.12s ease; }
+    #cal-grid .cal-day.empty { background: none; border: none; }
+    #cal-grid .cal-day.status-green { background: rgba(16, 185, 129, 0.28) !important; border-color: rgba(52, 211, 153, 0.7) !important; color: #d1fae5; }
+    #cal-grid .cal-day.status-yellow { background: rgba(245, 158, 11, 0.26) !important; border-color: rgba(251, 191, 36, 0.7) !important; color: #fef3c7; }
+    #cal-grid .cal-day.status-red { background: rgba(239, 68, 68, 0.28) !important; border-color: rgba(248, 113, 113, 0.75) !important; color: #fee2e2; }
+    #cal-grid .cal-day.status-black { background: rgba(10, 6, 20, 0.85) !important; border-color: rgba(167, 139, 250, 0.8) !important; color: #c4b5fd; }
+    #cal-grid .cal-day.today { outline: none; box-shadow: 0 0 0 2px var(--theme-primary), 0 0 12px var(--accent-glow); }
+    #cal-grid .cal-day.period::before { content: ''; position: absolute; inset: 3px; border-radius: 9px; border: 1.5px dashed rgba(248, 113, 113, 0.75); pointer-events: none; }
+    #cal-grid .cal-day.full-moon::after, #cal-grid .cal-day.new-moon::after { content: ''; position: absolute; bottom: 3px; left: 50%; width: 5px; height: 5px; margin-left: -2.5px; border-radius: 50%; }
+    #cal-grid .cal-day.full-moon::after { background: #fff6d8; box-shadow: 0 0 5px rgba(255, 246, 216, 0.9); }
+    #cal-grid .cal-day.new-moon::after { border: 1px solid rgba(255, 246, 216, 0.8); }
+    /* Start screen: the oni faces float gently over the night sky */
+    #oni-screen { background: radial-gradient(120% 80% at 50% 0%, rgba(20, 30, 70, 0.55), rgba(2, 4, 10, 0.88) 70%); -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); }
+    #oni-screen .oni-tile { animation: oniFloat 5s ease-in-out infinite; background: linear-gradient(160deg, rgba(var(--c), 0.2), rgba(4, 6, 18, 0.75)); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+    #oni-screen .oni-tile:nth-child(2) { animation-delay: -0.8s; } #oni-screen .oni-tile:nth-child(3) { animation-delay: -1.6s; }
+    #oni-screen .oni-tile:nth-child(4) { animation-delay: -2.4s; } #oni-screen .oni-tile:nth-child(5) { animation-delay: -3.2s; } #oni-screen .oni-tile:nth-child(6) { animation-delay: -4s; }
+    @keyframes oniFloat { 50% { transform: translateY(-5px); } }
+    /* While the start screen is up, only the sky shows behind it; the app appears as the screen fades out */
+    body:has(#oni-screen:not([style*="none"]):not(.leaving)) > :not(#oni-screen):not(#sky-bg) { visibility: hidden; }
+    /* Charts draw themselves in when Insights opens */
+    #tab-insights.active .hl-spark span { animation: barUp 0.7s cubic-bezier(.2,.8,.2,1) both; transform-origin: bottom; }
+    #tab-insights.active .hl-strip span { animation: fadeIn2 0.5s ease both; }
+    #tab-insights.active .hl-strip span:nth-child(n+5) { animation-delay: 0.1s; } #tab-insights.active .hl-strip span:nth-child(n+10) { animation-delay: 0.2s; }
+    #tab-insights.active #her-pattern path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: drawLine 1.2s ease forwards; }
+    @keyframes barUp { from { transform: scaleY(0); } }
+    @keyframes fadeIn2 { from { opacity: 0; } }
+    @keyframes drawLine { to { stroke-dashoffset: 0; } }
+    @media (prefers-reduced-motion: reduce) { #oni-screen .oni-tile, #tab-insights.active .hl-spark span, #tab-insights.active #her-pattern path { animation: none; stroke-dashoffset: 0; } }
+    /* ===================== CLEAN-UP PASS =====================
+       One title style (small labels), one button shape, even spacing, and little pixel icons. */
+    .tab-content .card > h2, .tab-content .card > .card-label { font-size: 0.72rem !important; text-transform: uppercase; letter-spacing: 0.9px;
+      color: var(--text-muted) !important; font-weight: 600; margin: 0 0 12px !important; text-align: left; text-shadow: none; display: flex; align-items: center; }
+    #tab-insights > .ins-card.collapsed > h2 { margin-bottom: 0 !important; }
+    #tab-insights > .ins-card > h2 { justify-content: flex-start; }
+    #tab-insights > .ins-card > h2::after { margin-left: auto; font-size: 0.8rem; }
+    .tab-content .card > h2 + .subtitle { margin-top: -4px; }
+    /* Buttons: rounded rectangles, the same radius everywhere */
+    .icon-btn { border-radius: 12px; padding: 8px 14px; font-size: 0.8rem; font-weight: 600; }
+    .tag-chip { border-radius: 10px; padding: 7px 11px; }
+    .btn-action { border-radius: 12px; }
+    .header-crisis, .header-gear { border-radius: 12px; }
+    .today-day, .hq-scale button, .hq-yn button { border-radius: 12px; }
+    .calm-tile, .today-pin { border-radius: 16px; }
+    /* Even spacing: 16 px inside cards, 12 px between them */
+    main { padding: 16px; }
+    .tab-content .card { padding: 16px; margin-bottom: 12px; }
+    .calm-tiles { gap: 12px; }
+    .today-pin { margin-bottom: 12px; }
+    .tiles2 { gap: 10px; }
+    .hl { margin-bottom: 10px; }
+    /* Pixel icons (cozy night, little pixel touches) */
+    .card-ic { background: var(--tint-strong) !important; color: var(--theme-primary); }
+    .card-ic svg, .calm-ic svg, .px-ic svg { width: 14px; height: 14px; stroke: none !important; fill: currentColor; shape-rendering: crispEdges; }
+    .calm-ic { color: var(--theme-primary); }
+    .calm-ic svg { width: 18px; height: 18px; }
+    .hl-ic svg { stroke: none !important; fill: #fff; shape-rendering: crispEdges; }
+    /* ===================== /CLEAN-UP PASS ===================== */
+    /* ===================== /POLISH ===================== */
+
+    /* Hidden journal: stays out of sight until unlocked with 5 quick taps on the sunset time (on Today) */
+    body:not(.journal-open) .private { display: none !important; }
+    .sun-info { cursor: default; }
+    .open-smiley { display: none; flex: none; align-self: center; }
+    /* Daily check on how it went with her: revealed by 5 taps on her cycle circle, once a day, no editing */
+    #her-quiz { display: none; }
+    body.her-quiz-open #her-quiz { display: block; animation: hqIn 0.3s ease; }
+    @keyframes hqIn { from { opacity: 0; transform: translateY(-6px); } }
+    #today-cycle svg { cursor: pointer; }
+    .hq-q { margin-bottom: 12px; }
+    .hq-q > div:first-child { font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
+    .hq-scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
+    .hq-yn { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+    .hq-scale button, .hq-yn button { font: inherit; font-size: 0.74rem; padding: 8px 0; border-radius: 10px; border: 1px solid var(--border-color); background: rgba(255,255,255,0.04); color: var(--text-main); cursor: pointer; }
+    .hq-scale button.sel, .hq-yn button.sel { background: var(--theme-primary); color: #04121c; font-weight: 700; border-color: var(--theme-primary); }
+    .hq-ends { display: flex; justify-content: space-between; font-size: 0.64rem; color: var(--text-muted); margin-top: 3px; }
+    #hq-save:disabled { opacity: 0.45; }
+    .hp-keys { display: flex; flex-wrap: wrap; gap: 10px; font-size: 0.7rem; color: var(--text-muted); margin-top: 8px; }
+    .hp-keys i { width: 14px; height: 3px; border-radius: 2px; display: inline-block; margin-right: 5px; vertical-align: middle; }
+    body.journal-open .open-smiley { display: block; }
+    body.journal-open .sun-icon { display: none; } /* the smiley takes the sun's place while unlocked */
   </style>
 </head>
 <body>
@@ -1457,8 +1629,13 @@
         <div class="moon-phase" id="moon-phase">Moon</div>
         <div class="moon-next" id="moon-next"></div>
       </div>
-      <div class="sun-info" title="Sunset today">
-        <svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true">
+      <div class="sun-info" onclick="sunsetTap(event)">
+        <svg class="open-smiley" width="16" height="16" viewBox="0 0 14 14" aria-hidden="true">
+          <circle cx="7" cy="7" r="6" fill="none" stroke="#f2c879" stroke-width="1.5"/>
+          <circle cx="5" cy="5.6" r="0.9" fill="#f2c879"/><circle cx="9" cy="5.6" r="0.9" fill="#f2c879"/>
+          <path d="M4.3 8.2q2.7 2.6 5.4 0" fill="none" stroke="#f2c879" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+        <svg class="sun-icon" width="22" height="16" viewBox="0 0 22 16" aria-hidden="true">
           <path d="M4 12a7 7 0 0 1 14 0z" fill="#ffb86b"/>
           <line x1="1" y1="12.5" x2="21" y2="12.5" stroke="#ffb86b" stroke-width="1.5" stroke-linecap="round"/>
           <path d="M11 1v3M4.5 4l1.8 1.8M17.5 4l-1.8 1.8" stroke="#ffb86b" stroke-width="1.4" stroke-linecap="round"/>
@@ -1475,7 +1652,7 @@
 
   <nav>
     <button class="tab-btn active" data-tab="today" onclick="switchTab('today')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>Today</button>
-    <button class="tab-btn" data-tab="journey" onclick="switchTab('journey')"><svg viewBox="0 0 24 24"><path d="M5 4h11l3 3v13H5z"/><path d="M8 10h8M8 14h8M8 18h5"/></svg>Journal</button>
+    <button class="tab-btn" data-tab="journey" onclick="switchTab('journey')"><svg viewBox="0 0 24 24"><path d="M5 4h11l3 3v13H5z"/><path d="M8 10h8M8 14h8M8 18h5"/></svg>Calendar</button>
     <button class="tab-btn" data-tab="puzzle" onclick="switchTab('puzzle')"><svg viewBox="0 0 24 24"><path d="M12 3l7 4v10l-7 4-7-4V7z"/><path d="M12 12l7-5M12 12v9M12 12L5 7"/></svg>Disrupt</button>
     <button class="tab-btn" data-tab="spirit" onclick="switchTab('spirit')" id="hamster-tab"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="7"/><circle cx="7" cy="6" r="2.5"/><circle cx="17" cy="6" r="2.5"/></svg>Spirit</button>
     <button class="tab-btn" data-tab="insights" onclick="switchTab('insights')"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Insights</button>
@@ -1522,9 +1699,28 @@
 
     <!-- TODAY -->
     <div class="tab-content active" id="tab-today">
+      <div class="today-greet" id="today-greet"></div>
+      <div class="card" id="today-backup-card" style="display:none;">
+        <div class="today-cycle" style="justify-content:space-between;">
+          <div class="today-sub" id="today-backup-text"></div>
+          <button class="icon-btn" onclick="exportBackup()">Back up now</button>
+        </div>
+      </div>
       <div class="card">
         <h2 class="card-label">Her cycle</h2>
         <div id="today-cycle"></div>
+      </div>
+      <div class="card" id="today-memory" style="display:none;">
+        <h2 class="card-label">A good memory</h2>
+        <div id="today-memory-text" style="font-size:1rem; font-weight:600; line-height:1.4;"></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-top:8px;">
+          <span class="today-sub" id="today-memory-date"></span>
+          <button class="icon-btn" onclick="nextMemory()">Another</button>
+        </div>
+      </div>
+      <div class="card" id="her-quiz">
+        <h2 class="card-label">Tonight · how it went</h2>
+        <div id="hq-body"></div>
       </div>
       <div class="card">
         <h2 class="card-label">Check in</h2>
@@ -1536,18 +1732,12 @@
       </div>
       <div class="card today-spirit-card" onclick="switchTab('spirit')" title="Visit Spirit">
         <div style="flex:1; min-width:0;">
-          <div class="hamster-canvas-container today-spirit-scene"><canvas id="today-spirit-canvas" width="320" height="150" style="width:100%; height:100%;"></canvas></div>
+          <div class="hamster-canvas-container today-spirit-scene lcd"><canvas id="today-spirit-canvas" width="448" height="244" style="width:100%; height:100%;"></canvas></div>
           <div class="today-spirit-name" style="margin-top:8px;"><span id="today-spirit-name">Spirit</span> <span class="tag-pill" id="today-spirit-lv"></span>
             <span class="today-sub" id="today-spirit-status" style="margin-left:4px;"></span></div>
         </div>
-        <span class="today-spirit-go" aria-hidden="true">›</span>
       </div>
-      <div class="card" id="today-backup-card" style="display:none;">
-        <div class="today-cycle" style="justify-content:space-between;">
-          <div class="today-sub" id="today-backup-text"></div>
-          <button class="icon-btn" onclick="exportBackup()">Back up</button>
-        </div>
-      </div>
+      <div id="today-pins"></div>
       <div class="card" id="today-coming-card" style="display:none;">
         <h2 class="card-label">Coming up</h2>
         <div id="today-coming"></div>
@@ -1556,10 +1746,10 @@
 
     <!-- JOURNAL -->
     <div class="tab-content" id="tab-journey">
-      <div class="journey-seg" id="journey-seg">
+      <div class="journey-seg private" id="journey-seg">
         <button data-seg="calendar" class="on" onclick="showJourneySeg('calendar')">Calendar</button>
-        <button data-seg="write" onclick="showJourneySeg('write')">Write</button>
-        <button data-seg="journal" onclick="showJourneySeg('journal')">Journal</button>
+        <button data-seg="write" class="private" onclick="showJourneySeg('write')">Write</button>
+        <button data-seg="journal" class="private" onclick="showJourneySeg('journal')">Journal</button>
       </div>
       <div data-seg="write">
       <div class="card">
@@ -1640,10 +1830,10 @@
         <div id="mood-container" style="display:none;">
           <div class="subtitle">Saved each time you tap an oni when the app opens. Tap a day to see the times.</div>
           <div class="mood-legend">
-            <span><span class="mood-dot big" style="background:#fbbf24;"></span>Happy</span>
+            <span><span class="mood-dot big" style="background:#f2c46b;"></span>Happy</span>
             <span><span class="mood-dot big" style="background:#38bdf8;"></span>Calm</span>
             <span><span class="mood-dot big" style="background:#ef4444;"></span>Angry</span>
-            <span><span class="mood-dot big" style="background:#a78bfa;"></span>Numb</span>
+            <span><span class="mood-dot big" style="background:#a792f0;"></span>Numb</span>
             <span><span class="mood-dot big" style="background:#fb923c;"></span>Anxious</span>
             <span><span class="mood-dot big" style="background:#6082d2;"></span>Sad</span>
           </div>
@@ -1667,12 +1857,14 @@
       <div class="card" style="text-align: center;">
         <div class="spirit-opts" id="puzzle-mode-opts" style="justify-content:center; margin-bottom:12px;"></div>
         <div class="puzzle-timer-wrap">
-          <button class="puzzle-ring" onclick="togglePuzzleWhy()" aria-label="Session timer: tap to learn how this helps">
+          <button class="puzzle-ring" onclick="togglePuzzleWhy()" aria-label="Session progress in quarters: tap for how to play so it helps">
             <svg viewBox="0 0 64 64">
-              <circle cx="32" cy="32" r="28" class="ring-bg"></circle>
-              <circle cx="32" cy="32" r="28" class="ring-fg" id="puzzle-ring-fg"></circle>
+              <circle cx="32" cy="32" r="28" class="ring-q" id="puzzle-q0"></circle>
+              <circle cx="32" cy="32" r="28" class="ring-q" id="puzzle-q1"></circle>
+              <circle cx="32" cy="32" r="28" class="ring-q" id="puzzle-q2"></circle>
+              <circle cx="32" cy="32" r="28" class="ring-q" id="puzzle-q3"></circle>
             </svg>
-            <span id="puzzle-timer">10:00</span>
+            <span id="puzzle-timer"></span>
           </button>
           <div class="puzzle-timer-info">
             <div id="puzzle-milestone">Turn pieces so matching inks touch: 6 joined hexes dissolve. Picture each turn in your mind first.</div>
@@ -1680,10 +1872,22 @@
           </div>
         </div>
         <div class="puzzle-why" id="puzzle-why" style="display:none;">
-          <b>Imagery Competing Task Intervention</b><br>Right after something upsetting, your brain spends a few hours "saving" the memory, mostly as vivid pictures.
-          A visual puzzle keeps that same part of your brain busy, so the memory gets stored less vividly and pops back into your head less often.
-          You still remember what happened; it just intrudes less. It works best within about 6 hours, for 10 to 20 minutes, while really focusing on turning the pieces in your mind.
-          <span id="puzzle-why-mode">Honeycomb's hexagons turn six ways, so they ask for a lot of mental rotation, which is the part that helps.</span>
+          <b>How to play it so it helps</b>
+          <ol>
+            <li><b>Soon after.</b> Best within about 6 hours of the upsetting moment. Later can still help if you do step 2.</li>
+            <li><b>A quick reminder first.</b> Bring the moment to mind for a few seconds, like glancing at a photo. Don't replay it.</li>
+            <li><b>Then play 10 to 20 minutes in one go.</b> The ring counts it for you.</li>
+            <li><b>Turn pieces in your head first.</b> Picture where each piece fits and rotate it in your mind before you move it. That mental picturing is the part that works.
+              <div class="why-example"><b>Example:</b> an L-shaped piece appears. Don't touch anything yet. Find the gap you want, say the low spot on the left. Now turn the L in your head, once, twice, until its long side lies flat along that gap. Only then make the moves to match the picture. If it lands where you imagined, you did it right.</div></li>
+            <li><b>Keep it quiet.</b> No other screens, chatting, or music with words while you play.</li>
+            <li><b>If the memory pops up later,</b> notice it, let it pass, and play another round if you want.</li>
+          </ol>
+          <details class="why-more"><summary>Why it works</summary>
+            Right after something upsetting, your brain spends a few hours "saving" the memory, mostly as vivid pictures.
+            A visual puzzle keeps that same part of your brain busy, so the memory is stored less vividly and pops back into your head less often.
+            You still remember what happened; it just intrudes less. Tested in studies with people after accidents and traumatic events (Holmes et al., 2009; Iyadurai et al., 2018).
+            <span id="puzzle-why-mode">Honeycomb's hexagons turn six ways, so they ask for a lot of mental rotation, which is the part that helps.</span>
+          </details>
         </div>
         
         <div class="puzzle-area">
@@ -1729,6 +1933,7 @@
       <div class="hamster-card">
         <div class="hamster-canvas-container">
           <canvas id="hamster-canvas" width="320" height="150" style="width:100%; height:100%;"></canvas>
+          <canvas id="spirit-lcd" width="448" height="210" aria-hidden="true"></canvas>
           <div class="spirit-thought" id="spirit-thought"></div>
         </div>
         <div class="hamster-name" id="hamster-name" onclick="renameHamster()" title="Tap to rename">Spirit</div>
@@ -1905,25 +2110,29 @@
         <div id="monthly-summary"></div>
       </div>
 
-      <div class="card">
+      <div class="card private">
         <h2>Patterns</h2>
         <div class="subtitle">Built from your oni picks, calendar and incident log.</div>
         <div id="patterns"></div>
       </div>
 
-      <div class="card">
+      <div class="card private">
+        <h2>Her pattern</h2>
+        <div id="her-pattern"></div>
+      </div>
+      <div class="card private">
         <h2>Her cycle &amp; what helps you</h2>
         <div class="subtitle">How your days line up with the cycle and your tags. Calculated only on this device.</div>
         <div id="correlations"></div>
       </div>
 
-      <div class="card">
+      <div class="card private">
         <h2>Your records</h2>
         <div class="subtitle">What your own records show, without judgement.</div>
         <div id="validation"></div>
       </div>
 
-      <div class="card">
+      <div class="card private">
         <h2>Counters</h2>
         
         <div class="meter">
@@ -2088,7 +2297,7 @@
         </div>
       </details>
 
-      <details class="set-sec">
+      <details class="set-sec private">
         <summary>Backup &amp; data</summary>
         <div class="form-group">
           <label>Backup (journal, calendar, dates, counters):</label>
@@ -2104,10 +2313,15 @@
         </div>
       </details>
 
-      <details class="set-sec">
+      <details class="set-sec private">
         <summary>Crises</summary>
         <div class="insight-note" style="margin-bottom:6px;">Started one by accident? Delete it here.</div>
         <div id="crisis-settings"></div>
+      </details>
+
+      <details class="set-sec">
+        <summary>Disrupt</summary>
+        <label class="spirit-check"><input type="checkbox" id="cfg-honeycomb" onchange="setHoneycombShown(this.checked)"> Show Honeycomb</label>
       </details>
 
       <details class="set-sec">
@@ -2162,10 +2376,10 @@
 
     // APP COLOR: one accent color drives every themed variable
     const COLOR_PRESETS = [
-      ['Aqua', '#00f2fe'], ['Sky', '#4facfe'], ['Indigo', '#818cf8'], ['Violet', '#a78bfa'], ['Rose', '#f472b6'],
-      ['Crimson', '#ff4b4b'], ['Amber', '#f59e0b'], ['Emerald', '#10b981'], ['Teal', '#2dd4bf'], ['Silver', '#cbd5e1']
+      ['Aqua', '#00f2fe'], ['Sky', '#4facfe'], ['Indigo', '#818cf8'], ['Violet', '#a792f0'], ['Rose', '#f472b6'],
+      ['Crimson', '#ff4b4b'], ['Amber', '#f2c46b'], ['Emerald', '#5fc79a'], ['Teal', '#2dd4bf'], ['Silver', '#cbd5e1']
     ];
-    const LEGACY_THEMES = { 'theme-blue': '#00f2fe', 'theme-crimson': '#ff4b4b', 'theme-emerald': '#10b981', 'theme-midnight': '#818cf8' };
+    const LEGACY_THEMES = { 'theme-blue': '#00f2fe', 'theme-crimson': '#ff4b4b', 'theme-emerald': '#5fc79a', 'theme-midnight': '#818cf8' };
     let appColor = localStorage.getItem('aq_color') || LEGACY_THEMES[localStorage.getItem('aq_theme')] || '#00f2fe';
 
     function hexToRgb(hex) {
@@ -2194,11 +2408,11 @@
       numb:       ['#f472b6', 'Warm rose, to bring some warmth back after feeling numb.'],
       anxious:    ['#86efac', 'Gentle mint, to help settle an anxious mind.'],
       sad:        ['#fcd34d', 'Soft sunlight, to keep you company while you feel sad.'],
-      happy:      ['#fbbf24', 'Sunny gold, to match a good moment.'],
+      happy:      ['#f2c46b', 'Sunny gold, to match a good moment.'],
       calm:       ['#00f2fe', 'Calm aqua, to keep things steady.'],
-      stressed:   ['#a78bfa', 'Soothing lavender, because the hamster is under strain.'],
-      recovering: ['#34d399', 'Soft green, for healing while things recover.'],
-      thriving:   ['#10b981', 'Emerald, for a run of good days.']
+      stressed:   ['#a792f0', 'Soothing lavender, because the hamster is under strain.'],
+      recovering: ['#5fc79a', 'Soft green, for healing while things recover.'],
+      thriving:   ['#5fc79a', 'Emerald, for a run of good days.']
     };
     let themeReason = '';
 
@@ -2207,6 +2421,7 @@
       return '#' + A.map((v, i) => Math.round(v + (B[i] - v) * f).toString(16).padStart(2, '0')).join('');
     }
 
+    const CALM_BLUE = '#7ab8e0';
     function applyAdaptiveTheme() {
       if(document.body.classList.contains('crisis')) { applyColor(document.body.classList.contains('crisis-ice') ? '#7dd3fc' : '#ef4444'); return; } // crisis colours
       const recent = typeof currentOniEntry === 'function' ? currentOniEntry() : null;
@@ -2225,6 +2440,11 @@
         hex = '#e8eef5';
         reason = 'Neutral white: no oni picked in the last 4 hours and no recent calendar days. Pick an oni or mark days and the color will follow how you are.';
       }
+      // One calming colour for the whole app: a soft, muted blue. Blue and green rate as the most pleasant and least
+      // arousing colours, softer (less saturated) shades calm more than vivid ones (Valdez & Mehrabian, 1994), and blue
+      // light helped people relax faster after stress than white light (Minguillon et al., 2017).
+      hex = CALM_BLUE;
+      reason = 'Soft calming blue. Research links muted blues with lower arousal and faster relaxation after stress.';
       appColor = hex;
       themeReason = reason;
       applyColor(hex);
@@ -2402,7 +2622,107 @@
       "Your worth does not depend on how today goes.",
       "You have survived every hard day so far.",
       "Rest is not a reward. It is a need.",
-      "Being steady is enough. You don't have to be perfect."
+      "Being steady is enough. You don't have to be perfect.",
+      "You can be the calm part of the room without carrying the whole room.",
+      "Slow is a superpower right now.",
+      "Feel your feet. That floor is holding you up.",
+      "You don't have to answer right away. A pause is an answer too.",
+      "Let your exhale be slower than your inhale.",
+      "This minute is survivable. So is the next one.",
+      "Loosen your hands. You don't need to hold on so tight.",
+      "Let your shoulders fall a little. Then a little more.",
+      "Your heartbeat will slow down. It always does.",
+      "Notice three sounds around you. You are here, not in the argument.",
+      "Silence can be kind. You can choose quiet.",
+      "You can step into another room and come back when you're ready.",
+      "Soften your eyes. Look at something far away.",
+      "The feeling is loud, but it is not in charge.",
+      "You are safe enough to take one slow breath.",
+      "Not every sharp word is the truth about you.",
+      "Her storm can pass through the room without becoming yours.",
+      "What was said in pain doesn't have to be kept.",
+      "You can hear the hurt without accepting the blame.",
+      "Her bad day is not your report card.",
+      "You are allowed to not take the bait.",
+      "Some things are about the moment, not about you.",
+      "You don't have to win this to be okay.",
+      "Let the words land on the floor, not in your chest.",
+      "You can care deeply and still let this one go.",
+      "This is a season, not the whole story.",
+      "The hard days come in waves, and waves go back out.",
+      "Good days are coming back. They always have.",
+      "It's the time of the month, not the truth of the relationship.",
+      "You know this stretch. You've crossed it before.",
+      "In a few days, the weather between you will change.",
+      "The person you love is still there under the storm.",
+      "Plan small, rest more, and wait for the light.",
+      "The dark side of the moon always turns back toward you.",
+      "Hold on to the memory of last week's easy evening.",
+      "You are worth the same on hard days as on good ones.",
+      "Kindness toward yourself is not selfish.",
+      "You are a good person having a hard time.",
+      "Your feelings make sense, even the messy ones.",
+      "You are allowed to need comfort too.",
+      "You don't have to earn rest.",
+      "Mistakes in a heated moment don't erase who you are.",
+      "You are learning, and that counts.",
+      "Being patient with her starts with being patient with you.",
+      "You matter in this relationship, not just her mood.",
+      "Your needs are not too much.",
+      "You can be proud of how you handled today.",
+      "Even trying to stay calm is a win.",
+      "You are more than the person who gets through hard days.",
+      "Treat yourself the way you'd treat a friend in your place.",
+      "Staying close doesn't mean standing in the line of fire.",
+      "You can love her and still say, I need a minute.",
+      "A short break protects the relationship, not just you.",
+      "You can pause a conversation without ending it.",
+      "Speaking softly about your limits is still speaking.",
+      "Taking care of yourself helps you take care of her.",
+      "You can come back to this when you're both calmer.",
+      "Your peace is part of what keeps you two together.",
+      "It's okay to protect your sleep tonight.",
+      "Kind and firm can live in the same sentence.",
+      "Drink some water. Your body is working hard.",
+      "Eat something small. Hard moments burn a lot of energy.",
+      "A warm shower can wash some of the day away.",
+      "Lie down for five minutes. Nothing needs you right now.",
+      "Stretch your neck slowly. Let it go heavy.",
+      "Your body kept you going today. Thank it.",
+      "Go to bed earlier tonight. Tomorrow will be clearer.",
+      "Step outside and feel the air for a minute.",
+      "Put your hand on your chest. You are still here, still steady.",
+      "Tired is not weak. Tired means you've been carrying a lot.",
+      "Tomorrow morning won't feel like tonight.",
+      "Most of what feels huge now will feel smaller in a week.",
+      "You don't have to solve everything today.",
+      "One good hour is still a good hour.",
+      "Calm days are coming. You'll recognise them when they arrive.",
+      "Small steady days add up to a steadier year.",
+      "You've already gotten through the hardest part of today.",
+      "Things can be hard and still get better.",
+      "Hope can be quiet. It still counts.",
+      "Look how far you've come since the worst days.",
+      "Find one small thing to look forward to tonight.",
+      "Put on a song you love, just for yourself.",
+      "Remember a moment when she made you laugh.",
+      "A good cup of something warm is a small act of care.",
+      "Text a friend something silly. Connection helps.",
+      "Spirit is proud of you for checking in.",
+      "Notice one thing that went right today.",
+      "Make your space a little cosier. You deserve comfort.",
+      "Give your mind something gentle to do for a while.",
+      "Laughing later is allowed. Joy is not disloyal.",
+      "You don't have to feel okay to get through this.",
+      "It's okay to cry. It lets some of the pressure out.",
+      "You are not alone in this, even when it feels that way.",
+      "Just get to the next hour. That's enough for now.",
+      "You have handled hard things before, and you're handling this.",
+      "Write it down later. For now, just breathe.",
+      "Heavy moments pass, even when they feel endless.",
+      "You are allowed to rest in the middle of a hard day.",
+      "Breathe in for four, out for six. Again.",
+      "You are steadier than you feel right now."
     ];
     let qIdx = 0;
 
@@ -2782,10 +3102,10 @@
 
     // EMOTIONAL STATE LOG: every oni tap on the start screen is saved with its time
     const MOODS = {
-      happy: { name: 'Happy', color: '#fbbf24' },
+      happy: { name: 'Happy', color: '#f2c46b' },
       calm:  { name: 'Calm',  color: '#38bdf8' },
       angry: { name: 'Angry', color: '#ef4444' },
-      numb:  { name: 'Numb',  color: '#a78bfa' },
+      numb:  { name: 'Numb',  color: '#a792f0' },
       anxious: { name: 'Anxious', color: '#fb923c' },
       sad:   { name: 'Sad',   color: '#6082d2' }
     };
@@ -2826,6 +3146,7 @@
 
     // Tabs (in order): journey, puzzle, spirit, vagus, recover, calm, practise
     function switchTab(name) {
+      calmFromToday = false; // only a tool opened from Today's pin goes back to Today
       if(typeof usageTab === 'function') usageTab(name);
       if(name !== 'calm') document.body.classList.remove('calm-tool-open');
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === name));
@@ -2842,7 +3163,7 @@
         spiritHuskTick();
         renderFindsButton();
         spiritThoughtNext = performance.now() + 3000;
-        selfCareCache.at = 0; renderSpiritPanels();
+        selfCareCache.at = -1e9; renderSpiritPanels();
         applySpiritBackdrop();
         if(spiritStyle.backdrop === 'weather') fetchWeather().then(applySpiritBackdrop);
       }
@@ -3090,6 +3411,7 @@
 
       let firstDay = new Date(year, month, 1).getDay();
       let daysInMonth = new Date(year, month + 1, 0).getDate();
+      const calCycle = cycleInfo();
 
       for(let i = 0; i < firstDay; i++) {
         let empty = document.createElement('div');
@@ -3105,6 +3427,11 @@
         div.className = `cal-day ${status}`;
         if(cellDate.getTime() === today.getTime()) div.classList.add('today');
         if(cellDate > today) div.classList.add('future');
+        // Her period days (first 5 days from each start, including the predicted next one) get a soft ring
+        if(calCycle.starts.some(st => { const n = Math.round((cellDate - st) / DAY); return n >= 0 && n < 5; })) div.classList.add('period');
+        const mAge = moonAge(new Date(year, month, d, 21)); // the moon that evening
+        if(Math.abs(mAge - SYNODIC / 2) < 0.5) div.classList.add('full-moon');
+        else if(mAge < 0.5 || mAge > SYNODIC - 0.5) div.classList.add('new-moon');
         div.innerText = d;
         div.onclick = () => cycleCalStatus(key);
         grid.appendChild(div);
@@ -3198,7 +3525,7 @@
     function renderSpiritStrip() {
       const el = document.getElementById('spirit-strip');
       if(!el) return;
-      const look = { thriving: ['#10b981', 'Thriving'], calm: ['var(--theme-primary)', 'Calm'], recovering: ['#f59e0b', 'Recovering'], stressed: ['#ef4444', 'Zombified'] };
+      const look = { thriving: ['#5fc79a', 'Thriving'], calm: ['var(--theme-primary)', 'Calm'], recovering: ['#f2c46b', 'Recovering'], stressed: ['#ef4444', 'Zombified'] };
       const today = startOfToday(), logs = spiritLogsByDay();
       let html = '';
       for(let i = 29; i >= 0; i--) {
@@ -3307,7 +3634,7 @@
       } else if(hamsterScore < 0) {
         hamsterMood = 'recovering';
         hStatus.innerText = "Wilted / Recovering";
-        hStatus.style.color = "#f59e0b";
+        hStatus.style.color = "#f2c46b";
         hDesc.innerText = "Slightly more hard days than good. Healing takes time.";
         
         let randomAdvice = hamsterAdvices[Math.floor(Math.random() * hamsterAdvices.length)];
@@ -3316,7 +3643,7 @@
       } else if(hamsterScore >= 5) {
         hamsterMood = 'thriving';
         hStatus.innerText = "Thriving & Radiant";
-        hStatus.style.color = "#10b981";
+        hStatus.style.color = "#5fc79a";
         hDesc.innerText = "Wonderful streak of calm environment!";
         hAdvice.style.display = 'none';
       } else {
@@ -4189,7 +4516,7 @@
         ctx.beginPath(); ctx.moveTo(0, 8); ctx.lineTo(0, -2); ctx.stroke();
         const petal = '#f9a8d4';
         for(let i = 0; i < 5; i++) { const a = i / 5 * Math.PI * 2; oval(Math.cos(a) * 3, -5 + Math.sin(a) * 3, 2.6, 1.8, petal, a); }
-        oval(0, -5, 1.6, 1.6, '#fbbf24');
+        oval(0, -5, 1.6, 1.6, '#f2c46b');
       } else if(item === 'carrot') {
         ctx.fillStyle = '#f97316';
         ctx.beginPath(); ctx.moveTo(-3.5, -4); ctx.lineTo(3.5, -4); ctx.lineTo(0, 9); ctx.closePath(); ctx.fill();
@@ -4500,7 +4827,7 @@
       localStorage.setItem('aq_spirit_find', JSON.stringify(spiritFind));
     }
     // What you've done for yourself today (cached for a couple of seconds, it's checked every frame)
-    let selfCareCache = { at: 0 };
+    let selfCareCache = { at: -1e9 };
     function selfCareToday() {
       const t = performance.now();
       if(t - selfCareCache.at < 2000) return selfCareCache;
@@ -4566,11 +4893,33 @@
       renderFindsButton();
     }
     // Taps on the ground: the find or a husk. `peek` only checks, for the press-and-hold handler.
+    // A backup is due after 7 days (or once there's enough worth keeping); Spirit then has a little box by his house
+    function backupDue() {
+      const last = +localStorage.getItem('aq_last_backup') || 0;
+      return last ? Date.now() - last >= 7 * DAY : notes.length + Object.keys(calData).length >= 10;
+    }
+    let backupDueCache = { at: 0, due: false };
+    const backupBoxX = () => spiritStyle.house !== false ? HOUSE.x - 16 : 300;
+    function drawBackupBox(ctx, now) {
+      if(performance.now() - backupDueCache.at > 5000) backupDueCache = { at: performance.now(), due: backupDue() };
+      if(!backupDueCache.due) return;
+      const x = backupBoxX(), y = 141, bob = Math.sin(now / 600) * 1.2;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.25)'; ctx.beginPath(); ctx.ellipse(x, y + 1, 11, 2.5, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#c99a5a'; ctx.fillRect(x - 10, y - 16, 20, 16);
+      ctx.fillStyle = '#b5844a'; ctx.fillRect(x - 11, y - 18, 22, 4);
+      ctx.fillStyle = '#e8d3a8'; ctx.fillRect(x - 2, y - 18, 4, 18);
+      ctx.fillStyle = '#3a7bfd'; // a little arrow saying "save me"
+      ctx.beginPath(); ctx.moveTo(x - 5, y - 30 + bob); ctx.lineTo(x + 5, y - 30 + bob); ctx.lineTo(x + 5, y - 26 + bob); ctx.lineTo(x + 8, y - 26 + bob);
+      ctx.lineTo(x, y - 20 + bob); ctx.lineTo(x - 8, y - 26 + bob); ctx.lineTo(x - 5, y - 26 + bob); ctx.closePath(); ctx.fill();
+    }
+
     function spiritGroundTap(e, peek) {
       const c = document.getElementById('hamster-canvas');
       const r = c.getBoundingClientRect();
       const x = (e.clientX - r.left) * c.width / r.width, y = (e.clientY - r.top) * c.height / r.height;
       if(y < 112) return false;
+      if(!spiritOuting && backupDueCache.due && Math.abs(x - backupBoxX()) < 14 && y > 110) { if(!peek) { exportBackup(); backupDueCache.at = 0; } return true; }
       if(spiritOuting) {
         const wf = spiritOuting.find;
         if(wf && !wf.got && Math.abs(x - wf.x) < 14 && y > 116) { if(!peek) collectFindItem(wf.id, () => { wf.got = true; }); return true; }
@@ -4737,7 +5086,7 @@
         ctx.fillStyle = day ? '#9a7a56' : '#4a3a2a';
         for(let x = 12; x < 320; x += 44) ctx.fillRect(x, 108, 3, 24);
         ctx.fillRect(0, 113, 320, 2.5); ctx.fillRect(0, 122, 320, 2.5);
-        const cols = ['#f472b6', '#facc15', '#f8fafc', '#a78bfa', '#fb923c'];
+        const cols = ['#f472b6', '#facc15', '#f8fafc', '#a792f0', '#fb923c'];
         for(let i = 0; i < 34; i++) {
           const x = rand01(i, 80) * 320, y = 131 + rand01(i, 81) * 9, sw = Math.sin(t + i) * 0.8;
           ctx.strokeStyle = '#3f7434'; ctx.lineWidth = 0.8;
@@ -4936,7 +5285,7 @@
         case 'button': ctx.fillStyle = '#4a8fd8'; ctx.beginPath(); ctx.arc(0, 0, 10, 0, Math.PI * 2);
           [[-2.8, -2.8], [2.8, -2.8], [-2.8, 2.8], [2.8, 2.8]].forEach(([x, y]) => { ctx.moveTo(x + 1.7, y); ctx.arc(x, y, 1.7, 0, Math.PI * 2); });
           ctx.fill('evenodd'); ctx.strokeStyle = '#3a78bd'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(0, 0, 7.5, 0, Math.PI * 2); ctx.stroke(); break;
-        case 'marble': { const g = ctx.createRadialGradient(-3, -3, 1, 0, 0, 9); g.addColorStop(0, '#bfe8ff'); g.addColorStop(1, '#2b6cb0'); E(0, 0, 9, 9, g); L([[-5, 3], [-1, -1], [4, 2]], '#f59e0b', 1.5); E(-3, -4, 2, 1.2, 'rgba(255,255,255,0.7)'); break; }
+        case 'marble': { const g = ctx.createRadialGradient(-3, -3, 1, 0, 0, 9); g.addColorStop(0, '#bfe8ff'); g.addColorStop(1, '#2b6cb0'); E(0, 0, 9, 9, g); L([[-5, 3], [-1, -1], [4, 2]], '#f2c46b', 1.5); E(-3, -4, 2, 1.2, 'rgba(255,255,255,0.7)'); break; }
         case 'boat': P([[-12, 2], [12, 2], [7, 9], [-7, 9]], '#e8eef5'); P([[-3, 2], [0, -11], [6, 2]], '#ffffff'); P([[0, -11], [6, 2], [2, 2]], '#cfd8e3'); break;
         case 'ribbon': P([[0, 0], [-11, -7], [-11, 7]], '#ec6fa0'); P([[0, 0], [11, -7], [11, 7]], '#ec6fa0'); P([[-1, 1], [-5, 11], [-2, 11]], '#d4558a'); P([[1, 1], [5, 11], [2, 11]], '#d4558a'); E(0, 0, 3, 3, '#f59ac0'); break;
         case 'clover': L([[0, 2], [3, 12]], '#3f7d2e', 1.4); [[0, -5], [5, 0], [0, 5], [-5, 0]].forEach(([x, y]) => E(x, y, 4.5, 4.5, '#4caf50')); E(0, 0, 1.5, 1.5, '#2e7d32'); break;
@@ -5427,6 +5776,7 @@
       else {
         drawSpiritDecor(ctx);
         drawSpiritHouse(ctx, now);
+        drawBackupBox(ctx, now);
         drawSpiritHusks(ctx, now);
         drawSpiritFind(ctx, now);
       }
@@ -5820,20 +6170,134 @@
       }
       const jump = hamsterJumpStart;
       hamsterJumpStart = -1;
+      // No house on the Today screen, so he's the focus (unless he's inside it)
+      const house = spiritStyle.house;
+      if(!spiritHome.inside) spiritStyle.house = false;
       spiritSnapshotting = true;
       drawHamster();
       spiritSnapshotting = false;
+      spiritStyle.house = house;
       hamsterJumpStart = jump;
-      const g = m.getContext('2d');
-      g.clearRect(0, 0, m.width, m.height);
-      g.drawImage(c, 0, 0, 320, 143, 0, 7, 320, 143); // a little lower in the frame
+      drawTamaScreen(c, m, spiritHome.inside ? HOUSE.door : w.x);
       todaySnapX = w.x;
+      drawHamster(); // put the Spirit tab's own scene back as it was
+    }
+
+    // ----- Tamagotchi-style LCD: his drawing redrawn as pastel pixels with a dark outline, status icons and a hearts meter
+    const TAMA_PAL = ['fff4e0', 'ffe8c7', 'ffd6a5', 'f6a26b', 'd9824f', 'a85c35', '6e3a24', 'ffc2d4', 'ff8fb1', 'f2a7a7', 'ffffff', 'e9e4f7',
+                      'b5e48c', '82c97a', '4f9f63', 'a9d6ff', '6fb3f2', 'ffe066', 'c8b6ff', '8d7fc4', '3b2f4f', '2b2140']
+      .map(h => [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)]);
+    const tamaCache = new Map();
+    function tamaColour(r, g, b) {
+      const key = (r >> 3) << 10 | (g >> 3) << 5 | (b >> 3);
+      let v = tamaCache.get(key);
+      if(!v) {
+        let bd = 1e9;
+        TAMA_PAL.forEach(p => { const d = 2 * (r - p[0]) ** 2 + 4 * (g - p[1]) ** 2 + 3 * (b - p[2]) ** 2; if(d < bd) { bd = d; v = p; } });
+        tamaCache.set(key, v);
+      }
+      return v;
+    }
+    const TAMA_ICONS = {
+      bowl:  ['.......', '..x.x..', '...x...', 'xxxxxxx', 'x.....x', '.x...x.', '..xxx..'],
+      bulb:  ['..xxx..', '.x...x.', '.x...x.', '.x...x.', '..x.x..', '..xxx..', '..xxx..'],
+      ball:  ['..xxx..', '.x.x.x.', 'x..x..x', 'xxxxxxx', 'x..x..x', '.x.x.x.', '..xxx..'],
+      heart: ['.......', '.xx.xx.', 'xxxxxxx', 'xxxxxxx', '.xxxxx.', '..xxx..', '...x...']
+    };
+    // His area on the screen: [sky top, sky bottom, ground] in soft LCD colours, one set per backdrop
+    const TAMA_AREAS = {
+      'wx-day':   [[0xbf, 0xdc, 0xff], [0xe6, 0xf2, 0xff], [0xb5, 0xe0, 0x8c]],
+      'wx-grey':  [[0xd2, 0xd8, 0xe4], [0xec, 0xee, 0xf3], [0xa9, 0xc7, 0x92]],
+      'wx-night': [[0x3d, 0x43, 0x80], [0x5c, 0x63, 0xa6], [0x4c, 0x6e, 0x5c]],
+      night:      [[0x3d, 0x43, 0x80], [0x5c, 0x63, 0xa6], [0x4c, 0x6e, 0x5c]],
+      meadow:     [[0xdc, 0xf2, 0xc8], [0xf3, 0xfb, 0xe6], [0xa8, 0xd8, 0x84]],
+      sunset:     [[0xff, 0xc4, 0xa8], [0xff, 0xe6, 0xd2], [0xe8, 0xb4, 0x8c]],
+      ocean:      [[0xb8, 0xe6, 0xff], [0xe6, 0xf6, 0xff], [0xf2, 0xdc, 0xa8]],
+      lavender:   [[0xdd, 0xd0, 0xff], [0xf1, 0xec, 0xff], [0xc4, 0xb0, 0xf0]],
+      cozy:       [[0xff, 0xdc, 0xb8], [0xff, 0xf0, 0xdc], [0xd6, 0xa2, 0x70]]
+    };
+    function tamaArea() {
+      let bd = spiritStyle.backdrop || 'weather';
+      if(spiritOuting) bd = spiritIsDay() ? 'meadow' : 'night';
+      else if(bd === 'weather') {
+        const wx = spiritWeatherNow();
+        bd = !spiritIsDay() ? 'wx-night' : wx && (wx.code >= 3 || wx.cloud > 70) ? 'wx-grey' : 'wx-day';
+      }
+      return TAMA_AREAS[bd] || TAMA_AREAS.meadow;
+    }
+    // full: the whole 320x150 scene (Spirit tab, so taps still line up); otherwise a crop around him (Today)
+    function drawTamaScreen(srcCanvas, out, centreX, full) {
+      const k = 2, W = 224, H = full ? 105 : 122;
+      const top = full ? 0 : 9 * k, areaH = full ? H : H - 18 * k;
+      let sx = 0, sy = 0, cropW = 320, cropH = 150;
+      if(!full) {
+        // Fit his height (with room for his ears) to the screen, whatever his size or stage
+        cropH = Math.min(150, 141 * spiritScale() + 26);
+        cropW = Math.min(320, cropH * W / areaH);
+        cropH = cropW * areaH / W;
+        sx = Math.max(0, Math.min(320 - cropW, centreX - cropW / 2));
+        sy = Math.max(0, 146 - cropH);
+      }
+      const tmp = full ? (drawTamaScreen.tmpF || (drawTamaScreen.tmpF = document.createElement('canvas'))) : (drawTamaScreen.tmp || (drawTamaScreen.tmp = document.createElement('canvas')));
+      if(tmp.width !== W || tmp.height !== areaH) { tmp.width = W; tmp.height = areaH; }
+      const t = tmp.getContext('2d', { willReadFrequently: true });
+      t.clearRect(0, 0, W, areaH);
+      t.imageSmoothingEnabled = true;
+      t.drawImage(srcCanvas, sx, sy, cropW, cropH, 0, 0, W, areaH);
+      const d = t.getImageData(0, 0, W, areaH).data;
+      // Screen colours: cream, with a ground strip where his grass is
+      const grid = new Uint8ClampedArray(W * H * 3);
+      const groundFrom = top + Math.round(areaH * (full ? 128 / 150 : 1 - 6 * k / areaH));
+      const set = (x, y, c) => { if(x < 0 || x >= W || y < 0 || y >= H) return; const p = (y * W + x) * 3; grid[p] = c[0]; grid[p + 1] = c[1]; grid[p + 2] = c[2]; };
+      // Sky in three soft bands, then the ground, in his area's colours
+      const [skyTop, skyLow, ground] = tamaArea();
+      const band = y => { const f = Math.min(2, Math.floor(y / Math.max(1, groundFrom) * 3)) / 2; return skyTop.map((v, i) => Math.round(v + (skyLow[i] - v) * f)); };
+      for(let y = 0; y < H; y++) { const c = y >= groundFrom ? ground : band(y); for(let x = 0; x < W; x++) set(x, y, c); }
+      const solid = new Uint8Array(W * areaH);
+      for(let y = 0; y < areaH; y++) for(let x = 0; x < W; x++) {
+        const i = (y * W + x) * 4, a = d[i + 3];
+        if(a < 120) continue;
+        const r = d[i] / (a / 255), g = d[i + 1] / (a / 255), b = d[i + 2] / (a / 255);
+        if(g > r * 1.05 && g > b && top + y >= groundFrom - 3) continue; // the grass becomes the ground strip
+        solid[y * W + x] = 1;
+        set(x, top + y, tamaColour(r, g, b));
+      }
+      const OUT = [0x2b, 0x21, 0x40];
+      for(let y = 0; y < areaH; y++) for(let x = 0; x < W; x++) {
+        const i = y * W + x;
+        if(solid[i]) continue;
+        if((x > 0 && solid[i - 1]) || (x < W - 1 && solid[i + 1]) || (y > 0 && solid[i - W]) || (y < areaH - 1 && solid[i + W])) set(x, top + y, OUT);
+      }
+      // Status icons: bowl = checked in today, bulb = lights out (asleep), ball = a calm exercise today; hearts = how he's doing
+      const icon = (name, x, y, col) => TAMA_ICONS[name].forEach((row, j) => [...row].forEach((ch, i) => {
+        if(ch === 'x') for(let a = 0; a < k; a++) for(let b = 0; b < k; b++) set(x + i * k + a, y + j * k + b, col);
+      }));
+      const sc = selfCareToday(), lit = [0x2b, 0x21, 0x40], dim = [0xd9, 0xc6, 0xa6], pink = [0xff, 0x8f, 0xb1];
+      [['bowl', sc.checked], ['bulb', spiritAsleep()], ['ball', sc.ex > 0]].forEach(([n, on], i) => icon(n, (6 + i * 34) * k, k, on ? lit : dim));
+      const hearts = { thriving: 4, calm: 3, recovering: 2, stressed: 1 }[hamsterMood] || 3;
+      for(let i = 0; i < 4; i++) icon('heart', W - (34 - i * 8) * k, H - 8 * k, i < hearts ? pink : dim);
+      // Each pixel becomes a 2x2 dot, its right and bottom edge a little darker, like an LCD
+      const S = 2;
+      if(out.width !== W * S || out.height !== H * S) { out.width = W * S; out.height = H * S; }
+      const o = out.getContext('2d'), img = o.createImageData(W * S, H * S), od = img.data;
+      for(let y = 0; y < H; y++) for(let x = 0; x < W; x++) {
+        const p = (y * W + x) * 3;
+        for(let dy = 0; dy < S; dy++) for(let dx = 0; dx < S; dx++) {
+          const q = ((y * S + dy) * W * S + x * S + dx) * 4, edge = dx === S - 1 || dy === S - 1 ? 0.86 : 1;
+          od[q] = grid[p] * edge; od[q + 1] = grid[p + 1] * edge; od[q + 2] = grid[p + 2] * edge; od[q + 3] = 255;
+        }
+      }
+      o.putImageData(img, 0, 0);
     }
     let todaySnapX = null;
 
     function hamsterLoop() {
       const c = document.getElementById('hamster-canvas');
-      if(c && c.offsetParent) { drawHamster(); drawHearts(); updateSpiritThought(); }
+      if(c && c.offsetParent) {
+        drawHamster(); drawHearts(); updateSpiritThought();
+        const lcd = document.getElementById('spirit-lcd');
+        if(lcd) drawTamaScreen(c, lcd, 0, true);
+      }
       const today = document.getElementById('tab-today');
       if(c && today && today.classList.contains('active')) {
         const t = reduceMotion ? 0 : performance.now();
@@ -5926,10 +6390,14 @@
       card.classList.add('reveal');
     }
 
+    // Random order, and none of the last 20 comes back too soon
+    let recentQuotes = [];
     function nextQuote() {
       const quotes = currentQuotes();
-      qIdx = (qIdx + 1) % quotes.length;
-      document.getElementById('quote-display').innerText = `"${quotes[qIdx]}"`;
+      let pick = quotes[Math.floor(Math.random() * quotes.length)];
+      for(let tries = 0; tries < 30 && recentQuotes.includes(pick); tries++) pick = quotes[Math.floor(Math.random() * quotes.length)];
+      recentQuotes = recentQuotes.concat(pick).slice(-20);
+      document.getElementById('quote-display').innerText = `"${pick}"`;
     }
 
     // CHAOS RELEASE MINI-GAME
@@ -6839,6 +7307,36 @@
         ctx.fillRect(0, 0, W, H);
       }
 
+      // A soft aurora on calm nights (not after a hard check-in or while Spirit is struggling)
+      const calmNight = typeof todaysOni !== 'function' || (!HARD_ONI.includes(todaysOni()) && hamsterMood !== 'stressed');
+      if(d < 0.6 && calmNight && !document.body.classList.contains('crisis')) {
+        const k = (0.6 - d) / 0.6, tt = reduceMotion ? 0 : t;
+        for(let r = 0; r < 3; r++) {
+          const band = ctx.createLinearGradient(0, H * 0.12, 0, H * 0.42);
+          band.addColorStop(0, 'rgba(45, 212, 191, 0)');
+          band.addColorStop(0.5, `rgba(${r === 1 ? '167, 139, 250' : '45, 212, 191'}, ${(0.08 + 0.035 * Math.sin(tt / 2000 + r)) * k})`);
+          band.addColorStop(1, 'rgba(45, 212, 191, 0)');
+          ctx.fillStyle = band;
+          ctx.beginPath();
+          ctx.moveTo(0, H * 0.22 + r * 30);
+          for(let x = 0; x <= W; x += 20) ctx.lineTo(x, H * 0.19 + r * 30 + Math.sin(x / 70 + tt / 1800 + r) * 26);
+          for(let x = W; x >= 0; x -= 20) ctx.lineTo(x, H * 0.31 + r * 30 + Math.sin(x / 55 + tt / 2100 + r) * 20);
+          ctx.fill();
+        }
+      }
+      // A shooting star now and then at night
+      if(d < 0.3 && !reduceMotion) {
+        if(!sky.shoot && Math.random() < 0.0012) sky.shoot = { x: W * (0.1 + Math.random() * 0.5), y: H * (0.04 + Math.random() * 0.18), t };
+        if(sky.shoot) {
+          const k = (t - sky.shoot.t) / 900, x = sky.shoot.x + k * 180, y = sky.shoot.y + k * 80;
+          const tail = ctx.createLinearGradient(x - 70, y - 31, x, y);
+          tail.addColorStop(0, 'rgba(255, 255, 255, 0)'); tail.addColorStop(1, `rgba(255, 255, 255, ${Math.max(0, 1 - k) * (1 - d)})`);
+          ctx.strokeStyle = tail; ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.moveTo(x - 70, y - 31); ctx.lineTo(x, y); ctx.stroke();
+          if(k >= 1) sky.shoot = null;
+        }
+      }
+
       if(d < 1) {
         sky.stars.forEach(s => {
           const tw = reduceMotion ? 0.7 : 0.35 + 0.55 * (0.5 + 0.5 * Math.sin(t / s.sp + s.ph));
@@ -6848,22 +7346,21 @@
           ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
           ctx.fill();
         });
-        // Crescent moon
-        const mx = W * 0.82, my = H * 0.1;
+        // Tonight's real moon: its actual phase, with a stronger halo the fuller it is
+        const mx = W * 0.82, my = Math.max(H * 0.1, 150), age = moonAge(), full = 1 - Math.abs(age / SYNODIC - 0.5) * 2;
         ctx.save();
         ctx.globalAlpha = 1 - d;
-        const halo = ctx.createRadialGradient(mx, my, 10, mx, my, 70);
-        halo.addColorStop(0, 'rgba(255, 248, 220, 0.25)');
+        const hr = 50 + 50 * full;
+        const halo = ctx.createRadialGradient(mx, my, 10, mx, my, hr);
+        halo.addColorStop(0, `rgba(255, 248, 220, ${0.12 + 0.25 * full})`);
         halo.addColorStop(1, 'rgba(255, 248, 220, 0)');
         ctx.fillStyle = halo;
-        ctx.fillRect(mx - 70, my - 70, 140, 140);
+        ctx.fillRect(mx - hr, my - hr, hr * 2, hr * 2);
+        ctx.fillStyle = 'rgba(40, 46, 70, 0.55)'; // the unlit part, faintly visible
+        ctx.beginPath(); ctx.arc(mx, my, 16, 0, Math.PI * 2); ctx.fill();
         ctx.fillStyle = '#fff6d8';
-        ctx.beginPath();
-        ctx.arc(mx, my, 16, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = mixHex('#02030c', '#1f4f8a', d);
-        ctx.beginPath();
-        ctx.arc(mx + 7, my - 5, 14, 0, Math.PI * 2);
+        if(skyLatLon()[0] < 0) { ctx.translate(mx * 2, 0); ctx.scale(-1, 1); } // southern hemisphere sees it lit from the other side
+        moonLitPath(ctx, mx, my, 16, age);
         ctx.fill();
         ctx.restore();
       }
@@ -6897,6 +7394,64 @@
         });
         sky.clouds = sky.clouds.map((cl, i) => cl.x - 120 * cl.size > W ? makeCloud(-140, i) : cl);
       }
+      drawConstellation(ctx, W, H, t, d);
+      drawSkyWeather(ctx, W, H, t, d);
+    }
+
+    // Real weather in the background sky: rain streaks, slow snow, a few autumn leaves by day
+    function drawSkyWeather(ctx, W, H, t, d) {
+      const wx = typeof weatherCache !== 'undefined' && weatherCache && Date.now() - weatherCache.at < 3 * 3600000 ? weatherCache : null;
+      const code = wx ? wx.code : 0, month = new Date().getMonth();
+      const kind = wx && isRain(code) ? 'rain' : wx && isSnow(code) ? 'snow' : (month === 9 || month === 10) && d > 0.5 ? 'leaves' : null;
+      if(!kind || reduceMotion) return;
+      if(sky.wxKind !== kind || !sky.wx) {
+        sky.wxKind = kind;
+        const n = kind === 'rain' ? 70 : kind === 'snow' ? 60 : 7;
+        sky.wx = Array.from({ length: n }, () => ({ x: Math.random() * W, y: Math.random() * H, s: 0.5 + Math.random(), ph: Math.random() * 6 }));
+      }
+      sky.wx.forEach(p => {
+        if(kind === 'rain') {
+          p.y += 9 * p.s; p.x += 1.5;
+          ctx.strokeStyle = `rgba(170, 200, 240, ${0.18 + 0.12 * p.s})`; ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x - 2, p.y - 12 * p.s); ctx.stroke();
+        } else if(kind === 'snow') {
+          p.y += 0.6 * p.s; p.x += Math.sin(t / 1500 + p.ph) * 0.4;
+          ctx.fillStyle = `rgba(255, 255, 255, ${0.5 + 0.3 * p.s})`;
+          ctx.beginPath(); ctx.arc(p.x, p.y, 1.2 + p.s, 0, Math.PI * 2); ctx.fill();
+        } else {
+          p.y += 0.5 * p.s; p.x += Math.sin(t / 1800 + p.ph) * 0.8;
+          ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(Math.sin(t / 900 + p.ph) * 0.9);
+          ctx.fillStyle = ['rgba(232, 140, 70, 0.75)', 'rgba(214, 100, 60, 0.7)', 'rgba(240, 190, 90, 0.75)'][Math.floor(p.ph) % 3];
+          ctx.beginPath(); ctx.ellipse(0, 0, 6 * p.s, 3 * p.s, 0, 0, Math.PI * 2); ctx.fill();
+          ctx.strokeStyle = 'rgba(120, 60, 30, 0.5)'; ctx.lineWidth = 0.8;
+          ctx.beginPath(); ctx.moveTo(-6 * p.s, 0); ctx.lineTo(6 * p.s, 0); ctx.stroke();
+          ctx.restore();
+        }
+        if(p.y > H + 20) { p.y = -20; p.x = Math.random() * W; }
+        if(p.x > W + 20) p.x = -20;
+      });
+    }
+    // Faint constellations on clear nights: one fades in now and then, joins up, and fades away
+    const SKY_CONSTELLATIONS = [
+      { name: 'The Plough', pts: [[0, 0.3], [0.17, 0.25], [0.32, 0.3], [0.45, 0.4], [0.62, 0.38], [0.7, 0.55], [0.52, 0.6]], lines: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 3]] },
+      { name: 'Cassiopeia', pts: [[0, 0.2], [0.22, 0.55], [0.42, 0.3], [0.62, 0.6], [0.85, 0.25]], lines: [[0, 1], [1, 2], [2, 3], [3, 4]] },
+      { name: 'Spirit', pts: [[0.2, 0.1], [0.12, 0.3], [0.3, 0.25], [0.5, 0.2], [0.7, 0.25], [0.88, 0.3], [0.8, 0.1], [0.85, 0.6], [0.5, 0.8], [0.15, 0.6]], lines: [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [5, 7], [7, 8], [8, 9], [9, 1]] }
+    ];
+    function drawConstellation(ctx, W, H, t, d) {
+      const wx = typeof weatherCache !== 'undefined' ? weatherCache : null;
+      if(d > 0.25 || reduceMotion || (wx && wx.cloud > 50)) { sky.con = null; return; }
+      if(!sky.con && (!sky.conNext || t > sky.conNext)) {
+        const c = SKY_CONSTELLATIONS[Math.floor(Math.random() * SKY_CONSTELLATIONS.length)];
+        sky.con = { c, t, x: W * (0.08 + Math.random() * 0.4), y: H * (0.18 + Math.random() * 0.12), w: Math.min(W * 0.45, 220), h: Math.min(W * 0.3, 140) };
+      }
+      if(!sky.con) return;
+      const k = (t - sky.con.t) / 12000; // 12 s: fade in, hold, fade out
+      if(k >= 1) { sky.con = null; sky.conNext = t + 30000 + Math.random() * 40000; return; }
+      const a = (k < 0.2 ? k / 0.2 : k > 0.8 ? (1 - k) / 0.2 : 1) * (1 - d * 4);
+      const { c, x, y, w, h } = sky.con, P = i => [x + c.pts[i][0] * w, y + c.pts[i][1] * h];
+      ctx.strokeStyle = `rgba(180, 210, 255, ${0.28 * a})`; ctx.lineWidth = 1;
+      c.lines.forEach(([i, j]) => { const [x1, y1] = P(i), [x2, y2] = P(j); ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); });
+      c.pts.forEach((_, i) => { const [px, py] = P(i); ctx.fillStyle = `rgba(255, 250, 230, ${0.85 * a})`; ctx.beginPath(); ctx.arc(px, py, 1.8, 0, Math.PI * 2); ctx.fill(); });
     }
 
     function skyLoop(t) {
@@ -7270,7 +7825,7 @@
 
     // ---------- PRIVATE INCIDENT LOG ----------
     const SEVERITIES = [
-      { k: 'tense',    name: 'Tense / verbal or character attack', color: '#f59e0b', cal: 'status-yellow' },
+      { k: 'tense',    name: 'Tense / verbal or character attack', color: '#f2c46b', cal: 'status-yellow' },
       { k: 'shouting', name: 'Shouting',               color: '#ef4444', cal: 'status-red' },
       { k: 'threats',  name: 'Threats / intimidation', color: '#dc2626', cal: 'status-red' },
       { k: 'physical', name: 'Physical',               color: '#111111', cal: 'status-black' }
@@ -8735,27 +9290,27 @@
       const dbp = daysBeforePeriod(startOfToday(), cyc);
       const phase = day <= 5 && !ds.inWindow ? 'period' : ds.inWindow ? 'dark' : dbp >= 1 && dbp <= 13 ? 'luteal' : dbp >= 14 && dbp <= 16 ? 'ovulation' : 'follicular';
       const TEXT = {
-        period:     ['Period', '#f87171', 'Things often ease after the first day or two.'],
+        period:     ['Period', '#ef8a7a', 'Things often ease after the first day or two.'],
         follicular: ['Follicular · good stretch', 'var(--color-green)', 'Usually the calmest part of her month. Enjoy it together.'],
-        ovulation:  ['Ovulation', '#fbbf24', 'Usually still a good stretch.'],
-        luteal:     ['Luteal', '#a78bfa', 'Still an ok stretch. Be easy on each other.'],
-        dark:       [`Dark side of the moon · day ${ds.dayIdx} of ${DARK_DAYS + 1}`, '#a78bfa', 'Go gently. Your plan is in Insights.']
+        ovulation:  ['Ovulation', '#f2c46b', 'Usually still a good stretch.'],
+        luteal:     ['Luteal', '#a792f0', 'Still an ok stretch. Be easy on each other.'],
+        dark:       [`Dark side of the moon · day ${ds.dayIdx} of ${DARK_DAYS + 1}`, '#a792f0', 'Go gently. Your plan is in Insights.']
       }[phase];
       // Ring: period, follicular, ovulation and luteal arcs, with today marked
       const cx = 56, cy = 56, r = 44;
       const pt = d => { const a = (d - 1) / L * Math.PI * 2 - Math.PI / 2; return [cx + r * Math.cos(a), cy + r * Math.sin(a)]; };
-      const arcs = [[1, 5, '#f87171'], [6, L - 16, '#34d399'], [L - 15, L - 13, '#fbbf24'], [L - 12, L, '#a78bfa']];
+      const arcs = [[1, 5, '#ef8a7a'], [6, L - 16, '#5fc79a'], [L - 15, L - 13, '#f2c46b'], [L - 12, L, '#a792f0']];
       let svg = `<circle cx="${cx}" cy="${cy}" r="${r}" stroke="rgba(255,255,255,0.06)" stroke-width="10" fill="none"/>`;
       arcs.forEach(([a, b, c]) => {
         const [x1, y1] = pt(a), [x2, y2] = pt(b + 0.9), large = (b + 0.9 - a) / L > 0.5 ? 1 : 0;
         svg += `<path d="M${x1} ${y1} A${r} ${r} 0 ${large} 1 ${x2} ${y2}" stroke="${c}" stroke-width="10" fill="none" stroke-linecap="round" opacity="0.6"/>`;
       });
       const [tx, ty] = pt(Math.min(day, L) + 0.45);
-      svg += `<circle cx="${tx}" cy="${ty}" r="7" fill="#fff"/><circle cx="${tx}" cy="${ty}" r="4" fill="${TEXT[1].startsWith('var') ? '#34d399' : TEXT[1]}"/>`;
+      svg += `<circle cx="${tx}" cy="${ty}" r="7" fill="#fff"/><circle cx="${tx}" cy="${ty}" r="4" fill="${TEXT[1].startsWith('var') ? '#5fc79a' : TEXT[1]}"/>`;
       const label = cyc.measured >= 3 ? `Her pattern · ${cyc.starts.length} cycles logged` : `Typical PMDD timing · ${cyc.measured} of 3 cycles logged`;
       return `<div class="today-cycle"><svg width="104" height="104" viewBox="0 0 112 112">${svg}</svg>` +
         `<div><div class="big">Day ${day}</div><div class="phase" style="color:${TEXT[1]}">${TEXT[0]}</div><div class="today-sub">${TEXT[2]}</div></div></div>` +
-        `<div class="today-legend"><span><i style="background:#f87171"></i>Period</span><span><i style="background:#34d399"></i>Follicular</span><span><i style="background:#fbbf24"></i>Ovulation</span><span><i style="background:#a78bfa"></i>Luteal</span></div>` +
+        `<div class="today-legend"><span><i style="background:#ef8a7a"></i>Period</span><span><i style="background:#5fc79a"></i>Follicular</span><span><i style="background:#f2c46b"></i>Ovulation</span><span><i style="background:#a792f0"></i>Luteal</span></div>` +
         `<span class="tag-pill">${label}</span>`;
     }
     // First run: the last period start and cycle length are enough for the cycle view to work
@@ -8771,7 +9326,234 @@
       savePastPeriods();
       renderToday();
     }
+    // ----- Daily check on how it went with her. One entry a day; once saved it can't be changed.
+    const HQ_SCALES = [['between', 'Between you two today', 'Warm', 'Hostile'], ['irrit', 'Her irritability or anger', 'None', 'Severe'],
+                       ['low', 'Her low mood or tearfulness', 'None', 'Severe'], ['tense', 'Her anxiety or tension', 'None', 'Severe'],
+                       ['mine', 'Your own stress', 'Low', 'Very high']];
+    const HQ_YN = [['good', 'A good moment together?', ['Yes', 'A little', 'No']], ['safe', 'Did you feel safe today?', ['Yes', 'Mostly', 'No']]];
+    let herDaily = {};
+    try { herDaily = JSON.parse(localStorage.getItem('aq_her_daily') || '{}'); } catch(e) {}
+    let hqDraft = {};
+    // Good memories: the lines you add on good evenings. Shown on Today during the dark stretch.
+    let goodMemories = [];
+    try { goodMemories = JSON.parse(localStorage.getItem('aq_memories') || '[]'); } catch(e) {}
+    let memoryIdx = null;
+    function renderTodayMemory() {
+      const card = document.getElementById('today-memory');
+      if(!card) return;
+      let ds = null;
+      try { ds = computeDarkStretch(); } catch(e) {}
+      if(!ds || !ds.inWindow || !goodMemories.length) { card.style.display = 'none'; return; }
+      if(memoryIdx === null || memoryIdx >= goodMemories.length) memoryIdx = Math.floor(rand01(startOfToday().getDate(), startOfToday().getMonth()) * goodMemories.length);
+      const m = goodMemories[memoryIdx];
+      document.getElementById('today-memory-text').innerText = `"${m.text}"`;
+      document.getElementById('today-memory-date').innerText = parseDay(m.day).toLocaleDateString('en-GB', { day: 'numeric', month: 'long' });
+      card.style.display = '';
+    }
+    function nextMemory() {
+      if(goodMemories.length < 2) return;
+      let i; do { i = Math.floor(Math.random() * goodMemories.length); } while(i === memoryIdx);
+      memoryIdx = i;
+      renderTodayMemory();
+    }
+    // Open from 10 PM, so the day is really over; until 4 AM it still counts for the evening before
+    function hqDay() {
+      const now = new Date(), h = now.getHours();
+      if(h >= 22) return dayKey(now);
+      if(h < 4) return dayKey(addDays(now, -1));
+      return null;
+    }
+    function renderHerQuiz() {
+      const el = document.getElementById('hq-body');
+      if(!el) return;
+      const day = hqDay();
+      if(!day) {
+        const last = herDaily[dayKey(addDays(new Date(), -1))];
+        el.innerHTML = `<div class="today-sub">Opens at 10 PM, once the day is done.${last ? ' Last night is saved.' : ''}</div>`;
+        return;
+      }
+      const done = herDaily[day];
+      if(done) {
+        el.innerHTML = `<div class="today-sub">Done for today · saved at ${new Date(done.ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}. Come back tomorrow.</div>`;
+        return;
+      }
+      el.innerHTML = HQ_SCALES.map(([k, q, lo, hi]) => `<div class="hq-q"><div>${q}</div><div class="hq-scale">` +
+          [1, 2, 3, 4, 5].map(n => `<button type="button" class="${hqDraft[k] === n ? 'sel' : ''}" onclick="hqPick('${k}', ${n})">${n}</button>`).join('') +
+          `</div><div class="hq-ends"><span>${lo}</span><span>${hi}</span></div></div>`).join('') +
+        HQ_YN.map(([k, q, opts]) => `<div class="hq-q"><div>${q}</div><div class="hq-yn">` +
+          opts.map((o, i) => `<button type="button" class="${hqDraft[k] === i ? 'sel' : ''}" onclick="hqPick('${k}', ${i})">${o}</button>`).join('') + `</div>` +
+          (k === 'good' && (hqDraft.good === 0 || hqDraft.good === 1)
+            ? `<input type="text" id="hq-memory" maxlength="120" placeholder="Remember it in a few words (optional)" value="${escapeHtml(hqDraft.memory || '')}" oninput="hqDraft.memory = this.value" style="width:100%; margin-top:8px;">` : '') +
+          `</div>`).join('') +
+        `<button class="btn-action" id="hq-save" onclick="hqSave()" ${HQ_SCALES.concat(HQ_YN).every(([k]) => hqDraft[k] !== undefined) ? '' : 'disabled'}>Save for today</button>` +
+        `<div class="today-sub" style="text-align:center; margin-top:6px;">Once a day. It can't be changed after saving.</div>`;
+    }
+    function hqPick(k, v) { hqDraft[k] = v; renderHerQuiz(); }
+    function hqSave() {
+      const key = hqDay();
+      if(!key || herDaily[key] || !HQ_SCALES.concat(HQ_YN).every(([k]) => hqDraft[k] !== undefined)) return;
+      const memory = (hqDraft.memory || '').trim();
+      herDaily[key] = { ...hqDraft, memory: memory || undefined, ts: Date.now() };
+      localStorage.setItem('aq_her_daily', JSON.stringify(herDaily));
+      if(memory && hqDraft.good < 2) { goodMemories.push({ day: key, text: memory, ts: Date.now() }); localStorage.setItem('aq_memories', JSON.stringify(goodMemories)); }
+      hqDraft = {};
+      renderHerQuiz();
+      renderHerPattern();
+    }
+    // 5 quick taps on her cycle circle show or hide it; leaving the app hides it again
+    let hqTaps = [];
+    document.addEventListener('click', e => {
+      if(!e.target.closest || !e.target.closest('#today-cycle svg')) return;
+      const now = Date.now();
+      hqTaps = hqTaps.filter(t => now - t < 2500).concat(now);
+      if(hqTaps.length < 5) return;
+      hqTaps = [];
+      renderHerQuiz();
+      document.body.classList.toggle('her-quiz-open');
+    });
+    document.addEventListener('visibilitychange', () => { if(document.hidden) document.body.classList.remove('her-quiz-open'); });
+
+    // Her pattern: averages per day of her cycle across everything logged, plus what stands out
+    function herCycleDay(d, cyc) {
+      const L = Math.round(cyc.avg), t = new Date(d); t.setHours(0, 0, 0, 0);
+      let start = [...cyc.starts].reverse().find(st => st <= t);
+      if(!start) { start = new Date(cyc.starts[0]); while(start > t) start = addDays(start, -L); }
+      let n = Math.round((t - start) / DAY) + 1;
+      while(n > L + 7) n -= L; // long gaps without a logged period
+      return Math.min(n, L);
+    }
+    function renderHerPattern() {
+      const el = document.getElementById('her-pattern');
+      if(!el) return;
+      const cyc = cycleInfo(), entries = Object.entries(herDaily);
+      if(!cyc.starts.length) { el.innerHTML = '<div class="today-sub">Set up her cycle on Today to see this.</div>'; return; }
+      if(entries.length < 10) {
+        el.innerHTML = `<div class="today-sub">Fill in tonight's questions (5 taps on her cycle circle on Today). The pattern appears after about 10 days; it gets clearer with each cycle. ${entries.length ? `${entries.length} so far.` : ''}</div>`;
+        return;
+      }
+      const L = Math.round(cyc.avg), keys = ['irrit', 'low', 'tense', 'between'];
+      const sum = keys.map(() => new Array(L + 1).fill(0)), cnt = new Array(L + 1).fill(0);
+      entries.forEach(([k, e]) => { const cd = herCycleDay(parseDay(k.split('-').map((v, i) => i ? String(v).padStart(2, '0') : v).join('-')), cyc); cnt[cd]++; keys.forEach((q, i) => sum[i][cd] += e[q]); });
+      // Smooth over 3 days (wrapping around the cycle) so single days don't jump around
+      const avg = keys.map((q, i) => Array.from({ length: L }, (_, j) => {
+        let s = 0, n = 0;
+        [-1, 0, 1].forEach(o => { const d = ((j + o + L) % L) + 1; s += sum[i][d]; n += cnt[d]; });
+        return n ? s / n : null;
+      }));
+      // Chart
+      const W = 320, H = 180, pl = 22, pb = 24, top = 8, cw = (W - pl - 6) / L, ch = H - pb - top;
+      const x = d => pl + (d - 0.5) * cw, y = v => top + ch - (v - 1) / 4 * ch;
+      let svg = '';
+      [[1, 5, '#ef8a7a'], [6, L - 16, '#5fc79a'], [L - 15, L - 13, '#f2c46b'], [L - 12, L, '#a792f0']].forEach(([a, b, c]) => {
+        svg += `<rect x="${pl + (a - 1) * cw}" y="${top}" width="${(b - a + 1) * cw}" height="${ch}" fill="${c}" opacity="0.07"/>` +
+               `<rect x="${pl + (a - 1) * cw}" y="${H - pb + 2}" width="${(b - a + 1) * cw - 1}" height="4" rx="2" fill="${c}" opacity="0.7"/>`;
+      });
+      [1, 2, 3, 4, 5].forEach(v => { svg += `<line x1="${pl}" x2="${W - 6}" y1="${y(v)}" y2="${y(v)}" stroke="rgba(255,255,255,0.06)"/><text x="${pl - 6}" y="${y(v) + 3}" fill="#7e9bbd" font-size="8" text-anchor="end">${v}</text>`; });
+      [1, 7, 14, 21, L].forEach(d => { svg += `<text x="${x(d)}" y="${H - 5}" fill="#7e9bbd" font-size="8" text-anchor="middle">${d}</text>`; });
+      const COL = ['#ef8a7a', '#60a5fa', '#f2c46b', '#e6f3ff'];
+      avg.forEach((vals, i) => {
+        let path = '', pen = false;
+        vals.forEach((v, j) => { if(v === null) { pen = false; return; } path += `${pen ? 'L' : 'M'}${x(j + 1).toFixed(1)} ${y(v).toFixed(1)} `; pen = true; });
+        svg += i === 3 ? `<path d="${path}" fill="none" stroke="${COL[i]}" stroke-width="2.2" stroke-linejoin="round" stroke-dasharray="4 3" opacity="0.55" style="animation:none; stroke-dashoffset:0"/>`
+                       : `<path d="${path}" pathLength="1" fill="none" stroke="${COL[i]}" stroke-width="2.2" stroke-linejoin="round"/>`;
+      });
+      // What stands out
+      const irr = avg[0], base = (() => { const v = irr.slice(5, Math.max(6, L - 16)).filter(n => n !== null); return v.length ? v.reduce((a, b) => a + b, 0) / v.length : 1.5; })();
+      const finds = [];
+      const rise = irr.findIndex((v, j) => j >= 14 && v !== null && v >= base + 1);
+      if(rise >= 0) finds.push(['#ef8a7a', `<b>Irritability rises from about day ${rise + 1}</b> of her cycle.`]);
+      const ease = irr.slice(0, 6).findIndex((v, j) => j >= 1 && v !== null && v <= base + 0.5);
+      if(rise >= 0 && ease >= 0) finds.push(['#5fc79a', `<b>It eases around day ${ease + 1}</b> of her period.`]);
+      const darkEntries = entries.filter(([k]) => { const b = daysBeforePeriod(parseDay(k.split('-').map((v, i) => i ? String(v).padStart(2, '0') : v).join('-')), cyc); return b !== null && b <= 8; });
+      if(darkEntries.length >= 3) {
+        const good = darkEntries.filter(([, e]) => e.good < 2).length;
+        finds.push(['#a792f0', `<b>Good moments in the dark stretch:</b> ${good} of ${darkEntries.length} logged days had one.`]);
+      }
+      const safeNo = entries.filter(([, e]) => e.safe === 2).length, safeYes = entries.filter(([, e]) => e.safe === 0).length;
+      finds.push(['#7e9bbd', `<b>Feeling safe:</b> yes on ${safeYes} of ${entries.length} days${safeNo ? `, no on ${safeNo}` : ''}.`]);
+      el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" style="width:100%; display:block;">${svg}</svg>` +
+        `<div class="hp-keys"><span><i style="background:#ef8a7a"></i>Irritability</span><span><i style="background:#60a5fa"></i>Low mood</span><span><i style="background:#f2c46b"></i>Tension</span><span><i style="background:#e6f3ff; opacity:.6"></i>Between you</span></div>` +
+        `<div style="margin-top:10px;">${finds.map(([c, t]) => `<div class="gl-find" style="display:flex; gap:10px; padding:6px 0; font-size:0.84rem; line-height:1.35;"><i style="flex:none; width:8px; height:8px; border-radius:50%; margin-top:6px; background:${c}"></i><span>${t}</span></div>`).join('')}</div>` +
+        `<div class="today-sub" style="margin-top:6px;">From ${entries.length} days you logged. What you noticed, not a diagnosis.</div>`;
+    }
+
+    function renderGreeting() {
+      const el = document.getElementById('today-greet');
+      if(!el) return;
+      const now = new Date(), h = now.getHours();
+      const part = h < 5 ? ['Still', 'up'] : h < 12 ? ['Good', 'morning'] : h < 18 ? ['Good', 'afternoon'] : h < 22 ? ['Good', 'evening'] : ['Good', 'night'];
+      el.innerHTML = `<small>${now.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}</small><h1>${part[0]} <em>${part[1]}</em></h1>`;
+    }
+    setInterval(renderGreeting, 60000);
+
+    // Little 9x9 pixel icons, drawn as crisp squares
+    const PX_ICONS = {
+      moon: ['...xxx...', '..xx.....', '.xx......', '.xx......', '.xx......', '.xx......', '..xx.....', '...xxx...', '.........'],
+      clip: ['.xxxxxxx.', '.x.xxx.x.', '.x.....x.', '.x.xxx.x.', '.x.....x.', '.x.xxx.x.', '.x.....x.', '.xxxxxxx.', '.........'],
+      heart: ['.xx...xx.', 'xxxx.xxxx', 'xxxxxxxxx', 'xxxxxxxxx', '.xxxxxxx.', '..xxxxx..', '...xxx...', '....x....', '.........'],
+      smile: ['..xxxxx..', '.x.....x.', 'x..x.x..x', 'x.......x', 'x.x...x.x', 'x..xxx..x', '.x.....x.', '..xxxxx..', '.........'],
+      trend: ['.........', '.....xxxx', '.......xx', '......x.x', '..x..x...', '.x.xx....', 'x........', '.........', '.........'],
+      bars: ['.......x.', '.......x.', '....x..x.', '....x..x.', '.x..x..x.', '.x..x..x.', '.x..x..x.', 'xxxxxxxxx', '.........'],
+      sparkle: ['....x....', '....x....', '...xxx...', 'xxxxxxxxx', '...xxx...', '....x....', '....x....', '.........', '.........'],
+      folder: ['.........', 'xxx......', 'x..xxxxxx', 'x.......x', 'x.......x', 'x.......x', 'xxxxxxxxx', '.........', '.........'],
+      hash: ['..x...x..', '..x...x..', 'xxxxxxxxx', '..x...x..', '..x...x..', 'xxxxxxxxx', '..x...x..', '..x...x..', '.........'],
+      clock: ['..xxxxx..', '.x.....x.', 'x...x...x', 'x...x...x', 'x...xxx.x', 'x.......x', '.x.....x.', '..xxxxx..', '.........'],
+      star: ['....x....', '....x....', '...xxx...', 'xxxxxxxxx', '.xxxxxxx.', '..xxxxx..', '..xx.xx..', '.xx...xx.', '.........'],
+      book: ['xxxx.xxxx', 'x..xxx..x', 'x.xx.xx.x', 'x..x.x..x', 'x.xx.xx.x', 'x..x.x..x', 'xxxx.xxxx', '....x....', '.........'],
+      cal: ['.x.....x.', 'xxxxxxxxx', 'x.......x', 'xxxxxxxxx', 'x.x.x.x.x', 'x.......x', 'x.x.x.x.x', 'xxxxxxxxx', '.........'],
+      leaf: ['.......xx', '.....xxxx', '...xxx.xx', '..xx..xx.', '.xx..xx..', '.x..xx...', '.xxxx....', 'x........', '.........'],
+      pen: ['.......xx', '......xxx', '.....xxx.', '....xxx..', '...xxx...', '..xxx....', '.xx......', 'xx.......', '.........'],
+      eye: ['.........', '...xxx...', '.xx...xx.', 'x..xxx..x', 'x.xx.xx.x', 'x..xxx..x', '.xx...xx.', '...xxx...', '.........'],
+      quote: ['.........', 'xx...xx..', 'xx...xx..', '.x....x..', 'x....x...', '.........', '.........', '.........', '.........'],
+      circle: ['...xxx...', '.xx...xx.', '.x.....x.', 'x...x...x', 'x..xxx..x', 'x...x...x', '.x.....x.', '.xx...xx.', '...xxx...'],
+      burst: ['x...x...x', '.x..x..x.', '..x...x..', '.........', 'xxx...xxx', '.........', '..x...x..', '.x..x..x.', 'x...x...x'],
+      waves: ['.........', '.xx...xx.', 'x..x.x..x', '.........', '.xx...xx.', 'x..x.x..x', '.........', '.xx...xx.', 'x..x.x..x'],
+      lantern: ['...xxx...', '..x...x..', '.xxxxxxx.', '.x.x.x.x.', '.x.x.x.x.', '.x.x.x.x.', '.xxxxxxx.', '..x...x..', '...xxx...'],
+      cloud: ['.........', '...xxx...', '..x...xx.', '.x......x', 'x.......x', 'x.......x', '.xxxxxxx.', '.........', '.........'],
+      pin: ['..xxxxx..', '..xxxxx..', '...xxx...', '...xxx...', '.xxxxxxx.', '....x....', '....x....', '....x....', '....x....']
+    };
+    function pxIcon(name) {
+      const rows = PX_ICONS[name] || PX_ICONS.sparkle;
+      let r = '';
+      rows.forEach((row, y) => [...row].forEach((ch, x) => { if(ch === 'x') r += `<rect x="${x}" y="${y}" width="1" height="1"/>`; }));
+      return `<svg viewBox="0 0 9 9" aria-hidden="true">${r}</svg>`;
+    }
+
+    // Small coloured icons on card titles (Today, Calendar, Spirit, Insights)
+    const CARD_ICONS = [
+      [/^her pattern/, '#ef8a7a,#60a5fa', '<path d="M3 17l4-6 4 3 4-8 6 9"/>'],
+      [/her cycle/, '#ef8a7a,#a792f0', '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>'],
+      [/^a good memory/, '#f472b6,#f2c46b', '<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>'],
+      [/^tonight/, '#a792f0,#6366f1', '<path d="M9 4h6l1 2h3v14H5V6h3z"/><path d="M9 12l2 2 4-4"/>'],
+      [/^check in|emotional state/, '#f2c46b,#f97316', '<circle cx="12" cy="12" r="9"/><path d="M8.5 14.5c2 2 5 2 7 0M9 9.5h.01M15 9.5h.01"/>'],
+      [/^past 30|^your week/, '#5fc79a,#0ea5e9', '<path d="M3 17l6-6 4 4 8-8M15 7h6v6"/>'],
+      [/^month by month/, '#60a5fa,#6366f1', '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>'],
+      [/^patterns/, '#f472b6,#a792f0', '<path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/>'],
+      [/^your records/, '#94a3b8,#64748b', '<path d="M4 6h6l2 2h8v11H4z"/>'],
+      [/^counters/, '#2dd4bf,#0ea5e9', '<path d="M9 4L7 20M17 4l-2 16M4 9h16M3 15h16"/>'],
+      [/^time on exercises/, '#38bdf8,#6366f1', '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/>'],
+      [/^together/, '#f472b6,#ef8a7a', '<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>'],
+      [/^finds/, '#f2c46b,#f2c46b', '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>'],
+      [/^diary|^journal|^new entry/, '#a792f0,#60a5fa', '<path d="M5 4h11l3 3v13H5z"/><path d="M8 10h8M8 14h8"/>'],
+      [/^calendar/, '#5fc79a,#2dd4bf', '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'],
+      [/^unsaid words/, '#fb923c,#f472b6', '<path d="M5 19c0-8 6-14 15-14 0 9-6 15-14 15M5 19l7-7"/>'],
+      [/^record$/, '#ef8a7a,#fb923c', '<path d="M4 20l4-1 11-11-3-3L5 16z"/>']
+    ];
+    const CARD_PX = [[/^a good memory/, 'heart'], [/^her pattern/, 'trend'], [/her cycle/, 'moon'], [/^tonight/, 'clip'], [/^check in|emotional state/, 'smile'],
+      [/^past 30|^your week/, 'trend'], [/^month by month/, 'bars'], [/^patterns/, 'sparkle'], [/^your records/, 'folder'], [/^counters/, 'hash'],
+      [/^time on exercises/, 'clock'], [/^together/, 'heart'], [/^finds/, 'star'], [/^diary|^journal|^new entry/, 'book'], [/^calendar/, 'cal'],
+      [/^unsaid words/, 'leaf'], [/^record$/, 'pen']];
+    function decorateCardHeads() {
+      document.querySelectorAll('#tab-today > .card > h2, #tab-journey .card > h2, #tab-spirit > .card > h2, #tab-insights > .card > h2, #tab-record .card > h2').forEach(h => {
+        if(h.querySelector('.card-ic')) return;
+        const text = h.textContent.trim().toLowerCase(), m = CARD_PX.find(([re]) => re.test(text));
+        if(!m) return;
+        h.insertAdjacentHTML('afterbegin', `<span class="card-ic" aria-hidden="true">${pxIcon(m[1])}</span>`);
+      });
+    }
+
     function renderToday() {
+      renderGreeting();
       const el = document.getElementById('today-cycle');
       if(!el) return;
       document.getElementById('today-spirit-name').innerText = hamsterName;
@@ -8786,12 +9568,12 @@
       document.getElementById('today-checked').innerText = lastPick && lastPick.ts >= startOfToday().getTime()
         ? `Checked in: ${MOODS[lastPick.mood].name} · ${new Date(lastPick.ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
         : 'Not checked in yet today.';
-      // Gentle backup reminder after two weeks (or once there is something worth keeping)
+      // Weekly backup reminder (or once there is something worth keeping)
       const lastBackup = +localStorage.getItem('aq_last_backup') || 0;
       const daysSince = lastBackup ? Math.floor((Date.now() - lastBackup) / DAY) : null;
-      const needBackup = lastBackup ? daysSince >= 14 : notes.length + Object.keys(calData).length >= 10;
-      document.getElementById('today-backup-card').style.display = needBackup ? '' : 'none';
-      document.getElementById('today-backup-text').innerText = lastBackup ? `Last backup ${daysSince} days ago. Keep your records safe.` : 'No backup yet. Keep your records safe.';
+      document.getElementById('today-backup-card').style.display = backupDue() ? '' : 'none';
+      document.getElementById('today-backup-text').innerText = lastBackup ? `Last backup ${daysSince} days ago. One tap keeps everything safe.` : 'No backup yet. One tap keeps everything safe.';
+      renderTodayMemory();
       const st = calData[dayKey(new Date())];
       document.getElementById('today-days').innerHTML = TODAY_DAYS.map(([k, name, col]) =>
         `<button class="today-day ${st === k ? 'sel' : ''}" style="--day-col:${col}" onclick="todaySetDay('${k}')">${name}</button>`).join('');
@@ -8821,9 +9603,9 @@
     }
 
     // ---------- CALM AS TILES (normal mode): one tool open at a time ----------
-    const CALM_TILE = [['Vagus', '👁', '60 seconds'], ['Quiet Reset', '🌿', '2 minutes, anywhere'], ['Statements', '❝', 'Words to hold onto'],
-                       ['Breathing', '◯', 'Paced rounds'], ['Chaos', '✷', 'Shake it out'], ['Leaves', '🍃', 'Let thoughts pass'],
-                       ['Pond', '≈', 'Ripples settle'], ['Lanterns', '🏮', 'Release worries'], ['Fog', '🌫', 'Wipe the window clear']];
+    const CALM_TILE = [['Vagus', pxIcon('eye'), '60 seconds'], ['Quiet Reset', pxIcon('leaf'), '2 minutes, anywhere'], ['Statements', pxIcon('quote'), 'Words to hold onto'],
+                       ['Breathing', pxIcon('circle'), 'Paced rounds'], ['Chaos', pxIcon('burst'), 'Shake it out'], ['Leaves', pxIcon('leaf'), 'Let thoughts pass'],
+                       ['Pond', pxIcon('waves'), 'Ripples settle'], ['Lanterns', pxIcon('lantern'), 'Release worries'], ['Fog', pxIcon('cloud'), 'Wipe the window clear']];
     function setupCalmTiles() {
       const tab = document.getElementById('tab-calm');
       if(!tab || document.getElementById('calm-tiles')) return;
@@ -8833,26 +9615,32 @@
       let pinned = null;
       tab.querySelectorAll(':scope > .card').forEach(c => {
         const h = c.querySelector('h2');
-        if(h && h.innerText.trim() === 'Statements') {
+        if(h && h.textContent.trim() === 'Statements') {
           pinned = c;
           c.classList.add('calm-pinned');
           document.getElementById('quote-display').onclick = nextQuote; // tap the words for the next one
           return;
         }
-        if(h) titles.push(h.innerText.trim());
+        if(h) titles.push(h.textContent.trim());
         c.dataset.calmGroup = Math.max(0, titles.length - 1);
       });
       const tiles = document.createElement('div');
       tiles.id = 'calm-tiles';
       tiles.className = 'calm-tiles';
       const USE_ORDER = ['Breathing', 'Lanterns', 'Vagus', 'Quiet Reset']; // by how often you use them
+      const MAIN = 2; // Breathing and Lanterns up front; the rest wait under "More tools"
       const rank = t => { const r = USE_ORDER.findIndex(k => t.includes(k)); return r < 0 ? USE_ORDER.length : r; };
       const order = titles.map((t, i) => i).sort((a, b) => rank(titles[a]) - rank(titles[b]) || a - b);
-      tiles.innerHTML = order.map(i => {
+      calmTitles = titles;
+      const tile = i => {
         const t = titles[i];
-        const [, ic, sub] = CALM_TILE.find(([k]) => t.includes(k)) || ['', '•', ''];
-        return `<button class="calm-tile" onclick="openCalmGroup(${i})"><span class="calm-ic">${ic}</span><span><b>${escapeHtml(t)}</b><small>${sub}</small></span></button>`;
-      }).join('');
+        const [key, ic, sub] = CALM_TILE.find(([k]) => t.includes(k)) || ['', '•', ''];
+        const pin = key ? `<span class="calm-pin ${calmPins.includes(key) ? 'on' : ''}" role="button" aria-label="Pin to Today" title="Pin to Today"
+          onclick="event.stopPropagation(); toggleCalmPin('${key}')"><span class="px-ic">${pxIcon('pin')}</span></span>` : '';
+        return `<button class="calm-tile" data-key="${key}" onclick="openCalmGroup(${i})">${pin}<span class="calm-ic">${ic}</span><span><b>${escapeHtml(t)}</b><small>${sub}</small></span></button>`;
+      };
+      tiles.innerHTML = order.slice(0, MAIN).map(tile).join('') +
+        `<details class="calm-more"><summary>More tools</summary><div class="calm-tiles">${order.slice(MAIN).map(tile).join('')}</div></details>`;
       const back = document.createElement('button');
       back.id = 'calm-back';
       back.className = 'calm-back';
@@ -8861,6 +9649,62 @@
       tab.prepend(back);
       tab.prepend(tiles);
       if(pinned) tab.prepend(pinned);
+    }
+    // Pinned tools: tap the pin on a Calm tile to put it on Today, under Spirit (up to 3)
+    let calmTitles = [];
+    let calmPins = ['Breathing'];
+    try { const saved = JSON.parse(localStorage.getItem('aq_calm_pins')); if(Array.isArray(saved)) calmPins = saved; } catch(e) {}
+    function toggleCalmPin(key) {
+      if(calmPins.includes(key)) calmPins = calmPins.filter(k => k !== key);
+      else { calmPins.push(key); if(calmPins.length > 3) calmPins.shift(); }
+      localStorage.setItem('aq_calm_pins', JSON.stringify(calmPins));
+      document.querySelectorAll('.calm-tile').forEach(t => {
+        const pin = t.querySelector('.calm-pin');
+        if(pin) pin.classList.toggle('on', calmPins.includes(t.dataset.key));
+      });
+      renderTodayPins();
+    }
+    function renderTodayPins() {
+      const el = document.getElementById('today-pins');
+      if(!el) return;
+      el.innerHTML = calmPins.map(key => {
+        const i = calmTitles.findIndex(t => t.includes(key)), tile = CALM_TILE.find(([k]) => k === key);
+        if(i < 0 || !tile) return '';
+        return `<button class="today-pin" onclick="openPinnedTool('${key}')"><span class="calm-ic">${tile[1]}</span>` +
+          `<span><b>${escapeHtml(calmTitles[i])}</b><small>${tile[2]}</small></span><span class="go" aria-hidden="true">›</span></button>`;
+      }).join('');
+    }
+    // ----- Hidden journal: 5 quick taps on the sunset time while on Today reveal Write, the entries and their stats; leaving the app hides them again
+    let secretTaps = [];
+    function sunsetTap(e) {
+      e.stopPropagation(); // the sunset no longer opens the moon view; the moon does
+      if(!document.getElementById('tab-today').classList.contains('active')) { secretTaps = []; return; }
+      const now = Date.now();
+      secretTaps = secretTaps.filter(t => now - t < 2500).concat(now);
+      if(secretTaps.length < 5) return;
+      secretTaps = [];
+      const open = document.body.classList.toggle('journal-open');
+      if(navigator.vibrate) { try { navigator.vibrate(open ? [15, 40, 15] : 30); } catch(err) {} }
+      if(!open && journeySeg !== 'calendar') showJourneySeg('calendar');
+    }
+    function lockJournal() {
+      if(!document.body.classList.contains('journal-open')) return;
+      document.body.classList.remove('journal-open');
+      if(journeySeg !== 'calendar') showJourneySeg('calendar');
+    }
+    document.addEventListener('visibilitychange', () => { if(document.hidden) lockJournal(); });
+    window.addEventListener('pagehide', lockJournal);
+
+    // A tool opened from Today goes back to Today
+    var calmFromToday = false;
+    function openPinnedTool(key) {
+      const i = calmTitles.findIndex(t => t.includes(key));
+      if(i < 0) return;
+      switchTab('calm');
+      openCalmGroup(i);
+      calmFromToday = true;
+      const back = document.getElementById('calm-back');
+      if(back) back.innerText = '← Today';
     }
     function openCalmGroup(i) {
       const tab = document.getElementById('tab-calm');
@@ -8875,6 +9719,9 @@
       tab.classList.remove('calm-open');
       document.body.classList.remove('calm-tool-open');
       tab.querySelectorAll(':scope > .card.open').forEach(c => c.classList.remove('open'));
+      const back = document.getElementById('calm-back');
+      if(back) back.innerText = '← All tools';
+      if(calmFromToday) { calmFromToday = false; switchTab('today'); }
     }
 
     // ---------- INSIGHTS AS CARDS: titles only, tap to open ----------
@@ -8895,6 +9742,7 @@
     // ---------- JOURNAL SECTIONS ----------
     let journeySeg = 'calendar';
     function showJourneySeg(seg) {
+      if(seg !== 'calendar' && !document.body.classList.contains('journal-open')) seg = 'calendar'; // Write and Journal open only after the secret taps
       journeySeg = seg;
       document.querySelectorAll('#tab-journey > [data-seg]').forEach(el => {
         el.style.display = el.dataset.seg === seg ? '' : 'none';
@@ -9003,11 +9851,40 @@
       }
       return out.sort((a, b) => b[2] - a[2]).slice(0, 4);
     }
+    // Each finding as a highlight card: an icon and topic, the sentence, and a small chart where one helps
+    const HL_TOPICS = [
+      [/^<b>(Better|Harder|About the same)/, 'month', 'This month', '<path d="M3 17l6-6 4 4 8-8M15 7h6v6"/>'],
+      [/Hard days cluster/, 'cycle', 'Her cycle', '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>'],
+      [/hardest day/, 'weekday', 'Weekdays', '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'],
+      [/Calm tools help/, 'helps', 'What helps', '<path d="M5 19c0-8 6-14 15-14 0 9-6 15-14 15M5 19l7-7"/>'],
+      [/good days in a row/, 'run', 'Good run', '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>'],
+      [/since the last hard day/, 'since', 'Calm stretch', '<path d="M5 12l4 4 10-10"/>'],
+      [/[Cc]rises/, 'crisis', 'Crises', '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/>'],
+      [/checked in/, 'checkin', 'Check-ins', '<circle cx="12" cy="12" r="9"/><path d="M8.5 14.5c2 2 5 2 7 0M9 9.5h.01M15 9.5h.01"/>']
+    ];
+    const HL_COLOUR = { good: 'var(--color-green)', watch: '#f2c46b', info: 'var(--theme-primary)' };
+    function hlChart(topic) {
+      const today = startOfToday(), st = d => calData[dayKey(d)];
+      const col = v => v === 'status-green' ? 'var(--color-green)' : v === 'status-yellow' ? '#f2c46b' : v === 'status-red' ? '#ef8a7a' : v === 'status-black' ? '#a792f0' : 'rgba(255,255,255,0.08)';
+      if(topic === 'run' || topic === 'since') // the last 14 days as coloured blocks
+        return '<div class="hl-strip">' + Array.from({ length: 14 }, (_, i) => `<span style="background:${col(st(addDays(today, i - 13)))}"></span>`).join('') + '</div>';
+      if(topic === 'month') { // good days per week, last 8 weeks
+        const weeks = Array.from({ length: 8 }, (_, w) => Array.from({ length: 7 }, (_, d) => st(addDays(today, -(7 - w) * 7 + d + 1))).filter(v => v === 'status-green').length);
+        const max = Math.max(1, ...weeks);
+        return '<div class="hl-spark">' + weeks.map((n, i) => `<span style="height:${Math.round(n / max * 100)}%; background:${i >= 4 ? 'var(--color-green)' : 'rgba(255,255,255,0.12)'}"></span>`).join('') + '</div>';
+      }
+      return '';
+    }
     function renderGlance() {
       const el = document.getElementById('trend-glance');
       if(!el) return;
       const f = glanceFindings();
-      el.innerHTML = f.length ? f.map(([kind, text]) => `<div class="glance-line"><i class="${kind}"></i><span>${text}</span></div>`).join('')
+      el.innerHTML = f.length ? '<div class="ins-sub">Highlights</div>' + f.map(([kind, text]) => {
+          const [, topic, title, icon] = HL_TOPICS.find(([re]) => re.test(text)) || [null, 'other', 'Trend', HL_TOPICS[0][3]];
+          const px = { month: 'trend', cycle: 'moon', weekday: 'cal', helps: 'leaf', run: 'star', since: 'sparkle', crisis: 'clock', checkin: 'smile' }[topic] || 'sparkle';
+          return `<div class="hl"><div class="hl-head"><span class="hl-ic" style="background:${HL_COLOUR[kind]}">${pxIcon(px)}</span>${title}</div>` +
+            `<div class="hl-text">${text}</div>${hlChart(topic)}</div>`;
+        }).join('')
         : '<div class="today-sub" style="padding:4px 0 8px;">Keep marking your days. Trends show up here after a couple of weeks.</div>';
     }
 
@@ -9060,9 +9937,14 @@
           arrow = a > b ? '↑' : '↓';
           cls = better ? 'up' : 'down';
         }
-        return `<div class="trend-row"><span class="t-name">${name}</span><span class="t-val">${a === null ? '–' : show(a)}</span>` +
-          `<span class="t-cmp"><span class="${cls}">${arrow || (a === b && a !== null ? '=' : '')}</span> before: ${b === null ? '–' : showPrev(b)}</span></div>`;
+        const unit = name === 'Disrupt' ? ' min' : '';
+        const delta = a === null || b === null ? (b === null ? 'nothing before' : `before: ${showPrev(b)}`)
+          : name === 'Feeling' ? (feelWord(a) === feelWord(b) ? 'same as before' : `before: ${showPrev(b)}`)
+          : a === b ? '= same as before' : `${arrow} ${Math.abs(a - b)}${unit} vs before`;
+        return `<div class="tile2"><div class="t-name">${name}</div><div class="t-big">${a === null ? '–' : show(a)}</div>` +
+          `<div class="t-delta ${cls}">${delta}</div></div>`;
       }).join('');
+      if(hasAny) el.innerHTML = '<div class="ins-sub">Past 30 days vs the 30 before</div><div class="tiles2">' + el.innerHTML + '</div>';
     }
 
     function renderCorrelations() {
@@ -9408,7 +10290,7 @@
 
     function currentQuotes() {
       const t = ONI_TAILOR[todaysOni()];
-      return t ? t.words : encouragements;
+      return t ? t.words.concat(encouragements) : encouragements;
     }
 
     // ---------- USAGE TRACKER (private, stays on this device) ----------
@@ -9416,7 +10298,7 @@
     // trimmed and tuned around how you actually use it.
     const TAB_KEYS = ['today', 'journey', 'puzzle', 'spirit', 'calm', 'insights'];
     // Older tabs (vagus, recover, practise) keep their names so past usage still reads right
-    const TAB_LABEL = { today: 'Today', journey: 'Journal', puzzle: 'Disrupt', spirit: 'Spirit', calm: 'Calm', insights: 'Insights',
+    const TAB_LABEL = { today: 'Today', journey: 'Calendar', puzzle: 'Disrupt', spirit: 'Spirit', calm: 'Calm', insights: 'Insights',
                         vagus: 'Vagus', recover: 'Recover', practise: 'Practise' };
     // Time recorded before tabs had names (by their old position)
     const OLD_TAB = { 0: 'vagus', 1: 'journey', 2: 'puzzle', 3: 'recover', 4: 'spirit', 5: 'calm', 6: 'practise' };
@@ -9857,10 +10739,6 @@
           if(!isPaused && !isGameOver) {
             timeLeft--;
             logPractice('puzzleSec', 1);
-            let m = Math.floor(timeLeft / 60);
-            let s = timeLeft % 60;
-            let timerEl = document.getElementById('puzzle-timer');
-            if(timerEl) timerEl.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
             updatePuzzleRing();
             if(timeLeft <= 0) {
               logPractice('puzzleSessions', 1);
@@ -9886,21 +10764,29 @@
     // Session ring: fills over the 10 minutes, with a line that changes as you go
     const PUZZLE_MILESTONES = [
       [0, 'Turn pieces so matching inks touch: 6 joined hexes dissolve. Picture each turn in your mind first.'],
-      [60, 'One minute in. Your visual brain is busy with shapes now.'],
-      [180, 'Three minutes. Keep your focus on the shapes.'],
+      [150, 'A quarter done. Your visual brain is busy with shapes now.'],
       [300, 'Halfway there. Notice your breathing slowing down.'],
-      [480, 'Two minutes left. Stay with the shapes.'],
+      [450, 'Three quarters. Stay with the shapes.'],
       [600, 'Session complete ✓ Well done for looking after yourself.']
     ];
+    // The session in quarters: ¼, ½, ¾, done. The exact time only shows when the board fills up.
+    function puzzleQuarterLabel() {
+      const q = Math.floor(Math.min(SESSION_SECONDS, SESSION_SECONDS - timeLeft) / (SESSION_SECONDS / 4));
+      return ['', '¼', '½', '¾', '✓'][q];
+    }
     function updatePuzzleRing() {
-      const fg = document.getElementById('puzzle-ring-fg');
-      if(!fg) return;
+      if(!document.getElementById('puzzle-q0')) return;
       const done = Math.min(SESSION_SECONDS, SESSION_SECONDS - timeLeft);
-      const frac = done / SESSION_SECONDS;
-      const len = 2 * Math.PI * 28;
-      fg.style.strokeDasharray = len;
-      fg.style.strokeDashoffset = len * (1 - frac);
-      fg.style.stroke = frac >= 1 ? 'var(--color-green)' : 'var(--theme-primary)';
+      const quarters = Math.floor(done / (SESSION_SECONDS / 4)), len = 2 * Math.PI * 28, seg = len / 4, gap = 6;
+      for(let i = 0; i < 4; i++) {
+        const el = document.getElementById('puzzle-q' + i);
+        el.style.strokeDasharray = `${seg - gap} ${len - seg + gap}`;
+        el.style.strokeDashoffset = -(i * seg + gap / 2);
+        el.classList.toggle('on', i < quarters);
+        el.classList.toggle('all', quarters >= 4);
+      }
+      const timerEl = document.getElementById('puzzle-timer');
+      if(timerEl) timerEl.innerText = puzzleQuarterLabel();
       const line = PUZZLE_MILESTONES.filter(([s]) => done >= s).pop()[1];
       const el = document.getElementById('puzzle-milestone');
       if(el && el.innerText !== line) { el.innerText = line; bump('puzzle-milestone'); }
@@ -9987,8 +10873,6 @@
       totalClearedLines = 0;
       score = 0;
       updatePuzzleStats();
-      let timerEl = document.getElementById('puzzle-timer');
-      if(timerEl) timerEl.innerText = formatTime(SESSION_SECONDS);
       updatePuzzleRing();
       PE().newBoard();
       drawBoard();
@@ -10016,10 +10900,12 @@
       } else {
         title.innerText = 'BOARD FULL';
         title.style.color = 'var(--color-red)';
-        btn.innerText = `Keep Going (${formatTime(timeLeft)} left)`;
+        btn.innerText = 'Keep Going';
       }
       let statsEl = document.getElementById('game-over-stats');
-      if(statsEl) statsEl.innerText = `Score: ${score} · ${PE().unitWord}: ${totalClearedLines} · Best: ${bestScore}`;
+      // The only place the exact time shows: when the board fills up
+      if(statsEl) statsEl.innerText = `Score: ${score} · ${PE().unitWord}: ${totalClearedLines} · Best: ${bestScore}` +
+        (reason === 'session' ? '' : `\nPlayed ${formatTime(SESSION_SECONDS - timeLeft)} · ${formatTime(timeLeft)} to go`);
       let goScreen = document.getElementById('game-over-screen');
       if(goScreen) goScreen.style.display = 'flex';
     }
@@ -10404,13 +11290,13 @@
     // ----- Classic Blocks: the original falling-block game (10 x 20, glossy blocks, ghost piece)
     const CL_COLS = 10, CL_ROWS = 20, CL_BLOCK = 20;
     const CL_PIECES = [
-      { shape: [[1, 1, 1, 1]], color: '#00f2fe' },
-      { shape: [[1, 0, 0], [1, 1, 1]], color: '#4facfe' },
-      { shape: [[0, 0, 1], [1, 1, 1]], color: '#f59e0b' },
-      { shape: [[1, 1], [1, 1]], color: '#facc15' },
-      { shape: [[0, 1, 1], [1, 1, 0]], color: '#10b981' },
-      { shape: [[0, 1, 0], [1, 1, 1]], color: '#7b2cbf' },
-      { shape: [[1, 1, 0], [0, 1, 1]], color: '#ef4444' }
+      { shape: [[1, 1, 1, 1]], color: '#6fb3f2' },
+      { shape: [[1, 0, 0], [1, 1, 1]], color: '#8d7fc4' },
+      { shape: [[0, 0, 1], [1, 1, 1]], color: '#f6a26b' },
+      { shape: [[1, 1], [1, 1]], color: '#ffd84d' },
+      { shape: [[0, 1, 1], [1, 1, 0]], color: '#82c97a' },
+      { shape: [[0, 1, 0], [1, 1, 1]], color: '#ff8fb1' },
+      { shape: [[1, 1, 0], [0, 1, 1]], color: '#ef8a7a' }
     ];
     let clGrid = [], clPiece = null, clNext = null, clX = 0, clY = 0, clFlashRows = [], clFlashUntil = 0;
     const clRandom = () => { const p = CL_PIECES[Math.floor(Math.random() * CL_PIECES.length)]; return { shape: p.shape.map(r => r.slice()), color: p.color }; };
@@ -10490,26 +11376,50 @@
       g.strokeRect(x + 0.75, y + 0.75, sz - 1.5, sz - 1.5);
       g.globalAlpha = 1;
     }
+    // Retro LCD look, like Spirit's screen: cream screen with dot cells, pastel pixel blocks with a dark outline
+    // Night sky behind the blocks: a deep blue gradient, faint cells and twinkling pixel stars (same spots every time)
+    function drawLcdCells(g, w, h, size) {
+      const sky = g.createLinearGradient(0, 0, 0, h);
+      sky.addColorStop(0, '#060a1f'); sky.addColorStop(0.6, '#0d1536'); sky.addColorStop(1, '#162250');
+      g.fillStyle = sky; g.fillRect(0, 0, w, h);
+      g.fillStyle = 'rgba(255, 255, 255, 0.035)';
+      for(let y = 0; y < h; y += size) for(let x = 0; x < w; x += size) g.fillRect(x + 2, y + 2, size - 4, size - 4);
+      const t = reduceMotion ? 0 : performance.now() / 1000, n = Math.round(w * h / 900);
+      for(let i = 0; i < n; i++) {
+        const x = Math.floor(rand01(i, 91) * w), y = Math.floor(rand01(i, 92) * h), big = rand01(i, 93) > 0.85;
+        const a = 0.35 + 0.55 * Math.abs(Math.sin(t * (0.6 + rand01(i, 94)) + i));
+        g.fillStyle = rand01(i, 95) > 0.8 ? `rgba(170, 215, 255, ${a})` : `rgba(255, 255, 255, ${a})`;
+        g.fillRect(x, y, big ? 2 : 1, big ? 2 : 1);
+      }
+    }
+    function drawRetroBlock(g, x, y, sz, color) {
+      x = Math.round(x); y = Math.round(y);
+      g.fillStyle = '#2b2140'; g.fillRect(x, y, sz, sz);                       // outline
+      g.fillStyle = color; g.fillRect(x + 2, y + 2, sz - 4, sz - 4);           // body
+      g.fillStyle = shadeHex(color, 0.45); g.fillRect(x + 2, y + 2, sz - 4, 2); g.fillRect(x + 2, y + 2, 2, sz - 4); // light edge
+      g.fillStyle = shadeHex(color, -0.25); g.fillRect(x + 2, y + sz - 4, sz - 4, 2); g.fillRect(x + sz - 4, y + 2, 2, sz - 4); // shade
+      g.fillStyle = 'rgba(255, 255, 255, 0.75)'; g.fillRect(x + 5, y + 5, 2, 2);  // a pixel of shine
+    }
+    function drawRetroGhost(g, x, y, sz) {
+      x = Math.round(x); y = Math.round(y);
+      g.fillStyle = 'rgba(43, 33, 64, 0.35)';
+      for(let i = 0; i < sz; i += 4) { g.fillRect(x + i, y, 2, 2); g.fillRect(x + i, y + sz - 2, 2, 2); g.fillRect(x, y + i, 2, 2); g.fillRect(x + sz - 2, y + i, 2, 2); }
+    }
     function clDraw() {
       if(!ctx) return;
-      ctx.fillStyle = '#02040a';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)'; ctx.lineWidth = 1;
-      ctx.beginPath();
-      for(let c = 1; c < CL_COLS; c++) { ctx.moveTo(c * CL_BLOCK - 0.5, 0); ctx.lineTo(c * CL_BLOCK - 0.5, CL_ROWS * CL_BLOCK); }
-      for(let r = 1; r < CL_ROWS; r++) { ctx.moveTo(0, r * CL_BLOCK - 0.5); ctx.lineTo(CL_COLS * CL_BLOCK, r * CL_BLOCK - 0.5); }
-      ctx.stroke();
-      for(let r = 0; r < CL_ROWS; r++) for(let c = 0; c < CL_COLS; c++) if(clGrid[r] && clGrid[r][c]) drawGlossyBlock(ctx, c * CL_BLOCK, r * CL_BLOCK, CL_BLOCK - 1, clGrid[r][c]);
+      ctx.imageSmoothingEnabled = false;
+      drawLcdCells(ctx, canvas.width, canvas.height, CL_BLOCK);
+      for(let r = 0; r < CL_ROWS; r++) for(let c = 0; c < CL_COLS; c++) if(clGrid[r] && clGrid[r][c]) drawRetroBlock(ctx, c * CL_BLOCK, r * CL_BLOCK, CL_BLOCK, clGrid[r][c]);
       const flashLeft = clFlashUntil - performance.now();
       if(flashLeft > 0) {
-        ctx.fillStyle = `rgba(255, 255, 255, ${0.6 * flashLeft / 260})`;
+        ctx.fillStyle = `rgba(255, 255, 255, ${0.85 * flashLeft / 260})`;
         clFlashRows.forEach(r => ctx.fillRect(0, r * CL_BLOCK, canvas.width, CL_BLOCK));
       }
       if(clPiece && !isGameOver) {
         let gy = clY;
         while(clCanMove(clX, gy + 1, clPiece.shape)) gy++;
-        if(gy > clY) clPiece.shape.forEach((row, r) => row.forEach((v, c) => { if(v) drawGhostBlock(ctx, (clX + c) * CL_BLOCK, (gy + r) * CL_BLOCK, CL_BLOCK - 1, clPiece.color); }));
-        clPiece.shape.forEach((row, r) => row.forEach((v, c) => { if(v) drawGlossyBlock(ctx, (clX + c) * CL_BLOCK, (clY + r) * CL_BLOCK, CL_BLOCK - 1, clPiece.color); }));
+        if(gy > clY) clPiece.shape.forEach((row, r) => row.forEach((v, c) => { if(v) drawRetroGhost(ctx, (clX + c) * CL_BLOCK, (gy + r) * CL_BLOCK, CL_BLOCK); }));
+        clPiece.shape.forEach((row, r) => row.forEach((v, c) => { if(v) drawRetroBlock(ctx, (clX + c) * CL_BLOCK, (clY + r) * CL_BLOCK, CL_BLOCK, clPiece.color); }));
       }
       puzzleChrome(!!clPiece);
     }
@@ -10517,12 +11427,12 @@
       const nc = document.getElementById('puzzle-next');
       if(!nc) return;
       const n = nc.getContext('2d');
-      n.fillStyle = '#02040a';
-      n.fillRect(0, 0, nc.width, nc.height);
+      n.imageSmoothingEnabled = false;
+      drawLcdCells(n, nc.width, nc.height, 12);
       if(!clNext) return;
       const b = 12, sh = clNext.shape;
-      const ox = (nc.width - sh[0].length * b) / 2, oy = (nc.height - sh.length * b) / 2;
-      sh.forEach((row, r) => row.forEach((v, c) => { if(v) drawGlossyBlock(n, ox + c * b, oy + r * b, b - 1, clNext.color); }));
+      const ox = Math.round((nc.width - sh[0].length * b) / 2), oy = Math.round((nc.height - sh.length * b) / 2);
+      sh.forEach((row, r) => row.forEach((v, c) => { if(v) drawRetroBlock(n, ox + c * b, oy + r * b, b, clNext.color); }));
     }
     function clMove(dir) {
       if(isPaused || isGameOver || !clPiece) return;
@@ -10743,7 +11653,9 @@
         newBoard: inkNewBoard
       }
     };
-    let puzzleMode = PUZZLE_ENGINES[localStorage.getItem('aq_puzzle_mode')] ? localStorage.getItem('aq_puzzle_mode') : 'honeycomb';
+    if(!localStorage.getItem('aq_classic_default')) { localStorage.setItem('aq_puzzle_mode', 'classic'); localStorage.setItem('aq_classic_default', '1'); }
+    let puzzleMode = PUZZLE_ENGINES[localStorage.getItem('aq_puzzle_mode')] ? localStorage.getItem('aq_puzzle_mode') : 'classic';
+    if(puzzleMode === 'honeycomb' && localStorage.getItem('aq_show_honeycomb') !== '1') puzzleMode = 'classic';
     function PE() { return PUZZLE_ENGINES[puzzleMode]; }
     function drawBoard() { PE().draw(); }
     function updatePuzzle() { PE().tick(); }
@@ -10761,6 +11673,7 @@
       const lbl = document.getElementById('puzzle-unit-label'); if(lbl) lbl.innerText = e.unitLabel;
       const why = document.getElementById('puzzle-why-mode'); if(why) why.innerText = e.why;
       const nx = document.getElementById('puzzle-next-stat'); if(nx) nx.style.display = e.next ? '' : 'none';
+      ['puzzle-canvas', 'puzzle-next'].forEach(id => { const c = document.getElementById(id); if(c) c.classList.toggle('lcd-board', puzzleMode === 'classic'); });
       const ms = document.getElementById('puzzle-milestone');
       if(ms && timeLeft >= SESSION_SECONDS) ms.innerText = e.hint;
       bestScore = parseInt(localStorage.getItem(e.bestKey) || '0');
@@ -10782,10 +11695,19 @@
       drawBoard();
       renderPuzzleModeSettings();
     }
+    // Honeycomb is hidden unless it's switched on in Settings
+    const honeycombOn = () => localStorage.getItem('aq_show_honeycomb') === '1';
+    function setHoneycombShown(on) {
+      localStorage.setItem('aq_show_honeycomb', on ? '1' : '0');
+      if(!on && puzzleMode === 'honeycomb') setPuzzleMode('classic');
+      renderPuzzleModeSettings();
+    }
     function renderPuzzleModeSettings() {
+      const box = document.getElementById('cfg-honeycomb');
+      if(box) box.checked = honeycombOn();
       const el = document.getElementById('puzzle-mode-opts');
       if(!el) return;
-      el.innerHTML = Object.entries(PUZZLE_ENGINES).map(([k, e]) =>
+      el.innerHTML = Object.entries(PUZZLE_ENGINES).filter(([k]) => k !== 'honeycomb' || honeycombOn()).map(([k, e]) =>
         `<button type="button" class="tag-chip ${puzzleMode === k ? 'selected' : ''}" onclick="setPuzzleMode('${k}')">${e.name}</button>`).join('');
     }
     applyPuzzleModeText();
@@ -10810,10 +11732,14 @@
     renderFindsButton();
     applySpiritBackdrop();
     setupCalmTiles();
+    renderTodayPins();
     setupInsightCards();
+    decorateCardHeads();
     renderPuzzleModeSettings();
     showJourneySeg('calendar');
     renderToday();
+    renderHerQuiz();
+    renderHerPattern();
     resumeCrisisIfActive();
     renderCrisisFollowup();
     renderHamsterName();
@@ -10842,8 +11768,9 @@
     setupFog();
     renderMoodCalendar();
     calmLoop();
-    if(!reduceMotion) hamsterLoop();
+    if(!reduceMotion) { hamsterLoop(); document.querySelector('#tab-spirit .hamster-canvas-container').classList.add('lcd'); }
     takeTodaySnapshot();
+    makeAppIcon(); // again, now that Spirit's screen is drawn
     if(spiritStyle.backdrop === 'weather') fetchWeather().then(() => {
       applySpiritBackdrop();
       // Same pose, just with the real weather behind him
@@ -10851,24 +11778,27 @@
     }); // again with the real weather
 
     // Home-screen icon drawn from the blue oni
+    // Home-screen icon: Spirit on his little LCD screen (from Today's snapshot), on a deep night tile
     function makeAppIcon() {
       try {
-        const src = document.createElement('canvas');
-        src.width = src.height = 200;
-        src.id = 'icon-src-canvas';
-        src.style.display = 'none';
-        document.body.appendChild(src);
-        drawOniFace('icon-src-canvas', 'calm', 0);
+        const lcd = document.getElementById('today-spirit-canvas');
         const icon = document.createElement('canvas');
         icon.width = icon.height = 180;
-        const ictx = icon.getContext('2d');
-        ictx.fillStyle = '#040612';
-        ictx.fillRect(0, 0, 180, 180);
-        ictx.drawImage(src, 15, 10, 150, 150);
+        const g = icon.getContext('2d');
+        const bg = g.createLinearGradient(0, 0, 0, 180);
+        bg.addColorStop(0, '#0d1536'); bg.addColorStop(1, '#060a1f');
+        g.fillStyle = bg; g.fillRect(0, 0, 180, 180);
+        g.fillStyle = 'rgba(255, 255, 255, 0.7)';
+        [[20, 22], [150, 30], [30, 150], [158, 140], [90, 14]].forEach(([x, y]) => g.fillRect(x, y, 2, 2));
+        g.fillStyle = '#c99a45'; g.beginPath(); g.roundRect(22, 22, 136, 136, 22); g.fill();
+        g.save(); g.beginPath(); g.roundRect(28, 28, 124, 124, 18); g.clip();
+        g.imageSmoothingEnabled = false;
+        if(lcd && lcd.width) { const side = lcd.height; g.drawImage(lcd, (lcd.width - side) / 2, 0, side, side, 28, 28, 124, 124); }
+        else { g.fillStyle = '#fff4e0'; g.fillRect(28, 28, 124, 124); }
+        g.restore();
         const url = icon.toDataURL('image/png');
         document.getElementById('app-icon').href = url;
         document.getElementById('app-favicon').href = url;
-        src.remove();
       } catch(e) {}
     }
   </script>
