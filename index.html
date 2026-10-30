@@ -1920,7 +1920,7 @@
         </div>
         </div>
 
-        <button class="btn-action btn-secondary" style="margin-top:12px; color:var(--color-red); border-color:rgba(239,68,68,0.4);" onclick="resetPuzzle()">Reset</button>
+        <button class="btn-action btn-secondary" style="margin-top:12px; color:var(--color-red); border-color:rgba(239,68,68,0.4);" onclick="resetBoard()">Reset</button>
 
         <div style="margin-top: 14px;">
           <a href="https://youtu.be/GYJkSLTJAv0?si=Xkk5F3I9TuIqr_ii" target="_blank" style="color:var(--theme-secondary); font-size:0.8rem; text-decoration:none;">🎵 Open Bilateral Audio Track</a>
@@ -6171,12 +6171,14 @@
       const jump = hamsterJumpStart;
       hamsterJumpStart = -1;
       // No house on the Today screen, so he's the focus (unless he's inside it)
-      const house = spiritStyle.house;
+      // No house (so he's the focus) and no weather clouds (only their cut-off edges would show in this small crop)
+      const house = spiritStyle.house, bd = spiritStyle.backdrop;
       if(!spiritHome.inside) spiritStyle.house = false;
+      spiritStyle.backdrop = 'meadow';
       spiritSnapshotting = true;
       drawHamster();
       spiritSnapshotting = false;
-      spiritStyle.house = house;
+      spiritStyle.house = house; spiritStyle.backdrop = bd;
       hamsterJumpStart = jump;
       drawTamaScreen(c, m, spiritHome.inside ? HOUSE.door : w.x);
       todaySnapX = w.x;
@@ -6253,15 +6255,31 @@
       const [skyTop, skyLow, ground] = tamaArea();
       const band = y => { const f = Math.min(2, Math.floor(y / Math.max(1, groundFrom) * 3)) / 2; return skyTop.map((v, i) => Math.round(v + (skyLow[i] - v) * f)); };
       for(let y = 0; y < H; y++) { const c = y >= groundFrom ? ground : band(y); for(let x = 0; x < W; x++) set(x, y, c); }
-      const solid = new Uint8Array(W * areaH);
+      let solid = new Uint8Array(W * areaH);
+      const cols = new Array(W * areaH);
       for(let y = 0; y < areaH; y++) for(let x = 0; x < W; x++) {
         const i = (y * W + x) * 4, a = d[i + 3];
         if(a < 120) continue;
         const r = d[i] / (a / 255), g = d[i + 1] / (a / 255), b = d[i + 2] / (a / 255);
-        if(g > r * 1.05 && g > b && top + y >= groundFrom - 3) continue; // the grass becomes the ground strip
+        if(g > r * 1.05 && g > b && top + y >= groundFrom - 10) continue; // grass and its blades become the ground strip
         solid[y * W + x] = 1;
-        set(x, top + y, tamaColour(r, g, b));
+        cols[y * W + x] = tamaColour(r, g, b);
       }
+      // Drop stray specks (single stars, grass tips, sparkles) so they don't each get a dark outline
+      const kept = new Uint8Array(W * areaH);
+      for(let y = 0; y < areaH; y++) for(let x = 0; x < W; x++) {
+        const i = y * W + x;
+        if(!solid[i]) continue;
+        let n = 0;
+        for(let dy = -1; dy <= 1; dy++) for(let dx = -1; dx <= 1; dx++) {
+          if(!dx && !dy) continue;
+          const xx = x + dx, yy = y + dy;
+          if(xx >= 0 && xx < W && yy >= 0 && yy < areaH && solid[yy * W + xx]) n++;
+        }
+        if(n >= 2) kept[i] = 1;
+      }
+      solid = kept;
+      for(let i = 0; i < W * areaH; i++) if(solid[i]) set(i % W, top + Math.floor(i / W), cols[i]);
       const OUT = [0x2b, 0x21, 0x40];
       for(let y = 0; y < areaH; y++) for(let x = 0; x < W; x++) {
         const i = y * W + x;
@@ -6273,6 +6291,10 @@
         if(ch === 'x') for(let a = 0; a < k; a++) for(let b = 0; b < k; b++) set(x + i * k + a, y + j * k + b, col);
       }));
       const sc = selfCareToday(), lit = [0x2b, 0x21, 0x40], dim = [0xd9, 0xc6, 0xa6], pink = [0xff, 0x8f, 0xb1];
+      // A small plain backing behind the icons and hearts, so clouds and the house don't tangle with them
+      const chip = (x, y, w, h, c) => { for(let yy = y; yy < y + h; yy++) for(let xx = x; xx < x + w; xx++) set(xx, yy, c); };
+      [0, 1, 2].forEach(i => chip((6 + i * 34) * k - k, 0, 9 * k, 9 * k, skyTop));
+      chip(W - 35 * k, H - 9 * k, 34 * k, 9 * k, ground);
       [['bowl', sc.checked], ['bulb', spiritAsleep()], ['ball', sc.ex > 0]].forEach(([n, on], i) => icon(n, (6 + i * 34) * k, k, on ? lit : dim));
       const hearts = { thriving: 4, calm: 3, recovering: 2, stressed: 1 }[hamsterMood] || 3;
       for(let i = 0; i < 4; i++) icon('heart', W - (34 - i * 8) * k, H - 8 * k, i < hearts ? pink : dim);
@@ -10871,6 +10893,21 @@
       score = 0;
       updatePuzzleStats();
       updatePuzzleRing();
+      PE().newBoard();
+      drawBoard();
+      startPuzzle();
+    }
+
+    // Reset clears the board and score but keeps the session time (a finished session starts a new one)
+    function resetBoard() {
+      if(timeLeft <= 0) { resetPuzzle(); return; }
+      pausePuzzle();
+      isGameOver = false;
+      const goScreen = document.getElementById('game-over-screen');
+      if(goScreen) goScreen.style.display = 'none';
+      totalClearedLines = 0;
+      score = 0;
+      updatePuzzleStats();
       PE().newBoard();
       drawBoard();
       startPuzzle();
