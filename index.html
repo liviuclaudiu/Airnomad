@@ -1583,7 +1583,7 @@
     /* ===================== /CLEAN-UP PASS ===================== */
     /* ===================== /POLISH ===================== */
 
-    /* Hidden journal: stays out of sight until unlocked with 5 quick taps on the sunset time (on Today) */
+    /* Hidden journal: stays out of sight until unlocked with 5 quick taps on her cycle wheel (on Today) */
     body:not(.journal-open) .private { display: none !important; }
     .sun-info { cursor: default; }
     .open-smiley { display: none; flex: none; align-self: center; }
@@ -1629,7 +1629,7 @@
         <div class="moon-phase" id="moon-phase">Moon</div>
         <div class="moon-next" id="moon-next"></div>
       </div>
-      <div class="sun-info" onclick="sunsetTap(event)">
+      <div class="sun-info">
         <svg class="open-smiley" width="16" height="16" viewBox="0 0 14 14" aria-hidden="true">
           <circle cx="7" cy="7" r="6" fill="none" stroke="#f2c879" stroke-width="1.5"/>
           <circle cx="5" cy="5.6" r="0.9" fill="#f2c879"/><circle cx="9" cy="5.6" r="0.9" fill="#f2c879"/>
@@ -9357,11 +9357,12 @@
       renderTodayMemory();
     }
     // Open from 10 PM, so the day is really over; until 4 AM it still counts for the evening before
+    // From 10 PM it's tonight's; before that, last night's if you missed it (once a day, no editing)
     function hqDay() {
-      const now = new Date(), h = now.getHours();
-      if(h >= 22) return dayKey(now);
-      if(h < 4) return dayKey(addDays(now, -1));
-      return null;
+      const now = new Date();
+      if(now.getHours() >= 22) return dayKey(now);
+      const last = dayKey(addDays(now, -1));
+      return herDaily[last] ? null : last;
     }
     function renderHerQuiz() {
       const el = document.getElementById('hq-body');
@@ -9377,7 +9378,8 @@
         el.innerHTML = `<div class="today-sub">Done for today · saved at ${new Date(done.ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}. Come back tomorrow.</div>`;
         return;
       }
-      el.innerHTML = HQ_SCALES.map(([k, q, lo, hi]) => `<div class="hq-q"><div>${q}</div><div class="hq-scale">` +
+      const forLastNight = day !== dayKey(new Date());
+      el.innerHTML = (forLastNight ? `<div class="today-sub" style="margin:-4px 0 10px;">For last night (${parseDay(day).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}). You missed it, so it's still open until 10 PM.</div>` : '') + HQ_SCALES.map(([k, q, lo, hi]) => `<div class="hq-q"><div>${q}</div><div class="hq-scale">` +
           [1, 2, 3, 4, 5].map(n => `<button type="button" class="${hqDraft[k] === n ? 'sel' : ''}" onclick="hqPick('${k}', ${n})">${n}</button>`).join('') +
           `</div><div class="hq-ends"><span>${lo}</span><span>${hi}</span></div></div>`).join('') +
         HQ_YN.map(([k, q, opts]) => `<div class="hq-q"><div>${q}</div><div class="hq-yn">` +
@@ -9385,7 +9387,7 @@
           (k === 'good' && (hqDraft.good === 0 || hqDraft.good === 1)
             ? `<input type="text" id="hq-memory" maxlength="120" placeholder="Remember it in a few words (optional)" value="${escapeHtml(hqDraft.memory || '')}" oninput="hqDraft.memory = this.value" style="width:100%; margin-top:8px;">` : '') +
           `</div>`).join('') +
-        `<button class="btn-action" id="hq-save" onclick="hqSave()" ${HQ_SCALES.concat(HQ_YN).every(([k]) => hqDraft[k] !== undefined) ? '' : 'disabled'}>Save for today</button>` +
+        `<button class="btn-action" id="hq-save" onclick="hqSave()" ${HQ_SCALES.concat(HQ_YN).every(([k]) => hqDraft[k] !== undefined) ? '' : 'disabled'}>Save for ${forLastNight ? 'last night' : 'today'}</button>` +
         `<div class="today-sub" style="text-align:center; margin-top:6px;">Once a day. It can't be changed after saving.</div>`;
     }
     function hqPick(k, v) { hqDraft[k] = v; renderHerQuiz(); }
@@ -9409,7 +9411,10 @@
       if(hqTaps.length < 5) return;
       hqTaps = [];
       renderHerQuiz();
-      document.body.classList.toggle('her-quiz-open');
+      const open = !document.body.classList.contains('her-quiz-open');
+      document.body.classList.toggle('her-quiz-open', open);
+      document.body.classList.toggle('journal-open', open); // the journal unlocks with the same taps
+      if(!open && journeySeg !== 'calendar') showJourneySeg('calendar');
     });
     document.addEventListener('visibilitychange', () => { if(document.hidden) document.body.classList.remove('her-quiz-open'); });
 
@@ -9571,8 +9576,12 @@
       // Weekly backup reminder (or once there is something worth keeping)
       const lastBackup = +localStorage.getItem('aq_last_backup') || 0;
       const daysSince = lastBackup ? Math.floor((Date.now() - lastBackup) / DAY) : null;
-      document.getElementById('today-backup-card').style.display = backupDue() ? '' : 'none';
-      document.getElementById('today-backup-text').innerText = lastBackup ? `Last backup ${daysSince} days ago. One tap keeps everything safe.` : 'No backup yet. One tap keeps everything safe.';
+      const lastBlack = [0, 1, 2].find(i => calData[dayKey(addDays(startOfToday(), -i))] === 'status-black'); // a black day in the last 3 days
+      const blackRecently = lastBlack !== undefined;
+      const backedUpSince = blackRecently && lastBackup >= addDays(startOfToday(), -lastBlack).getTime(); // saved on or after that day
+      document.getElementById('today-backup-card').style.display = backupDue() || (blackRecently && !backedUpSince) ? '' : 'none';
+      document.getElementById('today-backup-text').innerText = blackRecently && !backedUpSince ? 'After a hard day, keep a copy of everything safe, off your phone.'
+        : lastBackup ? `Last backup ${daysSince} days ago. One tap keeps everything safe.` : 'No backup yet. One tap keeps everything safe.';
       renderTodayMemory();
       const st = calData[dayKey(new Date())];
       document.getElementById('today-days').innerHTML = TODAY_DAYS.map(([k, name, col]) =>
@@ -9674,19 +9683,7 @@
           `<span><b>${escapeHtml(calmTitles[i])}</b><small>${tile[2]}</small></span><span class="go" aria-hidden="true">›</span></button>`;
       }).join('');
     }
-    // ----- Hidden journal: 5 quick taps on the sunset time while on Today reveal Write, the entries and their stats; leaving the app hides them again
-    let secretTaps = [];
-    function sunsetTap(e) {
-      e.stopPropagation(); // the sunset no longer opens the moon view; the moon does
-      if(!document.getElementById('tab-today').classList.contains('active')) { secretTaps = []; return; }
-      const now = Date.now();
-      secretTaps = secretTaps.filter(t => now - t < 2500).concat(now);
-      if(secretTaps.length < 5) return;
-      secretTaps = [];
-      const open = document.body.classList.toggle('journal-open');
-      if(navigator.vibrate) { try { navigator.vibrate(open ? [15, 40, 15] : 30); } catch(err) {} }
-      if(!open && journeySeg !== 'calendar') showJourneySeg('calendar');
-    }
+    // ----- Hidden journal: unlocked by the same 5 taps on her cycle wheel as tonight's questions; leaving the app hides it again
     function lockJournal() {
       if(!document.body.classList.contains('journal-open')) return;
       document.body.classList.remove('journal-open');
