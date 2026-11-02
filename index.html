@@ -1679,11 +1679,27 @@
     .sim-say { border-radius: 14px; padding: 14px; margin: 6px 0 10px; font-size: 1.02rem; font-style: italic; line-height: 1.45; border: 1px solid var(--theme-primary); background: var(--tint); }
     .sim-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; } .sim-row .btn-action { margin: 0; }
     .sim-guide { margin: 0 0 6px; padding-left: 20px; font-size: 0.86rem; line-height: 1.5; }
-    .sim-guide li { margin-bottom: 5px; } .sim-guide li::marker { color: var(--theme-primary); font-weight: 700; }
+    .sim-guide li { margin-bottom: 5px; transition: color 0.3s ease, opacity 0.3s ease; }
+    .sim-guide li.now { color: var(--theme-primary); font-weight: 700; }
+    .sim-guide li.did { opacity: 0.55; }
+    .sim-say { transition: box-shadow 0.4s ease, transform 0.4s ease; }
+    .sim-say.now { box-shadow: 0 0 0 2px var(--theme-primary), 0 0 22px rgba(122, 184, 224, 0.35); } .sim-guide li::marker { color: var(--theme-primary); font-weight: 700; }
     .sim-her { border-radius: 12px; padding: 10px 12px; font-size: 0.84rem; line-height: 1.45; background: rgba(167, 146, 240, 0.12); border: 1px solid rgba(167, 146, 240, 0.35); margin-bottom: 6px; }
     .sim-rate { display: flex; gap: 6px; margin: 4px 0 8px; }
     .sim-rate button { flex: 1; padding: 10px 0; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); font: inherit; font-weight: 700; cursor: pointer; }
     .sim-rate button.on { background: var(--tint-strong); color: var(--theme-primary); border-color: var(--theme-primary); }
+    .sim-drill { display: flex; justify-content: space-between; align-items: center; gap: 10px; width: 100%; text-align: left; padding: 12px 14px; margin: 4px 0 12px;
+                 border-radius: 14px; border: 1px solid var(--theme-primary); background: var(--tint); color: var(--text-main); font: inherit; cursor: pointer; }
+    .sim-drill small { display: block; font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; font-weight: 600; }
+    .sim-drill b { font-size: 0.92rem; } .sim-drill.done { border-color: var(--border-color); background: rgba(255, 255, 255, 0.04); }
+    .sim-streak { font-size: 0.74rem; font-weight: 700; color: var(--color-green); white-space: nowrap; }
+    .care-card { border-color: rgba(167, 146, 240, 0.4); }
+    .care-p { margin: 0 0 8px; font-size: 0.9rem; line-height: 1.45; }
+    .wk-dots { display: flex; justify-content: space-between; margin: 2px 0 10px; }
+    .wk-day { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 0.68rem; color: var(--text-muted); }
+    .wk-day i { width: 22px; height: 22px; border-radius: 7px; }
+    .wk-ta { width: 100%; min-height: 54px; padding: 9px 10px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-input);
+             color: var(--text-main); font: inherit; font-size: 0.86rem; margin-bottom: 4px; resize: vertical; }
     #toast { position: fixed; left: 50%; bottom: calc(22px + env(safe-area-inset-bottom)); z-index: 2000; transform: translate(-50%, 12px);
              padding: 10px 18px; border-radius: 999px; background: rgba(14, 22, 42, 0.96); border: 1px solid var(--border-color);
              color: var(--text-main); font-size: 0.84rem; font-weight: 600; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
@@ -1865,6 +1881,7 @@
         </div>
       </div>
       <div id="today-pins"></div>
+      <div id="today-care"></div>
       <div class="card" id="today-cycle-card">
         <h2 class="card-label" id="today-cycle-title">Cycle context</h2>
         <div id="today-cycle"></div>
@@ -10544,9 +10561,101 @@
       const soon = importantDates.map(e => ({ ...e, when: nextOccurrence(e.md) }))
         .map(e => ({ ...e, n: Math.round((e.when - today) / DAY) })).filter(e => e.n <= 30).sort((a, b) => a.n - b.n);
       document.getElementById('today-coming-card').style.display = 'none'; // countdowns to dates felt stressful
+      renderTodayCare();
       document.getElementById('today-coming').innerHTML = soon.map(e =>
         `<div class="today-coming"><span>${escapeHtml(e.name)}</span><span class="today-sub">${shortDate(e.when)} · ${e.n === 0 ? 'today' : `in ${e.n} day${e.n === 1 ? '' : 's'}`}</span></div>`).join('');
     }
+    // ----- Looking after you: the morning after a hard day, the daily drill, and a weekly look back
+    const CARE_KIND = ['Something warm to eat', 'A long shower', '10 minutes outside', 'Message a friend', 'Rest for 20 minutes'];
+    let careDraft = {}, weeklyDraft = {};
+    function careGet(k) { try { return JSON.parse(localStorage.getItem(k) || '{}'); } catch(e) { return {}; } }
+    function hardYesterday() {
+      const y = addDays(startOfToday(), -1), yk = dayKey(y), end = startOfToday().getTime();
+      const marked = ['status-red', 'status-black'].includes(calData[yk]);
+      const inc = typeof allIncidents === 'function' && allIncidents().some(e => e.ts >= y.getTime() && e.ts < end);
+      return marked || inc;
+    }
+    function weekKey() { const d = startOfToday(); return dayKey(addDays(d, -d.getDay())); } // the Sunday that starts the look back
+    function renderTodayCare() {
+      const el = document.getElementById('today-care');
+      if(!el) return;
+      const k = dayKey(new Date());
+      let html = '';
+      // The morning after a red or black day (or an incident)
+      const care = careGet('aq_aftercare');
+      if(hardYesterday() && !(care[k] && care[k].closed)) {
+        const c = care[k];
+        if(c) {
+          html += `<div class="card care-card"><h2 class="card-label">After yesterday</h2>
+            <p class="care-p">Planned for you today: <b>${escapeHtml(c.kind)}</b>. Be gentle with yourself.</p>
+            ${c.body === 'hurt' ? '<div class="repair-note">Look after the injury: cold pack and rest. If it\'s more than a bruise, see a doctor. A photo today keeps it on your record.</div>' : ''}
+            <button class="btn-action btn-secondary" onclick="careClose()">Close</button></div>`;
+        } else {
+          const chip = (key, v, label) => `<button type="button" class="tag-chip ${careDraft[key] === v ? 'selected' : ''}" onclick="careDraft.${key} = '${v}'; renderTodayCare()">${label}</button>`;
+          html += `<div class="card care-card"><h2 class="card-label">After yesterday</h2>
+            <p class="care-p">Yesterday was hard. It wasn't your fault.</p>
+            <div class="today-q">How's your body?</div><div class="repair-chips">${chip('body', 'okay', 'Okay')}${chip('body', 'sore', 'Sore or tense')}${chip('body', 'hurt', 'Hurt')}</div>
+            ${careDraft.body === 'hurt' ? '<div class="repair-note">Look after the injury: cold pack and rest. If it\'s more than a bruise, see a doctor. A photo today keeps it on your record.</div>' : ''}
+            <div class="today-q">One kind thing for you today</div><div class="repair-chips">${CARE_KIND.map((t, i) => chip('kind', t, t)).join('')}</div>
+            <button class="btn-action" onclick="careSave()" ${careDraft.body && careDraft.kind ? '' : 'disabled'}>Save</button></div>`;
+        }
+      }
+      // The weekly look back, on Sunday (or Monday if Sunday was missed)
+      const weekly = careGet('aq_weekly'), wk = weekKey(), dow = new Date().getDay();
+      if((dow === 0 || dow === 1) && !weekly[wk]) {
+        const days = Array.from({ length: 7 }, (_, i) => addDays(startOfToday(), i - 6));
+        const dots = days.map(d => { const st = calData[dayKey(d)]; const col = st ? DAY_STATE_COL[st.slice(7)] : 'rgba(255,255,255,0.12)';
+          return `<span class="wk-day"><i style="background:${col}"></i>${d.toLocaleDateString([], { weekday: 'narrow' })}</span>`; }).join('');
+        const from = days[0].getTime(), picks = moodLog.filter(m => m.ts >= from), tally = {};
+        picks.forEach(m => { tally[m.mood] = (tally[m.mood] || 0) + 1; });
+        const top = Object.entries(tally).sort((a, b) => b[1] - a[1])[0];
+        const tools = days.reduce((a, d) => a + ((practice[dayKey(d)] || {}).tools || 0), 0);
+        const drills = simDays().filter(x => days.some(d => dayKey(d) === x)).length;
+        const ta = (key, ph) => `<textarea class="wk-ta" placeholder="${ph}" oninput="weeklyDraft.${key} = this.value">${escapeHtml(weeklyDraft[key] || '')}</textarea>`;
+        html += `<div class="card"><h2 class="card-label">Your week</h2>
+          <div class="wk-dots">${dots}</div>
+          <div class="today-sub" style="margin-bottom:10px;">${picks.length} ${pl(picks.length, 'check-in')}${top ? `, mostly ${MOODS[top[0]].name.toLowerCase()}` : ''} · ${tools} calm ${pl(tools, 'tool')} · ${drills} ${pl(drills, 'drill')}</div>
+          <div class="today-q">What went okay?</div>${ta('ok', 'Even small things count')}
+          <div class="today-q">What was hard?</div>${ta('hard', 'Just the facts is enough')}
+          <div class="today-q">What do you need next week?</div>${ta('need', 'Sleep, a quiet evening, a friend…')}
+          <button class="btn-action" onclick="weeklySave()">Save my week</button></div>`;
+      }
+      // Today's drill, until it's done
+      if(typeof SIM_SCENARIOS !== 'undefined' && !drillDoneToday()) {
+        const dr = todaysDrill(), streak = simStreak();
+        html += `<button class="today-pin" onclick="openDrill()"><span class="calm-ic">${pxIcon('star')}</span>
+          <span><b>Today's drill: ${escapeHtml(dr.title)}</b><small>2 minutes · ${streak ? `${streak} ${pl(streak, 'day')} in a row` : 'start a streak'}</small></span><span class="go" aria-hidden="true">›</span></button>`;
+      }
+      el.innerHTML = html;
+    }
+    function careSave() {
+      const care = careGet('aq_aftercare'), k = dayKey(new Date());
+      care[k] = { body: careDraft.body, kind: careDraft.kind, ts: Date.now() };
+      localStorage.setItem('aq_aftercare', JSON.stringify(care));
+      careDraft = {};
+      renderTodayCare();
+      showToast('Saved. Look after yourself today');
+    }
+    function careClose() {
+      const care = careGet('aq_aftercare'), k = dayKey(new Date());
+      care[k] = { ...(care[k] || {}), closed: true };
+      localStorage.setItem('aq_aftercare', JSON.stringify(care));
+      renderTodayCare();
+    }
+    function weeklySave() {
+      const w = weeklyDraft, weekly = careGet('aq_weekly'), wk = weekKey();
+      if(!(w.ok || w.hard || w.need)) { showToast('Write at least one line'); return; }
+      weekly[wk] = { ok: w.ok || '', hard: w.hard || '', need: w.need || '', ts: Date.now() };
+      localStorage.setItem('aq_weekly', JSON.stringify(weekly));
+      const lines = [['Went okay', w.ok], ['Was hard', w.hard], ['Need next week', w.need]].filter(([, v]) => v && v.trim()).map(([l, v]) => `${l}: ${v.trim()}`);
+      notes.unshift({ id: Date.now(), text: `Week look back\n${lines.join('\n')}`, date: new Date().toLocaleString(), tags: ['weekly'] });
+      localStorage.setItem('aq_notes', JSON.stringify(notes));
+      if(typeof renderNotes === 'function') renderNotes();
+      weeklyDraft = {};
+      renderTodayCare();
+      showToast('Your week is saved in the journal');
+    }
+
     // Check-in from Today: same as picking an oni on the start screen, and marking today on the calendar
     function todayPick(kind) {
       moodLog.push({ ts: Date.now(), mood: kind });
@@ -10801,18 +10910,72 @@
           ['Push through and ignore it.', 'It usually stays switched on longer, and the tension can leak into your voice and hands.'],
           ['Leave the kitchen in a rush.', 'Sudden escape teaches your body the kitchen is dangerous, so the alarm gets stronger next time. Slow and steady works better.']],
         say: 'I\'m safe right now. This is a memory, not now.',
-        her: 'When I see you tense in the kitchen, I can say "We\'re okay right now" instead of commenting on how you cook.' }
+        her: 'When I see you tense in the kitchen, I can say "We\'re okay right now" instead of commenting on how you cook.' },
+      { id: 'backfire', title: 'A kind comment backfires', sub: '"You trigger me"',
+        body: ['Keep your face soft. Don\'t pull back as if you\'ve been hit.', 'A small nod, hands relaxed.', 'Let a second of quiet pass before you answer.'],
+        setup: `${P.They} forgot ${P.their} cosplay and you say it's a good sign, that ${P.they} ${P.is} relaxing. ${P.They} snaps that you trigger ${P.them}.`,
+        choices: [
+          ['"Okay, I didn\'t mean it that way. I\'ll leave it." Then actually let it go.', 'You clear up your intention once and drop it. Over-explaining a kind comment turns it into a debate about whether you meant well.'],
+          ['Explain carefully why it was a compliment.', 'The more you explain, the more it sounds like you\'re telling her she reacted wrongly.'],
+          ['Stop saying anything kind, so it can\'t happen again.', 'Pulling back your warmth costs you both. One misfire doesn\'t mean kindness is the problem.']],
+        say: 'Okay, I didn\'t mean it that way. I\'ll leave it.',
+        her: 'When a comment lands wrong, I ask "What did you mean?" before deciding it was an attack.' },
+      { id: 'money', title: 'Money is tight', sub: 'Overspending, the anniversary, the end of the month',
+        body: ['Bring it up sitting down, on a calm day. Never in the middle of another fight.', 'Have the numbers ready on paper or your phone, so it\'s facts, not feelings.', 'Shoulders loose, voice even. You\'re planning, not confessing.'],
+        setup: `You have 1300 lei left until the end of the month, you lost your tenant, and the anniversary is coming. ${P.They} wants plans and gifts, and you're scared to say it's tight.`,
+        choices: [
+          ['On a calm day: "Money\'s tight until the end of the month. I still want to make the anniversary special. Can we plan it together within this?"', 'You\'re honest early and make it a shared plan, not a secret you\'re carrying. Surprises about money cause bigger fights later.'],
+          ['Say nothing and quietly open another card to cover it.', 'It avoids tension now, but it grows into debt and a bigger conflict when it comes out.'],
+          ['Bring it up in the middle of an argument as proof that she spends too much.', 'Money used as ammunition in a fight never gets solved. It just becomes another wound.']],
+        say: 'Money\'s tight until the end of the month. I still want to make the anniversary special. Can we plan it together within this?',
+        her: 'When money is tight, I ask "What can we do that\'s free and still feels special?" instead of feeling let down.' },
+      { id: 'closeness', title: 'Wanting closeness', sub: 'You want intimacy but fear it starts a fight',
+        body: ['Choose a relaxed moment: after food, on a good evening, not right after tension.', 'Start with touch that asks nothing: a hand on her back, sitting close.', 'Watch her response and let her set the pace.'],
+        setup: `It's been a calmer day and you'd like to be close, maybe intimate. You hold back because last time it turned into an argument.`,
+        choices: [
+          ['Sit close, a warm touch, and say gently: "I\'ve missed being close to you." Let her answer, and accept a no without sulking.', 'You say what you want openly and softly, and a no doesn\'t become a fight. That makes it safer to ask next time.'],
+          ['Keep it all inside and hope she makes the first move.', 'Unspoken needs build up, and they come out sideways later, often as resentment.'],
+          ['Push for it, or get cold when she says no.', 'Pressure or sulking turns closeness into a battle, the very thing you\'re afraid of.']],
+        say: 'I\'ve missed being close to you.',
+        her: 'When I\'m not in the mood, I say "Not tonight, but I love you" so a no doesn\'t feel like rejection.' }
     ];
     // ===== /PERSONAL SCENARIOS =====
     let simLog = {};
     try { simLog = JSON.parse(localStorage.getItem('aq_sim_log') || '{}'); } catch(e) {}
-    const sim = { id: null, step: 0, order: [], picked: null, ready: null };
+    const sim = { id: null, step: 0, order: [], picked: null, ready: null, reps: 0 };
+    // Daily drill: one situation a day, the least practised first, so the steps become reflexes
+    function simDays() { try { return JSON.parse(localStorage.getItem('aq_sim_days') || '[]'); } catch(e) { return []; } }
+    function simStreak() {
+      const days = new Set(simDays());
+      let n = 0, d = startOfToday();
+      if(!days.has(dayKey(d))) d = addDays(d, -1); // today not done yet doesn't break the streak
+      while(days.has(dayKey(d))) { n++; d = addDays(d, -1); }
+      return n;
+    }
+    function todaysDrill() {
+      const k = dayKey(new Date());
+      let saved; try { saved = JSON.parse(localStorage.getItem('aq_sim_drill') || 'null'); } catch(e) { saved = null; }
+      if(saved && saved.day === k && SIM_SCENARIOS.some(x => x.id === saved.id)) return SIM_SCENARIOS.find(x => x.id === saved.id);
+      const pick = [...SIM_SCENARIOS].sort((a, b) => ((simLog[a.id] || {}).n || 0) - ((simLog[b.id] || {}).n || 0) || ((simLog[a.id] || {}).last || 0) - ((simLog[b.id] || {}).last || 0))[0];
+      localStorage.setItem('aq_sim_drill', JSON.stringify({ day: k, id: pick.id }));
+      return pick;
+    }
+    const drillDoneToday = () => simDays().includes(dayKey(new Date()));
+    function openDrill() {
+      switchTab('calm');
+      const c = document.getElementById('sim-card');
+      if(c) openCalmGroup(+c.dataset.calmGroup);
+      simOpen(todaysDrill().id);
+    }
     function renderSim() {
       const body = document.getElementById('sim-body');
       if(!body) return;
       const sc = SIM_SCENARIOS.find(x => x.id === sim.id);
       if(!sc) {
+        const dr = todaysDrill(), streak = simStreak(), done = drillDoneToday();
         body.innerHTML = `<div class="subtitle" style="text-align:left;">Practise while it's calm, so the right words are already there when it isn't. About two minutes each.</div>` +
+          `<button type="button" class="sim-drill ${done ? 'done' : ''}" onclick="simOpen('${dr.id}')"><span><small>${done ? 'Done today · practise again?' : "Today's drill"}</small><b>${escapeHtml(dr.title)}</b></span>` +
+          `<span class="sim-streak">${streak ? `${streak} ${pl(streak, 'day')} in a row` : 'Start a streak'}</span></button>` +
           SIM_SCENARIOS.map(x => { const n = (simLog[x.id] || {}).n || 0;
             return `<button type="button" class="sim-scen" onclick="simOpen('${x.id}')"><span><b>${escapeHtml(x.title)}</b><small>${escapeHtml(x.sub)}</small></span><span class="sim-n">${n ? n + '×' : ''}</span></button>`; }).join('');
         return;
@@ -10830,11 +10993,11 @@
         // A small guide: body first, then one slow breath, then the words out loud
         html = `<div class="sim-title">Do it: body first, then words</div>
           <ol class="sim-guide">${sc.body.map(b => `<li>${escapeHtml(b)}</li>`).join('')}
-            <li>One slow breath out, longer than the breath in.</li>
+            <li>Press your thumb and finger together and breathe out slowly, longer than in. This is your anchor: in a real moment, the press brings the calm back.</li>
             <li><b>Then say it, out loud, slowly, in a low voice:</b></li></ol>
           <div class="sim-say">"${escapeHtml(sc.say)}"</div>
           <div class="subtitle" style="text-align:left;">Stand up and actually do the steps if you can. Your body remembers them better than reading.</div>
-          <div class="sim-row"><button class="btn-action" onclick="simStep(2)">I did it</button><button class="btn-action btn-secondary" onclick="bump('sim-body')">Once more</button></div>`;
+          <div class="sim-row"><button class="btn-action" onclick="simStep(2)">I did it</button><button class="btn-action btn-secondary" id="sim-again" onclick="simGuided()">${sim.reps ? `Once more (${sim.reps}×)` : 'Guide me through it'}</button></div>`;
       } else {
         html = `<div class="today-q">${escapeHtml(P.Their)} side · to share on a calm day</div><div class="sim-her">${escapeHtml(sc.her)}</div>
           <div class="today-q">How ready do you feel?</div>
@@ -10846,15 +11009,41 @@
     function simOpen(id) {
       const order = [0, 1, 2];
       for(let i = order.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [order[i], order[j]] = [order[j], order[i]]; }
-      Object.assign(sim, { id, step: 0, order, picked: null, ready: null });
+      Object.assign(sim, { id, step: 0, order, picked: null, ready: null, reps: 0 });
       renderSim();
     }
     function simPick(i) { sim.picked = i; renderSim(); }
+    // A guided run: each step lights up in turn, long enough to actually do it, then the line to say
+    function simGuided() {
+      const items = [...document.querySelectorAll('#sim-body .sim-guide li')], say = document.querySelector('#sim-body .sim-say'), btn = document.getElementById('sim-again');
+      if(!items.length || simGuided.busy) return;
+      simGuided.busy = true;
+      if(btn) btn.disabled = true;
+      items.forEach(li => li.classList.remove('now', 'did'));
+      say && say.classList.remove('now');
+      let i = 0;
+      (function next() {
+        if(!document.getElementById('sim-again')) { simGuided.busy = false; return; } // left the screen
+        if(i > 0) { items[i - 1].classList.remove('now'); items[i - 1].classList.add('did'); }
+        if(i < items.length - 1) { items[i].classList.add('now'); i++; setTimeout(next, 3000); return; }
+        items[i].classList.add('now');
+        if(say) say.classList.add('now');
+        setTimeout(() => {
+          simGuided.busy = false;
+          sim.reps++;
+          const b = document.getElementById('sim-again');
+          if(b) { b.disabled = false; b.innerText = `Once more (${sim.reps}×)`; }
+        }, 3500);
+      })();
+    }
     function simStep(n) { sim.step = n; renderSim(); const c = document.getElementById('sim-card'); if(c && c.getBoundingClientRect().top < 0) c.scrollIntoView({ block: 'start' }); }
     function simDone() {
       const e = simLog[sim.id] || { n: 0 };
       simLog[sim.id] = { n: e.n + 1, last: Date.now(), ready: sim.ready };
       localStorage.setItem('aq_sim_log', JSON.stringify(simLog));
+      const days = simDays(), k = dayKey(new Date());
+      if(!days.includes(k)) localStorage.setItem('aq_sim_days', JSON.stringify([...days, k].slice(-120)));
+      if(typeof renderTodayCare === 'function') renderTodayCare();
       logPractice('tools', 1, 'practice');
       sim.id = null;
       renderSim();
