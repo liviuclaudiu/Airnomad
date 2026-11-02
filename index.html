@@ -1658,6 +1658,9 @@
     .tour-btns .btn-action { margin: 0; padding: 10px; }
     @media (prefers-reduced-motion: reduce) { .tour-hole { transition: none; } }
     .cyc-of { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); }
+    .today-sleep.done { display: block; margin-bottom: 10px; }
+    .sleep-done { margin: 0; }
+    .link-btn { background: none; border: 0; padding: 4px 2px; color: var(--theme-primary); font: inherit; font-weight: 600; cursor: pointer; }
     #toast { position: fixed; left: 50%; bottom: calc(22px + env(safe-area-inset-bottom)); z-index: 2000; transform: translate(-50%, 12px);
              padding: 10px 18px; border-radius: 999px; background: rgba(14, 22, 42, 0.96); border: 1px solid var(--border-color);
              color: var(--text-main); font-size: 0.84rem; font-weight: 600; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
@@ -1823,7 +1826,7 @@
       </div>
       <div class="card">
         <h2 class="card-label">Check in</h2>
-        <div class="today-q">How did you sleep?</div>
+        <div class="today-q" id="today-sleep-q">How did you sleep?</div>
         <div class="today-sleep" id="today-sleep"></div>
         <div class="today-q">How are you feeling?</div>
         <div class="today-moods" id="today-moods"></div>
@@ -9190,8 +9193,8 @@
         if(dbp === null) return null;
         const cycleDay = cycleDayOf(date);
         if(cycleDay >= 1 && cycleDay <= 5) return 'period';
-        if(dbp >= 1 && dbp <= 13) return 'luteal';
-        if(dbp >= 14 && dbp <= 16) return 'ovulation';
+        if(dbp >= 1 && dbp <= 11) return 'luteal';
+        if(dbp >= 12 && dbp <= 16) return 'ovulation'; // the 5 days around ovulation, about 14 days before the period
         return 'follicular';
       };
       // A day counts as hard or tense if it was marked red, black or yellow, had an incident, or you picked a hard oni
@@ -10102,15 +10105,26 @@
     const SLEEP_OPTS = [[0, 'Poor', 'var(--color-red)'], [1, 'OK', 'var(--color-yellow)'], [2, 'Good', 'var(--color-green)']];
     let sleepLog = {};
     try { sleepLog = JSON.parse(localStorage.getItem('aq_sleep') || '{}'); } catch(e) {}
+    let sleepEditing = false; // once today's sleep is picked, the question folds into one line until you tap Change
     function todaySetSleep(v) {
       sleepLog[dayKey(new Date())] = v;
       localStorage.setItem('aq_sleep', JSON.stringify(sleepLog));
+      sleepEditing = false;
       renderSleepRow();
     }
     function renderSleepRow() {
       const el = document.getElementById('today-sleep');
       if(!el) return;
-      const cur = sleepLog[dayKey(new Date())];
+      const cur = sleepLog[dayKey(new Date())], q = document.getElementById('today-sleep-q');
+      const opt = SLEEP_OPTS.find(([v]) => v === cur);
+      if(opt && !sleepEditing) {
+        if(q) q.style.display = 'none';
+        el.classList.add('done');
+        el.innerHTML = `<div class="today-sub sleep-done">Slept: <b style="color:${opt[2]}">${opt[1]}</b> · <button type="button" class="link-btn" onclick="sleepEditing = true; renderSleepRow()">Change</button></div>`;
+        return;
+      }
+      if(q) q.style.display = '';
+      el.classList.remove('done');
       el.innerHTML = SLEEP_OPTS.map(([v, name, col]) => `<button class="today-day ${cur === v ? 'sel' : ''}" style="--day-col:${col}" onclick="todaySetSleep(${v})">${name}</button>`).join('');
     }
     const TODAY_DAYS = [['status-green', 'Good', 'var(--color-green)'], ['status-yellow', 'Tense', 'var(--color-yellow)'],
@@ -10167,18 +10181,18 @@
       const dbp = daysBeforePeriod(startOfToday(), cyc);
       // This cycle's expected length (today's day plus the days left), so the ring and the phase name always agree
       const L = dbp != null && day + dbp - 1 >= 20 && day + dbp - 1 <= 45 ? day + dbp - 1 : ds.L;
-      const phase = day <= 5 && !ds.inWindow ? 'period' : ds.inWindow ? 'dark' : dbp >= 1 && dbp <= 13 ? 'luteal' : dbp >= 14 && dbp <= 16 ? 'ovulation' : 'follicular';
+      const phase = day <= 5 && !ds.inWindow ? 'period' : ds.inWindow ? 'dark' : dbp >= 1 && dbp <= 11 ? 'luteal' : dbp >= 12 && dbp <= 16 ? 'ovulation' : 'follicular';
       const TEXT = {
         period:     ['Period', '#ef8a7a', 'Things often ease after the first day or two.'],
         follicular: ['Follicular · good stretch', 'var(--color-green)', `Usually the calmest part of ${P.their} month. Enjoy it together.`],
-        ovulation:  ['Ovulation', '#f2c46b', 'Usually still a good stretch.'],
+        ovulation:  ['Around ovulation', '#f2c46b', 'Usually still a good stretch.'],
         luteal:     ['Luteal', '#a792f0', 'Still an ok stretch. Be easy on each other.'],
         dark:       [`Dark side of the moon · day ${ds.dayIdx} of ${DARK_DAYS + 1}`, '#a792f0', 'Go gently. Your plan is in Insights.']
       }[phase];
       // Ring: period, follicular, ovulation and luteal arcs, with today marked
       const cx = 56, cy = 56, r = 44;
       const pt = d => { const a = (d - 1) / L * Math.PI * 2 - Math.PI / 2; return [cx + r * Math.cos(a), cy + r * Math.sin(a)]; };
-      const arcs = [[1, 5, '#ef8a7a'], [6, L - 16, '#5fc79a'], [L - 15, L - 13, '#f2c46b'], [L - 12, L, '#a792f0']];
+      const arcs = [[1, 5, '#ef8a7a'], [6, L - 16, '#5fc79a'], [L - 15, L - 11, '#f2c46b'], [L - 10, L, '#a792f0']];
       let svg = `<circle cx="${cx}" cy="${cy}" r="${r}" stroke="rgba(255,255,255,0.06)" stroke-width="10" fill="none"/>`;
       arcs.forEach(([a, b, c]) => {
         const [x1, y1] = pt(a), [x2, y2] = pt(b + 0.9), large = (b + 0.9 - a) / L > 0.5 ? 1 : 0;
@@ -10334,7 +10348,7 @@
       const W = 320, H = 180, pl = 22, pb = 24, top = 8, cw = (W - pl - 6) / L, ch = H - pb - top;
       const x = d => pl + (d - 0.5) * cw, y = v => top + ch - (v - 1) / 4 * ch;
       let svg = '';
-      [[1, 5, '#ef8a7a'], [6, L - 16, '#5fc79a'], [L - 15, L - 13, '#f2c46b'], [L - 12, L, '#a792f0']].forEach(([a, b, c]) => {
+      [[1, 5, '#ef8a7a'], [6, L - 16, '#5fc79a'], [L - 15, L - 11, '#f2c46b'], [L - 10, L, '#a792f0']].forEach(([a, b, c]) => {
         svg += `<rect x="${pl + (a - 1) * cw}" y="${top}" width="${(b - a + 1) * cw}" height="${ch}" fill="${c}" opacity="0.07"/>` +
                `<rect x="${pl + (a - 1) * cw}" y="${H - pb + 2}" width="${(b - a + 1) * cw - 1}" height="4" rx="2" fill="${c}" opacity="0.7"/>`;
       });
