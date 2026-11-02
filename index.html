@@ -1646,6 +1646,18 @@
     .ds-row .lg-dot { margin: 0; }
     .ds-row input { width: 100%; min-width: 0; padding: 9px 10px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-input);
                     color: var(--text-main); font: inherit; font-size: 0.84rem; margin: 0; }
+    #tour { position: fixed; inset: 0; z-index: 1600; }
+    .tour-hole { position: fixed; border-radius: 16px; box-shadow: 0 0 0 9999px rgba(2, 5, 14, 0.72), 0 0 0 2px var(--theme-primary);
+                 transition: all 0.3s ease; pointer-events: none; }
+    .tour-tip { position: fixed; padding: 14px 16px 12px; border-radius: 16px; background: linear-gradient(180deg, rgba(22, 32, 60, 0.98), rgba(12, 20, 40, 0.98));
+                border: 1px solid var(--border-color); box-shadow: 0 14px 34px rgba(0, 0, 0, 0.55); animation: tabIn 0.22s ease; }
+    .tour-tip .repair-dots { justify-content: flex-start; margin: 0 0 8px; }
+    .tour-tip b { font-size: 1rem; color: var(--theme-primary); }
+    .tour-tip p { margin: 4px 0 10px; font-size: 0.86rem; line-height: 1.45; color: var(--text-main); }
+    .tour-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .tour-btns .btn-action { margin: 0; padding: 10px; }
+    @media (prefers-reduced-motion: reduce) { .tour-hole { transition: none; } }
+    .cyc-of { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); }
     #toast { position: fixed; left: 50%; bottom: calc(22px + env(safe-area-inset-bottom)); z-index: 2000; transform: translate(-50%, 12px);
              padding: 10px 18px; border-radius: 999px; background: rgba(14, 22, 42, 0.96); border: 1px solid var(--border-color);
              color: var(--text-main); font-size: 0.84rem; font-weight: 600; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
@@ -2481,6 +2493,7 @@
       <div class="app-version" id="app-version"></div>
 
       <button class="btn-action" onclick="saveSettings()">Save & Update</button>
+      <button class="btn-action btn-secondary" onclick="startTour()" style="margin-top:8px;">Show the tour</button>
       <button class="btn-action btn-secondary" onclick="showOniScreen()" style="margin-top:8px;">Show Start Screen</button>
       <button class="btn-action btn-secondary" onclick="closeSettings()" style="margin-top:8px;">Cancel</button>
     </div>
@@ -2499,7 +2512,7 @@
     const P = PP || { they: 'she', They: 'She', them: 'her', their: 'her', Their: 'Her', theirs: 'hers', is: 'is', Theyre: "She's" };
     // The dog companion is called Pip on a new install; an existing install keeps the name it already had
     if(!FIRST_RUN && !localStorage.getItem('aq_loki_name')) localStorage.setItem('aq_loki_name', 'Loki');
-    if(!FIRST_RUN && !localStorage.getItem('aq_onboarded')) localStorage.setItem('aq_onboarded', '1');
+    if(!FIRST_RUN && !localStorage.getItem('aq_onboarded')) { localStorage.setItem('aq_onboarded', '1'); localStorage.setItem('aq_tour_done', '1'); }
 
     // One-time migration: the mini-game's saved stats used older key names; move them to the "puzzle" names
     (function migrateGameKeys() {
@@ -3397,6 +3410,82 @@
       location.reload(); // starts fresh with the companion, name and wording chosen
     }
 
+    // First-load tour: a spotlight on the main parts of the app, one short line each
+    const TOUR = [
+      [() => document.getElementById('today-moods').closest('.card'), 'Check in', 'Once a day: how you slept, how you feel and how the day went. About ten seconds.'],
+      [() => document.querySelector('.today-spirit-card'), () => `Meet ${hamsterName}`, () => `${hamsterName} does better on good days and when you look after yourself. Tap to visit.`],
+      [() => document.querySelector('.greet-actions .header-crisis'), 'Hard moment?', 'Tap ! any time. It opens calm steps straight away and keeps a record for later.'],
+      [() => document.querySelector('.tab-btn[data-tab="calm"]'), 'Calm', 'Breathing, lanterns, and a guide for making up after a conflict.'],
+      [() => document.querySelector('.tab-btn[data-tab="puzzle"]'), 'Disrupt', 'A short block game. Ten minutes of it helps your mind let go of a hard moment.'],
+      [() => document.querySelector('.tab-btn[data-tab="journey"]'), 'Calendar', 'Every day in its colour, and your check-ins month by month.'],
+      [() => document.querySelector('.tab-btn[data-tab="insights"]'), 'Insights', 'Your patterns show up here after a couple of weeks of check-ins.'],
+      [() => document.querySelector('.header-gear'), 'Settings', 'Names, day colours, backups and feedback. You can replay this tour there too.']
+    ];
+    let tourStep = -1;
+    function startTour() {
+      closeSettings();
+      switchTab('today');
+      tourStep = 0;
+      let layer = document.getElementById('tour');
+      if(!layer) {
+        layer = document.createElement('div');
+        layer.id = 'tour';
+        layer.innerHTML = '<div class="tour-hole"></div><div class="tour-tip" role="dialog"></div>';
+        document.body.appendChild(layer);
+        window.addEventListener('resize', () => { if(tourStep >= 0) placeTour(); });
+      }
+      showTourStep();
+    }
+    function showTourStep() {
+      const [find] = TOUR[tourStep], el = find();
+      if(!el) { tourNext(); return; }
+      if(el.closest('nav') || el.closest('.today-greet')) window.scrollTo(0, 0);
+      else el.scrollIntoView({ block: 'center' });
+      setTimeout(placeTour, 120);
+    }
+    function placeTour() {
+      const layer = document.getElementById('tour');
+      if(!layer || tourStep < 0) return;
+      const [find, title, text] = TOUR[tourStep], el = find();
+      if(!el) return;
+      const r = el.getBoundingClientRect(), pad = 6;
+      const hole = layer.querySelector('.tour-hole'), tip = layer.querySelector('.tour-tip');
+      Object.assign(hole.style, { left: `${r.left - pad}px`, top: `${r.top - pad}px`, width: `${r.width + pad * 2}px`, height: `${r.height + pad * 2}px` });
+      const val = v => typeof v === 'function' ? v() : v, last = tourStep === TOUR.length - 1;
+      tip.innerHTML = `<div class="repair-dots">${TOUR.map((_, i) => `<i class="${i <= tourStep ? 'on' : ''}"></i>`).join('')}</div>
+        <b>${escapeHtml(val(title))}</b><p>${escapeHtml(val(text))}</p>
+        <div class="tour-btns"><button class="btn-action btn-secondary" onclick="endTour()">${last ? 'Close' : 'Skip'}</button>
+        <button class="btn-action" onclick="tourNext()">${last ? 'Done' : 'Next'}</button></div>`;
+      // below the spotlight when it's in the top half of the screen, above it otherwise
+      const below = r.top + r.height / 2 < innerHeight / 2, w = Math.min(340, innerWidth - 24);
+      tip.style.width = `${w}px`;
+      tip.style.left = `${Math.max(12, Math.min(innerWidth - w - 12, r.left + r.width / 2 - w / 2))}px`;
+      tip.style.top = below ? `${r.bottom + pad + 12}px` : '';
+      tip.style.bottom = below ? '' : `${innerHeight - r.top + pad + 12}px`;
+    }
+    function tourNext() {
+      tourStep++;
+      if(tourStep >= TOUR.length) { endTour(); return; }
+      showTourStep();
+    }
+    function endTour() {
+      tourStep = -1;
+      localStorage.setItem('aq_tour_done', '1');
+      const layer = document.getElementById('tour');
+      if(layer) layer.remove();
+      window.scrollTo(0, 0);
+    }
+    // Starts once the mood screen has been answered, the first time the app is used
+    function maybeStartTour() {
+      if(localStorage.getItem('aq_tour_done') || !localStorage.getItem('aq_onboarded')) return;
+      const wait = setInterval(() => {
+        const oni = document.getElementById('oni-screen');
+        if(document.getElementById('welcome') || (oni && oni.style.display !== 'none')) return;
+        clearInterval(wait);
+        setTimeout(startTour, 700);
+      }, 400);
+    }
+
     // "1 day", "2 days": counts read right whatever the number
     function pl(n, word, many) { return n === 1 ? word : (many || word + 's'); }
 
@@ -3539,13 +3628,26 @@
 
     // All known starts (past + the upcoming date from Settings) and the average cycle length
     function cycleInfo() {
-      const starts = [...new Set([...pastPeriods, ...(dates.period ? [dates.period] : [])])].sort().map(parseDay);
+      // Logged starts are facts. The "next period" date is often only a prediction: once it has passed it counts as a
+      // start unless a logged start sits close to it, and while it's ahead it only counts if it fits the usual length.
+      const today = startOfToday();
+      let starts = [...new Set(pastPeriods)].sort().map(parseDay);
+      let next = dates.period ? parseDay(dates.period) : null;
+      if(next && next <= today) {
+        if(!starts.some(st => Math.abs(st - next) / DAY <= 10)) starts = [...starts, next].sort((a, b) => a - b);
+        next = null;
+      }
       const lens = [];
       for(let i = 1; i < starts.length; i++) {
         const l = Math.round((starts[i] - starts[i - 1]) / DAY);
         if(l >= 15 && l <= 45) lens.push(l); // skip gaps where a period wasn't entered
       }
-      return { starts, avg: lens.length ? lens.reduce((a, b) => a + b, 0) / lens.length : 28, measured: lens.length };
+      const avg = lens.length ? lens.reduce((a, b) => a + b, 0) / lens.length : 28;
+      if(next) {
+        const last = starts[starts.length - 1], gap = last ? (next - last) / DAY : null, k = gap ? Math.max(1, Math.round(gap / avg)) : 0;
+        if(!last || Math.abs(gap - k * avg) <= 7) starts = [...starts, next];
+      }
+      return { starts, avg, measured: lens.length };
     }
 
     // How many days before the next period a date falls (0 = the start day), using real dates where known
@@ -10061,8 +10163,10 @@
         '<div><label>Cycle length</label><input type="number" id="today-cycle-len" value="28" min="20" max="40"></div></div>' +
         '<button class="btn-action" style="margin-top:4px;" onclick="todaySaveCycle()">Save</button>' +
         '<button class="btn-action btn-secondary" style="margin-top:8px;" onclick="skipCycleSetup()">Not now</button>';
-      const ds = computeDarkStretch(), L = ds.L, day = ds.cdNow;
+      const ds = computeDarkStretch(), day = ds.cdNow;
       const dbp = daysBeforePeriod(startOfToday(), cyc);
+      // This cycle's expected length (today's day plus the days left), so the ring and the phase name always agree
+      const L = dbp != null && day + dbp - 1 >= 20 && day + dbp - 1 <= 45 ? day + dbp - 1 : ds.L;
       const phase = day <= 5 && !ds.inWindow ? 'period' : ds.inWindow ? 'dark' : dbp >= 1 && dbp <= 13 ? 'luteal' : dbp >= 14 && dbp <= 16 ? 'ovulation' : 'follicular';
       const TEXT = {
         period:     ['Period', '#ef8a7a', 'Things often ease after the first day or two.'],
@@ -10084,7 +10188,7 @@
       svg += `<circle cx="${tx}" cy="${ty}" r="7" fill="#fff"/><circle cx="${tx}" cy="${ty}" r="4" fill="${TEXT[1].startsWith('var') ? '#5fc79a' : TEXT[1]}"/>`;
       const label = cyc.measured >= 3 ? `Pattern · ${cyc.starts.length} cycles logged` : `Typical PMDD timing · ${cyc.measured} of 3 cycles logged`;
       return `<div class="today-cycle"><svg width="104" height="104" viewBox="0 0 112 112">${svg}</svg>` +
-        `<div><div class="big">Day ${day}</div><div class="phase" style="color:${TEXT[1]}">${TEXT[0]}</div><div class="today-sub">${TEXT[2]}</div></div></div>` +
+        `<div><div class="big">Day ${day} <small class="cyc-of">of about ${L}</small></div><div class="phase" style="color:${TEXT[1]}">${TEXT[0]}</div><div class="today-sub">${TEXT[2]}</div></div></div>` +
         `<div class="today-legend"><span><i style="background:#ef8a7a"></i>Period</span><span><i style="background:#5fc79a"></i>Follicular</span><span><i style="background:#f2c46b"></i>Ovulation</span><span><i style="background:#a792f0"></i>Luteal</span></div>` +
         `<span class="tag-pill">${label}</span>`;
     }
@@ -11471,6 +11575,7 @@
       Object.keys(localStorage).filter(k => k.startsWith('aq_')).forEach(k => localStorage.removeItem(k));
       Object.entries(payload.data).forEach(([k, v]) => { if(k.startsWith('aq_') && typeof v === 'string') localStorage.setItem(k, v); });
       localStorage.setItem('aq_onboarded', '1');
+      localStorage.setItem('aq_tour_done', '1');
       location.reload();
     }
 
@@ -12771,6 +12876,7 @@
     renderRepair();
     document.getElementById('unsponge-text').innerText = `"${UNSPONGE[0]}"`;
     if(!localStorage.getItem('aq_onboarded')) showWelcome();
+    else maybeStartTour();
     takeTodaySnapshot();
     makeAppIcon(); // again, now that Spirit's screen is drawn
     if(spiritStyle.backdrop === 'weather') fetchWeather().then(applySpiritBackdrop);
