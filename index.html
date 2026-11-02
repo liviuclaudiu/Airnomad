@@ -1661,6 +1661,29 @@
     .today-sleep.done { display: block; margin-bottom: 10px; }
     .sleep-done { margin: 0; }
     .link-btn { background: none; border: 0; padding: 4px 2px; color: var(--theme-primary); font: inherit; font-weight: 600; cursor: pointer; }
+    /* Crisis Practice */
+    .sim-scen { display: flex; justify-content: space-between; align-items: center; gap: 10px; width: 100%; text-align: left; padding: 11px 12px; margin-bottom: 7px;
+                border-radius: 12px; border: 1px solid var(--border-color); background: rgba(255, 255, 255, 0.04); color: var(--text-main); font: inherit; cursor: pointer; }
+    .sim-scen b { display: block; font-size: 0.86rem; } .sim-scen small { display: block; color: var(--text-muted); font-size: 0.72rem; margin-top: 2px; }
+    .sim-n { font-size: 0.72rem; font-weight: 700; color: var(--color-green); white-space: nowrap; }
+    .sim-bar { display: flex; gap: 5px; margin: 8px 0 12px; } .sim-bar i { flex: 1; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.12); } .sim-bar i.on { background: var(--theme-primary); }
+    .sim-title { font-weight: 700; color: var(--theme-primary); margin-bottom: 6px; }
+    .sim-p { font-size: 0.88rem; line-height: 1.5; margin: 0 0 10px; }
+    .sim-choice { display: block; width: 100%; text-align: left; padding: 11px 12px; margin-bottom: 7px; border-radius: 12px; border: 1px solid var(--border-color);
+                  background: var(--bg-input); color: var(--text-main); font: inherit; font-size: 0.84rem; line-height: 1.4; cursor: pointer; }
+    .sim-choice.best { border-color: var(--color-green); background: rgba(95, 199, 154, 0.12); }
+    .sim-choice.meh { border-color: #f2c46b; background: rgba(242, 196, 107, 0.1); }
+    .sim-fb { border-radius: 12px; padding: 10px 12px; font-size: 0.82rem; line-height: 1.45; margin: 4px 0 6px; }
+    .sim-fb.good { background: rgba(95, 199, 154, 0.12); border: 1px solid rgba(95, 199, 154, 0.4); }
+    .sim-fb.meh { background: rgba(242, 196, 107, 0.1); border: 1px solid rgba(242, 196, 107, 0.4); }
+    .sim-say { border-radius: 14px; padding: 14px; margin: 6px 0 10px; font-size: 1.02rem; font-style: italic; line-height: 1.45; border: 1px solid var(--theme-primary); background: var(--tint); }
+    .sim-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; } .sim-row .btn-action { margin: 0; }
+    .sim-guide { margin: 0 0 6px; padding-left: 20px; font-size: 0.86rem; line-height: 1.5; }
+    .sim-guide li { margin-bottom: 5px; } .sim-guide li::marker { color: var(--theme-primary); font-weight: 700; }
+    .sim-her { border-radius: 12px; padding: 10px 12px; font-size: 0.84rem; line-height: 1.45; background: rgba(167, 146, 240, 0.12); border: 1px solid rgba(167, 146, 240, 0.35); margin-bottom: 6px; }
+    .sim-rate { display: flex; gap: 6px; margin: 4px 0 8px; }
+    .sim-rate button { flex: 1; padding: 10px 0; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-main); font: inherit; font-weight: 700; cursor: pointer; }
+    .sim-rate button.on { background: var(--tint-strong); color: var(--theme-primary); border-color: var(--theme-primary); }
     #toast { position: fixed; left: 50%; bottom: calc(22px + env(safe-area-inset-bottom)); z-index: 2000; transform: translate(-50%, 12px);
              padding: 10px 18px; border-radius: 999px; background: rgba(14, 22, 42, 0.96); border: 1px solid var(--border-color);
              color: var(--text-main); font-size: 0.84rem; font-weight: 600; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
@@ -2186,6 +2209,11 @@
         <div class="game-status" id="lantern-counter">Lanterns released: 0</div>
       </div>
 
+      <div class="card" id="sim-card">
+        <h2>Crisis Practice</h2>
+        <div id="sim-body"></div>
+      </div>
+
       <div class="card" id="repair-card">
         <h2>After a Conflict</h2>
         <div class="repair-dots" id="repair-dots"></div>
@@ -2371,6 +2399,9 @@
       </div>
       <label class="checklist-item" style="cursor:pointer;">
         <input type="checkbox" id="inc-calm" style="width:auto;"> I held my boundary / didn't engage
+      </label>
+      <label class="checklist-item" style="cursor:pointer;">
+        <input type="checkbox" id="inc-help" style="width:auto;"> I got help (called the police or someone else)
       </label>
       <div class="form-group">
         <label>How I felt (optional):</label>
@@ -3647,8 +3678,9 @@
       }
       const avg = lens.length ? lens.reduce((a, b) => a + b, 0) / lens.length : 28;
       if(next) {
+        // With 3+ logged cycles her own history is the better guess: a typed date only counts if it agrees within 2 days
         const last = starts[starts.length - 1], gap = last ? (next - last) / DAY : null, k = gap ? Math.max(1, Math.round(gap / avg)) : 0;
-        if(!last || Math.abs(gap - k * avg) <= 7) starts = [...starts, next];
+        if(!last || Math.abs(gap - k * avg) <= (lens.length >= 3 ? 2 : 7)) starts = [...starts, next];
       }
       return { starts, avg, measured: lens.length };
     }
@@ -4118,7 +4150,10 @@
       renderSpiritLevel(false);
       drawHamster();
       applyAdaptiveTheme();
-      calcDaysToDate(dates.period, 'm-period', 'lbl-period-date');
+      // The predicted next start (from logged cycles), so this counter agrees with the cycle card
+      const dbpNow = daysBeforePeriod(startOfToday());
+      const nextStart = dbpNow == null ? null : addDays(startOfToday(), dbpNow);
+      calcDaysToDate(nextStart ? `${nextStart.getFullYear()}-${String(nextStart.getMonth() + 1).padStart(2, '0')}-${String(nextStart.getDate()).padStart(2, '0')}` : dates.period, 'm-period', 'lbl-period-date');
       calcDaysToDate(dates.therapy, 'm-therapy', 'lbl-therapy-date');
       calcDaysToDate(dates.office, 'm-office', 'lbl-office-date');
     }
@@ -8674,6 +8709,7 @@
       document.getElementById('inc-mark').checked = true;
       selectSeverity('shouting');
       document.getElementById('inc-calm').checked = false;
+      document.getElementById('inc-help').checked = false;
       tagSelections.incident.clear();
       renderTagPicker('incident');
       document.getElementById('incident-modal').style.display = 'block';
@@ -8696,7 +8732,8 @@
         text: document.getElementById('inc-what').value.trim(),
         felt: document.getElementById('inc-felt').value.trim(),
         tags: [...tagSelections.incident],
-        calm: document.getElementById('inc-calm').checked
+        calm: document.getElementById('inc-calm').checked,
+        help: document.getElementById('inc-help').checked
       };
       incidents.push(entry);
       localStorage.setItem('aq_incidents', JSON.stringify(incidents));
@@ -8747,6 +8784,7 @@
           ${e.text ? `<div class="note-text">${escapeHtml(e.text)}</div>` : ''}
           ${e.felt ? `<div class="note-text" style="color:var(--text-muted); margin-top:4px;">Felt: ${escapeHtml(e.felt)}</div>` : ''}
           ${e.calm ? '<div class="note-text" style="color:var(--color-green); margin-top:4px;">Held my boundary</div>' : ''}
+          ${e.help ? '<div class="note-text" style="color:var(--theme-primary); margin-top:4px;">Got help</div>' : ''}
           ${tagPills(e.tags)}
         </div>`;
       }).join('') : '<div class="subtitle" style="margin:8px 0 0;">No incidents logged.</div>') +
@@ -10533,7 +10571,7 @@
     const CALM_TILE = [['Vagus', pxIcon('eye'), '60 seconds'], ['Quiet Reset', pxIcon('leaf'), '2 minutes, anywhere'], ['Statements', pxIcon('quote'), 'Words to hold onto'],
                        ['Breathing', pxIcon('circle'), 'Paced rounds'], ['Chaos', pxIcon('burst'), 'Shake it out'], ['Leaves', pxIcon('leaf'), 'Let thoughts pass'],
                        ['Pond', pxIcon('waves'), 'Ripples settle'], ['Lanterns', pxIcon('lantern'), 'Release worries'], ['Fog', pxIcon('cloud'), 'Wipe the window clear'],
-                       ['Conflict', pxIcon('heart'), 'Making up, step by step']];
+                       ['Conflict', pxIcon('heart'), 'Making up, step by step'], ['Practice', pxIcon('star'), 'Rehearse safe boundaries']];
     function setupCalmTiles() {
       const tab = document.getElementById('tab-calm');
       if(!tab || document.getElementById('calm-tiles')) return;
@@ -10555,8 +10593,8 @@
       const tiles = document.createElement('div');
       tiles.id = 'calm-tiles';
       tiles.className = 'calm-tiles';
-      const USE_ORDER = ['Breathing', 'Lanterns', 'Conflict', 'Vagus', 'Quiet Reset']; // by how often you use them
-      const MAIN = 2; // Breathing and Lanterns up front; the rest wait under "More tools"
+      const USE_ORDER = ['Breathing', 'Lanterns', 'Practice', 'Conflict', 'Vagus', 'Quiet Reset']; // by how often you use them
+      const MAIN = 4; // Breathing, Lanterns, Crisis Practice and After a Conflict up front; the rest wait under "More tools"
       const rank = t => { const r = USE_ORDER.findIndex(k => t.includes(k)); return r < 0 ? USE_ORDER.length : r; };
       const order = titles.map((t, i) => i).sort((a, b) => rank(titles[a]) - rank(titles[b]) || a - b);
       calmTitles = titles;
@@ -10638,6 +10676,189 @@
       const back = document.getElementById('calm-back');
       if(back) back.innerText = '← All tools';
       if(calmFromToday) { calmFromToday = false; switchTab('today'); }
+    }
+
+    // ---------- CRISIS PRACTICE: rehearse safe boundaries while it's calm ----------
+    // ===== PERSONAL SCENARIOS (from the journal) — strip or replace with general ones before a public version =====
+    // Each: a situation, three ways to answer (the steadiest first in the data; shown shuffled), the line to say out loud,
+    // and something she could practise too, to share on a calm day.
+    const SIM_SCENARIOS = [
+      { id: 'kitchen', body: ['Put down whatever\'s in your hands and step back from the counter.', 'Turn slightly side-on, shoulders loose, hands open by your sides.', 'Walk slowly to a chair and sit. Sitting lowers the temperature for both of you.'], title: 'Something in the kitchen', sub: 'A pan or chore wasn\'t done her way',
+        setup: `The cast iron wasn't washed the way ${P.they} wanted, and the food came out wrong. ${P.Their} voice is rising and you're both standing by the counter.`,
+        choices: [
+          ['Agree with the part you can fix, then move yourself: "You\'re right, I\'ll redo it later. I\'m going to sit down for a minute."',
+           'You agree with the fixable part and step away from the counter without asking her to go anywhere. Asking her to move can feel like being managed and turns it into a contest.'],
+          ['Explain how you actually washed it and why it should be fine.', 'Even if you\'re right, defending starts a debate about who\'s right, and that usually raises the volume.'],
+          ['"Let\'s talk on the couch, there are things here that can hurt," then wait for her to follow.', 'Getting away from objects is the right instinct, but asking her to move can feel like a demand. Move yourself instead.']],
+        say: 'You\'re right, I\'ll redo it later. I\'m going to sit down for a minute.',
+        her: 'When I notice I\'m getting loud over a chore, I say "I\'m getting wound up" and take ten minutes before we talk.' },
+      { id: 'late', body: ['Stay where you are, unhurried. Don\'t rush around the room.', 'Phone in hand only to fix the ride, then put it down.', 'Soft face, voice lower and slower than hers.'], title: 'Running late', sub: 'A ride or plan went wrong, old blame comes up',
+        setup: `${P.Their} ride was declined and there's no water for coffee. ${P.They} says you did everything to ruin ${P.their} morning, and brings up the flight you missed last year.`,
+        choices: [
+          ['"That\'s really stressful. I\'ve booked another ride. We can talk about last year another time."', 'You name the feeling, fix the practical part and park the old story. No blame in either direction.'],
+          ['"That wasn\'t my fault, the app declined it."', 'Even if it\'s true, it opens a trial about fault, and the old story comes with it.'],
+          ['Apologise again and again and promise it will never happen again.', 'Over-apologising keeps the spotlight on you and can feed more blame. One calm acknowledgement is enough.']],
+        say: 'That\'s really stressful. I\'ve booked another ride. We can talk about last year another time.',
+        her: 'When something goes wrong, I say what I need right now ("I need to get there on time") instead of whose fault it is.' },
+      { id: 'texts', body: ['Put the phone face down for one minute before you reply.', 'Feet flat on the floor, drop your shoulders, unclench your jaw.', 'Send one message, then put the phone away. Don\'t watch for her reply.'], title: 'Messages at work', sub: 'Long texts about the UK, the course, money',
+        setup: `While ${P.they} ${P.is} at work, long messages arrive about not moving to the UK and the electrician course. Each reply you send brings a longer one back.`,
+        choices: [
+          ['One short, warm reply: "I hear you. It matters to me too. Let\'s talk tonight when we\'re both home." Then stop debating by text.', 'Text strips out tone. A short, warm reply that moves the talk to later stops the spiral.'],
+          ['A detailed reply listing everything you\'ve already done about it.', 'Long answers give more to argue with, and get read in the worst possible tone.'],
+          ['Promise whatever is being asked, right now, to make it stop.', 'Promises made under pressure tend to come back later as new arguments.']],
+        say: 'I hear you. It matters to me too. Let\'s talk tonight when we\'re both home.',
+        her: 'If I get upset at work, I write it in my notes and bring it up in person, not by text.' },
+      { id: 'public', body: ['Keep walking at the same pace. Don\'t stop and face off.', 'Relaxed face, eyes forward, a small nod.', 'Hands out of pockets and loose. Nothing that looks like a fight.'], title: 'Out in public', sub: 'Sharp criticism over a small mistake',
+        setup: `At the mall you take the wrong entrance, or bump a bucket near someone. ${P.They} says you never think and you lack class, loud enough for people to hear.`,
+        choices: [
+          ['"Got it." Fix the small thing, keep walking, and stay warm. Leave any talk for later.', 'Short and neutral ends it in public. Arguing with an audience usually makes the drive home worse.'],
+          ['Explain right there why it wasn\'t a big deal.', 'It turns a moment into a scene, and the scene follows you home.'],
+          ['Go silent and cold for the rest of the outing.', 'Shutting down reads as punishment and can blow up later. Stay warm, just brief.']],
+        say: 'Got it.',
+        her: 'When something small annoys me in public, I take one breath and say it once, calmly, or let it go.' },
+      { id: 'labels', body: ['Stay seated or sit down. Don\'t stand over each other.', 'Look at her face calmly, not a stare. Glance away now and then.', 'Breathe out slowly before you answer. Let a second of silence pass.'], title: 'Names and labels', sub: 'Stupid, a narcissist, not good enough',
+        setup: `${P.They} makes you take a test together, then calls you a weak narcissist, too dumb to learn photography, not like other boyfriends.`,
+        choices: [
+          ['"I\'m not going to argue about labels. I\'m happy to talk about what upset you."', 'You neither accept the label nor fight it. You steer back to the actual issue.'],
+          ['Argue point by point why the label is wrong.', 'Fighting a label keeps it in the room longer and gives it weight.'],
+          ['Agree with it to make it stop.', 'Agreeing to an insult teaches both of you that it works, and it wears you down.']],
+        say: 'I\'m not going to argue about labels. I\'m happy to talk about what upset you.',
+        her: 'When I want to call names, I try to say the feeling instead: "I feel let down."' },
+      { id: 'intimacy', body: ['Sit next to her, not facing her head-on.', 'Open posture: arms uncrossed, hands resting on your knees.', 'Speak quietly. It\'s a private topic, even at home.'], title: 'Intimacy pressure', sub: 'Blame for what the medication affects',
+        setup: `${P.They} says you used ${P.them} and that your sex life is your fault, including things your sertraline and prolactin affect.`,
+        choices: [
+          ['"Some of this is the medication, not how I feel about you. I want to talk about it, calmly, not now."', 'You state the fact without shame and set a time. Your health isn\'t a fault.'],
+          ['Get angry and blame her back.', 'Counter-blame turns a sensitive topic into a fight.'],
+          ['Apologise for something that isn\'t your fault.', 'Taking blame for side effects adds shame and doesn\'t fix anything.']],
+        say: 'Some of this is the medication, not how I feel about you. I want to talk about it, calmly, not now.',
+        her: 'If something about sex bothers me, I bring it up on a calm day and ask instead of blame.' },
+      { id: 'physical', body: ['Step back out of arm\'s reach, then one more step.', 'Hands open, low and visible. Don\'t grab, don\'t raise them.', 'Protect your face with an open forearm if you need to. Keep moving back, not toward her.', 'Once there\'s distance, sit if it\'s safe. It shows you won\'t fight back.',
+        'If stepping back doesn\'t stop it, get help. Calling the police to protect yourself is a boundary, not a betrayal.'], title: 'It gets physical', sub: 'Hair pulled, a slap', safety: true,
+        setup: `${P.They} pulls your hair and slaps you.`,
+        choices: [
+          ['Step back out of reach, hands open and low, and say once, quietly: "I\'m staying, but not close while I\'m being hit."', 'Distance protects you. Open hands and a low voice show you\'re not a threat. One short sentence is a clear line.'],
+          ['Grab her arms to make it stop.', 'Holding someone can escalate it and can look like violence from you too. Distance is safer.'],
+          ['Shout threats back while it\'s still words and pushing.', 'Shouted threats raise the heat. If you need help, get it for real and calmly, not as a threat. That\'s different, and it\'s okay.']],
+        say: 'I\'m staying, but not close while I\'m being hit.',
+        her: 'When I feel the urge to hit, I put my hands in my pockets or squeeze a cushion, and walk to another room.' },
+      { id: 'after', body: ['Stay close but sit beside her, not under or on top.', 'Hold her hand or keep a hand on her back if it feels okay.', 'Slow your breathing on purpose. Your body is still shaken, so give it a minute.'], title: 'Right after the storm', sub: 'Sudden closeness while you\'re shaken',
+        setup: `Minutes after a big fight, ${P.they} switches to flirting and wants sex. You still feel shaken.`,
+        choices: [
+          ['"I care about you. I need a bit of time first. Can we just sit together for now?"', 'You stay warm and close but go at your own pace. Closeness feels better when it isn\'t covering a wound.'],
+          ['Go along with it to keep the peace.', 'Pushing past your own shakiness can leave you feeling worse afterwards.'],
+          ['Turn away coldly.', 'Coldness can restart the fight. You can say no to one thing and yes to staying close.']],
+        say: 'I care about you. I need a bit of time first. Can we just sit together for now?',
+        her: 'After a fight, I check in first: "Are you okay? Do you want space or a hug?"' },
+      { id: 'heavy', body: ['Have food or tea ready before she arrives.', 'Lights low, TV or music soft, nothing that needs answering.', 'Sit nearby, relaxed, available but not hovering.'], title: 'After a heavy day', sub: 'EMDR, her birthday, a bad night',
+        setup: `${P.They} comes home from a heavy EMDR session, or the birthday is on ${P.their} mind again. ${P.They} looks tense and ready to snap.`,
+        choices: [
+          ['Keep the evening low-demand: food ready, quiet, "No need to talk. I\'m here if you want me."', 'You lower the load before anything starts. Fewer decisions and questions means fewer sparks.'],
+          ['Ask lots of questions about how the session went.', 'On a raw day, questions can feel like pressure.'],
+          ['Stay out of the way all evening.', 'Disappearing can feel like abandonment. Stay near, just quiet.']],
+        say: 'No need to talk. I\'m here if you want me.',
+        her: 'On heavy days, I tell you early: "Today\'s a heavy one, I need a quiet evening."' },
+      { id: 'third', title: 'Someone else gets involved', sub: 'A neighbour, a stranger, a scene outside',
+        body: ['Step in beside her, not in front of her and not between her arms.', 'Keep your hands to yourself: no grabbing, pulling or pushing her.', 'Turn your body toward the way out, so walking away together is the easy option.'],
+        setup: `A neighbour blocks the entrance on purpose. ${P.They} ${P.is} furious and moving toward him, and it could turn ugly.`,
+        choices: [
+          ['Stand beside her and say quietly: "He\'s not worth it. Let\'s go in, I\'ll deal with it later." Then start walking.', 'You protect her by offering a way out, not by moving her body. People who feel handled while they\'re flooded often turn the anger on whoever handled them.'],
+          ['Grab her from both sides and pull her away from him.', 'It comes from wanting to protect her, but being physically handled in that state can feel like being controlled. The fight often lands on you afterwards.'],
+          ['Argue with the neighbour yourself to back her up.', 'Two of you shouting makes the scene bigger and harder to leave.']],
+        say: 'He\'s not worth it. Let\'s go in, I\'ll deal with it later.',
+        her: 'When someone else makes me furious, I let you handle it and walk away with you, then vent at home in words.' },
+      { id: 'enter', title: 'Walking in, or her waking up', sub: 'The first two minutes when you don\'t know her mood',
+        body: ['Before you open the door (or before she wakes): three slow breaths, longer out than in.', 'Walk in slowly, shoulders down, a soft face.', 'Put your things down quietly and give her a minute before asking anything.'],
+        setup: `You're about to walk in the door, or ${P.they} ${P.is} just waking up. You don't know which mood you'll meet, and your stomach is already in a knot.`,
+        choices: [
+          ['Breathe first, walk in calmly, a warm short greeting: "Hey. Good to see you." Then let her lead the pace.', 'You arrive regulated, not braced for a fight. A calm, small greeting gives her nothing to push against.'],
+          ['Walk in already scanning for trouble and asking "Are you okay? Is everything fine?"', 'Anxious checking can feel like pressure or suspicion, and it hands your tension to her.'],
+          ['Stay out as long as possible, or pretend to be asleep.', 'Avoiding helps for an hour, but it builds dread for you and can read as distance to her.']],
+        say: 'Hey. Good to see you.',
+        her: 'When I wake up or get home on edge, I say "I\'m in a mood, give me ten minutes" instead of picking a fight.' },
+      { id: 'future', title: 'Face-to-face about your life', sub: 'The UK, your job, money, in person',
+        body: ['Sit down, and if she\'s standing, invite her to sit too, without pressing.', 'Lean back slightly; nod while she talks.', 'Let her finish before you speak. Count to three in your head.'],
+        setup: `${P.They} starts tearing into you in person: you won't move to the UK, you're doing nothing about the electrician job, you'll never get anywhere.`,
+        choices: [
+          ['"I can hear how much this worries you. I want a plan too. Can we sit down tomorrow and write it out together?"', 'You take the worry seriously and move the big decision to a calm time. Big life questions can\'t be settled in the middle of a fight.'],
+          ['List everything you\'ve done: the course, the calls, the documents.', 'It sounds reasonable, but in the heat it turns into a scoreboard, and she\'ll find what\'s missing.'],
+          ['Say yes to moving or quitting just to stop the fight.', 'Decisions made under pressure come back as broken promises later.']],
+        say: 'I can hear how much this worries you. I want a plan too. Can we sit down tomorrow and write it out together?',
+        her: 'When I\'m scared about the future, I say "I\'m scared about us" instead of attacking what you\'re not doing.' },
+      { id: 'health', title: 'Your health versus hers', sub: 'Sharing your struggles at a bad moment',
+        body: ['Sit beside her, turned a little toward her.', 'Focus on her first: eye contact, nodding.', 'Keep your own news for later; there\'s no rush.'],
+        setup: `${P.They} ${P.is} worried about ${P.their} own medication and side effects. You mention yours can cause problems too, and ${P.they} says you're making it about you.`,
+        choices: [
+          ['"You\'re right, this is about you right now. Tell me more." Then save your own health talk for a calm day.', 'Taking turns isn\'t a loss. When she feels heard first, she\'s far more able to hear you later.'],
+          ['Explain that your side effects are just as serious.', 'Even if it\'s true, it starts a contest over who suffers more, and nobody wins that.'],
+          ['Go quiet and decide never to mention your health again.', 'Your health matters. Pick a better moment instead of giving it up.']],
+        say: 'You\'re right, this is about you right now. Tell me more.',
+        her: 'When you share something hard about your health, I listen first before I compare it to mine.' },
+      { id: 'alarm', title: 'Your body sounds the alarm', sub: 'Knot and nausea while cooking, flashbacks',
+        body: ['Feet flat on the floor; feel your weight through your heels.', 'Name five things you can see and three things you can hear, quietly in your head.', 'Hold something cold (a glass of water, the tap) for ten seconds.'],
+        setup: `You're cooking and nothing has happened, but your stomach knots, you feel sick, and a memory of ${P.them} screaming flashes in.`,
+        choices: [
+          ['Pause for one minute and ground yourself: feet, five things you see, something cold. Then go back to cooking slowly.', 'Your body is reacting to the past, not to now. Grounding tells it you\'re safe in this moment, and the alarm settles faster.'],
+          ['Push through and ignore it.', 'It usually stays switched on longer, and the tension can leak into your voice and hands.'],
+          ['Leave the kitchen in a rush.', 'Sudden escape teaches your body the kitchen is dangerous, so the alarm gets stronger next time. Slow and steady works better.']],
+        say: 'I\'m safe right now. This is a memory, not now.',
+        her: 'When I see you tense in the kitchen, I can say "We\'re okay right now" instead of commenting on how you cook.' }
+    ];
+    // ===== /PERSONAL SCENARIOS =====
+    let simLog = {};
+    try { simLog = JSON.parse(localStorage.getItem('aq_sim_log') || '{}'); } catch(e) {}
+    const sim = { id: null, step: 0, order: [], picked: null, ready: null };
+    function renderSim() {
+      const body = document.getElementById('sim-body');
+      if(!body) return;
+      const sc = SIM_SCENARIOS.find(x => x.id === sim.id);
+      if(!sc) {
+        body.innerHTML = `<div class="subtitle" style="text-align:left;">Practise while it's calm, so the right words are already there when it isn't. About two minutes each.</div>` +
+          SIM_SCENARIOS.map(x => { const n = (simLog[x.id] || {}).n || 0;
+            return `<button type="button" class="sim-scen" onclick="simOpen('${x.id}')"><span><b>${escapeHtml(x.title)}</b><small>${escapeHtml(x.sub)}</small></span><span class="sim-n">${n ? n + '×' : ''}</span></button>`; }).join('');
+        return;
+      }
+      const bar = `<div class="sim-bar">${[0, 1, 2].map(i => `<i class="${i <= sim.step ? 'on' : ''}"></i>`).join('')}</div>`;
+      let html = '';
+      if(sim.step === 0) {
+        html = `<div class="sim-title">${escapeHtml(sc.title)}</div><p class="sim-p">${escapeHtml(sc.setup)}</p>` +
+          (sc.safety ? '<div class="repair-note">Your safety comes first. Step back first. If it doesn\'t stop, you\'re allowed to get help, including calling the police.</div>' : '') +
+          `<div class="today-q">What would you do?</div>` +
+          sim.order.map(i => `<button type="button" class="sim-choice ${sim.picked === i ? (i === 0 ? 'best' : 'meh') : ''}" onclick="simPick(${i})">${escapeHtml(sc.choices[i][0])}</button>`).join('') +
+          (sim.picked != null ? `<div class="sim-fb ${sim.picked === 0 ? 'good' : 'meh'}"><b>${sim.picked === 0 ? 'This one works best.' : 'Understandable, but riskier.'}</b> ${escapeHtml(sc.choices[sim.picked][1])}</div>` +
+            (sim.picked === 0 ? '<button class="btn-action" onclick="simStep(1)">Next</button>' : '<div class="subtitle" style="text-align:left;">Try another answer.</div>') : '');
+      } else if(sim.step === 1) {
+        // A small guide: body first, then one slow breath, then the words out loud
+        html = `<div class="sim-title">Do it: body first, then words</div>
+          <ol class="sim-guide">${sc.body.map(b => `<li>${escapeHtml(b)}</li>`).join('')}
+            <li>One slow breath out, longer than the breath in.</li>
+            <li><b>Then say it, out loud, slowly, in a low voice:</b></li></ol>
+          <div class="sim-say">"${escapeHtml(sc.say)}"</div>
+          <div class="subtitle" style="text-align:left;">Stand up and actually do the steps if you can. Your body remembers them better than reading.</div>
+          <div class="sim-row"><button class="btn-action" onclick="simStep(2)">I did it</button><button class="btn-action btn-secondary" onclick="bump('sim-body')">Once more</button></div>`;
+      } else {
+        html = `<div class="today-q">${escapeHtml(P.Their)} side · to share on a calm day</div><div class="sim-her">${escapeHtml(sc.her)}</div>
+          <div class="today-q">How ready do you feel?</div>
+          <div class="sim-rate">${[1, 2, 3, 4, 5].map(v => `<button type="button" class="${sim.ready === v ? 'on' : ''}" onclick="sim.ready = ${v}; renderSim()">${v}</button>`).join('')}</div>
+          <button class="btn-action" onclick="simDone()" ${sim.ready ? '' : 'disabled'}>Done</button>`;
+      }
+      body.innerHTML = `<button type="button" class="link-btn" onclick="sim.id = null; renderSim()">← All situations</button>${bar}${html}`;
+    }
+    function simOpen(id) {
+      const order = [0, 1, 2];
+      for(let i = order.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [order[i], order[j]] = [order[j], order[i]]; }
+      Object.assign(sim, { id, step: 0, order, picked: null, ready: null });
+      renderSim();
+    }
+    function simPick(i) { sim.picked = i; renderSim(); }
+    function simStep(n) { sim.step = n; renderSim(); const c = document.getElementById('sim-card'); if(c && c.getBoundingClientRect().top < 0) c.scrollIntoView({ block: 'start' }); }
+    function simDone() {
+      const e = simLog[sim.id] || { n: 0 };
+      simLog[sim.id] = { n: e.n + 1, last: Date.now(), ready: sim.ready };
+      localStorage.setItem('aq_sim_log', JSON.stringify(simLog));
+      logPractice('tools', 1, 'practice');
+      sim.id = null;
+      renderSim();
+      showToast('Practice saved');
     }
 
     // ---------- AFTER A CONFLICT: settle, pick the moment, own your part, say it, listen, then note how it went ----------
@@ -12888,6 +13109,7 @@
     applyDayStates();
     renderToday();
     renderRepair();
+    renderSim();
     document.getElementById('unsponge-text').innerText = `"${UNSPONGE[0]}"`;
     if(!localStorage.getItem('aq_onboarded')) showWelcome();
     else maybeStartTour();
