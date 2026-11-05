@@ -272,6 +272,10 @@
       box-shadow: inset 0 0 0 2px #c99a45, inset 0 6px 12px rgba(0, 0, 0, 0.15); border-color: transparent; }
     .today-spirit-scene.lcd canvas { image-rendering: pixelated; }
     #spirit-lcd { display: none; }
+    .hamster-heal { font-size: 0.74rem; color: var(--text-muted); margin-top: 4px; display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; }
+    .heal-bar { display: inline-flex; gap: 2px; }
+    .heal-bar i { width: 8px; height: 8px; background: rgba(255, 255, 255, 0.12); }
+    .heal-bar i.on { background: #ef8a7a; }
     #tab-spirit .hamster-canvas-container.lcd { background: #e6f2ff !important; box-shadow: inset 0 0 0 2px #c99a45; border-color: transparent; }
     #tab-spirit .hamster-canvas-container.lcd #spirit-lcd { display: block; position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; image-rendering: pixelated; }
     #tab-spirit .hamster-canvas-container.lcd #hamster-canvas { opacity: 0; }
@@ -1267,6 +1271,7 @@
     .dark-banner { display: flex; align-items: center; gap: 10px; padding: 10px 14px; margin: 0 0 12px; border-radius: 14px; cursor: pointer;
                    background: linear-gradient(90deg, rgba(76, 52, 140, 0.6), rgba(22, 20, 48, 0.75)); border: 1px solid rgba(167, 139, 250, 0.45);
                    font-size: 0.85rem; line-height: 1.4; animation: cardIn 0.35s ease both; }
+    .dark-banner.luteal { background: linear-gradient(90deg, rgba(120, 96, 190, 0.38), rgba(22, 24, 48, 0.7)); border-color: rgba(167, 146, 240, 0.35); }
     .dark-banner.good { background: linear-gradient(90deg, rgba(16, 120, 100, 0.45), rgba(14, 30, 40, 0.7)); border-color: rgba(52, 211, 153, 0.4); }
     .dark-list { margin: 0 0 8px; padding-left: 18px; font-size: 0.8rem; line-height: 1.5; }
     .dark-list li { margin-bottom: 4px; }
@@ -1974,7 +1979,7 @@
             <button class="cal-nav-btn" onclick="changeCalMonth(1)">›</button>
           </div>
           <div class="cal-days-header">
-            <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
+            <div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div><div>Su</div>
           </div>
           <div class="calendar-grid" id="cal-grid"></div>
         </div>
@@ -1999,7 +2004,7 @@
             <button class="cal-nav-btn" onclick="changeMoodMonth(1)">›</button>
           </div>
           <div class="cal-days-header">
-            <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
+            <div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div><div>Su</div>
           </div>
           <div class="calendar-grid" id="mood-grid"></div>
           <div id="mood-day-detail"></div>
@@ -2092,6 +2097,7 @@
         <div class="spirit-level" id="spirit-level"></div>
         <div style="font-weight:700; color:var(--theme-primary); margin-top:2px;" id="hamster-status">Companion Status</div>
         <div style="font-size:0.78rem; color:var(--text-muted);" id="hamster-desc">Reflects environment energy</div>
+        <div class="hamster-heal" id="hamster-heal" style="display:none;"></div>
         <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;" id="hamster-trend"></div>
         <div class="spirit-strip" id="spirit-strip" title="Last 30 days"></div>
         <button class="icon-btn" id="feed-btn" onclick="feedHamster()" style="margin-top:8px;">Feed</button>
@@ -3920,7 +3926,7 @@
       let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
       document.getElementById('cal-month-title').innerText = `${monthNames[month]} ${year}`;
 
-      let firstDay = new Date(year, month, 1).getDay();
+      let firstDay = (new Date(year, month, 1).getDay() + 6) % 7; // weeks start on Monday
       let daysInMonth = new Date(year, month + 1, 0).getDate();
       const calCycle = cycleInfo();
 
@@ -3961,7 +3967,8 @@
     let hamsterMood = 'calm';
     let hamsterHasData = false; // any calendar days marked in the last 30 days
     let hamsterWound = 'none';  // healing stage: fresh, stitched, bandaged, scars, none
-    let hamsterHealDays = 99;   // days since the last red/black day (cuts and bruises fade over 2 weeks)
+    let hamsterHealDays = 99;   // days since the last red/black day (scars fade over SCAR_DAYS)
+    const SCAR_DAYS = 7;
 
     // Spirit's hidden health for the 30 days ending on `today` (see the rules inside)
     // Logging is self-care too: each journal entry or incident logged, plus checking in with an oni (once a day)
@@ -4094,13 +4101,13 @@
       // Zombified by any red/black day (lifts after 2 green, 3 yellow, or 1 green + 2 yellow days since the last one)
       // or by 5 yellow days in a row (lifts after 2 green days).
       const zombify = health.zombify;
+      hamsterHealDays = lastConflictDate ? Math.round((today - lastConflictDate) / 86400000) : 99;
       hamsterWound = zombify ? ((badDays10 >= 3 || blackDays10 >= 2) ? 'fresh' : 'stitched')
         : hamsterScore < 0 ? 'bandaged'
-        : (badPoints > 0 && hamsterScore < 2) ? 'scars' : 'none';
-      // However quickly his score recovers, cuts and bruises stay until 2 weeks after the last red/black day.
-      hamsterHealDays = lastConflictDate ? Math.round((today - lastConflictDate) / 86400000) : 99;
+        : (badDays10 > 0 && hamsterScore < 2) ? 'scars' : 'none';
+      // However quickly his score recovers, small scars stay until a week after the last red/black day.
       const WOUND_RANK = { none: 0, scars: 1, bandaged: 2, stitched: 3, fresh: 4 };
-      const woundFloor = hamsterHealDays < 14 ? 'scars' : 'none';
+      const woundFloor = hamsterHealDays < SCAR_DAYS ? 'scars' : 'none';
       if(WOUND_RANK[woundFloor] > WOUND_RANK[hamsterWound]) hamsterWound = woundFloor;
       hamsterHasData = recentGood + recentBad + recentYellow > 0 || !!lastConflictDate;
       document.getElementById('m-good-days').innerText = greenCount;
@@ -4162,6 +4169,21 @@
         hAdvice.style.display = 'none';
       }
       if(hamsterHasData) hDesc.innerText = spiritPlainWords(health);
+      const healEl = document.getElementById('hamster-heal');
+      if(healEl) {
+        const LV = { fresh: [4, 'Badly hurt'], stitched: [3, 'Hurt, stitched up'], bandaged: [2, 'Bandaged, healing'], scars: [1, 'Small scars, nearly healed'] }[hamsterWound];
+        if(!LV) healEl.style.display = 'none';
+        else {
+          // Healed once the scars fade (a week after the last hard day) and he's out of the worse stages
+          const scarsGone = lastConflictDate ? addDays(lastConflictDate, SCAR_DAYS) : today;
+          const extra = hamsterWound === 'fresh' || hamsterWound === 'stitched' ? 2 : hamsterWound === 'bandaged' ? 2 : 0;
+          const healed = new Date(Math.max(scarsGone.getTime(), addDays(today, extra).getTime()));
+          const n = Math.round((healed - today) / DAY);
+          healEl.innerHTML = `<span class="heal-bar">${[1, 2, 3, 4].map(i => `<i class="${i <= LV[0] ? 'on' : ''}"></i>`).join('')}</span>` +
+            `${LV[1]} · ${n <= 0 ? 'heals today' : `healed in about ${n} ${pl(n, 'day')} (${shortDate(healed)}) if the next days are calm`}`;
+          healEl.style.display = '';
+        }
+      }
 
       renderSpiritStrip();
       renderSpiritLevel(false);
@@ -4607,7 +4629,7 @@
           ctx.restore();
         } else {
           // Cuts and bruises: fresh-looking at first, fading towards day 14
-          const fade = Math.max(0.25, Math.min(1, (14 - hamsterHealDays) / 9));
+          const fade = Math.max(0.25, Math.min(1, (SCAR_DAYS - hamsterHealDays) / 5));
           const R = r * 1.5;
           const bx = x + R * 0.15, by = y + R * 0.3;
           const bruise = ctx.createRadialGradient(bx, by, 0, bx, by, R);
@@ -5279,6 +5301,25 @@
 
     // MINI GAME: give Spirit a seed or press and hold to pet him. Just for fun, it doesn't change his health.
     let hamsterHearts = [];
+    // Tap him: now and then he says something kind, with a few hearts (not every tap, so it stays special)
+    const SPIRIT_KIND = ['You\'re doing better than you think.', 'I like it when you visit.', 'You matter. A lot.', 'Proud of you for showing up.',
+      'One small step is still a step.', 'You make this place cozy.', 'Have some water? For me?', 'You\'re a good human.', 'Breathe… there you go.',
+      'Whatever today is, I\'m on your side.', 'You\'ve been through hard days before. You got through.', 'Thanks for looking after me.',
+      'You deserve kindness too. Especially from you.', 'Little wins count. Every one.', 'I saved you a seed.', 'Hug? Hug.'];
+    let spiritKindAt = 0, spiritKindLast = -1;
+    function spiritKindTap(now) {
+      if(now - spiritKindAt < 6000 || Math.random() < 0.35) return;
+      spiritKindAt = now;
+      const lines = [...SPIRIT_KIND], h = new Date().getHours();
+      if(h >= 21 || h < 5) lines.push('Rest soon, okay?', 'Sleep well tonight.');
+      else if(h < 11) lines.push('Good morning, you.', 'New day, fresh start.');
+      try { const ds = computeDarkStretch(); if(ds && ds.inWindow) lines.push('These days are harder. You\'re handling them.', 'Go gently today.'); } catch(e) {}
+      let i = Math.floor(Math.random() * lines.length);
+      if(i === spiritKindLast) i = (i + 1) % lines.length;
+      spiritKindLast = i;
+      setTimeout(() => sayThought(lines[i]), 450);
+      for(let k = 0; k < 3; k++) hamsterHearts.push({ x: hamsterWalk.x + (Math.random() - 0.5) * 30, y: 72 + Math.random() * 8, vy: -(0.4 + Math.random() * 0.4), life: 1, ph: Math.random() * 6 });
+    }
     function careForHamster() {
       for(let i = 0; i < 5; i++) {
         hamsterHearts.push({ x: hamsterWalk.x + (Math.random() - 0.5) * 40, y: 70 + Math.random() * 10,
@@ -5311,7 +5352,7 @@
     }
     // ----- A deeper world: distant hills and a tree line that drift a little as he walks (parallax)
     function drawWorldDepth(ctx, now) {
-      if(spiritOuting && spiritOuting.place === 'forest') return; // the forest has its own trees
+      if(spiritOuting && (spiritOuting.place === 'forest' || spiritOuting.place === 'mountains' || spiritOuting.place === 'beach')) return; // these have their own horizon
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       const day = spiritIsDay(), wx = spiritWx(), grey = wx && (wx.rain || wx.snow || wx.storm);
       const off = (hamsterWalk.x - 160);
@@ -5833,7 +5874,10 @@
     const OUTINGS = {
       pond: { name: 'the pond', lines: ['Ooh, a pond!', 'Look, a lily pad.', 'Ripples…'] },
       forest: { name: 'the forest edge', lines: ['Big trees!', 'Smells like pine.', 'So quiet here.'] },
-      field: { name: 'the flower field', lines: ['So many flowers!', 'A butterfly!', 'I love it here.'] }
+      field: { name: 'the flower field', lines: ['So many flowers!', 'A butterfly!', 'I love it here.'] },
+      beach: { name: 'the beach', lines: ['Sand between my toes!', 'Listen to the waves.', 'A shell!'] },
+      garden: { name: 'the vegetable garden', lines: ['Carrots!!', 'Everything smells green.', 'Just one nibble…'] },
+      mountains: { name: 'the mountains', lines: ['So high up!', 'Fresh air.', 'Look how far I can see.'] }
     };
     const OUTING_MS = 45000, OUTING_FADE = 700;
     let spiritOuting = null;
@@ -5916,6 +5960,62 @@
           ctx.fillStyle = `rgba(250, 240, 140, ${0.4 + 0.5 * Math.max(0, Math.sin(t * 2 + i * 1.7))})`;
           ctx.beginPath(); ctx.arc(40 + rand01(i, 70) * 240 + Math.sin(t * 0.7 + i) * 10, 80 + rand01(i, 71) * 40 + Math.cos(t * 0.9 + i) * 6, 1.3, 0, Math.PI * 2); ctx.fill();
         }
+      } else if(place === 'beach') {
+        // Sea on the horizon with rolling waves, sand, shells and a crab
+        E(160, 136, 220, 14, day ? '#f0d9a4' : '#6b5a3c');
+        const sea = ctx.createLinearGradient(0, 104, 0, 124);
+        sea.addColorStop(0, day ? '#4fa3d9' : '#1d3d5c'); sea.addColorStop(1, day ? '#7cc6ea' : '#2a5677');
+        ctx.fillStyle = sea; ctx.fillRect(0, 104, 320, 20);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)'; ctx.lineWidth = 1.2;
+        for(let i = 0; i < 3; i++) {
+          const y = 110 + i * 5, sh = (t * (12 + i * 4)) % 40;
+          ctx.beginPath();
+          for(let x = -40 + sh; x < 330; x += 40) { ctx.moveTo(x, y); ctx.quadraticCurveTo(x + 10, y - 2, x + 20, y); }
+          ctx.stroke();
+        }
+        const foam = 124 + Math.sin(t * 0.8) * 2;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.55)'; ctx.fillRect(0, foam, 320, 2);
+        [[60, '#f4a7c4'], [200, '#f8e7d0'], [282, '#fbbf8a']].forEach(([x, c]) => { E(x, 140, 3.4, 2.4, c); E(x, 139.4, 1.4, 1, 'rgba(255,255,255,0.6)'); });
+        const cx = 120 + Math.sin(t * 0.4) * 60; // a crab, scuttling sideways
+        E(cx, 141, 5, 3.2, '#d9583f'); E(cx - 6, 139, 1.8, 1.6, '#d9583f'); E(cx + 6, 139, 1.8, 1.6, '#d9583f');
+        ctx.fillStyle = '#111'; ctx.fillRect(cx - 2, 137.4, 1, 1.4); ctx.fillRect(cx + 1, 137.4, 1, 1.4);
+        if(day) { const g = ctx.createRadialGradient(50, 40, 2, 50, 40, 26); g.addColorStop(0, 'rgba(255,240,180,0.9)'); g.addColorStop(1, 'rgba(255,220,120,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(50, 40, 26, 0, Math.PI * 2); ctx.fill(); }
+      } else if(place === 'garden') {
+        // Rows of carrots and lettuces, a watering can and tall sunflowers
+        ctx.fillStyle = day ? '#7a5434' : '#3d2a1a';
+        [126, 134].forEach(y => ctx.fillRect(14, y, 292, 5));
+        for(let x = 22; x < 300; x += 18) {
+          const sw = Math.sin(t * 1.2 + x) * 0.6;
+          ctx.fillStyle = '#ef8a3a'; ctx.beginPath(); ctx.moveTo(x - 2, 127); ctx.lineTo(x + 2, 127); ctx.lineTo(x, 131); ctx.fill();
+          ctx.strokeStyle = '#4f9a45'; ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(x, 127); ctx.lineTo(x - 2 + sw, 121); ctx.moveTo(x, 127); ctx.lineTo(x + 2 + sw, 121); ctx.stroke();
+          E(x + 9, 134, 4, 2.6, day ? '#7cc36a' : '#3b6a34'); E(x + 9, 133, 2.4, 1.6, day ? '#a6dd8f' : '#4d7e45');
+        }
+        [[40, 0], [286, 1]].forEach(([x, i]) => {
+          const sw = Math.sin(t * 0.9 + i) * 1.5;
+          ctx.strokeStyle = '#3f7434'; ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.moveTo(x, 126); ctx.quadraticCurveTo(x + sw / 2, 100, x + sw, 76); ctx.stroke();
+          E(x - 5 + sw / 2, 104, 5, 2, '#4f9a45', -0.5);
+          for(let k = 0; k < 10; k++) { const a = k / 10 * Math.PI * 2; E(x + sw + Math.cos(a) * 7, 76 + Math.sin(a) * 7, 4, 2, '#facc15', a); }
+          E(x + sw, 76, 5, 5, '#7a4a24');
+        });
+        ctx.fillStyle = day ? '#7aa2b8' : '#3d5260'; ctx.fillRect(250, 132, 14, 9); // watering can
+        ctx.strokeStyle = ctx.fillStyle; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(264, 134); ctx.lineTo(271, 128); ctx.stroke();
+      } else if(place === 'mountains') {
+        // Peaks with snow caps, a stream and rocks, an eagle circling in the day
+        const peak = (x, h, wd, col, cap) => {
+          ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(x - wd, 132); ctx.lineTo(x, 132 - h); ctx.lineTo(x + wd, 132); ctx.fill();
+          ctx.fillStyle = cap; ctx.beginPath(); ctx.moveTo(x - wd * 0.22, 132 - h * 0.78); ctx.lineTo(x, 132 - h); ctx.lineTo(x + wd * 0.22, 132 - h * 0.78);
+          ctx.lineTo(x + wd * 0.08, 132 - h * 0.72); ctx.lineTo(x - wd * 0.06, 132 - h * 0.8); ctx.fill();
+        };
+        peak(70, 96, 90, day ? '#8292b0' : '#2e3550', day ? '#f4f7fb' : '#a8b0c8');
+        peak(230, 112, 110, day ? '#6f7e9e' : '#262c44', day ? '#ffffff' : '#b7bfd6');
+        peak(150, 70, 70, day ? '#5f6f8c' : '#20263b', day ? '#eef2f8' : '#9aa3bc');
+        ctx.fillStyle = day ? 'rgba(120, 190, 230, 0.8)' : 'rgba(50, 90, 130, 0.8)';
+        ctx.beginPath(); ctx.moveTo(196, 132); ctx.quadraticCurveTo(220, 138, 206, 146); ctx.lineTo(222, 146); ctx.quadraticCurveTo(232, 138, 204, 132); ctx.fill();
+        [[34, 5], [96, 3.6], [270, 4.4], [300, 3]].forEach(([x, r]) => E(x, 139, r * 1.4, r, day ? '#9a9a9a' : '#4a4a52'));
+        if(day) { const ex = 160 + Math.cos(t * 0.5) * 50, ey = 40 + Math.sin(t * 0.5) * 12, f = Math.sin(t * 4) * 2;
+          ctx.strokeStyle = '#3a2a1e'; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.moveTo(ex - 7, ey + f); ctx.quadraticCurveTo(ex - 3, ey - 2, ex, ey); ctx.quadraticCurveTo(ex + 3, ey - 2, ex + 7, ey + f); ctx.stroke(); }
       } else {
         ctx.fillStyle = day ? '#9a7a56' : '#4a3a2a';
         for(let x = 12; x < 320; x += 44) ctx.fillRect(x, 108, 3, 24);
@@ -5967,7 +6067,8 @@
       if(hamsterMood === 'stressed') t.push('Just resting today.');
       if(hamsterMood === 'recovering') t.push('Slowly getting better.');
       if(hamsterMood === 'thriving') t.push('Feeling great!');
-      try { const ds = computeDarkStretch(); if(ds && ds.inWindow) t.push('Be gentle with yourself today.'); } catch(e) {}
+      try { const ds = computeDarkStretch(); if(ds && ds.inWindow) t.push('Be gentle with yourself today.');
+            else if(ds && ds.headsUp) t.push('Early night tonight?', 'Let\'s take it easy this week.'); } catch(e) {}
       if(!t.length || Math.random() < 0.3) t.push('Hi.', '*sniff sniff*', 'Thinking about seeds.', 'Hmm…');
       return t;
     }
@@ -6143,6 +6244,14 @@
     const HOUSE = { x: 222, w: 90, door: 267 };
     const spiritHome = { inside: false, until: 0, anim: null }; // anim: squeezing in or out of the door
     const SPIRIT_DOOR_MS = 800;
+    // The moon shows at night when the sky isn't too cloudy (see drawSpiritWeather)
+    function spiritMoonHit(e) {
+      const c = document.getElementById('hamster-canvas'), wx = spiritWeatherNow();
+      if(spiritIsDay() || (wx ? wx.cloud : 20) >= 75 || spiritStyle.backdrop !== 'weather' || spiritOuting) return false;
+      const r = c.getBoundingClientRect();
+      const x = (e.clientX - r.left) * c.width / r.width, y = (e.clientY - r.top) * c.height / r.height;
+      return Math.hypot(x - (c.width - 34), y - 24) <= 18;
+    }
     function spiritHouseHit(e) {
       const c = document.getElementById('hamster-canvas');
       const r = c.getBoundingClientRect();
@@ -6169,8 +6278,10 @@
       spiritHome.inside = false; spiritHome.anim = null;
       hamsterWalk.x = HOUSE.door; hamsterWalk.toHouse = false;
     }
-    // Tricks: chasing his own tail, a backflip, a roll and a spin. Just for fun, no effect on his stats.
-    const SPIRIT_TRICKS = { chase: 2400, flip: 900, roll: 1300, spin: 1000 };
+    // Tricks: tail chase, backflip, roll, spin, bunny hops, a dance, a handstand, a squish, a moonwalk and the zoomies.
+    // Just for fun, no effect on his stats.
+    const SPIRIT_TRICKS = { chase: 2400, flip: 900, roll: 1300, spin: 1000, hops: 1500, dance: 2200, handstand: 2000, squish: 1200, moonwalk: 2000, zoomies: 2600 };
+    const TRICK_LINES = { zoomies: 'Zoom zoom!', dance: 'Dance with me!', handstand: 'Ta-da!', moonwalk: 'Smooth.' };
     let spiritTrick = null, spiritDizzyUntil = 0;
     function spiritDoTrick(kind) {
       if(spiritTrick || spiritEat || reduceMotion) return;
@@ -6180,16 +6291,18 @@
       const kinds = Object.keys(SPIRIT_TRICKS);
       kind = kind || kinds[Math.floor(Math.random() * kinds.length)];
       if(kind === 'roll' && w.x > 320 - 100) kind = 'flip'; // no room to roll right
+      if(kind === 'moonwalk' && w.x < 80) kind = 'dance'; // no room to slide left
       w.toHouse = false;
       w.walking = false;
-      spiritTrick = { kind, start: performance.now(), dur: SPIRIT_TRICKS[kind], baseX: w.x };
+      spiritTrick = { kind, start: performance.now(), dur: SPIRIT_TRICKS[kind], baseX: kind === 'zoomies' ? Math.max(90, Math.min(170, w.x)) : w.x };
+      if(TRICK_LINES[kind] && Math.random() < 0.6) sayThought(TRICK_LINES[kind]);
     }
     function spiritTrickState() {
       if(!spiritTrick) return null;
       const p = (performance.now() - spiritTrick.start) / spiritTrick.dur;
       if(p < 1) return { kind: spiritTrick.kind, p };
       const w = hamsterWalk;
-      if(spiritTrick.kind === 'chase') { w.x = spiritTrick.baseX; spiritDizzyUntil = performance.now() + 1700; }
+      if(spiritTrick.kind === 'chase' || spiritTrick.kind === 'zoomies') { w.x = spiritTrick.baseX; spiritDizzyUntil = performance.now() + 1700; }
       w.walking = false; w.facing = 'front'; w.dir = -1; w.until = performance.now() + 2500;
       spiritTrick = null;
       return null;
@@ -6275,10 +6388,11 @@
       ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => c.addEventListener(ev, stopPet));
       c.addEventListener('pointerdown', e => {
         stopPet();
-        if(spiritHouseHit(e) || spiritGroundTap(e, true)) return;
+        if(spiritMoonHit(e) || spiritHouseHit(e) || spiritGroundTap(e, true)) return;
         petTimer = setTimeout(careForHamster, 600);
       });
       c.addEventListener('pointerdown', e => {
+        if(spiritMoonHit(e)) { openMoonView(); return; }
         if(spiritHouseHit(e)) { spiritHouseTap(); return; }
         if(spiritGroundTap(e)) return;
         if(spiritHome.inside) return;
@@ -6287,6 +6401,7 @@
         if(hamsterJumpStart >= 0 && now - hamsterJumpStart < 650) return; // already in the air
         hamsterJumpStart = now;
         if(navigator.vibrate) { try { navigator.vibrate(15); } catch(e) {} }
+        spiritKindTap(now);
         if(reduceMotion) { drawHamster(); setTimeout(drawHamster, 650); }
       });
     }
@@ -6323,6 +6438,18 @@
         } else if(trick.kind === 'roll') {
           w.x = spiritTrick.baseX + trick.p * 44;
           w.dir = 1; w.walking = false; w.facing = 'side';
+        } else if(trick.kind === 'moonwalk') {
+          // Facing right, legs going, sliding backwards
+          w.x = spiritTrick.baseX - trick.p * 46;
+          w.dir = 1; w.walking = true; w.facing = 'side';
+          w.phase += 0.3;
+        } else if(trick.kind === 'zoomies') {
+          // Mad dashes back and forth across the screen
+          const a = trick.p * Math.PI * 2 * 2.5;
+          w.x = spiritTrick.baseX + Math.sin(a) * 70;
+          w.dir = Math.cos(a) > 0 ? 1 : -1;
+          w.walking = true; w.facing = 'side';
+          w.phase += 0.9;
         } else {
           w.walking = false; w.facing = 'front';
         }
@@ -6414,7 +6541,7 @@
           ctx.fillRect(rand01(i, 1) * w, rand01(i, 2) * h * 0.55, 1.3, 1.3);
         }
         // Tonight's real moon phase
-        ctx.fillStyle = 'rgba(40, 46, 70, 0.6)';
+        ctx.fillStyle = 'rgba(40, 46, 70, 0.3)';
         ctx.beginPath(); ctx.arc(w - 34, 24, 9, 0, Math.PI * 2); ctx.fill();
         ctx.fillStyle = 'rgba(240, 240, 220, 0.9)';
         moonLitPath(ctx, w - 34, 24, 9, moonAge());
@@ -6689,6 +6816,29 @@
           ctx.translate(px, ry);
           ctx.rotate(tr.p * Math.PI * 2);
           ctx.translate(-px, -ry);
+        } else if(tr.kind === 'hops') {
+          // Three bunny hops, each a little higher
+          const k = (tr.p * 3) % 1, n = Math.floor(tr.p * 3);
+          ctx.translate(0, -Math.sin(k * Math.PI) * (10 + n * 6));
+        } else if(tr.kind === 'dance') {
+          // Side to side sway with a bounce on every beat
+          const a = Math.sin(tr.p * Math.PI * 8) * 0.22, fy = 141;
+          ctx.translate(px, fy - Math.abs(Math.sin(tr.p * Math.PI * 8)) * 5);
+          ctx.rotate(a);
+          ctx.translate(-px, -fy);
+        } else if(tr.kind === 'handstand') {
+          // Flip onto his hands, hold with a little wobble, flip back
+          const e = tr.p < 0.25 ? tr.p / 0.25 : tr.p > 0.75 ? (1 - tr.p) / 0.25 : 1;
+          const wob = tr.p >= 0.25 && tr.p <= 0.75 ? Math.sin(tr.p * Math.PI * 10) * 0.06 : 0;
+          ctx.translate(px, py - Math.sin(e * Math.PI / 2) * 16 * spiritScale());
+          ctx.rotate(e * Math.PI + wob);
+          ctx.translate(-px, -py);
+        } else if(tr.kind === 'squish') {
+          // Squash flat, then boing up tall, then settle
+          const k = tr.p < 0.35 ? Math.sin(tr.p / 0.35 * Math.PI / 2) * -0.35 : Math.sin((tr.p - 0.35) / 0.65 * Math.PI * 3) * 0.25 * (1 - tr.p);
+          ctx.translate(px, 141);
+          ctx.scale(1 - k * 0.6, 1 + k);
+          ctx.translate(-px, -141);
         } else if(tr.kind === 'spin') {
           // A pirouette: two full turns with a little hop
           const sx = Math.cos(tr.p * Math.PI * 4);
@@ -7085,7 +7235,7 @@
     };
     function tamaArea() {
       let bd = spiritStyle.backdrop || 'weather';
-      if(spiritOuting) bd = spiritIsDay() ? 'meadow' : 'night';
+      if(spiritOuting) bd = !spiritIsDay() ? 'night' : spiritOuting.place === 'beach' ? 'ocean' : 'meadow';
       else if(bd === 'weather') {
         const wx = spiritWeatherNow();
         bd = !spiritIsDay() ? 'wx-night' : wx && (wx.code >= 3 || wx.cloud > 70) ? 'wx-grey' : 'wx-day';
@@ -7150,6 +7300,7 @@
         if(solid[i]) continue;
         if((x > 0 && solid[i - 1]) || (x < W - 1 && solid[i + 1]) || (y > 0 && solid[i - W]) || (y < areaH - 1 && solid[i + W])) set(x, top + y, OUT);
       }
+      if(full && !bare) tamaHud(set, W, band);
       // Each pixel becomes a 2x2 dot, its right and bottom edge a little darker, like an LCD
       const S = 2;
       if(out.width !== W * S || out.height !== H * S) { out.width = W * S; out.height = H * S; }
@@ -7162,6 +7313,24 @@
         }
       }
       o.putImageData(img, 0, 0);
+    }
+    // Pixel digits (3x5) for the screen's temperature
+    const TAMA_FONT = { '0': '111101101101111', '1': '010110010010111', '2': '111001111100111', '3': '111001111001111', '4': '101101111001001',
+      '5': '111100111001111', '6': '111100111101111', '7': '111001001001001', '8': '111101111101111', '9': '111101111001111', '-': '000000111000000',
+      '°': '010101010000000', 'C': '011100100100011' };
+    function tamaHud(set, W, band) {
+      const night = !spiritIsDay(), ink = night ? [0xf3, 0xfb, 0xe6] : [0x2b, 0x21, 0x40];
+      const wx = spiritWeatherNow();
+      if(wx && wx.temp != null && Date.now() - wx.at < 6 * 3600000) {
+        let x = 5;
+        for(const ch of `${Math.round(wx.temp)}°C`) {
+          const g = TAMA_FONT[ch];
+          if(!g) continue;
+          for(let i = 0; i < 15; i++) if(g[i] === '1') set(x + i % 3, 5 + Math.floor(i / 3), ink);
+          x += 4;
+        }
+      }
+      // The moon is part of the night scene (drawSpiritWeather), so nothing else here
     }
     let todayFrameAt = 0;
 
@@ -7794,7 +7963,7 @@
       });
 
       const today = startOfToday();
-      const firstDay = new Date(moodViewYear, moodViewMonth, 1).getDay();
+      const firstDay = (new Date(moodViewYear, moodViewMonth, 1).getDay() + 6) % 7; // weeks start on Monday
       const daysInMonth = new Date(moodViewYear, moodViewMonth + 1, 0).getDate();
       let html = '';
       for(let i = 0; i < firstDay; i++) html += '<div class="cal-day empty"></div>';
@@ -9579,16 +9748,21 @@
       const ds = computeDarkStretch();
       const hidden = localStorage.getItem('aq_dark_dismiss') === dayKey(new Date());
       if(hidden) { el.style.display = 'none'; return; }
-      const dark = !!(ds && ds.inWindow);
-      el.classList.toggle('good', !dark);
-      el.dataset.mode = dark ? 'dark' : 'care';
-      document.getElementById('dark-banner-icon').innerHTML = pxIcon(dark ? 'moon' : 'leaf');
+      const dark = !!(ds && ds.inWindow), luteal = !dark && !!(ds && ds.headsUp);
+      el.classList.toggle('good', !dark && !luteal);
+      el.classList.toggle('luteal', luteal);
+      el.dataset.mode = dark ? 'dark' : luteal ? 'luteal' : 'care';
+      document.getElementById('dark-banner-icon').innerHTML = pxIcon(dark || luteal ? 'moon' : 'leaf');
       const today = startOfToday();
       const soon = importantDates.map(e => ({ ...e, when: nextOccurrence(e.md), n: Math.round((nextOccurrence(e.md) - today) / DAY) }))
         .filter(e => e.n <= 14).sort((a, b) => a.n - b.n)[0];
       if(dark) {
         const todayNote = soon && soon.n === 0 ? ` Today is your ${escapeHtml(soon.name)}: keep it simple and sweet.` : '';
         document.getElementById('dark-banner-text').innerHTML = `<b>Dark side of the moon</b> · day ${ds.dayIdx} of ${DARK_DAYS + 1}. Go gently.${todayNote} Tap for your plan.`;
+      } else if(luteal) {
+        const n = Math.floor(startOfToday().getTime() / DAY) + selfCareShift;
+        const tip = LUTEAL_IDEAS[((n % LUTEAL_IDEAS.length) + LUTEAL_IDEAS.length) % LUTEAL_IDEAS.length].replace('{them}', P.them); const _unused = LUTEAL_IDEAS[((n % LUTEAL_IDEAS.length) + LUTEAL_IDEAS.length) % LUTEAL_IDEAS.length];
+        document.getElementById('dark-banner-text').innerHTML = `<b>Luteal</b> · the harder days start in ${ds.headsUp} ${pl(ds.headsUp, 'day')}. ${tip}`;
       } else if(soon && soon.n === 0 && selfCareShift === 0) { // only on the day itself, no countdown
         const early = ds && ds.upcomingStart <= soon.when && soon.when <= ds.upcomingEnd ? ' A little early celebration could be lovely too.' : '';
         document.getElementById('dark-banner-text').innerHTML = soon.n === 0
@@ -9601,9 +9775,21 @@
       el.style.display = 'flex';
     }
     let selfCareShift = 0;
+    // Early luteal: the few days before the dark stretch. Small ways to get ready, one a day (tap for another)
+    const LUTEAL_IDEAS = [
+      'Sleep is your best buffer this week. Aim for an early night.',
+      'Keep plans light for the next week. Move anything stressful if you can.',
+      'Sort the small chores now, so they can\'t turn into friction later.',
+      'Say something kind to {them} today, while it\'s easy.',
+      'Patience will run shorter on both sides soon. A pause beats a quick reply.',
+      'Stock up on comfort: snacks, a show you both like, a quiet evening.',
+      'Fit in some exercise or a walk now. It helps you both through the next days.',
+      'Read your plan in Insights so it\'s fresh when you need it.'
+    ];
     function darkBannerTap() {
       const el = document.getElementById('dark-banner');
       if(el.dataset.mode === 'dark') openDarkPlan();
+      else if(el.dataset.mode === 'luteal' && (selfCareShift + 1) % LUTEAL_IDEAS.length === 0) openDarkPlan(); // after a round of tips, the plan
       else { selfCareShift++; renderDarkBanner(); } // another idea
     }
     function dismissDarkBanner() {
@@ -10076,7 +10262,7 @@
       crisis = null;
       localStorage.removeItem('aq_crisis_active');
       document.getElementById('crisis-modal').style.display = 'none';
-      if(!puzzleWindow || puzzleWindow.until < Date.now()) setPuzzleWindow(); // Disrupt works best within 6 hours
+      if(!puzzleWindow || puzzleWindow.until < Date.now()) { setPuzzleWindow(); puzzleWindow.crisis = record.start; localStorage.setItem('aq_puzzle_window', JSON.stringify(puzzleWindow)); } // Disrupt works best within 6 hours
       // The frost melts and Spirit gives a little hop before the normal app comes back
       document.body.classList.add('crisis-thaw');
       const phrase = document.getElementById('crisis-phrase');
@@ -10121,6 +10307,13 @@
         return;
       }
       crisisDelArmed = null;
+      // The Disrupt window this crisis opened goes too (older windows have no tag: match by when it opened)
+      const gone = crises.find(c => c.start === start);
+      if(puzzleWindow && gone && (puzzleWindow.crisis === start || (!puzzleWindow.crisis && Math.abs(puzzleWindow.until - 6 * 3600 * 1000 - gone.end) < 15 * 60000))) {
+        puzzleWindow = null;
+        localStorage.removeItem('aq_puzzle_window');
+        updatePuzzleWindowBanner();
+      }
       crises = crises.filter(c => c.start !== start);
       localStorage.setItem('aq_crises', JSON.stringify(crises));
       notes = notes.filter(n => !(n.id === start && (n.tags || []).includes('crisis')));
@@ -10241,7 +10434,7 @@
         period:     ['Period', '#ef8a7a', 'Things often ease after the first day or two.'],
         follicular: ['Follicular · good stretch', 'var(--color-green)', `Usually the calmest part of ${P.their} month. Enjoy it together.`],
         ovulation:  ['Around ovulation', '#f2c46b', 'Usually still a good stretch.'],
-        luteal:     ['Luteal', '#a792f0', 'Still an ok stretch. Be easy on each other.'],
+        luteal:     ['Luteal', '#a792f0', 'The harder days start soon. Rest up and keep plans light.'],
         dark:       [`Dark side of the moon · day ${ds.dayIdx} of ${DARK_DAYS + 1}`, '#a792f0', 'Go gently. Your plan is in Insights.']
       }[phase];
       // Ring: period, follicular, ovulation and luteal arcs, with today marked
@@ -11091,6 +11284,8 @@
         try { const ds = computeDarkStretch(); if(ds && ds.inWindow) {
           const left = DARK_DAYS + 1 - ds.dayIdx;
           cyc = `<div class="repair-note">${P.Theyre} in the harder days of ${P.their} cycle${left > 0 ? `, about ${left} ${pl(left, 'day')} left` : ''}. Keep today short and warm. The bigger talk can wait until after.</div>`;
+        } else if(ds && ds.headsUp) {
+          cyc = `<div class="repair-note">The harder days of ${P.their} cycle start in about ${ds.headsUp} ${pl(ds.headsUp, 'day')}. If this needs a real talk, now is better than next week.</div>`;
         } } catch(e) {}
         html = `<h3>2. Pick the moment</h3>
           <p>Somewhere private, when neither of you is tired, hungry or rushing. Ask first, and accept either answer:</p>
