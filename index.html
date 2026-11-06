@@ -271,6 +271,7 @@
     .hamster-canvas-container.today-spirit-scene.lcd { aspect-ratio: 448 / 244; background: #fff4e0 !important; position: relative;
       box-shadow: inset 0 0 0 2px #c99a45, inset 0 6px 12px rgba(0, 0, 0, 0.15); border-color: transparent; }
     .today-spirit-scene.lcd canvas { image-rendering: pixelated; }
+    .today-spirit-scene.lcd #today-spirit-canvas { image-rendering: auto; }
     #spirit-lcd { display: none; }
     .hamster-heal { font-size: 0.74rem; color: var(--text-muted); margin-top: 4px; display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; }
     .heal-bar { display: inline-flex; gap: 2px; }
@@ -1880,7 +1881,7 @@
       </div>
       <div class="card today-spirit-card" onclick="switchTab('spirit')" title="Visit Spirit">
         <div style="flex:1; min-width:0;">
-          <div class="hamster-canvas-container today-spirit-scene lcd"><canvas id="today-spirit-canvas" width="448" height="244" style="width:100%; height:100%;"></canvas></div>
+          <div class="hamster-canvas-container today-spirit-scene lcd"><canvas id="today-spirit-canvas" width="448" height="244" style="display:block; width:100%; height:auto;"></canvas></div>
           <div class="today-spirit-name" style="margin-top:8px;"><span id="today-spirit-name">Spirit</span> <span class="tag-pill" id="today-spirit-lv"></span>
             <span class="today-sub" id="today-spirit-status" style="margin-left:4px;"></span></div>
         </div>
@@ -7183,18 +7184,35 @@
     function takeTodaySnapshot() {
       const m = document.getElementById('today-spirit-canvas');
       if(!m) return;
-      const src = takeTodaySnapshot.c || (takeTodaySnapshot.c = Object.assign(document.createElement('canvas'), { width: 320, height: 150 }));
-      const g = src.getContext('2d');
+      // Drawn smooth (no pixel screen), straight onto the card at the screen's resolution
+      const dpr = Math.min(3, Math.max(2, window.devicePixelRatio || 2));
+      const W = Math.round(224 * dpr), H = Math.round(122 * dpr);
+      if(m.width !== W || m.height !== H) { m.width = W; m.height = H; }
+      const g = m.getContext('2d');
       g.setTransform(1, 0, 0, 1, 0, 0);
-      g.clearRect(0, 0, 320, 150);
+      // Sky and ground in his area's colours
+      const [skyTop, skyLow, ground] = tamaArea();
+      const rgb = c => `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
+      const sky = g.createLinearGradient(0, 0, 0, H);
+      sky.addColorStop(0, rgb(skyTop)); sky.addColorStop(1, rgb(skyLow));
+      g.fillStyle = sky; g.fillRect(0, 0, W, H);
+      const groundY = H * 0.9;
+      g.fillStyle = rgb(ground);
+      g.beginPath(); g.moveTo(0, groundY + H * 0.02); g.quadraticCurveTo(W / 2, groundY - H * 0.03, W, groundY + H * 0.02); g.lineTo(W, H); g.lineTo(0, H); g.closePath(); g.fill();
+      // A crop around him, the same framing the pixel screen used
+      let cropH = Math.min(150, 141 * spiritScale() + 26);
+      const cropW = Math.min(320, cropH * 224 / 122);
+      cropH = cropW * 122 / 224;
+      const sx = Math.max(0, Math.min(320 - cropW, 160 - cropW / 2)), sy = Math.max(0, 146 - cropH);
+      const f = W / cropW;
       const S = spiritScale() * 1.15;
       spiritSnapshotting = true; // keeps him still: no swaying or bobbing
       g.save();
-      g.translate(160 - 80 * S, 141 - 141 * S); g.scale(S, S);
-      if(spiritStyle.companion === 'loki') drawLokiFront(g); else drawHamsterFront(g, 0, 0, S);
-      g.restore();
-      spiritSnapshotting = false;
-      drawTamaScreen(src, m, 160, false, true);
+      try {
+        g.setTransform(f, 0, 0, f, -sx * f, -sy * f);
+        g.translate(160 - 80 * S, 141 - 141 * S); g.scale(S, S);
+        if(spiritStyle.companion === 'loki') drawLokiFront(g); else drawHamsterFront(g, 0, 0, S);
+      } finally { g.restore(); spiritSnapshotting = false; }
     }
 
     // ----- Tamagotchi-style LCD: his drawing redrawn as pastel pixels with a dark outline, status icons and a hearts meter
