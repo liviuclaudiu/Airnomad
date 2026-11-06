@@ -7184,6 +7184,25 @@
     function takeTodaySnapshot() {
       const m = document.getElementById('today-spirit-canvas');
       if(!m) return;
+      try { drawTodaySpirit(m); }
+      catch(e) { // show what went wrong on the card itself, so a screenshot tells us
+        const g = m.getContext('2d');
+        g.setTransform(1, 0, 0, 1, 0, 0);
+        g.fillStyle = 'rgba(0, 0, 0, 0.6)'; g.fillRect(0, m.height - 60, m.width, 60);
+        g.fillStyle = '#fff'; g.font = '22px sans-serif';
+        g.fillText(String(e && e.message || e).slice(0, 60), 12, m.height - 22);
+      }
+    }
+    // Breathing and blinking on the spot: its own timer, only while Today is open and the card is in view
+    setInterval(() => {
+      if(document.hidden || reduceMotion) return;
+      const today = document.getElementById('tab-today'), m = document.getElementById('today-spirit-canvas');
+      if(!today || !m || !today.classList.contains('active')) return;
+      const r = m.getBoundingClientRect();
+      if(!r.width || r.bottom < 0 || r.top > window.innerHeight) return;
+      takeTodaySnapshot();
+    }, 100);
+    function drawTodaySpirit(m) {
       // Drawn smooth (no pixel screen), straight onto the card at the screen's resolution
       const dpr = Math.min(3, Math.max(2, window.devicePixelRatio || 2));
       const W = Math.round(224 * dpr), H = Math.round(122 * dpr);
@@ -7353,20 +7372,20 @@
     let todayFrameAt = 0;
 
     function hamsterLoop() {
+      requestAnimationFrame(hamsterLoop); // first, so one failing drawing can't stop every animation for good
+      const safe = (fn) => { try { fn(); } catch(e) { if(!safe.seen) { safe.seen = 1; console.error(e); } } };
       const c = document.getElementById('hamster-canvas');
-      if(onScreen(c)) {
+      if(onScreen(c)) safe(() => {
         drawHamster(); drawHearts(); updateSpiritThought();
         const lcd = document.getElementById('spirit-lcd');
         if(lcd) drawTamaScreen(c, lcd, 0, true);
-      }
-      drawBreathBuddy();
+      });
+      safe(drawBreathBuddy);
       const today = document.getElementById('tab-today');
-      if(c && today && today.classList.contains('active')) {
+      if(today && today.classList.contains('active')) {
         const t = reduceMotion ? 0 : performance.now();
-        if(onScreen(document.getElementById('today-oni-calm'))) ONI_KINDS.forEach(k => drawOniFace('today-oni-' + k, k, t));
-        if(t - todayFrameAt > 90 && onScreen(document.getElementById('today-spirit-canvas'))) { todayFrameAt = t; takeTodaySnapshot(); } // breathing and blinking on the spot
+        if(onScreen(document.getElementById('today-oni-calm'))) safe(() => ONI_KINDS.forEach(k => drawOniFace('today-oni-' + k, k, t)));
       }
-      requestAnimationFrame(hamsterLoop);
     }
 
     function calcDaysToDate(targetStr, valId, labelId) {
