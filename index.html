@@ -7375,9 +7375,14 @@
       requestAnimationFrame(hamsterLoop); // first, so one failing drawing can't stop every animation for good
       const safe = (fn) => { try { fn(); } catch(e) { if(!safe.seen) { safe.seen = 1; console.error(e); } } };
       const c = document.getElementById('hamster-canvas');
-      if(onScreen(c)) safe(() => {
-        drawHamster(); drawHearts(); updateSpiritThought();
-      });
+      if(onScreen(c)) try { drawHamster(); drawHearts(); updateSpiritThought(); }
+      catch(e) { // show what went wrong on his scene, so a screenshot tells us
+        const g = c.getContext('2d');
+        g.setTransform(1, 0, 0, 1, 0, 0);
+        g.fillStyle = 'rgba(0, 0, 0, 0.7)'; g.fillRect(0, c.height - 22, c.width, 22);
+        g.fillStyle = '#fff'; g.font = '9px sans-serif';
+        g.fillText(String(e && e.message || e).slice(0, 70), 4, c.height - 8);
+      }
       safe(drawBreathBuddy);
       const today = document.getElementById('tab-today');
       if(today && today.classList.contains('active')) {
