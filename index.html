@@ -6741,7 +6741,7 @@
 
       const S = spiritScale();
       if(spiritStyle.backdrop === 'weather') drawSpiritWeather(ctx, now, hCanvas.width, hCanvas.height);
-      if(reduceMotion && !spiritSnapshotting) drawSpiritGround(ctx, hCanvas.width, hCanvas.height); // the LCD screens draw their own ground
+      if(!spiritSnapshotting) drawSpiritGround(ctx, hCanvas.width, hCanvas.height);
       drawSpiritAmbient(ctx, now, hCanvas.width, hCanvas.height);
       drawWorldDepth(ctx, now);
       if(spiritOuting) drawSpiritOuting(ctx, now);
@@ -7377,8 +7377,6 @@
       const c = document.getElementById('hamster-canvas');
       if(onScreen(c)) safe(() => {
         drawHamster(); drawHearts(); updateSpiritThought();
-        const lcd = document.getElementById('spirit-lcd');
-        if(lcd) drawTamaScreen(c, lcd, 0, true);
       });
       safe(drawBreathBuddy);
       const today = document.getElementById('tab-today');
@@ -13521,7 +13519,7 @@
     setupFog();
     renderMoodCalendar();
     calmLoop();
-    if(!reduceMotion) { hamsterLoop(); document.querySelector('#tab-spirit .hamster-canvas-container').classList.add('lcd'); }
+    if(!reduceMotion) hamsterLoop(); // the Spirit tab shows his scene as drawn (the pixel screen is off)
     document.querySelectorAll('[data-px]').forEach(el => { if(!el.innerHTML) el.innerHTML = pxIcon(el.dataset.px); });
     const TAB_PX = { today: 'sun', journey: 'cal', puzzle: 'blocks', spirit: 'paw', insights: 'bars', calm: 'waves' };
     document.querySelectorAll('.tab-btn').forEach(b => { const svg = b.querySelector('svg'); if(svg && TAB_PX[b.dataset.tab]) svg.outerHTML = pxIcon(TAB_PX[b.dataset.tab]).replace('<svg', '<svg class="px-tab"'); });
