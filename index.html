@@ -10633,14 +10633,14 @@
         return n ? s / n : null;
       }));
       // Chart
-      const W = 320, H = 180, pl = 22, pb = 24, top = 8, cw = (W - pl - 6) / L, ch = H - pb - top;
-      const x = d => pl + (d - 0.5) * cw, y = v => top + ch - (v - 1) / 4 * ch;
+      const W = 320, H = 180, padL = 22, pb = 24, top = 8, cw = (W - padL - 6) / L, ch = H - pb - top;
+      const x = d => padL + (d - 0.5) * cw, y = v => top + ch - (v - 1) / 4 * ch;
       let svg = '';
       [[1, 5, '#ef8a7a'], [6, L - 16, '#5fc79a'], [L - 15, L - 11, '#f2c46b'], [L - 10, L, '#a792f0']].forEach(([a, b, c]) => {
-        svg += `<rect x="${pl + (a - 1) * cw}" y="${top}" width="${(b - a + 1) * cw}" height="${ch}" fill="${c}" opacity="0.07"/>` +
-               `<rect x="${pl + (a - 1) * cw}" y="${H - pb + 2}" width="${(b - a + 1) * cw - 1}" height="4" rx="2" fill="${c}" opacity="0.7"/>`;
+        svg += `<rect x="${padL + (a - 1) * cw}" y="${top}" width="${(b - a + 1) * cw}" height="${ch}" fill="${c}" opacity="0.07"/>` +
+               `<rect x="${padL + (a - 1) * cw}" y="${H - pb + 2}" width="${(b - a + 1) * cw - 1}" height="4" rx="2" fill="${c}" opacity="0.7"/>`;
       });
-      [1, 2, 3, 4, 5].forEach(v => { svg += `<line x1="${pl}" x2="${W - 6}" y1="${y(v)}" y2="${y(v)}" stroke="rgba(255,255,255,0.06)"/><text x="${pl - 6}" y="${y(v) + 3}" fill="#7e9bbd" font-size="8" text-anchor="end">${v}</text>`; });
+      [1, 2, 3, 4, 5].forEach(v => { svg += `<line x1="${padL}" x2="${W - 6}" y1="${y(v)}" y2="${y(v)}" stroke="rgba(255,255,255,0.06)"/><text x="${padL - 6}" y="${y(v) + 3}" fill="#7e9bbd" font-size="8" text-anchor="end">${v}</text>`; });
       [1, 7, 14, 21, L].forEach(d => { svg += `<text x="${x(d)}" y="${H - 5}" fill="#7e9bbd" font-size="8" text-anchor="middle">${d}</text>`; });
       const COL = ['#ef8a7a', '#60a5fa', '#f2c46b', '#e6f3ff'];
       avg.forEach((vals, i) => {
