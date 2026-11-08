@@ -1684,6 +1684,28 @@
     .sleep-done { margin: 0; }
     /* Simpler Today: arrangeToday() hides what doesn't fit the moment */
     .slot-off { display: none !important; }
+    /* Don't JADE: ten a day, with points and ranks */
+    .jade-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 12px; margin-bottom: 10px; border-radius: 12px;
+      background: rgba(242, 196, 107, 0.08); border: 1px solid rgba(242, 196, 107, 0.28); }
+    .jade-head b { display: block; color: var(--color-yellow); font-size: 0.95rem; }
+    .jade-head small { display: block; color: var(--text-muted); font-size: 0.72rem; margin-top: 2px; }
+    .jade-today { text-align: right; }
+    .jade-today b { color: var(--text-main); }
+    .jade-row.done { opacity: 0.6; }
+    .jade-q { font-size: 1.08rem; font-weight: 700; line-height: 1.4; margin: 10px 0 4px; }
+    .jade-why { font-size: 0.8rem; line-height: 1.5; color: var(--text-muted); margin: -2px 2px 10px; }
+    .jade-why b { color: var(--color-red); }
+    .jade-why.good b { color: var(--color-green); }
+    .jade-help { display: block; margin-top: 4px; }
+    .jade-bar { height: 5px; border-radius: 3px; background: rgba(255, 255, 255, 0.1); margin-top: 6px; overflow: hidden; }
+    .jade-bar i { display: block; height: 100%; background: var(--color-yellow); border-radius: 3px; }
+    .jade-real { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 12px; margin-bottom: 10px; border-radius: 12px;
+      background: rgba(95, 199, 154, 0.08); border: 1px solid rgba(95, 199, 154, 0.3); }
+    .jade-real b { display: block; color: var(--color-green); font-size: 0.88rem; }
+    .jade-real small { display: block; color: var(--text-muted); font-size: 0.72rem; }
+    .jade-resp { padding: 10px 12px; border-radius: 12px; background: rgba(239, 138, 122, 0.08); border: 1px solid rgba(239, 138, 122, 0.25); font-size: 0.9rem; margin-bottom: 8px; }
+    .jade-pts { color: var(--color-yellow); font-weight: 700; text-align: center; margin: 10px 0; }
+    .jade-done { margin-top: 10px; padding: 10px 12px; border-radius: 12px; background: rgba(95, 199, 154, 0.1); border: 1px solid rgba(95, 199, 154, 0.3); font-size: 0.85rem; }
     /* Look back: one calendar at a time, cycled with two arrows */
     .cal-cycle { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 2px 12px; text-align: center; }
     .cal-cycle b { font-size: 0.95rem; }
@@ -2321,6 +2343,10 @@
         <h2>Crisis Practice</h2>
         <div id="sim-body"></div>
       </div>
+      <div class="card" id="jade-card">
+        <h2>Don't JADE</h2>
+        <div id="jade-body"></div>
+      </div>
 
       <div class="card" id="repair-card">
         <h2>After a Conflict</h2>
@@ -2377,7 +2403,7 @@
 
       <div class="card private">
         <h2>Patterns</h2>
-        <div class="subtitle">Built from your oni picks, calendar and incident log.</div>
+        <div class="subtitle">Built from your mood picks, calendar and incident log.</div>
         <div id="patterns"></div>
       </div>
 
@@ -2529,7 +2555,7 @@
     </div>
   </div>
 
-  <div class="moon-view" id="moon-view" onclick="closeMoonView()">
+  <div class="moon-view" id="moon-view" onclick="moonViewTap(event)">
     <button class="moon-view-close" onclick="event.stopPropagation(); closeMoonView()">✕</button>
     <canvas id="moon-view-canvas" width="760" height="760"></canvas>
     <div class="moon-view-name" id="moon-view-name"></div>
@@ -2545,7 +2571,6 @@
       <details class="set-sec" open>
         <summary>Companion <span id="spirit-settings-lv" class="today-sub" style="margin-left:auto; margin-right:8px;"></span></summary>
         <div id="spirit-settings"></div>
-        <label class="spirit-check"><input type="checkbox" id="spirit-blush" onchange="setSpiritStyle('blush', this.checked)"> Rosy cheeks</label>
         <label class="spirit-check"><input type="checkbox" id="spirit-house" onchange="setSpiritStyle('house', this.checked)"> His house</label>
       </details>
 
@@ -2660,7 +2685,6 @@
     })[localStorage.getItem('aq_partner_pron')] || null;
     const P = PP || { they: 'she', They: 'She', them: 'her', their: 'her', Their: 'Her', theirs: 'hers', is: 'is', Theyre: "She's" };
     // The dog companion is called Pip on a new install; an existing install keeps the name it already had
-    if(!FIRST_RUN && !localStorage.getItem('aq_loki_name')) localStorage.setItem('aq_loki_name', 'Loki');
     if(!FIRST_RUN && !localStorage.getItem('aq_onboarded')) { localStorage.setItem('aq_onboarded', '1'); localStorage.setItem('aq_tour_done', '1'); }
 
     // One-time migration: the mini-game's saved stats used older key names; move them to the "puzzle" names
@@ -2710,7 +2734,7 @@
     // ADAPTIVE THEME: the color follows what you need right now,
     // based on today's oni pick and how the hamster is doing.
     const NEED_COLORS = {
-      angry:      ['#2dd4bf', 'Cooling teal, because you picked the angry oni.'],
+      angry:      ['#2dd4bf', 'Cooling teal, because you picked angry.'],
       numb:       ['#f472b6', 'Warm rose, to bring some warmth back after feeling numb.'],
       anxious:    ['#86efac', 'Gentle mint, to help settle an anxious mind.'],
       sad:        ['#fcd34d', 'Soft sunlight, to keep you company while you feel sad.'],
@@ -2744,7 +2768,7 @@
       } else {
         // Nothing to go on yet: stay neutral white
         hex = '#e8eef5';
-        reason = 'Neutral white: no oni picked in the last 4 hours and no recent calendar days. Pick an oni or mark days and the color will follow how you are.';
+        reason = 'Neutral white: no mood picked in the last 4 hours and no recent calendar days. Pick a mood or mark days and the color will follow how you are.';
       }
       // One calming colour for the whole app: a soft, muted blue. Blue and green rate as the most pleasant and least
       // arousing colours, softer (less saturated) shades calm more than vivid ones (Valdez & Mehrabian, 1994), and blue
@@ -3062,59 +3086,18 @@
     // Each row in Settings: [label, key, { value: text or [text, level needed] }].
     // 'fur' is drawn as its own row with swatches.
     const SPIRIT_OPTIONS = [
-      ['Companion', 'companion', { spirit: 'Hamster', loki: 'Dog' }],
-      ['Fur', 'fur', null],
-      ['Fur style', 'furStyle', { smooth: 'Smooth', fluffy: 'Fluffy', ruffled: 'Ruffled', long: 'Long-haired', curly: 'Curly' }],
-      ['Pattern', 'pattern', { plain: 'Plain', spots: ['Spots', 3], stripe: ['Stripe', 6], banded: ['Banded', 9] }],
-      ['Eyes', 'eyes', { black: 'Black', brown: 'Brown', ruby: 'Ruby', blue: 'Blue' }],
-      ['Holding', 'held', { seed: 'Seed', strawberry: ['Strawberry', 2], acorn: ['Acorn', 4], heart: ['Heart', 7], flower: ['Flower', 10] }],
-      ['Effect', 'effect', { none: 'None', sparkles: ['Sparkles', 3], hearts: ['Hearts', 5], bubbles: ['Bubbles', 8], fireflies: ['Fireflies', 12], snow: ['Snow', 15] }],
+      // His looks are fixed now (fur, eyes, pattern, held item, effect, size, pace); only his surroundings can be changed
       ['Backdrop', 'backdrop', { weather: 'Real weather', night: 'Night', meadow: 'Meadow', sunset: 'Sunset', ocean: 'Ocean', lavender: 'Lavender', cozy: 'Cozy' }],
-      ['Size', 'size', { small: 'Small', normal: 'Normal', big: 'Big' }],
-      ['Pace', 'pace', { calm: 'Calm', normal: 'Normal', lively: 'Lively' }]
     ];
     let spiritStyle = { fur: 'golden', furStyle: 'smooth', eyes: 'black', blush: false, house: true, backdrop: 'weather', pace: 'normal',
                         pattern: 'plain', held: 'seed', effect: 'none', size: 'normal' };
     try { Object.assign(spiritStyle, JSON.parse(localStorage.getItem('aq_spirit_style') || '{}')); } catch(e) {}
+    spiritStyle.companion = 'spirit'; // the dog companion was removed: everyone has the hamster
+    // The looks options were removed: everyone gets the same hamster (backdrop and house stay choosable)
+    Object.assign(spiritStyle, { fur: 'golden', furStyle: 'smooth', eyes: 'black', blush: false, pattern: 'plain', held: 'seed', effect: 'none', size: 'normal', pace: 'normal' });
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     // Start-screen faces: Spirit in each mood, on the oni's coloured tile
-    const isLoki = () => typeof spiritStyle !== 'undefined' && spiritStyle.companion === 'loki';
-    // Loki's face for each mood: black coat, long ears, a lighter muzzle and her white chest peeking in at the bottom
-    function drawLokiMoodFace(ctx, cx, cy, mood, t, pulse) {
-      const coat = mood === 'numb' ? '#58524f' : '#2b2728', hi = mood === 'numb' ? '#6e6865' : '#4a4446', muzzle = mood === 'numb' ? '#6a6461' : '#4d4749';
-      const oval = (x, y, rx, ry, col, rot = 0) => { ctx.fillStyle = col; ctx.beginPath(); ctx.ellipse(x, y, rx, ry, rot, 0, Math.PI * 2); ctx.fill(); };
-      const line = (pts, col, w = 2) => { ctx.strokeStyle = col; ctx.lineWidth = w; ctx.beginPath(); pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke(); };
-      oval(cx, cy + 34, 20, 12, '#f5f2ec');                                        // white chest
-      ctx.fillStyle = '#d23c3c'; ctx.beginPath(); ctx.ellipse(cx, cy + 25, 17, 4.5, 0, 0, Math.PI * 2); ctx.fill(); // red collar
-      ctx.fillStyle = '#ffd84d'; ctx.beginPath(); ctx.arc(cx, cy + 30, 3, 0, Math.PI * 2); ctx.fill();
-      const earDrop = mood === 'sad' ? 6 : mood === 'angry' || mood === 'anxious' ? -2 : 0;
-      [-1, 1].forEach(sd => { oval(cx + sd * 25, cy + 6 + earDrop, 10, 20, coat, sd * (mood === 'sad' ? 0.35 : 0.15)); }); // long ears
-      oval(cx, cy, 27, 26, coat);                                                  // head
-      for(let i = 0; i < 10; i++) { const a = Math.PI + i / 9 * Math.PI; oval(cx + 26 * Math.cos(a), cy + 24 * Math.sin(a), 6, 6, coat); } // fluffy top
-      oval(cx - 6, cy - 22, 4, 3, hi); oval(cx + 4, cy - 24, 4, 3, hi);
-      oval(cx, cy + 10, 13, 10, muzzle);
-      const eye = (x, y, r = 4.4) => { oval(x, y, r + 1.8, r + 1.8, 'rgba(255,255,255,0.22)'); oval(x, y, r, r, '#120d0e'); oval(x + 1.4, y - 1.6, 1.4, 1.4, '#fff'); };
-      const L = '#cfc9cb'; // light strokes read on black fur
-      const ex = 11, ey = cy - 4;
-      if(mood === 'happy') { line([[cx - ex - 4, ey + 1], [cx - ex, ey - 3], [cx - ex + 4, ey + 1]], L, 2.2); line([[cx + ex - 4, ey + 1], [cx + ex, ey - 3], [cx + ex + 4, ey + 1]], L, 2.2); }
-      else if(mood === 'calm') { line([[cx - ex - 4, ey - 1], [cx - ex, ey + 2], [cx - ex + 4, ey - 1]], L, 2); line([[cx + ex - 4, ey - 1], [cx + ex, ey + 2], [cx + ex + 4, ey - 1]], L, 2); }
-      else if(mood === 'numb') { eye(cx - ex, ey, 3.6); eye(cx + ex, ey, 3.6); oval(cx - ex, ey - 2.5, 5.6, 3, coat); oval(cx + ex, ey - 2.5, 5.6, 3, coat); line([[cx - ex - 5, ey - 1], [cx - ex + 5, ey - 1]], L, 1.4); line([[cx + ex - 5, ey - 1], [cx + ex + 5, ey - 1]], L, 1.4); }
-      else if(mood === 'anxious') { eye(cx - ex, ey, 5.2); eye(cx + ex, ey, 5.2); }
-      else { eye(cx - ex, ey + (mood === 'sad' ? 1 : 0)); eye(cx + ex, ey + (mood === 'sad' ? 1 : 0)); }
-      if(mood === 'angry') { line([[cx - ex - 6, ey - 9], [cx - ex + 4, ey - 5]], L, 2.4); line([[cx + ex + 6, ey - 9], [cx + ex - 4, ey - 5]], L, 2.4); }
-      if(mood === 'sad') { line([[cx - ex - 5, ey - 6], [cx - ex + 4, ey - 9]], L, 2); line([[cx + ex + 5, ey - 6], [cx + ex - 4, ey - 9]], L, 2); }
-      oval(cx, cy + 6, 4.6, 3.4, '#0d0b0c'); oval(cx - 1.4, cy + 5, 1.2, 0.9, 'rgba(255,255,255,0.5)'); // nose
-      const ink = '#0d0b0c', my = cy + 13;
-      if(mood === 'happy') { ctx.fillStyle = '#5a2a33'; ctx.beginPath(); ctx.ellipse(cx, my, 6, 4.5, 0, 0, Math.PI); ctx.fill(); oval(cx, my + 2.5, 3.2, 2.6, '#f08a9a'); }
-      else if(mood === 'calm') { line([[cx - 5, my - 1], [cx, my + 2], [cx + 5, my - 1]], ink, 1.6); oval(cx - 15, cy + 7, 3.5, 2, 'rgba(255,140,160,0.35)'); oval(cx + 15, cy + 7, 3.5, 2, 'rgba(255,140,160,0.35)'); }
-      else if(mood === 'angry') { line([[cx - 5, my + 2], [cx, my - 1], [cx + 5, my + 2]], ink, 1.8);
-        ctx.strokeStyle = `rgba(239, 68, 68, ${0.7 + 0.3 * pulse})`; ctx.lineWidth = 2; [[cx + 20, cy - 20]].forEach(([x, y]) => { line([[x - 4, y - 1], [x - 1, y - 1], [x - 1, y - 4]], ctx.strokeStyle); line([[x + 4, y + 1], [x + 1, y + 1], [x + 1, y + 4]], ctx.strokeStyle); }); }
-      else if(mood === 'numb') line([[cx - 4, my], [cx + 4, my]], ink, 1.6);
-      else if(mood === 'anxious') { line([[cx - 5, my], [cx - 2.5, my - 1.5], [cx, my], [cx + 2.5, my - 1.5], [cx + 5, my]], ink, 1.5); oval(cx + 22, cy - 14 + Math.sin(t / 300), 2.4, 3.4, 'rgba(147, 197, 253, 0.9)'); }
-      else if(mood === 'sad') { line([[cx - 5, my + 2], [cx, my - 1], [cx + 5, my + 2]], ink, 1.6); oval(cx - ex - 2, ey + 9 + (t / 60 % 8), 1.8, 2.6, 'rgba(147, 197, 253, 0.9)'); }
-      if(mood === 'happy') [[cx - 28, cy - 22], [cx + 29, cy - 18]].forEach(([x, y], i) => { const r = 2 + 2 * Math.max(0, Math.sin(t / 300 + i * 2)); ctx.fillStyle = '#fde68a'; ctx.beginPath(); ctx.moveTo(x, y - r); ctx.lineTo(x + r * 0.3, y - r * 0.3); ctx.lineTo(x + r, y); ctx.lineTo(x + r * 0.3, y + r * 0.3); ctx.lineTo(x, y + r); ctx.lineTo(x - r * 0.3, y + r * 0.3); ctx.lineTo(x - r, y); ctx.lineTo(x - r * 0.3, y - r * 0.3); ctx.fill(); });
-    }
 
     function drawOniFace(canvasId, mood, t = 0) {
       const c = document.getElementById(canvasId);
@@ -3151,7 +3134,6 @@
       aura.addColorStop(1, `rgba(${ONI_STYLES[mood].glow}, 0)`);
       ctx.fillStyle = aura;
       ctx.fillRect(0, 0, 100, 100);
-      if(isLoki()) { drawLokiMoodFace(ctx, cx, cy, mood, t, pulse); return; }
 
       // Ears: perky, flattened back (anxious, angry) or drooping (sad)
       [-1, 1].forEach(s => {
@@ -3504,10 +3486,10 @@
       } else if(st === 1) {
         const opt = (k, label) => `<button type="button" class="wl-comp ${welcome.comp === k ? 'on' : ''}" onclick="welcome.comp = '${k}'; welcome.name = ''; showWelcome()">
           <canvas width="96" height="96" data-comp="${k}"></canvas><b>${label}</b></button>`;
-        html = `<h2>Pick a companion</h2>
-          <p>They live on your Today screen and do better when you look after yourself.</p>
-          <div class="wl-comps">${opt('spirit', 'Hamster')}${opt('loki', 'Dog')}</div>
-          <input id="wl-name" maxlength="16" placeholder="Name: ${welcome.comp === 'loki' ? 'Pip' : 'Spirit'}" value="${escapeHtml(welcome.name)}" oninput="welcome.name = this.value">
+        html = `<h2>Meet your companion</h2>
+          <p>A little hamster who lives on your Today screen and does better when you look after yourself.</p>
+          <div class="wl-comps">${opt('spirit', 'Hamster')}</div>
+          <input id="wl-name" maxlength="16" placeholder="Name: Spirit" value="${escapeHtml(welcome.name)}" oninput="welcome.name = this.value">
           <button class="btn-action" onclick="welcomeNext()">Next</button>`;
       } else if(st === 2) {
         html = `<h2>Your day colours</h2>
@@ -3533,7 +3515,7 @@
         const g = c.getContext('2d'), keep = spiritStyle.companion;
         spiritStyle.companion = c.dataset.comp;
         g.save(); g.translate(48 - 80 * 0.62, 92 - 141 * 0.62); g.scale(0.62, 0.62);
-        c.dataset.comp === 'loki' ? drawLokiFront(g) : drawHamsterFront(g, 0, 0, 0.62);
+        drawHamsterFront(g, 0, 0, 0.62);
         g.restore();
         spiritStyle.companion = keep;
       });
@@ -3542,7 +3524,7 @@
       if(welcome.step === 1) {
         setSpiritStyle('companion', welcome.comp);
         const n = welcome.name.trim();
-        localStorage.setItem(welcome.comp === 'loki' ? 'aq_loki_name' : 'aq_hamster_name', n || (welcome.comp === 'loki' ? 'Pip' : 'Spirit'));
+        localStorage.setItem('aq_hamster_name', n || 'Spirit');
       }
       if(welcome.step === 2) readDayStates('wl');
       welcome.step++;
@@ -4395,15 +4377,20 @@
 
       // Idle motion: slow breathing; quick shiver when zombified; sleepy slump when recovering
       const B = spiritBody(now);
+      const idle = spiritIdleState(performance.now()), grooming = !!idle && idle.kind === 'groom', chewing = !!idle && idle.kind === 'chew';
+      const sneezeP = idle && idle.kind === 'sneeze' ? idle.p : -1; // eyes squeeze shut, a little jerk, a puff
+      const yawnO = idle && idle.kind === 'yawn' ? Math.sin(Math.min(1, idle.p * 1.15) * Math.PI) : 0; // mouth opening wide and closing
+      const standK = (idle && idle.kind === 'stand' ? Math.sin(idle.p * Math.PI) : 0) + yawnO * 0.35 // up on his hind legs (a little, mid-yawn)
+                   - (sneezeP > 0.4 && sneezeP < 0.6 ? Math.sin((sneezeP - 0.4) / 0.2 * Math.PI) * 0.6 : 0); // ...and a little jerk down as he sneezes
       const shiver = mood === 'stressed' ? Math.sin(now / 55) * 0.5 : todaysOni() === 'anxious' ? Math.sin(now / 45) * 0.6 : 0;
       const sway = mood === 'stressed' ? Math.sin(now / 700) * 0.06 : B.sway;
       const breathe = 1 + Math.sin(now / B.speed) * B.amp;
       const slump = mood === 'recovering' ? 0.95 : B.slump;
       // Sniffing: the nose twitches in short bursts (not when numb)
       const sniff = !reduceMotion && !B.still && (now % 2600) < 600 ? Math.sin(now / 45) * 0.8 : 0;
-      const blink = !reduceMotion && (now % 4200) < 140;
+      const blink = (!reduceMotion && (now % 4200) < 140) || grooming || yawnO > 0.3 || (sneezeP > 0.25 && sneezeP < 0.7); // eyes shut while he washes, yawns or sneezes
 
-      const puff = spiritEatState() ? 1 + 0.08 * Math.abs(Math.sin(performance.now() / 90)) : 1;
+      const puff = spiritEatState() ? 1 + 0.08 * Math.abs(Math.sin(performance.now() / 90)) : cheeksFull() ? 1.22 : 1;
 
       // Syrian hamster colours (muted when zombified)
       const zombie = mood === 'stressed';
@@ -4423,29 +4410,41 @@
       ctx.save();
       ctx.translate(cx + shiver, 141 - B.bob);
       ctx.rotate(sway);
-      ctx.scale(breathe * B.puff, slump / breathe);
+      ctx.scale(breathe * B.puff * (1 - standK * 0.06), slump / breathe * (1 + standK * 0.11));
       ctx.translate(-cx, -141);
 
       // Ears (behind the head). Flattened back when stressed.
       const earFlat = mood === 'stressed' || B.earFlat;
       [-1, 1].forEach(s => {
         const ex = cx + s * (earFlat ? 25 : 21), ey = earFlat ? 33 : 27;
-        oval(ex, ey, 9, earFlat ? 6 : 10, furDark, s * (earFlat ? 0.9 : 0.35));
-        oval(ex + s * 0.5, ey + 1, 5.5, earFlat ? 3.5 : 6.5, pink, s * (earFlat ? 0.9 : 0.35));
+        const twitch = !reduceMotion && !earFlat && s === ((Math.floor(now / 5300) % 2) ? 1 : -1) && (now % 5300) < 160 ? s * 0.35 : 0; // a quick ear flick now and then
+        oval(ex, ey, 9, earFlat ? 6 : 10, furDark, s * (earFlat ? 0.9 : 0.35) + twitch);
+        oval(ex + s * 0.5, ey + 1, 5.5, earFlat ? 3.5 : 6.5, pink, s * (earFlat ? 0.9 : 0.35) + twitch);
       });
 
-      // One continuous pear-shaped silhouette: head flows straight into the body
-      const bodyGrad = ctx.createLinearGradient(cx - 50, 0, cx + 50, 0);
+      // One continuous pear-shaped silhouette: head flows straight into the body.
+      // Real-hamster colouring: a darker back fading lighter low down, with soft shade on both sides
+      const bodyGrad = ctx.createLinearGradient(0, 22, 0, 141);
       bodyGrad.addColorStop(0, furDark);
-      bodyGrad.addColorStop(0.25, fur);
-      bodyGrad.addColorStop(0.75, fur);
-      bodyGrad.addColorStop(1, furDark);
+      bodyGrad.addColorStop(0.42, fur);
+      bodyGrad.addColorStop(1, mixHexToHex(fur, cream, 0.35));
       ctx.fillStyle = bodyGrad;
       const bodyPath = () => traceSpiritShape(ctx, 'front'); // laid out for cx = 80
       bodyPath();
       ctx.fill();
-      drawSpiritFurStyle(ctx, SPIRIT_FRONT_OUTLINE(), mixHexToHex(fur, furDark, 0.55), furDark, (x, y) => y > 128);
+      const sideShade = ctx.createLinearGradient(cx - 50, 0, cx + 50, 0);
+      sideShade.addColorStop(0, 'rgba(60, 30, 10, 0.2)');
+      sideShade.addColorStop(0.3, 'rgba(60, 30, 10, 0)');
+      sideShade.addColorStop(0.7, 'rgba(60, 30, 10, 0)');
+      sideShade.addColorStop(1, 'rgba(60, 30, 10, 0.2)');
+      ctx.fillStyle = sideShade;
+      bodyPath();
+      ctx.fill();
+      drawRealFur(ctx, SPIRIT_FRONT_OUTLINE(), mixHexToHex(furDark, '#000000', 0.15), mixHexToHex(fur, cream, 0.3), 80, (x, y) => y > 130);
 
+      // Soft-edged white markings (belly, cheeks, muzzle), like real fur
+      ctx.save();
+      ctx.filter = 'blur(1.4px)';
       // Cream belly running up to the chin
       ctx.fillStyle = cream;
       ctx.beginPath();
@@ -4469,18 +4468,19 @@
         oval(cx + s * 19, 58, 13 * puff, 10 * puff, cream, s * -0.3);
       });
       oval(cx, 56, 11, 8, cream);
+      ctx.restore(); // end of the soft edges
 
       drawSpiritPattern(ctx, {
         spots: [[cx - 36, 100, 8, 6], [cx + 38, 112, 7, 5], [cx - 26, 40, 6, 4], [cx + 33, 84, 5, 4]],
         stripe: [[cx, 25], [cx, 37]], stripeWidth: 4, band: [cx - 60, 94, 120, 13]
       }, bodyPath, furDark, cream);
 
-      // Fur texture: a few short strokes along the back and flanks
+      // Ruffled tufts when zombified (the fine fur is drawn above)
       ctx.strokeStyle = 'rgba(120, 70, 30, 0.35)';
       ctx.lineWidth = 1;
       const tufts = mood === 'stressed'
         ? [[-44, 96, -6, -6], [44, 96, 6, -6], [-40, 112, -7, -3], [40, 112, 7, -3], [-30, 34, -5, -6], [30, 34, 5, -6], [0, 26, 0, -6]]
-        : [[-42, 100, -3, -4], [42, 100, 3, -4], [-38, 118, -4, -2], [38, 118, 4, -2], [-30, 40, -3, -3], [30, 40, 3, -3]];
+        : [];
       tufts.forEach(([x, y, dx, dy]) => {
         ctx.beginPath();
         ctx.moveTo(cx + x, y);
@@ -4514,9 +4514,13 @@
           ctx.restore();
           oval(ex + 1.8, ey + 1.2, 1.3, 1.3, '#120a06');
         } else {
-          oval(ex, ey, 4.4, 4.8, spiritEyeColour());
-          oval(ex - 1.4, ey - 1.6, 1.4, 1.4, 'rgba(255, 255, 255, 0.9)');
-          oval(ex + 1.3, ey + 1.5, 0.6, 0.6, 'rgba(255, 255, 255, 0.6)');
+          // A real hamster's eye: a dark glossy bead with a soft rim and a bright catchlight
+          ctx.strokeStyle = 'rgba(90, 50, 25, 0.45)';
+          ctx.lineWidth = 0.9;
+          ctx.beginPath(); ctx.ellipse(ex, ey + 0.4, 6.6, 7.1, 0, 0, Math.PI * 2); ctx.stroke();
+          oval(ex, ey + 0.4, 5.8, 6.4, spiritEyeColour());
+          oval(ex - 1.9, ey - 1.8, 2.2, 2.1, 'rgba(255, 255, 255, 0.97)'); // big catchlight
+          oval(ex + 1.9, ey + 2.4, 0.95, 0.95, 'rgba(255, 255, 255, 0.75)'); // small second one
         }
       });
 
@@ -4539,6 +4543,19 @@
       ctx.quadraticCurveTo(cx + 1.5, ny + 7.5, cx + 3.5, ny + 6.5);
       ctx.stroke();
 
+      // A sneeze: a tiny puff from his nose
+      if(sneezeP > 0.45 && sneezeP < 0.95) {
+        const k = (sneezeP - 0.45) / 0.5;
+        ctx.fillStyle = `rgba(255, 255, 255, ${0.7 * (1 - k)})`;
+        [[-1, -0.4], [0, -0.9], [1, -0.4], [-0.6, 0.3], [0.6, 0.3]].forEach(([dx, dy]) => { ctx.beginPath(); ctx.arc(cx + dx * 9 * k, ny + dy * 7 * k, 1.4 * (1 - k) + 0.6, 0, Math.PI * 2); ctx.fill(); });
+      }
+      // A big yawn: a dark open mouth with two tiny front teeth
+      if(yawnO > 0.05) {
+        oval(cx, ny + 8, 2.4 + yawnO * 2.4, 2 + yawnO * 4, '#6e2a33');
+        oval(cx, ny + 10 + yawnO * 2, 1.6 + yawnO * 1.2, 1 + yawnO * 1.2, '#d9707f');
+        ctx.fillStyle = '#fffaf0';
+        ctx.fillRect(cx - 1.9, ny + 5.4, 1.6, 2.2); ctx.fillRect(cx + 0.3, ny + 5.4, 1.6, 2.2);
+      }
       // Whiskers
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.55)';
       ctx.lineWidth = 0.7;
@@ -4552,7 +4569,21 @@
       });
 
       // Hands: holding his item (dropped when zombified, unless he's eating)
-      if(mood !== 'stressed' || spiritEatState()) {
+      if(chewing) {
+        const t = performance.now(), j = Math.sin(t / 55) * 0.8;
+        ctx.save(); ctx.translate(cx, 63 + j); ctx.rotate(0.08);
+        ctx.fillStyle = '#b98552'; ctx.fillRect(-13, -2.2, 26, 4.4);
+        ctx.fillStyle = '#d9a873'; ctx.fillRect(-13, -2.2, 26, 1.4);
+        ctx.fillStyle = '#e9c79a'; ctx.beginPath(); ctx.ellipse(-1, 0, 2.6, 2.2, 0, 0, Math.PI * 2); ctx.fill(); // the gnawed bit
+        ctx.restore();
+        [-1, 1].forEach(s => oval(cx + s * 8, 64 + j, 4.4, 3.6, pink, s * 0.6));
+        ctx.fillStyle = '#d9a873';
+        for(let i = 0; i < 3; i++) { const k = ((t / 700) + i / 3) % 1; ctx.fillRect(cx - 3 + i * 3, 68 + k * 26, 1.6, 1.2); }
+      } else if(grooming) {
+        // Both paws rubbing his face in little circles, like a real hamster washing
+        const a = performance.now() / 85;
+        [-1, 1].forEach(s => oval(cx + s * (10 + Math.sin(a + s) * 2.5), 57 + Math.cos(a + s) * 3, 4.6, 3.7, pink, s * 0.7));
+      } else if(mood !== 'stressed' || spiritEatState()) {
         drawSpiritHeld(ctx, cx, 82);
         [-1, 1].forEach(s => {
           oval(cx + s * 6.5, 84, 4.5, 3.6, pink, s * 0.4);
@@ -4645,12 +4676,7 @@
       } else {
         drawHealingMarks(ctx, [[cx + 27, 88, 11], [cx - 29, 110, 10], [cx + 14, 125, 7]], bodyPath);
       }
-      drawOniTouches(ctx, {
-        mood: todaysOni(), ink: '#6b3d1c', dim: zombie, size: 1.3,
-        mark: [cx, 31],
-        tusks: [[cx - 4, ny + 9.5, 1], [cx + 4, ny + 9.5, -1]],
-        stripes: [[cx - 30, 54, 1], [cx + 30, 54, -1]]
-      });
+      // (no forehead mark or tusks: he's drawn as a real hamster)
       drawSpiritOni(ctx, {
         now, zombie, fur,
         eyes: [[cx - 13, 44], [cx + 13, 44]],
@@ -4697,15 +4723,13 @@
     }
 
     // HAMSTER NAME (tap the name to change it)
-    // The companion's name: Spirit's (renamable) or Loki's
+    // The companion's name (renamable). The dog companion was removed, so it's always the hamster's
     function companionName() {
-      let style = {};
-      try { style = JSON.parse(localStorage.getItem('aq_spirit_style') || '{}'); } catch(e) {}
-      return style.companion === 'loki' ? (localStorage.getItem('aq_loki_name') || 'Pip') : (localStorage.getItem('aq_hamster_name') || 'Spirit');
+      return localStorage.getItem('aq_hamster_name') || 'Spirit';
     }
     let hamsterName = companionName();
-    // Pronouns for the companion: he/him/his for Spirit, she/her for Loki
-    const pron = () => isLoki() ? { he: 'she', He: 'She', him: 'her', his: 'her' } : { he: 'he', He: 'He', him: 'him', his: 'his' };
+    // Pronouns for the companion
+    const pron = () => ({ he: 'he', He: 'He', him: 'him', his: 'his' });
     function renderHamsterName() {
       const el = document.getElementById('hamster-name');
       if(el) el.innerText = hamsterName;
@@ -4717,13 +4741,12 @@
       if(typeof renderFeedButton === 'function') renderFeedButton();
     }
     function renameHamster() {
-      const loki = spiritStyle.companion === 'loki';
-      const name = prompt(`What would you like to call your ${loki ? 'dog' : 'hamster'}?`, hamsterName);
+      const name = prompt('What would you like to call your hamster?', hamsterName);
       if(name === null) return;
       const clean = name.trim().slice(0, 20);
       if(!clean) return;
       hamsterName = clean;
-      localStorage.setItem(loki ? 'aq_loki_name' : 'aq_hamster_name', clean);
+      localStorage.setItem('aq_hamster_name', clean);
       renderHamsterName();
       bump('hamster-name');
     }
@@ -4852,6 +4875,7 @@
       if(oni === 'sad') { b.earFlat = true; b.slump = 0.93; b.amp = 0.03; b.speed = 1700; }
       if(oni === 'numb') { b.earFlat = true; b.slump = 0.97; b.amp = 0.004; b.speed = 2000; b.still = true; }
       if(spiritSnapshotting) { b.bob = 0; b.sway = 0; b.amp = Math.max(b.amp, 0.025); b.speed = Math.max(b.speed, 900); } // the Today card: he keeps still, just breathing slowly
+      else { const idl = typeof spiritIdleState === 'function' ? spiritIdleState(now) : null; if(idl && idl.kind === 'freeze') { b.amp = 0.002; b.bob = 0; b.sway = 0; b.still = true; } }
       return b;
     }
 
@@ -4899,7 +4923,6 @@
         }).join('');
         return `<div class="spirit-sub">${label}</div><div class="spirit-opts">${chips}</div>`;
       }).join('');
-      document.getElementById('spirit-blush').checked = !!spiritStyle.blush;
       document.getElementById('spirit-house').checked = spiritStyle.house !== false;
     }
     // The last weather result (fetched for the moon view too); null until the first fetch
@@ -4963,9 +4986,13 @@
 
     // Rosy cheeks, positioned by each view's geometry `g`
     function drawSpiritExtras(ctx, g, zombie) {
-      if(!spiritStyle.blush || zombie) return;
-      ctx.fillStyle = 'rgba(255, 130, 150, 0.35)';
-      g.cheeks.forEach(([x, y]) => { ctx.beginPath(); ctx.ellipse(x, y, 6, 3.5, 0, 0, Math.PI * 2); ctx.fill(); });
+      if(zombie) return;
+      // Soft rosy cheeks, always: a big part of looking cute
+      ctx.save();
+      ctx.filter = 'blur(1.2px)';
+      ctx.fillStyle = 'rgba(255, 125, 150, 0.4)';
+      g.cheeks.forEach(([x, y]) => { ctx.beginPath(); ctx.ellipse(x, y, 7, 4.2, 0, 0, Math.PI * 2); ctx.fill(); });
+      ctx.restore();
     }
 
     // Points along a body outline (same curves as the drawing), every `step` px, with the outward normal
@@ -5029,113 +5056,6 @@
       return (spiritOutlineCache[key] = out);
     }
 
-    // ----- Loki: a black Havanese with a white chest. A skin for Spirit: same stats, health, damage, level and finds.
-    // Drawn in the same frames as the hamster (front/back: 160 wide, ground at 141; side: facing right around x = 82).
-    function lokiColours(zombie) {
-      return zombie ? { coat: '#4b5546', coatHi: '#66705e', white: '#c8cfb4', muzzle: '#5d6656', nose: '#1e231b' }
-                    : { coat: '#2b2728', coatHi: '#4a4446', white: '#f5f2ec', muzzle: '#4d4749', nose: '#111' };
-    }
-    function lokiFluff(ctx, cx, cy, rx, ry, col, n = 14, r = 6) { // a fluffy blob: an ellipse with soft tufts around its edge
-      ctx.fillStyle = col;
-      ctx.beginPath(); ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2); ctx.fill();
-      for(let i = 0; i < n; i++) { const a = i / n * Math.PI * 2; ctx.beginPath(); ctx.arc(cx + rx * Math.cos(a), cy + ry * Math.sin(a), r, 0, Math.PI * 2); ctx.fill(); }
-    }
-    function lokiMarks(ctx, x, y) { // healing marks: a plaster on her head, or a couple of faint scars
-      if(hamsterWound === 'none') return;
-      if(hamsterWound === 'scars') {
-        ctx.strokeStyle = 'rgba(240, 150, 150, 0.7)'; ctx.lineWidth = 2;
-        ctx.beginPath(); ctx.moveTo(x - 6, y - 4); ctx.lineTo(x + 4, y + 4); ctx.moveTo(x + 2, y - 5); ctx.lineTo(x + 9, y + 2); ctx.stroke();
-        return;
-      }
-      ctx.save(); ctx.translate(x, y); ctx.rotate(-0.5);
-      ctx.fillStyle = '#e8c9a0'; ctx.fillRect(-11, -4, 22, 8); ctx.fillRect(-4, -11, 8, 22);
-      ctx.fillStyle = 'rgba(160, 110, 70, 0.5)'; [[-2, -2], [2, -2], [-2, 2], [2, 2]].forEach(([a, b]) => ctx.fillRect(a - 0.6, b - 0.6, 1.2, 1.2));
-      ctx.restore();
-    }
-    function lokiCollarFront(ctx, x, y) { // a red collar with a little gold tag
-      ctx.fillStyle = '#d23c3c';
-      ctx.beginPath(); ctx.moveTo(x - 24, y - 4); ctx.quadraticCurveTo(x, y + 6, x + 24, y - 4); ctx.lineTo(x + 24, y + 3); ctx.quadraticCurveTo(x, y + 13, x - 24, y + 3); ctx.closePath(); ctx.fill();
-      ctx.fillStyle = '#a82a2a'; ctx.fillRect(x - 2, y + 5, 4, 3);
-      ctx.fillStyle = '#ffd84d'; ctx.beginPath(); ctx.arc(x, y + 11, 4, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.beginPath(); ctx.arc(x - 1.2, y + 10, 1.2, 0, Math.PI * 2); ctx.fill();
-    }
-    function lokiEye(ctx, x, y, closed, grumpy) {
-      if(closed) { ctx.strokeStyle = '#0d0b0c'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(x, y - 1, 4, 0.15 * Math.PI, 0.85 * Math.PI); ctx.stroke(); return; }
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.22)'; ctx.beginPath(); ctx.arc(x, y, 6.2, 0, Math.PI * 2); ctx.fill(); // a soft ring so dark eyes show on black fur
-      ctx.fillStyle = '#120d0e'; ctx.beginPath(); ctx.arc(x, y, 4.6, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(x + 1.6, y - 1.7, 1.6, 0, Math.PI * 2); ctx.fill();
-      if(grumpy) { ctx.strokeStyle = '#9a9496'; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(x - 6, y - 8); ctx.lineTo(x + 4, y - 6); ctx.stroke(); }
-    }
-    function lokiTail(ctx, x, y, now, c, wag) { // a plumed tail curling up over her back
-      ctx.save(); ctx.translate(x, y); ctx.rotate(Math.sin(now / (wag ? 140 : 600)) * (wag ? 0.35 : 0.12));
-      [[0, 0, 7], [-3, -9, 8], [-1, -19, 8], [5, -26, 7], [12, -28, 6]].forEach(([dx, dy, r]) => { ctx.fillStyle = c.coat; ctx.beginPath(); ctx.arc(dx, dy, r, 0, Math.PI * 2); ctx.fill(); });
-      ctx.fillStyle = c.coatHi; ctx.beginPath(); ctx.arc(2, -22, 3, 0, Math.PI * 2); ctx.fill();
-      ctx.restore();
-    }
-    function lokiWagging() { return !reduceMotion && (hamsterMood === 'thriving' || todaysOni() === 'happy' || performance.now() - hamsterJumpStart < 900); }
-    function drawLokiFront(ctx) {
-      const zombie = hamsterMood === 'stressed', c = lokiColours(zombie), now = reduceMotion ? 0 : performance.now();
-      const B = spiritBody(now), breathe = 1 + Math.sin(now / B.speed) * (B.amp + 0.002), blink = !reduceMotion && (now % 4200) < 140;
-      ctx.save();
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.3)'; ctx.beginPath(); ctx.ellipse(80, 140, 46, 5, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.translate(80, 141); ctx.scale(breathe, 1 / breathe * B.slump); ctx.translate(-80, -141);
-      lokiTail(ctx, 112, 100, now, c, lokiWagging());
-      lokiFluff(ctx, 80, 108, 38, 30, c.coat, 16, 7);                       // body
-      lokiFluff(ctx, 80, 116, 19, 20, c.white, 10, 5);                      // white chest
-      lokiCollarFront(ctx, 80, 90);
-      [[64, 134], [96, 134]].forEach(([x, y]) => { ctx.fillStyle = c.coat; ctx.beginPath(); ctx.ellipse(x, y, 10, 8, 0, 0, Math.PI * 2); ctx.fill(); });
-      ctx.strokeStyle = c.coatHi; ctx.lineWidth = 1; [[61, 136], [67, 136], [93, 136], [99, 136]].forEach(([x, y]) => { ctx.beginPath(); ctx.moveTo(x, y - 3); ctx.lineTo(x, y + 2); ctx.stroke(); });
-      const tilt = B.earFlat ? 0.35 : 0.12;
-      [[49, -tilt], [111, tilt]].forEach(([x, r]) => { ctx.save(); ctx.translate(x, 70); ctx.rotate(r); lokiFluff(ctx, 0, 6, 11, 22, c.coat, 10, 4); ctx.restore(); }); // long droopy ears
-      lokiFluff(ctx, 80, 62, 28, 27, c.coat, 14, 6);                        // head
-      ctx.fillStyle = c.coatHi; [[70, 40], [80, 37], [90, 40]].forEach(([x, y]) => { ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI * 2); ctx.fill(); }); // a little topknot shine
-      ctx.fillStyle = c.muzzle; ctx.beginPath(); ctx.ellipse(80, 78, 15, 11, 0, 0, Math.PI * 2); ctx.fill();
-      lokiEye(ctx, 67, 62, blink || hamsterMood === 'recovering'); lokiEye(ctx, 93, 62, blink || hamsterMood === 'recovering');
-      ctx.fillStyle = c.nose; ctx.beginPath(); ctx.ellipse(80, 74, 5.5, 4, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.5)'; ctx.beginPath(); ctx.arc(78, 72.5, 1.4, 0, Math.PI * 2); ctx.fill();
-      ctx.strokeStyle = '#0d0b0c'; ctx.lineWidth = 1.3; ctx.beginPath(); ctx.moveTo(80, 78); ctx.lineTo(80, 81); ctx.moveTo(74, 82); ctx.quadraticCurveTo(80, 86, 86, 82); ctx.stroke();
-      if(!zombie && (lokiWagging() || hamsterMood === 'calm')) { ctx.fillStyle = '#f08a9a'; ctx.beginPath(); ctx.ellipse(80, 86, 3.6, 4.2, 0, 0, Math.PI); ctx.fill(); } // a little tongue
-      const eat = spiritEatState();
-      if(eat) { // her bowl, with the snack in it
-        ctx.fillStyle = '#c0503f'; ctx.beginPath(); ctx.ellipse(80, 139, 18, 5, 0, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = '#e07a5f'; ctx.fillRect(64, 132, 32, 7);
-        ctx.fillStyle = '#b7843f'; [[72, 131], [80, 130], [88, 131]].forEach(([x, y]) => { ctx.beginPath(); ctx.arc(x, y, 2.5, 0, Math.PI * 2); ctx.fill(); });
-      }
-      lokiMarks(ctx, 98, 48);
-      ctx.restore();
-    }
-    function drawLokiBack(ctx) { // her fluffy rump and tail as she squeezes into the house
-      const c = lokiColours(hamsterMood === 'stressed'), now = reduceMotion ? 0 : performance.now();
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.3)'; ctx.beginPath(); ctx.ellipse(80, 140, 40, 5, 0, 0, Math.PI * 2); ctx.fill();
-      lokiFluff(ctx, 80, 108, 36, 30, c.coat, 16, 7);
-      ctx.fillStyle = '#d23c3c'; ctx.fillRect(58, 80, 44, 7); // collar, seen from behind
-      [[66, 135], [94, 135]].forEach(([x, y]) => { ctx.fillStyle = c.coat; ctx.beginPath(); ctx.ellipse(x, y, 9, 7, 0, 0, Math.PI * 2); ctx.fill(); });
-      lokiTail(ctx, 80, 92, now, c, true);
-    }
-    // Side view, facing right, laid out for ground = 138 like the hamster's
-    function drawLokiSide(ctx, o) {
-      const c = lokiColours(o.zombie), g = o.ground, now = o.now, sleep = o.asleepPose;
-      const hx = sleep ? 6 : 0, hy = sleep ? 12 : 0; // asleep: head stretched forward and down on the grass
-      if(!sleep) [[52 + o.legA, 0.85], [106 - o.legA, 0.85]].forEach(([x]) => { ctx.fillStyle = c.coatHi; ctx.beginPath(); ctx.ellipse(x, g - 7, 6, 9, 0, 0, Math.PI * 2); ctx.fill(); });
-      lokiTail(ctx, 42, 92, now, c, !sleep && lokiWagging());
-      lokiFluff(ctx, 78, 104, 40, 23, c.coat, 16, 6);                        // body
-      ctx.fillStyle = c.coat; for(let x = 46; x <= 108; x += 9) { ctx.beginPath(); ctx.ellipse(x, 124, 5, 7, 0, 0, Math.PI * 2); ctx.fill(); } // long coat hanging down
-      lokiFluff(ctx, 110 + hx * 0.5, 108 + hy * 0.4, 12, 16, c.white, 8, 4); // white chest
-      ctx.save(); ctx.translate(112 + hx * 0.6, 90 + hy * 0.6); ctx.rotate(0.35); // her red collar, seen from the side
-      ctx.fillStyle = '#d23c3c'; ctx.fillRect(-4, -11, 8, 22); ctx.fillStyle = '#a82a2a'; ctx.fillRect(-4, 7, 8, 4);
-      ctx.fillStyle = '#ffd84d'; ctx.beginPath(); ctx.arc(4, 13, 3.2, 0, Math.PI * 2); ctx.fill();
-      ctx.restore();
-      if(!sleep) [[60 - o.legA], [102 + o.legA]].forEach(([x]) => { ctx.fillStyle = c.coat; ctx.beginPath(); ctx.ellipse(x, g - 7, 7, 10, 0, 0, Math.PI * 2); ctx.fill(); });
-      ctx.save(); ctx.translate(hx, hy);
-      ctx.save(); ctx.translate(113, 76); ctx.rotate(0.3); lokiFluff(ctx, 0, 8, 9, 19, c.coat, 9, 4); ctx.restore(); // droopy ear
-      lokiFluff(ctx, 123, 72, 20, 19, c.coat, 12, 5);                        // head
-      ctx.fillStyle = c.muzzle; ctx.beginPath(); ctx.ellipse(140, 82, 11, 8.5, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = c.nose; ctx.beginPath(); ctx.ellipse(150 + o.sniff * 0.3, 80, 4, 3.4, 0, 0, Math.PI * 2); ctx.fill();
-      lokiEye(ctx, 129, 69, sleep && !o.grumpy || o.blink, sleep && o.grumpy);
-      if(!o.zombie && o.walking && lokiWagging()) { ctx.fillStyle = '#f08a9a'; ctx.beginPath(); ctx.ellipse(142, 91, 3, 4, 0.3, 0, Math.PI); ctx.fill(); }
-      lokiMarks(ctx, 118, 58);
-      ctx.restore();
-    }
 
     // On all fours, seen from behind (160px frame, ground at 141): his round rump as he squeezes into his house
     function drawHamsterBack(ctx) {
@@ -5225,10 +5145,7 @@
         oval(cx + s * 15, 138, 7, 3.6, zombie ? '#b98f8f' : '#f2a7a7');
         [-3, 0, 3].forEach(o => oval(cx + s * 15 + o, 135.8, 1.2, 1.1, '#e48d8d'));
       });
-      drawOniTouches(ctx, {
-        mood: todaysOni(), ink: '#6b3d1c', dim: zombie, size: 1.2,
-        mark: [cx, 74], tusks: [[cx - 4, ny + 9, 1], [cx + 4, ny + 9, -1]], stripes: [[cx - 28, 96, 1], [cx + 28, 96, -1]]
-      });
+      // (no forehead mark or tusks: he's drawn as a real hamster)
       drawSpiritOni(ctx, {
         now, zombie, fur,
         eyes: [[cx - 11, 88], [cx + 11, 88]], cheeks: [[cx - 17, 103], [cx + 17, 103]], mark: [cx + 24, 76],
@@ -5238,6 +5155,29 @@
     }
 
     // Fur style along his outline: fluffy scallops, ruffled tufts, long teddy-bear strands or little curls
+    // Real-hamster fur: fine short hairs over the edge, lying down (outwards and a little downwards).
+    // Darker along the back, lighter low down. pts: [x, y, nx, ny] around the outline
+    function drawRealFur(ctx, pts, dark, light, splitY, skip) {
+      ctx.save();
+      ctx.lineWidth = 0.8;
+      ctx.lineCap = 'round';
+      ctx.globalAlpha = 0.55;
+      for(let i = 0; i < pts.length; i++) {
+        const [x, y, nx, ny] = pts[i], [x2, y2] = pts[(i + 1) % pts.length];
+        for(let k = 0; k < 3; k++) {
+          const f = k / 3, px = x + (x2 - x) * f, py = y + (y2 - y) * f;
+          if(skip(px, py)) continue;
+          const top = py < splitY, len = (top ? 1.6 : 1.2) + rand01(i * 3 + k, 60) * (top ? 1.8 : 1.2);
+          ctx.strokeStyle = top ? dark : light;
+          ctx.globalAlpha = top ? 0.55 : 0.3; // lighter hairs low down stay subtle
+          ctx.beginPath();
+          ctx.moveTo(px - nx * 1.4, py - ny * 1.4);
+          ctx.lineTo(px + nx * len, py + ny * len + len * 0.8);
+          ctx.stroke();
+        }
+      }
+      ctx.restore();
+    }
     function drawSpiritFurStyle(ctx, pts, edge, dark, skip) {
       const style = spiritStyle.furStyle;
       if(!style || style === 'smooth') return;
@@ -5480,10 +5420,19 @@
     // Feed: as often as you like. He stops, faces you and munches a snack. Just for fun, no effect on his stats.
     const SPIRIT_SNACKS = ['seed', 'strawberry', 'acorn', 'carrot'];
     let spiritEat = null, spiritCrumbs = [];
+    var spiritCheeksUntil = 0; // cheeks stuffed until then (or until he's been home)
+    const cheeksFull = () => performance.now() < spiritCheeksUntil;
     function spiritEatState() {
       if(!spiritEat) return null;
       const p = (performance.now() - spiritEat.start) / spiritEat.dur;
-      if(p >= 1) { if(Math.random() < 0.6) addHusks(1 + Math.floor(Math.random() * 2), hamsterWalk.x); spiritEat = null; careForHamster(); return null; }
+      if(p >= 1) {
+        if(Math.random() < 0.6) addHusks(1 + Math.floor(Math.random() * 2), hamsterWalk.x);
+        spiritEat = null; careForHamster();
+        // Like real hamsters he stuffs his cheeks and takes the rest home to his stash
+        spiritCheeksUntil = performance.now() + 20000;
+        if(spiritStyle.house !== false && !spiritOuting && !reduceMotion) hamsterWalk.toHouse = true;
+        return null;
+      }
       return { food: spiritEat.food, p };
     }
     function feedHamster() {
@@ -5500,12 +5449,12 @@
       const btn = document.getElementById('feed-btn');
       if(btn) btn.innerText = 'Feed';
     }
-    // ----- A deeper world: distant hills and a tree line that drift a little as he walks (parallax)
+    // ----- A deeper world: distant hills and a tree line (fixed in place: no drifting as he walks)
     function drawWorldDepth(ctx, now) {
       if(spiritOuting && (spiritOuting.place === 'forest' || spiritOuting.place === 'mountains' || spiritOuting.place === 'beach')) return; // these have their own horizon
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       const day = spiritIsDay(), wx = spiritWx(), grey = wx && (wx.rain || wx.snow || wx.storm);
-      const off = (hamsterWalk.x - 160);
+      const off = 0;
       // Far hills: soft and hazy
       ctx.fillStyle = day ? (grey ? '#9aa7b6' : '#9cc0d8') : '#3a4470';
       ctx.beginPath(); ctx.moveTo(0, 130);
@@ -5587,10 +5536,8 @@
       const kinds = night ? ['fireflies', 'fireflies', 'cat'] : ['bird', 'bird', 'butterfly', 'butterfly', 'snail', 'cat'];
       const kind = kinds[Math.floor(Math.random() * kinds.length)], dir = Math.random() < 0.5 ? 1 : -1;
       spiritVisitor = { kind, start: now, dir, dur: { bird: 6000, butterfly: 14000, snail: 40000, cat: 9000, fireflies: 20000 }[kind], y: 30 + Math.random() * 25 };
-      const loki = isLoki();
       if(kind === 'cat') {
-        if(loki) { setTimeout(() => { if(!spiritHome.inside) { hamsterJumpStart = performance.now(); sayThought('A cat! A cat!'); } }, 2500); }
-        else { setTimeout(() => { sayThought('Eek, a cat!'); if(spiritStyle.house !== false && !spiritHome.inside) hamsterWalk.toHouse = true; }, 2500); }
+        setTimeout(() => { sayThought('Eek, a cat!'); if(spiritStyle.house !== false && !spiritHome.inside) hamsterWalk.toHouse = true; }, 2500);
       } else if(Math.random() < 0.5) {
         setTimeout(() => sayThought({ bird: 'A bird!', butterfly: 'A butterfly!', snail: 'Hello, little snail.', fireflies: 'Fireflies…' }[kind]), 1500);
       }
@@ -5600,7 +5547,8 @@
       const v = spiritVisitor;
       if(!v || (v.kind !== 'snail' && v.kind !== 'cat')) return;
       ctx.setTransform(1, 0, 0, 1, 0, 0);
-      const k = visitorProgress(v, now), x = v.dir > 0 ? -20 + k * 360 : 340 - k * 360;
+      const k = visitorProgress(v, now), far = v.kind === 'cat' ? 210 : 20, span = 320 + far * 2; // a giant cat needs room to come and go
+      const x = v.dir > 0 ? -far + k * span : 320 + far - k * span;
       ctx.save(); ctx.translate(x, 141); ctx.scale(v.dir, 1);
       if(v.kind === 'snail') {
         ctx.fillStyle = '#c9b48a'; ctx.beginPath(); ctx.ellipse(2, -2, 9, 2.5, 0, 0, Math.PI * 2); ctx.fill();          // body
@@ -5608,15 +5556,53 @@
         ctx.fillStyle = '#a0623a'; ctx.beginPath(); ctx.arc(-1, -7, 6, 0, Math.PI * 2); ctx.fill();                       // shell
         ctx.strokeStyle = '#6e3a24'; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.arc(-1, -7, 3, 0, Math.PI * 1.6); ctx.stroke();
       } else {
-        const step = Math.sin(now / 90) * 2.5;
-        ctx.fillStyle = '#3a3438';
-        ctx.fillRect(-9 + step, -7, 3, 7); ctx.fillRect(5 - step, -7, 3, 7); ctx.fillRect(-5 - step, -7, 3, 7); ctx.fillRect(9 + step, -7, 3, 7); // legs
-        ctx.beginPath(); ctx.ellipse(1, -11, 12, 6, 0, 0, Math.PI * 2); ctx.fill();                                          // body
-        ctx.beginPath(); ctx.arc(14, -16, 6, 0, Math.PI * 2); ctx.fill();                                                    // head
-        ctx.beginPath(); ctx.moveTo(10, -20); ctx.lineTo(12, -26); ctx.lineTo(15, -21); ctx.moveTo(15, -21); ctx.lineTo(18, -26); ctx.lineTo(19, -19); ctx.fill(); // ears
-        ctx.strokeStyle = '#3a3438'; ctx.lineWidth = 3; ctx.lineCap = 'round';
-        ctx.beginPath(); ctx.moveTo(-11, -12); ctx.quadraticCurveTo(-20, -18 + Math.sin(now / 300) * 4, -16, -26); ctx.stroke();       // tail
-        ctx.fillStyle = '#ffd84d'; ctx.fillRect(15, -18, 2, 2);                                                              // eye
+        // A real cat next to a hamster is enormous: its legs, its belly and chest across the top of the scene,
+        // a big head at the front looking down, and its tail curling up out of view at the back
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
+        ctx.beginPath(); ctx.ellipse(0, 1, 120, 6, 0, 0, Math.PI * 2); ctx.fill(); // the shadow of its body
+        const ph = now / 280, bob = Math.sin(ph * 2) * 1.5;
+        const coat = '#3d373b', coatLo = '#2a2528';
+        // tail, behind everything
+        ctx.strokeStyle = coatLo; ctx.lineWidth = 14; ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(-112, -112 + bob); ctx.bezierCurveTo(-150, -110, -160, -150 + Math.sin(now / 500) * 8, -138, -190); ctx.stroke();
+        // body: a long furry belly with a lighter underside
+        const belly = ctx.createLinearGradient(0, -200, 0, -84);
+        belly.addColorStop(0, coatLo); belly.addColorStop(0.8, coat); belly.addColorStop(1, '#4d474b');
+        ctx.fillStyle = belly;
+        ctx.beginPath(); ctx.ellipse(0, -150 + bob, 128, 64, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.07)'; ctx.lineWidth = 1; // a few fur strokes along the belly
+        for(let i = -5; i <= 5; i++) { ctx.beginPath(); ctx.moveTo(i * 20, -90 + bob - Math.abs(i) * 1.4); ctx.lineTo(i * 20 + 4, -97 + bob - Math.abs(i) * 1.4); ctx.stroke(); }
+        // back legs at the rear, front legs ahead; the far pair darker and a step out of time
+        [[-78, Math.PI, true], [-52, 0, false], [56, 0, true], [82, Math.PI, false]].forEach(([lx, off, farLeg]) => {
+          const swing = Math.sin(ph + off), lift = Math.max(0, -Math.cos(ph + off)) * 7, fx = lx + swing * 12;
+          const fur = farLeg ? '#2a2528' : '#3d373b';
+          const g = ctx.createLinearGradient(fx - 11, 0, fx + 11, 0);
+          g.addColorStop(0, fur); g.addColorStop(0.5, farLeg ? '#353034' : '#4a4448'); g.addColorStop(1, fur);
+          ctx.fillStyle = g;
+          ctx.beginPath(); // the leg comes down from out of frame and widens a little at the ankle
+          ctx.moveTo(fx - 13 - swing * 4, -112); ctx.lineTo(fx + 13 - swing * 4, -112);
+          ctx.quadraticCurveTo(fx + 11, -40, fx + 10, -8 - lift); ctx.lineTo(fx - 10, -8 - lift);
+          ctx.quadraticCurveTo(fx - 11, -40, fx - 13 - swing * 4, -112); ctx.closePath(); ctx.fill();
+          ctx.fillStyle = fur; // the paw
+          ctx.beginPath(); ctx.ellipse(fx + 3, -5 - lift, 15, 7.5, 0, 0, Math.PI * 2); ctx.fill();
+          ctx.strokeStyle = 'rgba(0, 0, 0, 0.45)'; ctx.lineWidth = 1.2; // toes
+          [-4, 2, 8].forEach(tx => { ctx.beginPath(); ctx.moveTo(fx + tx + 3, -1 - lift); ctx.lineTo(fx + tx + 2, -7 - lift); ctx.stroke(); });
+        });
+        // chest and head at the front, peering down at the little world below
+        ctx.fillStyle = coat;
+        ctx.beginPath(); ctx.ellipse(108, -118 + bob, 34, 40, -0.3, 0, Math.PI * 2); ctx.fill();
+        const hx = 136, hy = -112 + bob;
+        ctx.beginPath(); ctx.arc(hx, hy, 40, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(hx - 28, hy - 26); ctx.lineTo(hx - 16, hy - 66); ctx.lineTo(hx + 2, hy - 36); ctx.fill(); // ears
+        ctx.beginPath(); ctx.moveTo(hx + 8, hy - 36); ctx.lineTo(hx + 30, hy - 64); ctx.lineTo(hx + 36, hy - 24); ctx.fill();
+        ctx.fillStyle = '#5a5257'; ctx.beginPath(); ctx.ellipse(hx + 22, hy + 16, 16, 12, 0, 0, Math.PI * 2); ctx.fill(); // muzzle
+        const blinkCat = (now % 3800) < 140;
+        ctx.fillStyle = '#ffd84d'; // a big yellow eye with a slit pupil, looking down
+        ctx.beginPath(); ctx.ellipse(hx + 14, hy - 4, 8, blinkCat ? 1 : 7, 0, 0, Math.PI * 2); ctx.fill();
+        if(!blinkCat) { ctx.fillStyle = '#1a1416'; ctx.beginPath(); ctx.ellipse(hx + 15, hy - 2, 1.8, 6, 0, 0, Math.PI * 2); ctx.fill(); }
+        ctx.fillStyle = '#e88a9a'; ctx.beginPath(); ctx.moveTo(hx + 33, hy + 9); ctx.lineTo(hx + 39, hy + 9); ctx.lineTo(hx + 36, hy + 13); ctx.closePath(); ctx.fill(); // nose
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.55)'; ctx.lineWidth = 0.9; // whiskers
+        [[-2, -4], [2, 0], [6, 5]].forEach(([dy, ey]) => { ctx.beginPath(); ctx.moveTo(hx + 30, hy + 16 + dy); ctx.quadraticCurveTo(hx + 50, hy + 14 + dy, hx + 64, hy + 18 + ey); ctx.stroke(); });
       }
       ctx.restore();
     }
@@ -5743,7 +5729,12 @@
     const SPIRIT_STAGES = [[1, 'Baby', 0.72, 1.2], [5, 'Young', 0.86, 1.1], [12, 'Adult', 1, 1], [25, 'Elder', 1, 0.8]];
     function spiritStage(level) { return SPIRIT_STAGES.filter(st => level >= st[0]).pop(); }
     let spiritStageNow = SPIRIT_STAGES[2];
-    function spiritScale() { return 0.85 * (SPIRIT_SIZE[spiritStyle.size] || 1) * spiritStageNow[2]; }
+    function spiritScale() {
+      const base = 0.85 * (SPIRIT_SIZE[spiritStyle.size] || 1) * spiritStageNow[2];
+      if(!spiritWheel || spiritWheel.stage !== 'run' || spiritSnapshotting) return base;
+      const k = Math.min(1, (performance.now() - spiritWheel.start) / 250); // the wheel stands a little further back
+      return base + (0.4 - base) * k;
+    }
 
     // Asleep from midnight to 7:00, sleepy in the evening after sunset.
     // During a crisis and for 2 hours after one he stays up with you.
@@ -5792,6 +5783,20 @@
       }
       localStorage.setItem('aq_spirit_husks', JSON.stringify(spiritHusks));
     }
+    // Droppings: at most twice a day, after a walk, at least 3 hours apart
+    function maybeDropping(x) {
+      if(spiritOuting || spiritHusks.length >= 7) return;
+      const today = dayKey(new Date());
+      let log = {};
+      try { log = JSON.parse(localStorage.getItem('aq_spirit_poop') || '{}') || {}; } catch(e) {}
+      const n = log.day === today ? log.n : 0;
+      if(n >= 2 || Date.now() - (log.at || 0) < 3 * 3600000 || Math.random() > 0.25) return;
+      localStorage.setItem('aq_spirit_poop', JSON.stringify({ day: today, n: n + 1, at: Date.now() }));
+      const maxX = spiritStyle.house !== false ? HOUSE.x - 12 : 304;
+      spiritHusks.push({ x: Math.round(Math.min(maxX, Math.max(14, x))), r: +(Math.random() * 3).toFixed(2), k: 'poop' });
+      localStorage.setItem('aq_spirit_husks', JSON.stringify(spiritHusks));
+      setTimeout(() => sayThought('Oops.'), 400);
+    }
     function spiritHuskTick() {
       const last = +localStorage.getItem('aq_spirit_husk_at') || 0;
       if(Date.now() - last < 8 * 3600000) return;
@@ -5801,6 +5806,18 @@
     function drawSpiritHusks(ctx, now) {
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       spiritHusks.forEach(h => {
+        if(h.k === 'poop') {
+          // Three little dark pellets, like real hamster droppings
+          [[-4, 0, 0], [2, -0.6, 0.9], [5.5, 0.7, -0.4]].forEach(([dx, dy, a]) => {
+            ctx.save();
+            ctx.translate(h.x + dx, 139 + dy);
+            ctx.rotate(h.r + a);
+            ctx.fillStyle = '#3b2618'; ctx.beginPath(); ctx.ellipse(0, 0, 3, 1.5, 0, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)'; ctx.beginPath(); ctx.ellipse(-0.8, -0.5, 1, 0.45, 0, 0, Math.PI * 2); ctx.fill();
+            ctx.restore();
+          });
+          return;
+        }
         [-1, 1].forEach(side => {
           ctx.save();
           ctx.translate(h.x + side * 2, 139);
@@ -6402,6 +6419,13 @@
       const x = (e.clientX - r.left) * c.width / r.width, y = (e.clientY - r.top) * c.height / r.height;
       return Math.hypot(x - (c.width - 34), y - 24) <= 18;
     }
+    // Tapping the wheel sends him over for a run
+    function spiritWheelHit(e) {
+      if(spiritOuting) return false;
+      const c = document.getElementById('hamster-canvas'), r = c.getBoundingClientRect();
+      const x = (e.clientX - r.left) * c.width / r.width, y = (e.clientY - r.top) * c.height / r.height;
+      return Math.hypot(x - WHEEL.x, y - (138 - WHEEL.r)) <= WHEEL.r + 4;
+    }
     function spiritHouseHit(e) {
       const c = document.getElementById('hamster-canvas');
       const r = c.getBoundingClientRect();
@@ -6430,8 +6454,15 @@
     }
     // Tricks: tail chase, backflip, roll, spin, bunny hops, a dance, a handstand, a squish, a moonwalk and the zoomies.
     // Just for fun, no effect on his stats.
-    const SPIRIT_TRICKS = { chase: 2400, flip: 900, roll: 1300, spin: 1000, hops: 1500, dance: 2200, handstand: 2000, squish: 1200, moonwalk: 2000, zoomies: 2600 };
-    const TRICK_LINES = { zoomies: 'Zoom zoom!', dance: 'Dance with me!', handstand: 'Ta-da!', moonwalk: 'Smooth.' };
+    // Real hamster tricks only: little hops, a mad dash, a sprint on the wheel, sitting up to beg, a face wash, peekaboo from his igloo
+    const SPIRIT_TRICKS = { hops: 1500, zoomies: 2600, wheel: 0, beg: 0, groom: 0, peek: 0 };
+    const TRICK_LINES = { zoomies: 'Zoom zoom!', wheel: 'Wheel time!', beg: 'A treat?', peek: 'Peekaboo!' };
+    // The ones done with his everyday habits rather than a one-off move
+    function startWheelRun() {
+      const w = hamsterWalk, now = performance.now();
+      spiritWheel = { stage: 'go' };
+      w.target = WHEEL.x; w.dir = WHEEL.x > w.x ? 1 : -1; w.walking = true; w.facing = 'side'; w.startAt = now; w.pauseUntil = 0;
+    }
     let spiritTrick = null, spiritDizzyUntil = 0;
     function spiritDoTrick(kind) {
       if(spiritTrick || spiritEat || reduceMotion) return;
@@ -6440,12 +6471,17 @@
       callSpiritOut();
       const kinds = Object.keys(SPIRIT_TRICKS);
       kind = kind || kinds[Math.floor(Math.random() * kinds.length)];
-      if(kind === 'roll' && w.x > 320 - 100) kind = 'flip'; // no room to roll right
-      if(kind === 'moonwalk' && w.x < 80) kind = 'dance'; // no room to slide left
+      if(!SPIRIT_TRICKS.hasOwnProperty(kind)) kind = 'hops';
+      if((kind === 'wheel' && (spiritOuting || spiritWheel)) || (kind === 'peek' && (spiritStyle.house === false || spiritOuting))) kind = 'hops';
       w.toHouse = false;
       w.walking = false;
-      spiritTrick = { kind, start: performance.now(), dur: SPIRIT_TRICKS[kind], baseX: kind === 'zoomies' ? Math.max(90, Math.min(170, w.x)) : w.x };
       if(TRICK_LINES[kind] && Math.random() < 0.6) sayThought(TRICK_LINES[kind]);
+      const now = performance.now();
+      if(kind === 'wheel') { startWheelRun(); return; }
+      if(kind === 'beg') { w.facing = 'front'; w.until = now + 4000; spiritIdle = { kind: 'stand', start: now, dur: 2600 }; return; }
+      if(kind === 'groom') { w.facing = 'front'; w.until = now + 4500; spiritIdle = { kind: 'groom', start: now, dur: 2800 }; return; }
+      if(kind === 'peek') { w.toHouse = true; return; }
+      spiritTrick = { kind, start: now, dur: SPIRIT_TRICKS[kind], baseX: kind === 'zoomies' ? Math.max(90, Math.min(170, w.x)) : w.x };
     }
     function spiritTrickState() {
       if(!spiritTrick) return null;
@@ -6477,6 +6513,77 @@
       }
     }
 
+    // ---------- WHEEL: next to his house. He runs on it in bursts, mostly in the evening, like real hamsters ----------
+    // Mounted on the side of his igloo when he has it (with a lightbulb on top that lights while he runs), on a stand otherwise
+    const WHEEL = { get x() { return spiritStyle.house !== false ? 200 : 192; }, get r() { return spiritStyle.house !== false ? 28 : 30; },
+                    get mounted() { return spiritStyle.house !== false; } };
+    var spiritWheel = null; // { stage: 'go' | 'run', start, until, angle } (var, so spiritScale can look at it any time)
+    function drawSpiritWheel(ctx, now, front) {
+      if(spiritOuting) return;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      const cx = WHEEL.x, cy = 138 - WHEEL.r, r = WHEEL.r;
+      const leg = (dx) => { ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + dx, 141); ctx.stroke(); };
+      ctx.save();
+      ctx.lineCap = 'round';
+      const inside = spiritWheel && spiritWheel.stage === 'run';
+      if(front) { if(inside && !WHEEL.mounted) { ctx.strokeStyle = '#9aa7b4'; ctx.lineWidth = 3; leg(14); } ctx.restore(); return; } // the near leg of the stand, over him
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.22)'; ctx.beginPath(); ctx.ellipse(cx, 141, r + 4, 3, 0, 0, Math.PI * 2); ctx.fill();
+      if(WHEEL.mounted) {
+        // An axle into the igloo wall, and a wire up to the lightbulb on the dome
+        ctx.strokeStyle = '#7d8a96'; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + 20, cy); ctx.stroke();
+        ctx.strokeStyle = '#4b4f57'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(cx + 18, cy - 2); ctx.bezierCurveTo(cx + 24, 84, cx + 46, 62, HOUSE.x + HOUSE.w / 2 - 3, 66); ctx.stroke();
+      } else {
+        ctx.strokeStyle = '#7d8a96'; ctx.lineWidth = 3; leg(-14);
+        if(!inside) { ctx.strokeStyle = '#9aa7b4'; leg(14); }
+      }
+      if(spiritWheel && spiritWheel.stage === 'run') spiritWheel.angle -= 0.16; // spins as he runs
+      const a = spiritWheel && spiritWheel.angle || 0;
+      ctx.fillStyle = 'rgba(120, 200, 220, 0.18)'; ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fill(); // tinted plastic back
+      ctx.strokeStyle = '#5bb6cc'; ctx.lineWidth = 2;
+      for(let i = 0; i < 4; i++) { const t = a + i * Math.PI / 2; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(t) * r, cy + Math.sin(t) * r); ctx.stroke(); }
+      ctx.strokeStyle = '#3f9db4'; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.55)'; ctx.lineWidth = 1; // the rungs he runs on
+      for(let i = 0; i < 20; i++) { const t = a + i * Math.PI / 10; ctx.beginPath(); ctx.moveTo(cx + Math.cos(t) * (r - 3), cy + Math.sin(t) * (r - 3)); ctx.lineTo(cx + Math.cos(t) * (r + 1), cy + Math.sin(t) * (r + 1)); ctx.stroke(); }
+      ctx.fillStyle = '#e7edf2'; ctx.beginPath(); ctx.arc(cx, cy, 3.5, 0, Math.PI * 2); ctx.fill();
+      if(WHEEL.mounted) drawWheelBulb(ctx, now, inside);
+      ctx.restore();
+    }
+    // The lightbulb on top of the igloo: dark glass and a filament, glowing warm (with a little flicker) while he runs
+    function drawWheelBulb(ctx, now, on) {
+      const bx = HOUSE.x + HOUSE.w / 2, by = 57;
+      ctx.fillStyle = '#8b929c'; ctx.fillRect(bx - 3.5, by + 5, 7, 6); // the socket on the dome
+      ctx.fillStyle = '#6b717a'; ctx.fillRect(bx - 3.5, by + 7, 7, 1); ctx.fillRect(bx - 3.5, by + 9, 7, 1);
+      if(on) {
+        const k = 0.85 + 0.15 * Math.sin(now / 60);
+        const halo = ctx.createRadialGradient(bx, by, 2, bx, by, 26);
+        halo.addColorStop(0, `rgba(255, 226, 120, ${0.55 * k})`); halo.addColorStop(1, 'rgba(255, 226, 120, 0)');
+        ctx.fillStyle = halo; ctx.beginPath(); ctx.arc(bx, by, 26, 0, Math.PI * 2); ctx.fill();
+        ctx.shadowColor = 'rgba(255, 220, 110, 0.95)'; ctx.shadowBlur = 12;
+        ctx.fillStyle = `rgba(255, 232, 140, ${k})`;
+      } else ctx.fillStyle = 'rgba(225, 235, 245, 0.6)';
+      ctx.beginPath(); ctx.arc(bx, by, 6, 0, Math.PI * 2); ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = on ? 'rgba(255, 140, 40, 0.9)' : 'rgba(110, 110, 120, 0.8)'; ctx.lineWidth = 0.9; // filament
+      ctx.beginPath(); ctx.moveTo(bx - 2.5, by + 3); ctx.lineTo(bx - 1.5, by - 1); ctx.lineTo(bx, by + 1); ctx.lineTo(bx + 1.5, by - 1); ctx.lineTo(bx + 2.5, by + 3); ctx.stroke();
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.7)'; ctx.beginPath(); ctx.arc(bx - 2.2, by - 2.4, 1.3, 0, Math.PI * 2); ctx.fill(); // shine on the glass
+    }
+    // A little water dish at the far left: now and then he trots over for a drink
+    const DISH = { x: 26 };
+    var spiritDrinkTrip = false;
+    function drawWaterDish(ctx, now) {
+      if(spiritOuting) return;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      const x = DISH.x, y = 139;
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'; ctx.beginPath(); ctx.ellipse(x, y + 2, 12, 2.5, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#e8eef4'; ctx.beginPath(); ctx.moveTo(x - 11, y - 5); ctx.lineTo(x + 11, y - 5); ctx.lineTo(x + 8, y + 1); ctx.lineTo(x - 8, y + 1); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#7cc4e8'; ctx.beginPath(); ctx.ellipse(x, y - 5, 10, 2.2, 0, 0, Math.PI * 2); ctx.fill();
+      const idl = spiritIdleState(now);
+      if(idl && idl.kind === 'drink') { // ripples while he laps
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)'; ctx.lineWidth = 0.7;
+        const k = (now / 400) % 1;
+        ctx.beginPath(); ctx.ellipse(x, y - 5, 2 + k * 7, 0.5 + k * 1.5, 0, 0, Math.PI * 2); ctx.stroke();
+      }
+    }
     function drawSpiritHouse(ctx, now) {
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       if(spiritStyle.house === false) return;
@@ -6485,27 +6592,23 @@
       ctx.save();
       ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
       ctx.beginPath(); ctx.ellipse(mid, base + 2, w / 2 + 6, 4, 0, 0, Math.PI * 2); ctx.fill();
-      // Walls with planks
-      ctx.fillStyle = '#c98b5a';
-      ctx.fillRect(x, top, w, base - top);
-      ctx.strokeStyle = 'rgba(110, 65, 35, 0.45)'; ctx.lineWidth = 1;
-      ctx.beginPath();
-      for(let y = top + 8; y < base; y += 8) { ctx.moveTo(x, y); ctx.lineTo(x + w, y); }
-      ctx.stroke();
-      // Roof
-      ctx.fillStyle = '#9b4a3a';
-      ctx.beginPath(); ctx.moveTo(x - 8, top + 2); ctx.lineTo(mid, top - 30); ctx.lineTo(x + w + 8, top + 2); ctx.closePath(); ctx.fill();
-      ctx.strokeStyle = '#6e3026'; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.moveTo(x - 8, top + 2); ctx.lineTo(mid, top - 30); ctx.lineTo(x + w + 8, top + 2); ctx.stroke();
-      // Round window in the gable, warm when he's home or at night
-      ctx.fillStyle = lit ? '#fde68a' : '#9cc9e8';
-      if(lit) { ctx.shadowColor = 'rgba(253, 230, 138, 0.9)'; ctx.shadowBlur = 8; }
-      ctx.beginPath(); ctx.arc(mid, top - 11, 6, 0, Math.PI * 2); ctx.fill();
+      // A pet-shop plastic igloo: a see-through lilac dome with ridges and a shine, glowing softly when he's home or at night
+      const domeL = x - 8, domeR = x + w + 8, domeTop = 70;
+      const dome = () => { ctx.beginPath(); ctx.moveTo(domeL, base); ctx.bezierCurveTo(domeL, 92, mid - 27, domeTop, mid, domeTop); ctx.bezierCurveTo(mid + 27, domeTop, domeR, 92, domeR, base); ctx.closePath(); };
+      const dg = ctx.createRadialGradient(mid - 18, domeTop + 18, 6, mid, base - 20, 72);
+      dg.addColorStop(0, lit ? 'rgba(238, 224, 255, 0.97)' : 'rgba(217, 194, 255, 0.95)');
+      dg.addColorStop(1, lit ? 'rgba(172, 142, 236, 0.93)' : 'rgba(155, 127, 224, 0.88)');
+      ctx.fillStyle = dg;
+      if(lit) { ctx.shadowColor = 'rgba(205, 175, 255, 0.65)'; ctx.shadowBlur = 12; }
+      dome(); ctx.fill();
       ctx.shadowBlur = 0;
-      ctx.strokeStyle = '#6e3026'; ctx.lineWidth = 1.2;
-      ctx.beginPath(); ctx.arc(mid, top - 11, 6, 0, Math.PI * 2); ctx.moveTo(mid - 6, top - 11); ctx.lineTo(mid + 6, top - 11); ctx.stroke();
-      // Arched door
-      ctx.fillStyle = '#3b2618';
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)'; ctx.lineWidth = 1.5; // moulded ridges
+      ctx.beginPath(); ctx.moveTo(x, 120); ctx.bezierCurveTo(x + 16, 112, x + w - 16, 112, x + w, 120); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x + 8, 98); ctx.bezierCurveTo(x + 24, 90, x + w - 24, 90, x + w - 8, 98); ctx.stroke();
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)'; ctx.lineWidth = 3; ctx.lineCap = 'round'; // the shine on the plastic
+      ctx.beginPath(); ctx.moveTo(x + 10, 82); ctx.bezierCurveTo(x + 22, 74, x + 30, 72, x + 40, 72); ctx.stroke();
+      // Round doorway (same size and place as before, so going in and out still lines up)
+      ctx.fillStyle = '#4a3070';
       ctx.beginPath(); ctx.moveTo(mid - 20, base); ctx.lineTo(mid - 20, base - 24); ctx.arc(mid, base - 24, 20, Math.PI, 0); ctx.lineTo(mid + 20, base); ctx.closePath(); ctx.fill();
       // Two eyes peeking out of the dark when he's inside
       const grumpy = performance.now() < spiritGrumpUntil;
@@ -6538,11 +6641,12 @@
       ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => c.addEventListener(ev, stopPet));
       c.addEventListener('pointerdown', e => {
         stopPet();
-        if(spiritMoonHit(e) || spiritHouseHit(e) || spiritGroundTap(e, true)) return;
+        if(spiritMoonHit(e) || spiritWheelHit(e) || spiritHouseHit(e) || spiritGroundTap(e, true)) return;
         petTimer = setTimeout(careForHamster, 600);
       });
       c.addEventListener('pointerdown', e => {
         if(spiritMoonHit(e)) { openMoonView(); return; }
+        if(spiritWheelHit(e)) { if(!spiritWheel) spiritDoTrick('wheel'); return; }
         if(spiritHouseHit(e)) { spiritHouseTap(); return; }
         if(spiritGroundTap(e)) return;
         if(spiritHome.inside) return;
@@ -6556,6 +6660,25 @@
       });
     }
 
+    // ---------- REAL-HAMSTER HABITS while he isn't going anywhere ----------
+    // groom: sits up and rubs his face · stand: up on his hind legs, sniffing · dig: scratches at the ground · freeze: goes stock-still
+    let spiritIdle = null;
+    const SPIRIT_IDLE = [['groom', 0.2, 2600], ['stand', 0.14, 1900], ['dig', 0.1, 2200], ['yawn', 0.1, 2200], ['scratch', 0.1, 1600],
+                         ['chew', 0.13, 2800], ['sniff', 0.11, 1800], ['sneeze', 0.07, 1000], ['freeze', 0.05, 1500]];
+    const IDLE_SIDE = ['dig', 'scratch', 'sniff', 'drink']; // these are seen side-on
+    function spiritIdleState(now = performance.now()) {
+      if(!spiritIdle || spiritSnapshotting) return null;
+      const p = (now - spiritIdle.start) / spiritIdle.dur;
+      if(p < 0 || p >= 1) { if(p >= 1) spiritIdle = null; return null; }
+      return { kind: spiritIdle.kind, p };
+    }
+    function startSpiritIdle(now) {
+      let r = Math.random(), pick = SPIRIT_IDLE[0];
+      for(const it of SPIRIT_IDLE) { if(r < it[1]) { pick = it; break; } r -= it[1]; }
+      spiritIdle = { kind: pick[0], start: now, dur: pick[2] };
+      if(pick[0] === 'sneeze' && Math.random() < 0.4) setTimeout(() => sayThought('Achoo!'), 500);
+      if(IDLE_SIDE.includes(pick[0])) hamsterWalk.dir = Math.random() < 0.5 ? -1 : 1;
+    }
     function updateHamsterWalk(now, width, mood) {
       const w = hamsterWalk;
       spiritWeatherTick(now);
@@ -6566,7 +6689,7 @@
         // Squeezing through the door: stay put until it's done
         w.walking = false; w.facing = 'side';
         if(now - spiritHome.anim.start >= SPIRIT_DOOR_MS) {
-          if(spiritHome.anim.kind === 'in') { spiritHome.inside = true; spiritHome.until = now + ((spiritWx() || {}).storm ? 30000 : 6000) + Math.random() * 7000; }
+          if(spiritHome.anim.kind === 'in') { spiritCheeksUntil = 0; spiritHome.inside = true; spiritHome.until = now + ((spiritWx() || {}).storm ? 30000 : 6000) + Math.random() * 7000; }
           else { w.walking = true; w.dir = -1; }
           spiritHome.anim = null;
         }
@@ -6618,6 +6741,12 @@
         }
         return;
       }
+      // On the wheel: legs going fast, the wheel spinning, then he hops off
+      if(spiritWheel && spiritWheel.stage === 'run') {
+        if(now > spiritWheel.until || spiritAsleep() || spiritEat || reduceMotion || mood === 'stressed') {
+          spiritWheel = null; w.walking = false; w.facing = 'front'; w.dir = -1; w.until = now + 3000; hamsterJumpStart = performance.now();
+        } else { w.walking = true; w.facing = 'side'; w.dir = 1; w.x = WHEEL.x; w.phase += 0.55; return; }
+      }
       // Bedtime: he sleeps out on the grass, clear of his house (after a snack or a trick he settles back down)
       if(spiritAsleep() && !spiritEat) {
         w.toHouse = false;
@@ -6652,6 +6781,28 @@
       if(!w.walking && w.facing === 'front' && !reduceMotion && (mood === 'calm' || mood === 'thriving') &&
          Math.random() < (mood === 'thriving' ? 1 / 1500 : 1 / 3000)) { spiritDoTrick(); return; }
       if(!w.walking && w.facing === 'left' && now > w.turnAt) w.facing = 'front';
+      // A drink now and then
+      if(!w.walking && !spiritWheel && !spiritDrinkTrip && !spiritOuting && w.facing === 'front' && mood !== 'stressed' && !spiritIdleState(now) && Math.random() < 1 / 900) {
+        spiritDrinkTrip = true;
+        w.target = DISH.x + 52 * spiritScale(); w.dir = w.target > w.x ? 1 : -1; w.walking = true; w.facing = 'side'; w.startAt = now; w.pauseUntil = 0;
+        return;
+      }
+      // Off to the wheel now and then: often in the evening and at night, rarely in the day
+      if(!w.walking && !spiritWheel && !spiritOuting && w.facing === 'front' && mood !== 'stressed' && !spiritIdleState(now)) {
+        const h = new Date().getHours();
+        if(Math.random() < (h >= 17 || h < 7 ? 1 / 300 : 1 / 1500)) {
+          spiritWheel = { stage: 'go' };
+          w.target = WHEEL.x; w.dir = WHEEL.x > w.x ? 1 : -1; w.walking = true; w.facing = 'side'; w.startAt = now; w.pauseUntil = 0;
+          return;
+        }
+      }
+      // Habits while he waits: one at a time, now and then (not when he's zombified)
+      if(!w.walking) {
+        const idle = spiritIdleState(now);
+        if(idle) { w.facing = IDLE_SIDE.includes(idle.kind) ? 'side' : 'front'; return; }
+        if(w.facing === 'side' && spiritIdle === null && w.dir) w.facing = 'front'; // back to facing you after digging
+        if(w.facing === 'front' && mood !== 'stressed' && now < w.until - 1500 && Math.random() < 1 / 240) { startSpiritIdle(now); return; }
+      }
       if(!w.walking && now > w.until) {
         let target;
         const stormy = (spiritWx() || {}).storm;
@@ -6662,12 +6813,34 @@
         w.dir = target > w.x ? 1 : -1;
         w.walking = true;
         w.facing = 'side';
+        w.startAt = now;
       }
       if(w.walking) {
-        const speed = (mood === 'stressed' ? 0.35 : mood === 'thriving' ? 1.1 : 0.7) * oniSpeed;
+        // Like a real hamster: quick little scurries with short stops to sniff the air
+        if(w.pauseUntil > now) return;
+        if(now - (w.pauseUntil || 0) > 1500 && now - (w.startAt || 0) > 600 && Math.random() < 1 / 150) {
+          w.pauseUntil = now + 350 + Math.random() * 900;
+          return;
+        }
+        const base = (mood === 'stressed' ? 0.35 : mood === 'thriving' ? 1.1 : 0.7) * oniSpeed;
+        const left = Math.abs(w.target - w.x), since = now - (w.startAt || now);
+        const ease = Math.min(1, 0.35 + since / 400, 0.3 + left / 25); // speed up from a standstill, slow down near the end
+        const speed = base * 1.25 * ease;
         w.x += w.dir * speed;
-        w.phase += speed * 0.22;
+        w.phase += speed * 0.35;
         if((w.dir > 0 && w.x >= w.target) || (w.dir < 0 && w.x <= w.target)) {
+          if(spiritDrinkTrip) { // nose over the dish: a drink
+            spiritDrinkTrip = false;
+            w.walking = false; w.dir = -1; w.facing = 'side'; w.until = now + 6000;
+            spiritIdle = { kind: 'drink', start: now, dur: 2800 };
+            return;
+          }
+          if(spiritWheel && spiritWheel.stage === 'go') { // in he climbs
+            spiritWheel = { stage: 'run', start: now, until: now + 4000 + Math.random() * 4500, angle: 0 };
+            w.x = WHEEL.x; w.dir = 1;
+            return;
+          }
+          maybeDropping(w.x - w.dir * 30); // sometimes he leaves a little something behind
           w.walking = false;
           w.dir = -1; // glance left first...
           w.facing = 'left';
@@ -6695,8 +6868,28 @@
       }
       if(!day && cloud < 75) {
         for(let i = 0; i < 22; i++) {
-          ctx.fillStyle = `rgba(255, 255, 255, ${0.35 + 0.4 * Math.max(0, Math.sin(t * 1.5 + i * 2))})`;
-          ctx.fillRect(rand01(i, 1) * w, rand01(i, 2) * h * 0.55, 1.3, 1.3);
+          const tw = Math.max(0, Math.sin(t * (1.1 + rand01(i, 7)) + i * 2)), sx = rand01(i, 1) * w, sy = rand01(i, 2) * h * 0.55;
+          ctx.fillStyle = `rgba(255, 255, 255, ${0.35 + 0.4 * tw})`;
+          ctx.fillRect(sx, sy, 1.3, 1.3);
+          if(i % 4 === 0 && tw > 0.85) { // a few of them sparkle
+            const len = 3 * (tw - 0.85) / 0.15;
+            ctx.strokeStyle = `rgba(255, 255, 255, ${0.6 * tw})`; ctx.lineWidth = 0.6;
+            ctx.beginPath(); ctx.moveTo(sx + 0.65 - len, sy + 0.65); ctx.lineTo(sx + 0.65 + len, sy + 0.65); ctx.moveTo(sx + 0.65, sy + 0.65 - len); ctx.lineTo(sx + 0.65, sy + 0.65 + len); ctx.stroke();
+          }
+        }
+        // A shooting star now and then when the sky is clear
+        if(cloud < 30 && !reduceMotion) {
+          if(!drawSpiritWeather.shoot && Math.random() < 1 / 1500) drawSpiritWeather.shoot = { x: w * (0.05 + Math.random() * 0.5), y: 6 + Math.random() * 20, t: now };
+          const sh = drawSpiritWeather.shoot;
+          if(sh) {
+            const k = (now - sh.t) / 800, x = sh.x + k * 120, y = sh.y + k * 40, fade = Math.max(0, Math.min(1, k * 5, (1 - k) * 2.5));
+            const tail = ctx.createLinearGradient(x - 40, y - 13, x, y);
+            tail.addColorStop(0, 'rgba(255, 255, 255, 0)'); tail.addColorStop(1, `rgba(255, 255, 255, ${fade})`);
+            ctx.strokeStyle = tail; ctx.lineWidth = 1.3; ctx.lineCap = 'round';
+            ctx.beginPath(); ctx.moveTo(x - 40, y - 13); ctx.lineTo(x, y); ctx.stroke();
+            ctx.fillStyle = `rgba(255, 255, 255, ${fade})`; ctx.beginPath(); ctx.arc(x, y, 1.4, 0, Math.PI * 2); ctx.fill();
+            if(k >= 1) drawSpiritWeather.shoot = null;
+          }
         }
         // Tonight's real moon phase, with a soft glow and outline so it can always be found and tapped.
         // A cloud passing in front hides it: the more of the moon it covers, the fainter the moon.
@@ -6892,8 +7085,10 @@
 
       updateHamsterWalk(now, hCanvas.width, mood);
       const walking = hamsterWalk.walking;
-      const legA = walking ? Math.sin(hamsterWalk.phase) * 4 : 0;
-      const hop = walking ? -Math.abs(Math.sin(hamsterWalk.phase)) * (zombie ? 1 : todaysOni() === 'happy' ? 4 : 2) : 0;
+      const idleNow = spiritIdleState(performance.now()), digging = !!idleNow && idleNow.kind === 'dig', scratching = !!idleNow && idleNow.kind === 'scratch';
+      const stepping = walking && !(hamsterWalk.pauseUntil > performance.now()); // stopped to sniff: legs still
+      const legA = stepping ? Math.sin(hamsterWalk.phase * 1.7) * 3 : 0; // quick, short strides
+      const hop = stepping ? -Math.abs(Math.sin(hamsterWalk.phase * 1.7)) * (zombie ? 0.6 : todaysOni() === 'happy' ? 2.5 : 1.2) : 0;
 
       // Jump: a quick arc, lower and wobblier when zombified, tiny when sleepy
       const jumpT = hamsterJumpStart >= 0 ? (performance.now() - hamsterJumpStart) / 650 : 1;
@@ -6911,6 +7106,8 @@
         drawSpiritDecor(ctx);
         drawSpiritGarden(ctx, now);
         drawSpiritHouse(ctx, now);
+        drawSpiritWheel(ctx, now, false); // after the house: it's mounted on the igloo's side
+        drawWaterDish(ctx, now);
         drawBackupBox(ctx, now);
         drawSpiritHusks(ctx, now);
         drawSpiritFind(ctx, now);
@@ -6958,9 +7155,8 @@
         ctx.save();
         ctx.translate(hamsterWalk.x - 80 * S, 141 - 141 * S);
         ctx.scale(S, S);
-        const loki = spiritStyle.companion === 'loki';
-        if(spiritHome.anim.kind === 'in') loki ? drawLokiBack(ctx) : drawHamsterBack(ctx);
-        else loki ? drawLokiFront(ctx) : drawHamsterCrawlFront(ctx);
+        if(spiritHome.anim.kind === 'in') drawHamsterBack(ctx);
+        else drawHamsterCrawlFront(ctx);
         ctx.restore();
         ctx.restore();
         drawSpiritOverlay(ctx, now, S);
@@ -7029,10 +7225,10 @@
         }
         ctx.translate(hamsterWalk.x - 80 * S, 141 - 141 * S + jumpY);
         ctx.scale(S, S);
-        if(spiritStyle.companion === 'loki') drawLokiFront(ctx); else drawHamsterFront(ctx, jumpY, jumpK, S);
+        drawHamsterFront(ctx, jumpY, jumpK, S);
         if(snowCap > 0.05) { // snow settled on his head
           ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
-          const top = spiritStyle.companion === 'loki' ? 34 : 26;
+          const top = 26;
           [[-14, 4, 7], [0, 0, 9], [13, 3, 7], [-6, -3, 5], [7, -2, 5]].slice(0, 2 + Math.round(snowCap * 3)).forEach(([dx, dy, r]) => {
             ctx.beginPath(); ctx.ellipse(80 + dx, top + dy, r * (0.6 + 0.4 * snowCap), r * 0.6 * (0.6 + 0.4 * snowCap), 0, 0, Math.PI * 2); ctx.fill();
           });
@@ -7073,51 +7269,54 @@
       // (stays on the ground and shrinks while he's in the air)
       oval(82, ground + 3 - jumpY / S, 60 * (1 - jumpK * 0.35), 5, `rgba(0, 0, 0, ${0.35 - jumpK * 0.15})`);
 
-      if(spiritStyle.companion === 'loki') { // Loki's side view, with the same motion as his
-        ctx.save();
-        ctx.translate(82 + shiver, ground - B.bob);
-        ctx.rotate(sway);
-        ctx.scale(breathe * B.puff * (asleepPose ? 1.06 : 1), slump / breathe * (asleepPose ? 0.8 : 1));
-        ctx.translate(-82, -ground);
-        drawLokiSide(ctx, { ground, legA, walking, asleepPose, grumpy, zombie, now, blink, sniff });
-        ctx.restore();
-        ctx.restore();
-        drawSpiritOverlay(ctx, now, S);
-        return;
-      }
 
       ctx.save();
       ctx.translate(82 + shiver, ground - B.bob);
-      ctx.rotate(sway);
+      ctx.rotate(sway + (idleNow && (idleNow.kind === 'sniff' || idleNow.kind === 'drink') ? 0.13 : 0)); // nose down to the ground or the water
       ctx.scale(breathe * B.puff * (asleepPose ? 1.06 : 1), slump / breathe * (asleepPose ? 0.8 : 1));
       ctx.translate(-82, -ground);
 
       // Far-side legs and ear (behind the body, darker)
       if(!asleepPose) {
-        oval(48 + legA, ground - 2, 9, 4.5, zombie ? '#8a6a6a' : '#d98c8c');
-        oval(110 - legA, ground - 2, 6, 4, zombie ? '#8a6a6a' : '#d98c8c');
+        oval(50 + legA, ground - 1.5, 7, 3, zombie ? '#8a6a6a' : '#d98c8c');
+        // The far front leg only touches the ground while he walks; when his front paws are up (holding food) or digging, it's one of those
+        const pawsBusy = digging;
+        if(!pawsBusy) oval(110 - legA, ground - 1.5, 4.5, 2.8, zombie ? '#8a6a6a' : '#d98c8c');
       }
       oval(95 + HX(95), 50 + HY(95), 7, 9, furDark, -0.5);
 
       // Tail stub
       oval(21, 112, 4.5, 3.5, furDark, 0.4);
 
+      // Near feet, tucked under him like a real hamster's: drawn before the body, so only the toes peek out
+      if(!asleepPose) {
+        const toe = zombie ? '#9a7272' : '#e48d8d';
+        if(!scratching) {
+          oval(66 - legA, ground - 1.5, 8, 3.4, pink);
+          ctx.fillStyle = toe;
+          [70, 73].forEach(x => { ctx.beginPath(); ctx.arc(x - legA, ground - 1.5, 1, 0, Math.PI * 2); ctx.fill(); });
+        }
+        if(!digging) oval(122 + legA, ground - 1.5, 5, 3, pink);
+      }
+
       // Body + head silhouette: round rump on the left, snout on the right
       const bodyPath = () => traceSpiritShape(ctx, asleepPose ? 'sideSleep' : 'side'); // laid out for ground = 138
       const bodyGrad = ctx.createLinearGradient(0, 50, 0, ground);
       bodyGrad.addColorStop(0, furDark);
-      bodyGrad.addColorStop(0.35, fur);
-      bodyGrad.addColorStop(1, fur);
+      bodyGrad.addColorStop(0.38, fur);
+      bodyGrad.addColorStop(1, mixHexToHex(fur, cream, 0.3));
       ctx.fillStyle = bodyGrad;
       bodyPath();
       ctx.fill();
       const sideOutline = asleepPose ? spiritOutline('sideSleep', SPIRIT_SHAPES.sideSleep.start, SPIRIT_SHAPES.sideSleep.segs) : SPIRIT_SIDE_OUTLINE();
-      drawSpiritFurStyle(ctx, sideOutline, mixHexToHex(fur, furDark, 0.4), furDark, (x, y) => y > ground - 12 || (x > 126 + HX(126) && y > 66 + HY(126)));
+      drawRealFur(ctx, sideOutline, mixHexToHex(furDark, '#000000', 0.15), mixHexToHex(fur, cream, 0.3), 90,
+        (x, y) => y > ground - 12 || (x > 126 + HX(126) && y > 66 + HY(126)));
 
-      // Cream belly, chin and cheek (clipped to the body)
+      // Cream belly, chin and cheek (clipped to the body), with soft edges like real fur
       ctx.save();
       bodyPath();
       ctx.clip();
+      ctx.filter = 'blur(1.4px)';
       oval(88, ground - 6, 44, 16, cream);
       oval(124 + HX(124), 92 + HY(124), 16, 11, cream, -0.3);
       // Dark cheek bar typical of Syrian hamsters
@@ -7131,6 +7330,15 @@
       ctx.globalAlpha = 1;
       ctx.restore();
 
+      // Cheek pouch stuffed with food on his way home
+      if(cheeksFull() && !asleepPose) {
+        ctx.save();
+        ctx.filter = 'blur(0.6px)';
+        oval(114 + HX(114), 96 + HY(114), 16, 13, mixHexToHex(fur, cream, 0.35));
+        oval(116 + HX(116), 100 + HY(116), 12, 8, cream);
+        ctx.restore();
+      }
+
       drawSpiritPattern(ctx, {
         spots: [[40, 90, 9, 7], [70, 70, 8, 6], [28, 114, 6, 5], [96, 62, 5, 4]],
         stripe: [[22, 98], [40, 74], [66, 61], [100, 53]], stripeWidth: 6, band: [56, 40, 16, 110]
@@ -7141,7 +7349,7 @@
       ctx.lineWidth = 1;
       const tufts = zombie
         ? [[30, 80, -5, -6], [44, 68, -3, -7], [62, 60, 0, -7], [80, 56, 2, -7], [22, 100, -7, -3]]
-        : [[30, 82, -3, -3], [44, 70, -2, -4], [62, 62, 0, -4], [80, 58, 1, -4], [22, 102, -4, -1]];
+        : []; // the fine fur along the edge does this now
       tufts.forEach(([x, y, dx, dy]) => {
         ctx.beginPath();
         ctx.moveTo(x, y);
@@ -7174,9 +7382,9 @@
         ctx.restore();
         oval(ex + 1.6, ey + 1.3, 1.3, 1.3, '#120a06');
       } else {
-        oval(ex, ey, 4.4, 4.8, spiritEyeColour());
-        oval(ex + 1.4, ey - 1.6, 1.4, 1.4, 'rgba(255, 255, 255, 0.9)');
-        oval(ex - 1.2, ey + 1.5, 0.6, 0.6, 'rgba(255, 255, 255, 0.6)');
+        oval(ex, ey, 5.4, 5.9, spiritEyeColour());
+        oval(ex + 1.6, ey - 1.8, 2, 1.9, 'rgba(255, 255, 255, 0.97)');
+        oval(ex - 1.6, ey + 2, 0.9, 0.9, 'rgba(255, 255, 255, 0.7)');
       }
 
       // Nose (twitching) and mouth
@@ -7202,7 +7410,19 @@
       // Front paws: holding a seed up to the mouth, or flat on the ground when zombified
       if(asleepPose) {
         // no paws showing: tucked under him
-      } else if(!zombie && !walking) {
+      } else if(digging) {
+        // Scratching at the ground with quick front paws, bits of earth flying back
+        const t = performance.now(), d = Math.sin(t / 45);
+        oval(126 + d * 4, ground - 3 - Math.abs(d) * 2, 6, 3.5, pink);
+        oval(120 - d * 4, ground - 2, 5.5, 3.2, pink);
+        ctx.fillStyle = '#5a3d24';
+        for(let i = 0; i < 6; i++) {
+          const k = fract(t / 520 + i / 6), side = i % 2 ? 1 : -0.4;
+          ctx.globalAlpha = 1 - k;
+          ctx.beginPath(); ctx.arc(130 + side * k * 20, ground - 3 - Math.sin(k * Math.PI) * 13, 1.6, 0, Math.PI * 2); ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+      } else if(false) { // (sitting up with a seed sideways looked wrong: he stands on all fours instead)
         oval(136, 102, 3.8, 7, '#3d3226', 0.5);
         ctx.strokeStyle = '#d8cbb0';
         ctx.lineWidth = 0.8;
@@ -7213,15 +7433,14 @@
         oval(132, 106, 4.5, 3.4, pink, 0.6);
         oval(128, 110, 4, 3, pink, 0.4);
       } else {
-        oval(124 + legA, ground - 2, 6, 3.5, pink);
+        // near front paw: tucked under him, drawn before the body
       }
 
-      // Near hind foot
-      if(!asleepPose) {
-        oval(64 - legA, ground - 2, 11, 4.5, pink);
-        ctx.fillStyle = zombie ? '#9a7272' : '#e48d8d';
-        [71, 74.5].forEach(x => { ctx.beginPath(); ctx.arc(x - legA, ground - 3, 1.3, 0, Math.PI * 2); ctx.fill(); });
-      }
+      // Near hind foot (lifted up behind his ear, scratching fast, when he has an itch)
+      if(scratching) {
+        const t = performance.now();
+        oval(96 + Math.sin(t / 28) * 2.5, 84 + Math.cos(t / 28) * 2.5, 6, 3.6, pink, -0.9);
+      } // (otherwise his near hind foot is tucked under him, drawn before the body)
 
       if(zombie) {
         // Jagged bite-shaped chunks taken out of the silhouette
@@ -7289,12 +7508,7 @@
       } else {
         drawHealingMarks(ctx, [[62, 74, 11], [36, 104, 10], [86, ground - 14, 8]], bodyPath);
       }
-      drawOniTouches(ctx, {
-        mood: todaysOni(), ink: '#6b3d1c', dim: zombie, size: 1.3,
-        mark: [128, 61],
-        tusks: [[nx - 6, ny + 8, 1]],
-        stripes: [[110, 86, -1]]
-      });
+      // (no forehead mark or tusks: he's drawn as a real hamster)
       drawSpiritOni(ctx, {
         now, zombie, fur,
         eyes: [[122, 72]],
@@ -7338,6 +7552,7 @@
       }
       ctx.restore();
       ctx.restore();
+      drawSpiritWheel(ctx, now, true);
       drawSpiritOverlay(ctx, now, S);
     }
 
@@ -7392,7 +7607,7 @@
       try {
         g.setTransform(f, 0, 0, f, -sx * f, -sy * f);
         g.translate(160 - 80 * S, 141 - 141 * S); g.scale(S, S);
-        if(spiritStyle.companion === 'loki') drawLokiFront(g); else drawHamsterFront(g, 0, 0, S);
+        drawHamsterFront(g, 0, 0, S);
       } finally { g.restore(); spiritSnapshotting = false; }
     }
 
@@ -7861,7 +8076,7 @@
       const lines = [
         compare('Exercises within 24 hours', r => r.f.some(x => EXERCISE.includes(x))),
         compare('Writing about it', r => r.f.includes('Wrote in the journal')),
-        compare('Checking in with an oni', r => r.f.includes('Checked in'))
+        compare('Checking in with a mood', r => r.f.includes('Checked in'))
       ].filter(Boolean);
       box.innerHTML = insightCard('🧪', lines.length
         ? 'How it helps you after hard days:<br>' + lines.join('<br>') + '<br><span class="insight-note">From your own records. On good days you don\'t need any of this, and that\'s fine.</span>'
@@ -8124,13 +8339,10 @@
     }
 
     function calmLoop() {
+      requestAnimationFrame(calmLoop); // first, so one failing tool can't stop the others
       const t = performance.now();
-      drawStream(t);
-      renderStream(unsentStream, t);
-      drawPond(t);
-      drawLanterns(t);
-      drawFog(t);
-      requestAnimationFrame(calmLoop);
+      [() => drawStream(t), () => renderStream(unsentStream, t), () => drawPond(t), () => drawLanterns(t), () => drawFog(t)]
+        .forEach(f => { try { f(); } catch(e) { if(!calmLoop.seen) { calmLoop.seen = 1; console.error(e); } } });
     }
 
     // EMOTIONAL STATE CALENDAR
@@ -8209,7 +8421,7 @@
                       <button class="mood-del" onclick="deleteMoodEntry(${e.ts})">✕</button>
                     </div>`;
           }).join('')
-        : '<div class="subtitle" style="margin:6px 0 0;">No oni tapped this day.</div>');
+        : '<div class="subtitle" style="margin:6px 0 0;">No mood picked this day.</div>');
     }
 
     // SKY LANTERNS
@@ -8588,15 +8800,20 @@
           ctx.fill();
         }
       }
-      // A shooting star now and then at night
-      if(d < 0.3 && !reduceMotion) {
-        if(!sky.shoot && Math.random() < 0.0012) sky.shoot = { x: W * (0.1 + Math.random() * 0.5), y: H * (0.04 + Math.random() * 0.18), t };
+      // A shooting star now and then on clear nights: a bright head and a fading tail
+      const clearSky = !wxNow || (wxNow.cloud < 40 && wxNow.code < 3);
+      if(d < 0.3 && !reduceMotion && (clearSky || sky.shoot)) {
+        if(!sky.shoot && Math.random() < 0.0015) sky.shoot = { x: W * (0.1 + Math.random() * 0.5), y: H * (0.04 + Math.random() * 0.18), t, len: 80 + Math.random() * 60 };
         if(sky.shoot) {
-          const k = (t - sky.shoot.t) / 900, x = sky.shoot.x + k * 180, y = sky.shoot.y + k * 80;
-          const tail = ctx.createLinearGradient(x - 70, y - 31, x, y);
-          tail.addColorStop(0, 'rgba(255, 255, 255, 0)'); tail.addColorStop(1, `rgba(255, 255, 255, ${Math.max(0, 1 - k) * (1 - d)})`);
-          ctx.strokeStyle = tail; ctx.lineWidth = 2;
-          ctx.beginPath(); ctx.moveTo(x - 70, y - 31); ctx.lineTo(x, y); ctx.stroke();
+          const k = (t - sky.shoot.t) / 1000, x = sky.shoot.x + k * 220, y = sky.shoot.y + k * 95, L = sky.shoot.len;
+          const fade = Math.max(0, Math.min(1, k * 5, (1 - k) * 2.5)) * (1 - d);
+          const tail = ctx.createLinearGradient(x - L, y - L * 0.43, x, y);
+          tail.addColorStop(0, 'rgba(255, 255, 255, 0)'); tail.addColorStop(1, `rgba(255, 255, 255, ${fade})`);
+          ctx.strokeStyle = tail; ctx.lineWidth = 2; ctx.lineCap = 'round';
+          ctx.beginPath(); ctx.moveTo(x - L, y - L * 0.43); ctx.lineTo(x, y); ctx.stroke();
+          const head = ctx.createRadialGradient(x, y, 0, x, y, 6);
+          head.addColorStop(0, `rgba(255, 255, 255, ${fade})`); head.addColorStop(1, 'rgba(200, 225, 255, 0)');
+          ctx.fillStyle = head; ctx.beginPath(); ctx.arc(x, y, 6, 0, Math.PI * 2); ctx.fill();
           if(k >= 1) sky.shoot = null;
         }
       }
@@ -8609,6 +8826,11 @@
           ctx.beginPath();
           ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
           ctx.fill();
+          if(s.r > 1.15 && tw > 0.8 && !reduceMotion) { // a sparkle at the brightest moment of its twinkle
+            const g = (tw - 0.8) / 0.1, len = s.r * 3.2 * Math.min(1, g);
+            ctx.strokeStyle = `rgba(255, 255, 255, ${a * 0.85})`; ctx.lineWidth = 0.7;
+            ctx.beginPath(); ctx.moveTo(s.x - len, s.y); ctx.lineTo(s.x + len, s.y); ctx.moveTo(s.x, s.y - len); ctx.lineTo(s.x, s.y + len); ctx.stroke();
+          }
         });
         // Tonight's real moon: its actual phase, with a stronger halo the fuller it is
         const mx = W * 0.82, my = Math.max(H * 0.1, 150), age = moonAge(), full = 1 - Math.abs(age / SYNODIC - 0.5) * 2;
@@ -8722,9 +8944,9 @@
     }
 
     function skyLoop(t) {
+      if(!reduceMotion) requestAnimationFrame(skyLoop); // first, so one bad frame can't stop the sky
       // ~20 fps is plenty for a slow background; on Calendar and Insights it holds still
-      if(t - sky.lastDraw > 50 && !document.body.classList.contains('still-sky')) { drawSky(t); sky.lastDraw = t; }
-      if(!reduceMotion) requestAnimationFrame(skyLoop);
+      try { if(t - sky.lastDraw > 50 && !document.body.classList.contains('still-sky')) { drawSky(t); sky.lastDraw = t; } } catch(e) { console.error(e); }
     }
 
     window.addEventListener('resize', () => { setupSky(); drawSky(performance.now()); setNavHeight(); });
@@ -8738,6 +8960,26 @@
 
     // MOON PHASE (top bar)
     const SYNODIC = 29.530588853;
+    // New-moon nights only, in the moon view: the dark moon wears a sly grin (its own face, not borrowed from anywhere)
+    function isNewMoon() { const a = moonAge(); return a < 1.8 || a > SYNODIC - 1.8; }
+    function drawCreepyMoonFace(ctx, x, y, r, now, eyeA = 1, grinA = 1) {
+      ctx.save();
+      const base = ctx.globalAlpha;
+      ctx.fillStyle = 'rgba(255, 214, 140, 0.9)';
+      ctx.shadowColor = 'rgba(255, 160, 80, 0.85)'; ctx.shadowBlur = Math.max(3, r * 0.4);
+      const look = Math.sin(now / 2600) * r * 0.05; // the eyes drift slowly from side to side
+      ctx.globalAlpha = base * eyeA;
+      [-1, 1].forEach(s => { // narrow, slanted, half-lidded slits
+        ctx.beginPath(); ctx.ellipse(x + s * r * 0.36 + look, y - r * 0.2, r * 0.21, r * 0.07, s * -0.35, 0, Math.PI * 2); ctx.fill();
+      });
+      ctx.globalAlpha = base * grinA;
+      ctx.beginPath(); // a wide, thin grin from cheek to cheek
+      ctx.moveTo(x - r * 0.64, y + r * 0.06);
+      ctx.quadraticCurveTo(x, y + r * 0.8, x + r * 0.64, y + r * 0.06);
+      ctx.quadraticCurveTo(x, y + r * 0.5, x - r * 0.64, y + r * 0.06);
+      ctx.fill();
+      ctx.restore();
+    }
     const NEW_MOON_REF = Date.UTC(2000, 0, 6, 18, 14); // a known new moon
 
     function moonAge(d = new Date()) {
@@ -8936,6 +9178,17 @@
       ctx.restore();
     }
 
+    let moonGrinAt = 0;
+    // A tap on the new moon makes it grin; anywhere else (or on any other moon) closes the view as before
+    function moonViewTap(e) {
+      const c = document.getElementById('moon-view-canvas'), r = c.getBoundingClientRect();
+      const x = (e.clientX - r.left) * c.width / r.width, y = (e.clientY - r.top) * c.height / r.height;
+      if(isNewMoon() && Math.hypot(x - c.width / 2, y - c.height / 2) <= c.width * 0.36) {
+        if(!moonGrinAt || performance.now() - moonGrinAt > 9000) moonGrinAt = performance.now();
+        return;
+      }
+      closeMoonView();
+    }
     function moonViewLoop() {
       const c = document.getElementById('moon-view-canvas');
       const ctx = c.getContext('2d');
@@ -8983,6 +9236,14 @@
       });
       ctx.restore();
       ctx.restore();
+      // Only around the new moon, and only when you tap it: the dark moon grins back at you, Cheshire Cat style.
+      // The grin fades in first, then the eyes; the eyes fade away and the grin lingers alone before it goes too
+      const gk = moonGrinAt ? (performance.now() - moonGrinAt) / 9000 : 1;
+      if(isNewMoon() && gk < 1) {
+        const grinA = gk < 0.12 ? gk / 0.12 : gk < 0.85 ? 1 : gk < 0.95 ? (0.95 - gk) / 0.1 : 0;
+        const eyeA = gk < 0.12 ? 0 : gk < 0.22 ? (gk - 0.12) / 0.1 : gk < 0.6 ? 1 : gk < 0.7 ? (0.7 - gk) / 0.1 : 0;
+        if(grinA > 0) drawCreepyMoonFace(ctx, cx, cy, r, performance.now(), eyeA, grinA);
+      }
 
       moonClouds.filter(cl => cl.front).forEach(cl => drawCloud(ctx, cl, true));
       moonClouds = moonClouds.map(cl => {
@@ -9289,7 +9550,7 @@
         html += `<div class="pat-insight">Incidents happen most in the <b>${bands[top][0].toLowerCase()}</b>.</div>`;
       }
 
-      el.innerHTML = html || '<div class="subtitle" style="margin:0;">Not enough data yet. Patterns appear after a few oni picks, hard days or incidents.</div>';
+      el.innerHTML = html || '<div class="subtitle" style="margin:0;">Not enough data yet. Patterns appear after a few mood picks, hard days or incidents.</div>';
     }
 
     // ---------- QUICK TAGS (journal + incident log) ----------
@@ -10335,7 +10596,7 @@
       g.rotate(0.2 - inhale * 0.04);
       g.scale(S * (1 + 0.02 * inhale), S * (1 + 0.045 * inhale));
       g.translate(-80, -141);
-      if(isLoki()) drawLokiFront(g); else drawHamsterFront(g, 0, 0, S);
+      drawHamsterFront(g, 0, 0, S);
       // The sigh: a misty puff drifting away from his mouth
       if(ph > 0.6 && ph < 0.98) {
         const k = (ph - 0.6) / 0.38;
@@ -11270,7 +11531,8 @@
     const CALM_TILE = [['Vagus', pxIcon('eye'), '60 seconds'], ['Quiet Reset', pxIcon('leaf'), '2 minutes, anywhere'], ['Statements', pxIcon('quote'), 'Words to hold onto'],
                        ['Breathing', pxIcon('circle'), 'Paced rounds'], ['Chaos', pxIcon('burst'), 'Shake it out'], ['Leaves', pxIcon('leaf'), 'Let thoughts pass'],
                        ['Pond', pxIcon('waves'), 'Ripples settle'], ['Lanterns', pxIcon('lantern'), 'Release worries'], ['Fog', pxIcon('cloud'), 'Wipe the window clear'],
-                       ['Conflict', pxIcon('heart'), 'Making up, step by step'], ['Practice', pxIcon('star'), 'Rehearse safe boundaries']];
+                       ['Conflict', pxIcon('heart'), 'Making up, step by step'], ['Practice', pxIcon('star'), 'Rehearse safe boundaries'],
+                       ['JADE', pxIcon('quote'), '10 a day · calm replies to insults']];
     function setupCalmTiles() {
       const tab = document.getElementById('tab-calm');
       if(!tab || document.getElementById('calm-tiles')) return;
@@ -11292,8 +11554,8 @@
       const tiles = document.createElement('div');
       tiles.id = 'calm-tiles';
       tiles.className = 'calm-tiles';
-      const USE_ORDER = ['Breathing', 'Lanterns', 'Practice', 'Conflict', 'Vagus', 'Quiet Reset']; // by how often you use them
-      const MAIN = 4; // Breathing, Lanterns, Crisis Practice and After a Conflict up front; the rest wait under "More tools"
+      const USE_ORDER = ['Breathing', 'JADE', 'Practice', 'Conflict', 'Lanterns', 'Vagus', 'Quiet Reset']; // by how often you use them
+      const MAIN = 4; // Breathing, Don't JADE, Crisis Practice and After a Conflict up front; the rest wait under "More tools"
       const rank = t => { const r = USE_ORDER.findIndex(k => t.includes(k)); return r < 0 ? USE_ORDER.length : r; };
       const order = titles.map((t, i) => i).sort((a, b) => rank(titles[a]) - rank(titles[b]) || a - b);
       calmTitles = titles;
@@ -11638,6 +11900,162 @@
       sim.id = null;
       renderSim();
       showToast('Practice saved');
+    }
+
+    // ---------- DON'T JADE: ten a day. Calm one-liners to insults, instead of Justifying, Arguing, Defending or Explaining ----------
+    // q: what's said · j: the JADE reply (jt: which letter) · h: hitting back · c: the calm reply (ck: what kind; in brackets = something to do)
+    // w: why it works here · r: a possible response, so the next step isn't a surprise
+    const JADE_GENERAL = [{"q": "You're pathetic.", "j": "I'm not pathetic, I work hard and I always…", "jt": "D", "h": "Look who's talking.", "c": "I'm not going to keep talking while I'm being called names.", "ck": "bound", "w": "You don't have to prove the label wrong. Naming the line ends the round.", "r": "Oh, now you're too good to talk to me?"}, {"q": "You're such an idiot.", "j": "I'm not an idiot, I just didn't know that the…", "jt": "D", "h": "At least I'm not the one screaming.", "c": "I see it differently.", "ck": "dis", "w": "One calm line and no evidence. There's nothing to grab onto.", "r": "Of course you do. You always do."}, {"q": "You're useless.", "j": "That's not fair, I did the shopping and the washing and…", "jt": "J", "h": "Useless? You haven't done anything all week.", "c": "Okay.", "ck": "min", "w": "A list of what you did invites a debate over every item. 'Okay' gives the moment nowhere to go.", "r": "Okay? That's all you've got?"}, {"q": "You're a coward.", "j": "I'm not scared, I just think we should wait because…", "jt": "E", "h": "And you're a bully.", "c": "You're allowed to think that.", "ck": "own", "w": "Their opinion of you stays theirs. You don't have to take it on, or fight it.", "r": "See, you can't even argue back."}, {"q": "You're a loser. Everyone thinks so.", "j": "Who thinks that? My friends actually told me…", "jt": "A", "h": "Everyone thinks you're impossible.", "c": "I'm going to step out for a bit.", "ck": "step", "w": "No answer wins this one. Leaving the room protects you and stops the spiral.", "r": "Yes, run away like always."}, {"q": "You're such a child.", "j": "I'm not acting like a child, I'm upset because…", "jt": "E", "h": "Says the one throwing a tantrum.", "c": "I'll talk about it when we're both calmer.", "ck": "later", "w": "Explaining your feelings mid-attack hands over more to criticise. Postpone instead of defending.", "r": "No, we're talking now!"}, {"q": "You're a liar.", "j": "I didn't lie, I said seven and the bus was late, and…", "jt": "J", "h": "You're the one who lies.", "c": "I know what's true for me.", "ck": "dis", "w": "Long explanations sound like guilt. A short, steady line doesn't.", "r": "Your 'truth' is a joke."}, {"q": "You're crazy.", "j": "I'm not crazy, I just remember it differently because…", "jt": "D", "h": "You're the crazy one.", "c": "I remember it differently, and that's okay.", "ck": "dis", "w": "You don't need to win the memory. Two versions can stand without a fight.", "r": "It's not okay. You're wrong."}, {"q": "You're a terrible person.", "j": "That's not true, I'm always there for you, remember when…", "jt": "D", "h": "Better than you.", "c": "I don't agree, and I'm not going to argue about it.", "ck": "dis", "w": "Your worth isn't up for a vote. Disagree once, then stop.", "r": "You don't argue because you know I'm right."}, {"q": "You're so selfish. You only think about yourself.", "j": "I'm not selfish, I cooked, I drove you, I…", "jt": "J", "h": "Selfish? You never even ask how I am.", "c": "I hear that you feel that way.", "ck": "ack", "w": "Acknowledging the feeling isn't agreeing with the label.", "r": "Don't 'hear' me. Change."}, {"q": "You're lazy.", "j": "I'm tired because I worked ten hours and then…", "jt": "E", "h": "You're one to talk.", "c": "Hm.", "ck": "min", "w": "Not every sentence needs an answer. 'Hm' is a complete reply.", "r": "'Hm'? Answer me properly."}, {"q": "You don't care about anyone.", "j": "Of course I care, look at everything I do for…", "jt": "A", "h": "You don't care about me either.", "c": "I do care. I'm not going to argue about it right now.", "ck": "bound", "w": "Say it once. Piling up proof turns care into a court case.", "r": "Then prove it."}, {"q": "You're cold. You have no feelings.", "j": "I do have feelings, I just don't show them like you because…", "jt": "E", "h": "And you have far too many.", "c": "I'm staying calm on purpose.", "ck": "fact", "w": "Calm isn't cold. You can name your choice without defending it.", "r": "On purpose? That's even worse."}, {"q": "Everything about you is fake.", "j": "I'm not fake, I'm just polite with people because…", "jt": "D", "h": "You're the fake one.", "c": "That's your view.", "ck": "own", "w": "Their view isn't a fact you have to correct.", "r": "It's not a view, it's the truth."}, {"q": "You're a bad friend to everyone.", "j": "I'm a good friend, ask anyone, I helped Sam move and…", "jt": "A", "h": "At least I have friends.", "c": "I'm not going to discuss that now.", "ck": "bound", "w": "Calling witnesses keeps the trial going. Close the topic instead.", "r": "Because you know I'm right."}, {"q": "You're weak.", "j": "I'm not weak, I just don't want to fight because…", "jt": "J", "h": "And you're cruel.", "c": "Not fighting is my choice.", "ck": "fact", "w": "One line about your choice, then stop. No reasons needed.", "r": "Keep telling yourself that."}, {"q": "This is all your fault.", "j": "It's not all my fault, you also said that…", "jt": "A", "h": "It's your fault, actually.", "c": "I'm not going to argue about whose fault it is.", "ck": "bound", "w": "Splitting blame turns into a tally. Step out of the scoring.", "r": "Because it's yours."}, {"q": "You ruined the whole evening.", "j": "I didn't ruin it, I only said one thing about…", "jt": "D", "h": "You ruined it the moment you started yelling.", "c": "I'm sorry the evening went badly.", "ck": "ack", "w": "You can be sorry it went badly without taking all the blame.", "r": "Sorry isn't enough."}, {"q": "Look what you made me do.", "j": "I didn't make you do anything, you chose to…", "jt": "A", "h": "Don't blame me for your temper.", "c": "I'm going to give us some space.", "ck": "step", "w": "Arguing about who caused it keeps it hot. Space cools it.", "r": "Don't you dare walk away from me."}, {"q": "If you weren't so difficult, we wouldn't fight.", "j": "I'm not difficult, I only asked you to…", "jt": "D", "h": "If you weren't so angry, we wouldn't fight.", "c": "I'd like to talk when we're both calm.", "ck": "later", "w": "Point to a calmer talk instead of debating who's difficult.", "r": "There you go, avoiding again."}, {"q": "You always ruin everything.", "j": "Not always, last week everything was fine because…", "jt": "A", "h": "You always make everything about you.", "c": "Okay. I'm going to take a break.", "ck": "step", "w": "'Always' is bait. Counter-examples just start a new argument.", "r": "Typical. Running away."}, {"q": "It's your fault I'm like this.", "j": "It's not, you were like this before we even…", "jt": "A", "h": "You were like this long before me.", "c": "I care that you're upset. I'm not taking the blame for it.", "ck": "love", "w": "Caring and refusing the blame can both be true at once.", "r": "You should take the blame."}, {"q": "You made us late, as usual.", "j": "I wasn't the reason, the traffic on the ring road…", "jt": "J", "h": "You're the one who took an hour to get ready.", "c": "We're late. Let's just go.", "ck": "fact", "w": "Deal with the fact and skip the trial.", "r": "Don't change the subject."}, {"q": "Oh great, the genius has an opinion.", "j": "I'm only saying what I think because…", "jt": "J", "h": "Better than having none.", "c": "Yes, I do.", "ck": "min", "w": "Answering sarcasm plainly takes out the sting. It has nowhere to land.", "r": "Wow. Amazing."}, {"q": "Poor you, always the victim.", "j": "I'm not playing the victim, I just felt hurt when…", "jt": "D", "h": "You're the one who always complains.", "c": "I'm going to leave it there.", "ck": "bound", "w": "Proving you're not a victim makes you argue about your own pain.", "r": "Of course you will."}, {"q": "Wow, you actually did something right for once.", "j": "I do things right all the time, like last week when…", "jt": "D", "h": "Shocking, coming from you.", "c": "Thanks.", "ck": "min", "w": "Taking the words at face value disarms the mockery.", "r": "Don't get used to it."}, {"q": "Are you going to cry now?", "j": "I'm not crying, I'm just tired and…", "jt": "D", "h": "Are you going to scream now?", "c": "Maybe. I'm stepping out for a minute.", "ck": "step", "w": "You're allowed to have feelings without defending them.", "r": "Go on then, go and cry."}, {"q": "Here we go again with the drama.", "j": "It's not drama, it's a real problem because…", "jt": "A", "h": "You're the drama.", "c": "I'll bring it up another time.", "ck": "later", "w": "Postponing keeps the issue alive without a fight now.", "r": "You never bring anything up."}, {"q": "My ex never acted like this.", "j": "I'm not acting like anything, I only asked…", "jt": "D", "h": "Then go back to your ex.", "c": "I'm not going to compare myself to anyone.", "ck": "bound", "w": "Comparisons can't be won. Decline the contest.", "r": "Because you'd lose."}, {"q": "Everyone else's partner manages it. Why can't you?", "j": "I do manage, I just had a lot going on with…", "jt": "J", "h": "Everyone else's partner is nicer, too.", "c": "I'm doing what I can.", "ck": "fact", "w": "A calm statement of fact, with no list to pick apart.", "r": "Well, it's not enough."}, {"q": "Your friends think you're a joke too.", "j": "They don't, they told me just last week that…", "jt": "A", "h": "Your friends can't stand you.", "c": "I'll let them speak for themselves.", "ck": "own", "w": "Second-hand opinions are a trap. Don't defend yourself against people who aren't in the room.", "r": "They'll tell you the same."}, {"q": "You're just like your parents.", "j": "I'm nothing like them, I always…", "jt": "D", "h": "And you're just like yours.", "c": "I'm not going to talk about my family like this.", "ck": "bound", "w": "A boundary about the topic, not a defence of the people.", "r": "Oh, touchy."}, {"q": "You did the same thing two years ago.", "j": "That was different, back then the situation was…", "jt": "E", "h": "And you did worse last year.", "c": "I'd like to stay on today.", "ck": "bound", "w": "Re-trying old cases never ends. Bring it back to now.", "r": "No, we're talking about all of it."}, {"q": "You never apologised for what you did.", "j": "I did apologise, in March, I said…", "jt": "A", "h": "You never apologise for anything.", "c": "I can hear it still hurts. Can we talk about it when it's calm?", "ck": "later", "w": "Acknowledge the hurt and move the talk to a better time.", "r": "Calm? You always want to wait."}, {"q": "I'll never forget what you did.", "j": "But I explained why it happened, it was because…", "jt": "E", "h": "Neither will I, about you.", "c": "I understand.", "ck": "ack", "w": "You can't argue someone out of a memory. Let it be heard.", "r": "You don't understand anything."}, {"q": "You've always been like this.", "j": "I haven't, I've changed a lot since…", "jt": "A", "h": "And you've always been cruel.", "c": "I see myself differently.", "ck": "dis", "w": "One line of your own view, then stop.", "r": "Then you're blind."}, {"q": "Remember your birthday disaster? Typical.", "j": "That wasn't my fault, the restaurant cancelled and…", "jt": "J", "h": "Remember yours?", "c": "That's in the past.", "ck": "fact", "w": "Old examples are ammunition. Don't reload them.", "r": "It's not the past. It's who you are."}, {"q": "So you're saying I'm a bad person?", "j": "No, that's not what I said, I meant that…", "jt": "E", "h": "If the shoe fits.", "c": "No. I said what I said.", "ck": "dis", "w": "Re-explaining invites another twist. Stand by your words, briefly.", "r": "That's exactly what you meant."}, {"q": "You said you hate me.", "j": "I never said that, I said I hate it when…", "jt": "E", "h": "Maybe I should.", "c": "I didn't say that, and I'm not going to argue about it.", "ck": "bound", "w": "Correct it once, then refuse the loop.", "r": "You did. I heard you."}, {"q": "You're twisting everything, as always.", "j": "I'm not twisting it, here's exactly what happened…", "jt": "A", "h": "You're the one twisting it.", "c": "We see it differently.", "ck": "dis", "w": "Two versions can exist. You don't need the last word.", "r": "No, you see it wrong."}, {"q": "Why are you making this about you?", "j": "I'm not, I'm only saying how it affected me because…", "jt": "J", "h": "Because you make everything about you.", "c": "I'll stop here for now.", "ck": "later", "w": "Pausing beats proving your motives.", "r": "Running away again."}, {"q": "Maybe I should just leave you.", "j": "Please don't, I'll change, I'm sorry about…", "jt": "J", "h": "Go, then.", "c": "That's a big decision. Let's not make it while we're angry.", "ck": "later", "w": "Neither begging nor daring. Big choices belong to calm moments.", "r": "Maybe I'm serious."}, {"q": "If you loved me, you'd do this.", "j": "I do love you, I've shown it so many times by…", "jt": "J", "h": "If you loved me, you wouldn't ask.", "c": "I love you, and my answer is still no.", "ck": "love", "w": "Love and a no can share one sentence.", "r": "So you don't love me."}, {"q": "Do it, or we're done.", "j": "But I can't, because on Friday I have…", "jt": "E", "h": "Then we're done.", "c": "I'm not deciding anything under pressure.", "ck": "bound", "w": "Ultimatums push for a fast yes. Slowing down is allowed.", "r": "You never decide anything."}, {"q": "Who were you texting? You're hiding something.", "j": "I'm not hiding anything, it was my brother about the…", "jt": "J", "h": "Who are you texting all the time?", "c": "I'm not hiding anything. I won't be questioned like this.", "ck": "bound", "w": "Say it once. Long proof makes it look like there's something to prove.", "r": "That's exactly what someone hiding something says."}, {"q": "You're cheating. I know it.", "j": "I'm not, I was at work, you can ask my boss…", "jt": "D", "h": "Maybe you are.", "c": "That's not true. I won't keep defending myself against it.", "ck": "bound", "w": "A clear no, then a boundary. Not an alibi.", "r": "Then show me your phone."}, {"q": "You did that on purpose to hurt me.", "j": "I didn't, I forgot because I was so busy with…", "jt": "E", "h": "You do things on purpose all the time.", "c": "I didn't mean to hurt you.", "ck": "love", "w": "One honest line. Extra reasons start to sound like excuses.", "r": "But you did."}, {"q": "You're overreacting.", "j": "I'm not overreacting, it's a big deal because…", "jt": "J", "h": "And you're underreacting.", "c": "It matters to me.", "ck": "fact", "w": "Your feelings don't need a justification to count.", "r": "Everything matters to you."}, {"q": "Stop being so sensitive.", "j": "I'm not sensitive, anyone would be upset if…", "jt": "D", "h": "Stop being so harsh.", "c": "I feel what I feel.", "ck": "fact", "w": "There's no case to make. Feelings aren't arguments.", "r": "Feelings, feelings. Grow up."}, {"q": "Nobody cares about your feelings.", "j": "But I'm just trying to explain why I…", "jt": "E", "h": "Nobody cares about yours either.", "c": "I care about them. I'm going to take some time for me.", "ck": "step", "w": "You can look after your own feelings without asking permission.", "r": "Go on, go and sulk."}, {"q": "You're wasting all our money.", "j": "I'm not, I only bought what we needed, like…", "jt": "J", "h": "You spend more than me.", "c": "I'd like to look at the budget together on a calm day.", "ck": "later", "w": "Money talks go better with numbers and calm, not under attack.", "r": "You always want to postpone."}, {"q": "Your job is a joke.", "j": "It's not, I actually do important work, like…", "jt": "D", "h": "At least I have one.", "c": "It works for me.", "ck": "dis", "w": "Your job doesn't need defending to stay worth doing.", "r": "Because you have no ambition."}, {"q": "You'll never earn enough.", "j": "I'm working on it, next year I'll get…", "jt": "J", "h": "Neither will you.", "c": "I'm doing what I can.", "ck": "fact", "w": "A plain fact leaves no list to pick apart.", "r": "It's not enough."}, {"q": "You care more about work than about me.", "j": "That's not true, I only stayed late because…", "jt": "E", "h": "You care more about your phone.", "c": "You matter to me. I'm working right now.", "ck": "love", "w": "Both things are true. You can say them together.", "r": "Then stop working."}, {"q": "Your colleagues must hate you.", "j": "They don't, my manager even said…", "jt": "A", "h": "Your friends must hate you.", "c": "Hm.", "ck": "min", "w": "Guesses about other people need no reply.", "r": "You know it's true."}, {"q": "You're so stingy.", "j": "I'm not, I paid for dinner twice this week and…", "jt": "J", "h": "And you're wasteful.", "c": "I'm careful with money right now.", "ck": "fact", "w": "Say what you're doing, not why you're not what they called you.", "r": "Careful? Cheap."}, {"q": "You can't even manage a bank account.", "j": "I can, it's just that this month the rent…", "jt": "E", "h": "Look at your own account.", "c": "I'm sorting it out.", "ck": "fact", "w": "Short and true. The details are yours.", "r": "Since when?"}, {"q": "You should be embarrassed by how little you make.", "j": "I'm not embarrassed, it's actually normal for…", "jt": "D", "h": "You should be embarrassed by how you act.", "c": "I'm not.", "ck": "dis", "w": "Two words. Shame only works if you pick it up.", "r": "You should be."}, {"q": "Why did you buy that? Explain yourself.", "j": "Because it was on sale and I needed…", "jt": "J", "h": "Why did you buy your stuff?", "c": "I wanted it.", "ck": "fact", "w": "You can own a small choice without a court case.", "r": "That's not a reason."}, {"q": "You're lazy at work. That's why you're stuck.", "j": "I'm not lazy, promotions are frozen because…", "jt": "E", "h": "You're stuck too.", "c": "That's your view.", "ck": "own", "w": "Their verdict on your career stays theirs.", "r": "It's everyone's view."}, {"q": "Who would hire someone like you?", "j": "Plenty of people, I had two offers last…", "jt": "A", "h": "Who would date someone like you?", "c": "I'm not going to answer that.", "ck": "bound", "w": "Some questions are traps. You can decline them.", "r": "Because you can't."}, {"q": "You only work from home to avoid me.", "j": "No, my team decided that because…", "jt": "E", "h": "I'd avoid you if I could.", "c": "I'm not avoiding you.", "ck": "dis", "w": "One line of what's true for you.", "r": "Then why are you always in that room?"}, {"q": "You can't even cook an egg.", "j": "I can, the pan was just too hot because…", "jt": "E", "h": "Then cook it yourself.", "c": "I'll try again tomorrow.", "ck": "fact", "w": "A small mistake is just a small mistake.", "r": "Don't bother."}, {"q": "This place is a pigsty because of you.", "j": "I cleaned the bathroom and kitchen yesterday, so…", "jt": "J", "h": "Half of it is your mess.", "c": "Let's split what's left today.", "ck": "fact", "w": "Move to the task, not the trial.", "r": "Now you want to clean?"}, {"q": "You never do anything around here.", "j": "I do loads, the laundry, the dishes…", "jt": "J", "h": "You never do anything either.", "c": "I'll take the dishes now.", "ck": "fact", "w": "An action beats a list.", "r": "One thing doesn't fix it."}, {"q": "You put it in the wrong place, as always.", "j": "I put it there because last time you said…", "jt": "E", "h": "Then put it away yourself.", "c": "Where would you like it?", "ck": "fact", "w": "A question turns a battle into a task.", "r": "You should know by now."}, {"q": "You burned it. You ruin everything you touch.", "j": "I didn't ruin it, it's just a bit dark because…", "jt": "D", "h": "You ruin everything too.", "c": "It got burned. I'll make another one.", "ck": "fact", "w": "Own the toast, not the 'everything'.", "r": "Don't bother."}, {"q": "You didn't buy water. Again.", "j": "I meant to, but the shop was closed and…", "jt": "J", "h": "You drink it all.", "c": "I'll get some now.", "ck": "fact", "w": "Fix it. Reasons won't fill the bottle.", "r": "Too late."}, {"q": "Why do I always have to tell you everything?", "j": "You don't, I took the bins out without being asked and…", "jt": "A", "h": "Why do you always have to nag?", "c": "I'd like a list we both agree on. Can we make one later?", "ck": "later", "w": "Point to a fix for another time.", "r": "You'd lose the list."}, {"q": "You wash dishes like a child.", "j": "I don't, I use hot water and…", "jt": "D", "h": "You wash nothing.", "c": "Show me how you like it.", "ck": "fact", "w": "Asking turns criticism into instructions.", "r": "I shouldn't have to."}, {"q": "You left the window closed. Do you want to make me ill?", "j": "No, of course not, I just forgot because…", "jt": "E", "h": "Don't be so dramatic.", "c": "I'll open it now.", "ck": "fact", "w": "Do the thing. Skip the defence.", "r": "You always forget."}, {"q": "You're so clumsy. You break everything.", "j": "I don't break everything, that was the first glass in…", "jt": "A", "h": "You broke the other one.", "c": "Yes, I dropped it. I'll clean it up.", "ck": "fact", "w": "Admit the small thing, refuse the big label.", "r": "Of course you did."}, {"q": "Your cooking makes me sick.", "j": "It's the same recipe as last time, so…", "jt": "A", "h": "Cook yourself then.", "c": "Okay. Do you want to pick dinner tomorrow?", "ck": "fact", "w": "Hand over a choice instead of a defence.", "r": "You're impossible."}, {"q": "You're a slob.", "j": "I'm not, I just left one thing out…", "jt": "D", "h": "Look at your side of the room.", "c": "Hm.", "ck": "min", "w": "A label is not a question.", "r": "Not even denying it."}, {"q": "You've let yourself go.", "j": "I haven't, I go to the gym four times a week…", "jt": "D", "h": "So have you.", "c": "I feel fine about how I look.", "ck": "dis", "w": "Your body isn't up for review.", "r": "You shouldn't."}, {"q": "You look disgusting today.", "j": "I just woke up, I haven't showered yet…", "jt": "E", "h": "Look in the mirror.", "c": "I'm not going to talk about my looks like this.", "ck": "bound", "w": "Name the line once.", "r": "Oh, now you're sensitive."}, {"q": "You're too skinny. It's pathetic.", "j": "I'm not, I eat properly, it's just stress…", "jt": "J", "h": "And you're…", "c": "I'm taking care of my health.", "ck": "fact", "w": "Your health is yours to manage.", "r": "Clearly not."}, {"q": "Those clothes make you look stupid.", "j": "They're fine, I bought them because…", "jt": "J", "h": "Yours aren't much better.", "c": "I like them.", "ck": "dis", "w": "Taste needs no defence.", "r": "No taste."}, {"q": "Nobody else would find you attractive.", "j": "That's not true, people have told me…", "jt": "A", "h": "Nobody would want you either.", "c": "You're allowed to think that.", "ck": "own", "w": "Their view of your looks stays theirs.", "r": "Because it's true."}, {"q": "You smell.", "j": "I showered this morning, it's just from the gym…", "jt": "E", "h": "So do you.", "c": "I'll take a shower.", "ck": "fact", "w": "If it's fixable, fix it. No speech.", "r": "Finally."}, {"q": "Your voice is so annoying.", "j": "It's just my normal voice, I'm not…", "jt": "D", "h": "Yours is worse when you scream.", "c": "Okay.", "ck": "min", "w": "Nothing to grab, nothing to fight over.", "r": "And now you're mumbling."}, {"q": "Why do you always look so miserable?", "j": "I don't, I'm just tired because…", "jt": "E", "h": "Living with you would do that.", "c": "I'm tired today.", "ck": "fact", "w": "Three words of truth.", "r": "You're always tired."}, {"q": "You look like a child without a beard.", "j": "I shaved because it was itchy and…", "jt": "J", "h": "Act like an adult first.", "c": "I like it this way.", "ck": "dis", "w": "Your face, your call.", "r": "You would."}, {"q": "You walk like an idiot.", "j": "I don't, my knee hurts so…", "jt": "E", "h": "And you talk like one.", "c": "Hm.", "ck": "min", "w": "Some remarks deserve almost nothing.", "r": "See."}, {"q": "You can't do anything without me.", "j": "I can, I managed fine before we met, I…", "jt": "A", "h": "You can't do anything at all.", "c": "I can do plenty.", "ck": "dis", "w": "One calm line, no proof needed.", "r": "Name one thing."}, {"q": "You never understand anything.", "j": "I do, I just needed you to explain…", "jt": "D", "h": "You never explain anything.", "c": "Can you say it again, slowly?", "ck": "fact", "w": "Asking calmly takes the insult out of a misunderstanding.", "r": "I shouldn't have to."}, {"q": "Even a child would know that.", "j": "A child wouldn't, it's actually tricky because…", "jt": "A", "h": "Then ask a child.", "c": "I didn't know it. Now I do.", "ck": "fact", "w": "Not knowing something is normal.", "r": "Took you long enough."}, {"q": "Are you deaf or just stupid?", "j": "I heard you, I was just finishing…", "jt": "E", "h": "Are you mean or just angry?", "c": "I'm listening now.", "ck": "fact", "w": "Skip the either-or. Just show up.", "r": "Too late."}, {"q": "You read one article and think you're an expert.", "j": "It wasn't one, I read three books on…", "jt": "A", "h": "And you think you're an expert on everything.", "c": "I'll keep reading.", "ck": "fact", "w": "Your learning isn't up for approval.", "r": "Pointless."}, {"q": "You always get the directions wrong.", "j": "Not always, the app sent us that way because…", "jt": "A", "h": "You get everything wrong.", "c": "Let's look at the map together.", "ck": "fact", "w": "Solve the route, not the record.", "r": "You can't even read a map."}, {"q": "You'd be lost without me.", "j": "I wouldn't, I lived alone for years and…", "jt": "A", "h": "You'd be lost without me.", "c": "We help each other.", "ck": "dis", "w": "Shift from who needs whom to what you share.", "r": "You never help me."}, {"q": "How did you even pass school?", "j": "I passed with good grades actually, I…", "jt": "D", "h": "How did you?", "c": "I did fine.", "ck": "dis", "w": "Your grades are not today's topic.", "r": "Doubt it."}, {"q": "You can't drive. You'll get us killed.", "j": "I'm a good driver, I've never had an accident…", "jt": "D", "h": "Then you drive.", "c": "Would you like to drive?", "ck": "fact", "w": "Offer the wheel, not a defence.", "r": "Now you're scared."}, {"q": "Every decision you make is wrong.", "j": "Not every one, choosing this flat was…", "jt": "A", "h": "Like choosing you.", "c": "I make my own choices.", "ck": "dis", "w": "Your choices are yours to own.", "r": "Bad ones."}, {"q": "Your friends are losers.", "j": "They're not, they've got good jobs and…", "jt": "D", "h": "At least I have friends.", "c": "I like my friends.", "ck": "dis", "w": "You don't have to defend people who aren't here.", "r": "Says a lot about you."}, {"q": "Your family never liked me, and they're right.", "j": "They do like you, my mother said…", "jt": "A", "h": "Can you blame them?", "c": "I'm not going to speak for my family.", "ck": "bound", "w": "Stay out of the middle.", "r": "Of course you take their side."}, {"q": "Your mother raised you badly.", "j": "She didn't, she did her best on her own…", "jt": "D", "h": "Look at how yours raised you.", "c": "I'm not going to talk about my mother like this.", "ck": "bound", "w": "A line about the topic, not a defence of the person.", "r": "Touchy."}, {"q": "You care more about your friends than about me.", "j": "I don't, I've only seen them once this month…", "jt": "J", "h": "You don't care about anyone.", "c": "You matter to me. My friends matter too.", "ck": "love", "w": "Room for both, said kindly.", "r": "So go to them."}, {"q": "If you see them this weekend, don't bother coming back.", "j": "But I promised, they planned it weeks ago…", "jt": "J", "h": "Fine, I won't.", "c": "I'm going for a few hours. I'll be back for dinner.", "ck": "bound", "w": "Keep your plan and your return time. No debate.", "r": "Then go and stay there."}, {"q": "Your sister thinks you're an idiot too.", "j": "She doesn't, she called me yesterday and…", "jt": "A", "h": "Your sister can't stand you.", "c": "I'll let her speak for herself.", "ck": "own", "w": "Second-hand opinions aren't yours to answer.", "r": "She did."}, {"q": "Your friends only use you.", "j": "They don't, they helped me move last year…", "jt": "A", "h": "At least they're nice to me.", "c": "That's not how I see it.", "ck": "dis", "w": "One line, then on with your evening.", "r": "You're blind."}, {"q": "Your father was a failure and so are you.", "j": "He wasn't, he worked hard all his life…", "jt": "D", "h": "Better than yours.", "c": "I'm going to step out for a minute.", "ck": "step", "w": "Family wounds are too deep for a heated moment.", "r": "Run, like he did."}, {"q": "You embarrassed me in front of my friends.", "j": "I didn't, I only made one joke about…", "jt": "D", "h": "You embarrass yourself.", "c": "I didn't mean to. What bothered you?", "ck": "ack", "w": "Curiosity, not defence. Ask once.", "r": "Everything."}, {"q": "Nobody in your family has a backbone.", "j": "That's not fair, my brother stood up to…", "jt": "A", "h": "Nobody in yours has a heart.", "c": "Hm.", "ck": "min", "w": "Some bait is best left on the hook.", "r": "Proving my point."}, {"q": "Your hobbies are childish.", "j": "They're not, lots of adults play games because…", "jt": "J", "h": "Your hobbies are worse.", "c": "I enjoy them.", "ck": "dis", "w": "Joy doesn't need a permit.", "r": "Grow up."}, {"q": "You waste your life on your phone.", "j": "I was only checking work messages, I…", "jt": "E", "h": "Says the one on social media all day.", "c": "I'll put it away now.", "ck": "fact", "w": "If it's fair, act. If not, it still ends the round.", "r": "Finally."}, {"q": "You never plan anything fun.", "j": "I do, I planned the trip last month and…", "jt": "J", "h": "You never plan anything either.", "c": "What would you like to do this weekend?", "ck": "fact", "w": "A question moves things forward.", "r": "Why do I always have to decide?"}, {"q": "Your games are for losers.", "j": "They're not, they help me relax after…", "jt": "J", "h": "Your shows are for losers.", "c": "They help me unwind.", "ck": "fact", "w": "State it and let it be.", "r": "Unwind with me instead."}, {"q": "You only go to the gym to get away from me.", "j": "No, I go because my doctor said…", "jt": "E", "h": "Can you blame me?", "c": "I go for my health.", "ck": "fact", "w": "Four words. Your health isn't a betrayal.", "r": "Sure."}, {"q": "You're boring to go out with.", "j": "I'm not boring, we danced last time…", "jt": "A", "h": "You're exhausting to go out with.", "c": "I enjoy our nights out. Maybe we try something new.", "ck": "love", "w": "Warmth and an idea instead of a defence.", "r": "Like what? You never have ideas."}, {"q": "Why do you always read instead of talking to me?", "j": "I don't always, we talked all through dinner…", "jt": "A", "h": "Because talking to you ends in a fight.", "c": "Let me finish this page, then I'm all yours.", "ck": "fact", "w": "A small promise beats a debate about 'always'.", "r": "Forget it."}, {"q": "You sleep too much. Lazy.", "j": "I'm ill and the medication makes me tired…", "jt": "E", "h": "You sleep till noon.", "c": "My body needs it right now.", "ck": "fact", "w": "Your rest doesn't need permission.", "r": "Excuses."}, {"q": "That never happened. You're making it up.", "j": "It did, it was on Tuesday, you said…", "jt": "A", "h": "You're the one making things up.", "c": "I remember it differently.", "ck": "dis", "w": "You don't need to win the memory.", "r": "Your memory is broken."}, {"q": "You're too emotional to talk to.", "j": "I'm not too emotional, I'm just upset because…", "jt": "D", "h": "You're too angry to talk to.", "c": "Then let's talk later.", "ck": "later", "w": "Take them up on it: later.", "r": "No, now."}, {"q": "Stop playing the victim.", "j": "I'm not playing anything, I just said it hurt when…", "jt": "D", "h": "Stop playing the bully.", "c": "I'm going to leave it there.", "ck": "bound", "w": "Arguing about victimhood makes you defend your pain.", "r": "Of course."}, {"q": "You're imagining things.", "j": "I'm not, I saw it clearly, the message said…", "jt": "A", "h": "You're imagining I'm the problem.", "c": "We see it differently.", "ck": "dis", "w": "Two versions can stand.", "r": "No, you're wrong."}, {"q": "You can't take a joke.", "j": "I can, it just wasn't funny because…", "jt": "E", "h": "Your jokes aren't funny.", "c": "That one didn't feel like a joke to me.", "ck": "dis", "w": "Say how it landed, once.", "r": "Sensitive, as always."}, {"q": "You're making a big deal out of nothing.", "j": "It's not nothing, it matters because…", "jt": "J", "h": "You make big deals out of everything.", "c": "It matters to me.", "ck": "fact", "w": "Your reasons are yours. You don't owe them.", "r": "Everything matters to you."}, {"q": "I never said that.", "j": "You did, I remember exactly, you said…", "jt": "A", "h": "You always deny everything.", "c": "Okay. I remember it differently.", "ck": "dis", "w": "Note your memory, drop the trial.", "r": "Your memory is the problem."}, {"q": "You're paranoid.", "j": "I'm not, I only asked because…", "jt": "D", "h": "You're the paranoid one.", "c": "I asked a question. That's all.", "ck": "fact", "w": "A question is allowed.", "r": "A paranoid question."}, {"q": "Why are you so quiet? What are you plotting?", "j": "I'm not plotting, I'm just tired and…", "jt": "E", "h": "Plotting how to get away from you.", "c": "I'm just quiet tonight.", "ck": "fact", "w": "Quiet is allowed.", "r": "Suspicious."}, {"q": "You're too sensitive to be with.", "j": "I'm not too sensitive, anyone would…", "jt": "D", "h": "You're too harsh to be with.", "c": "I feel what I feel.", "ck": "fact", "w": "Feelings aren't a debate.", "r": "Then feel it somewhere else."}, {"q": "Your feelings are wrong.", "j": "They're not wrong, I feel this because…", "jt": "J", "h": "Your feelings are wrong.", "c": "They're mine.", "ck": "fact", "w": "Two words. Nobody else gets a vote.", "r": "Then they're stupid."}, {"q": "You always make me the bad guy.", "j": "I don't, I only said that one thing because…", "jt": "D", "h": "You make yourself the bad guy.", "c": "I don't see you as the bad guy. I'd like to talk calmly.", "ck": "love", "w": "Kind, clear, and pointing to calm.", "r": "Calmly, calmly. Always calmly."}, {"q": "Everyone's staring at how stupid you are.", "j": "Nobody's staring, I just dropped the…", "jt": "A", "h": "They're staring at you.", "c": "Let's finish here and talk at home.", "ck": "later", "w": "Take it out of public, quietly.", "r": "I'll talk wherever I want."}, {"q": "You embarrass me everywhere we go.", "j": "I don't, the waiter was fine with it…", "jt": "A", "h": "You embarrass yourself.", "c": "Hm.", "ck": "min", "w": "Nothing to defend in a sweeping 'everywhere'.", "r": "You don't even care."}, {"q": "You were flirting with them.", "j": "I wasn't, I was just asking about the menu…", "jt": "D", "h": "You're the one who flirts.", "c": "I wasn't. I'm not going to argue about it.", "ck": "bound", "w": "A clear no, then a stop.", "r": "I saw you."}, {"q": "You talked too much at the party. Everyone was bored.", "j": "They weren't, they were laughing and…", "jt": "A", "h": "You didn't talk at all.", "c": "I had a good time.", "ck": "fact", "w": "Keep your own good evening.", "r": "Of course you did."}, {"q": "Your posts online are cringe.", "j": "They're not, they got lots of likes and…", "jt": "A", "h": "Yours are worse.", "c": "I like posting them.", "ck": "dis", "w": "Likes are not a defence you need.", "r": "Cringe."}, {"q": "Don't speak in front of my friends again.", "j": "But I only said something nice about…", "jt": "J", "h": "Don't scream in front of mine.", "c": "I'll keep speaking, kindly.", "ck": "bound", "w": "You decide your voice. Kindly, not defiantly.", "r": "We'll see."}, {"q": "You're so awkward with people.", "j": "I'm not, I'm just quiet with new…", "jt": "E", "h": "You're so rude with people.", "c": "I'm fine with how I am.", "ck": "dis", "w": "You don't need a personality defence.", "r": "That's the problem."}, {"q": "Everyone at dinner saw how useless you are.", "j": "They didn't, your aunt even said…", "jt": "A", "h": "Everyone saw how you treat me.", "c": "I enjoyed dinner.", "ck": "fact", "w": "Keep what was good.", "r": "Unbelievable."}, {"q": "You don't even want me any more.", "j": "I do, it's the medication, it affects…", "jt": "E", "h": "Why would I?", "c": "I do. I'd like to be close when we're both calm.", "ck": "love", "w": "Reassure once, without a medical case.", "r": "Prove it."}, {"q": "You're cold in bed.", "j": "I'm not, I've just been tired from…", "jt": "E", "h": "You're cold everywhere.", "c": "I'd like to talk about this gently, not like this.", "ck": "later", "w": "Tender topics need a calm moment.", "r": "There's nothing to talk about."}, {"q": "Someone else would treat me better.", "j": "No, I treat you well, I do so much…", "jt": "J", "h": "Then go and find them.", "c": "I won't compete with someone imaginary.", "ck": "bound", "w": "You can't win against an imagined rival. Don't enter.", "r": "You don't treat me well."}, {"q": "You don't love me. You just stay out of habit.", "j": "That's not true, I tell you every day…", "jt": "A", "h": "Maybe I should leave then.", "c": "I love you.", "ck": "love", "w": "Three words, no evidence attached.", "r": "Words."}, {"q": "You never touch me.", "j": "I hugged you this morning, remember…", "jt": "A", "h": "Why would I, when you're like this?", "c": "Can I give you a hug now?", "ck": "love", "w": "Offer the thing instead of proving the past.", "r": "Don't bother."}, {"q": "You only want one thing from me.", "j": "That's not true, I love spending time with you, like…", "jt": "D", "h": "You want everything from me.", "c": "I want to be close to you, in every way.", "ck": "love", "w": "Say what you want, warmly.", "r": "Sure."}, {"q": "Where are you? Why aren't you answering?!", "j": "I was in a meeting and my phone was on silent and…", "jt": "E", "h": "Stop checking up on me.", "c": "At work. I'll call you at lunch.", "ck": "fact", "w": "Where and when. Nothing else.", "r": "Lunch? That's hours away."}, {"q": "You're useless, as always. (by text)", "j": "Why? What did I do? I…", "jt": "J", "h": "Look who's talking.", "c": "(don't reply to that one; answer the next normal message)", "ck": "min", "w": "Insults by text are fuel you can choose not to give.", "r": "So now you ignore me?"}, {"q": "Answer me right now.", "j": "I'm at work, I can't just answer because…", "jt": "E", "h": "Or what?", "c": "I'm at work. Tonight.", "ck": "fact", "w": "Four words, and back to work.", "r": "Tonight is too late."}, {"q": "Don't bother coming home.", "j": "Why? What happened? I didn't…", "jt": "J", "h": "Fine, I won't.", "c": "I'll be home at seven.", "ck": "fact", "w": "Calm and predictable takes the drama out.", "r": "Whatever."}, {"q": "(a stream of insults while you're at work)", "j": "That's not fair, you know I'm working, and I already told you…", "jt": "J", "h": "You're unbelievable. Leave me alone.", "c": "I'm at work. We can talk tonight, without insults.", "ck": "bound", "w": "One message with a time and a line. Then work.", "r": "I'll say whatever I want."}, {"q": "Why did you like that photo?", "j": "It was just a colleague's holiday picture, I…", "jt": "E", "h": "Why do you check what I like?", "c": "It was a friendly like. Nothing more.", "ck": "fact", "w": "One sentence of truth, no alibi.", "r": "Sure it was."}, {"q": "Oh, look who finally decided to help.", "j": "I always help, I was just finishing…", "jt": "J", "h": "Look who finally stopped complaining.", "c": "Here I am.", "ck": "min", "w": "Lightness disarms sarcasm.", "r": "Wow."}, {"q": "Bravo. Do you want a medal?", "j": "No, I was just telling you because…", "jt": "E", "h": "Do you want one for screaming?", "c": "No thanks.", "ck": "min", "w": "Answer the words, not the sneer.", "r": "Funny."}, {"q": "Oh look, the perfect one strikes again.", "j": "I'm not trying to be perfect, I just…", "jt": "D", "h": "Better than a disaster.", "c": "Hm.", "ck": "min", "w": "There's nothing to correct in a sneer.", "r": "Hm, hm."}, {"q": "Sure, because you're always right.", "j": "I'm not saying I'm always right, I just think…", "jt": "E", "h": "More than you.", "c": "I can be wrong. I see this one differently.", "ck": "dis", "w": "Humble and steady at once.", "r": "There it is."}, {"q": "Wow, so brave of you to say that.", "j": "I'm not trying to be brave, I just felt…", "jt": "E", "h": "Braver than you.", "c": "Thanks.", "ck": "min", "w": "Take it at face value.", "r": "That wasn't a compliment."}, {"q": "(laughs at something you shared)", "j": "Why are you laughing? It's important to me because…", "jt": "J", "h": "That's rich, coming from you.", "c": "It matters to me. I'll leave it there.", "ck": "bound", "w": "Say it once, keep your dignity, move on.", "r": "Oh, it matters."}, {"q": "Aww, did I hurt your feelings?", "j": "Yes, actually, because you said…", "jt": "E", "h": "You don't have any feelings to hurt.", "c": "I'm going to take a break.", "ck": "step", "w": "Baiting needs an audience. Leave it without one.", "r": "Poor baby."}, {"q": "Look at you trying to be calm. So fake.", "j": "I'm not fake, I'm calm because I'm practising…", "jt": "E", "h": "Look at you trying to be nice.", "c": "Yes, I'm staying calm.", "ck": "fact", "w": "Own the calm openly. It's not a trick.", "r": "It won't work."}, {"q": "Why do you even talk to me?", "j": "Because I want to fix things and…", "jt": "J", "h": "Fine, I won't.", "c": "Because I care. I'll be around when you want to talk.", "ck": "love", "w": "Kind and open, without chasing.", "r": "(silence)"}, {"q": "I'm not talking to you until you apologise.", "j": "But I haven't done anything, I…", "jt": "A", "h": "Great. Peace and quiet.", "c": "Okay. I'm here when you're ready.", "ck": "ack", "w": "You don't have to buy your way out of silence.", "r": "Don't wait up."}, {"q": "Don't speak to me.", "j": "But I just wanted to explain that…", "jt": "E", "h": "Gladly.", "c": "Okay.", "ck": "min", "w": "Respect the space; it often shortens it.", "r": "(slams the door)"}, {"q": "You're the reason I'm in a bad mood.", "j": "I'm not, I've been quiet all day…", "jt": "D", "h": "You're the reason I'm in one.", "c": "I'm sorry you're in a bad mood.", "ck": "ack", "w": "Sympathy without the blame.", "r": "Sorry doesn't fix it."}, {"q": "(throws something near you) Look what you made me do!", "j": "I didn't make you, I only said…", "jt": "A", "h": "Throw something else and see.", "c": "I'm leaving the room now.", "ck": "step", "w": "Things flying means distance now, not words.", "r": "Don't walk away from me!"}, {"q": "Come here. Now.", "j": "Why? What did I do? I…", "jt": "J", "h": "Make me.", "c": "Not while you're this angry. I'll be in the other room.", "ck": "bound", "w": "You never have to walk towards anger.", "r": "I said now!"}, {"q": "You'll regret this.", "j": "Regret what? I didn't do anything, I…", "jt": "J", "h": "So will you.", "c": "I'm going to give us both some space.", "ck": "step", "w": "Threats are a cue for distance, not debate.", "r": "Yes, run."}, {"q": "I'll make your life hell.", "j": "Why? I've done everything you asked, I…", "jt": "J", "h": "It already is.", "c": "I'm going out for a while.", "ck": "step", "w": "Leave calmly. Talk only when it's quiet.", "r": "Go, then. See what happens."}];
+    // ===== PERSONAL SCENARIOS (non-JADE) =====
+    // Built from the journal, reworded so nothing is identifiable. Replace with general ones before any public version.
+    const JADE_PERSONAL = [{"q": "You have a loser face.", "j": "My face is fine, I just look tired because…", "jt": "D", "h": "Have you seen yours?", "c": "I'm not going to talk about my face.", "ck": "bound", "w": "Defending your face turns it into a debate about your looks.", "r": "Because you know it's true."}, {"q": "(repeats what you said, in a mocking voice)", "j": "I didn't say it like that, I said…", "jt": "E", "h": "(mock them back)", "c": "(carry on with what you were doing, without a word)", "ck": "min", "w": "Mockery needs a reaction. Without one it gets boring fast.", "r": "What, now you're ignoring me?"}, {"q": "Why do I have to listen to your stupidity? You don't even know basic physics.", "j": "I do, the heater warms the air so…", "jt": "E", "h": "Says the one who can't…", "c": "Okay.", "ck": "min", "w": "You don't have to pass an exam to be treated with respect.", "r": "Did you even look it up?"}, {"q": "You're too dumb to learn as you go. Take a course.", "j": "I'm not dumb, I'm learning, look at these…", "jt": "D", "h": "You couldn't learn it either.", "c": "I'll learn it my way.", "ck": "fact", "w": "You decide how you learn, without defending your brain.", "r": "Your way doesn't work."}, {"q": "You lack class. You'd fit right in on a building site.", "j": "I do have class, that was an accident with the…", "jt": "J", "h": "And you'd fit right in…", "c": "I'm not going to talk about myself like this.", "ck": "bound", "w": "Class insults are about rank. Don't compete for a higher one.", "r": "See, you can't take criticism."}, {"q": "Your hair is a mess. You look like a tramp.", "j": "It's just curly, and it's been raining all week so…", "jt": "E", "h": "At least I don't…", "c": "I like my hair.", "ck": "dis", "w": "Your looks don't need a weather report to be okay.", "r": "Then you have no taste."}, {"q": "You're so boring.", "j": "I'm not, I suggested the quiz and…", "jt": "D", "h": "And you're exhausting.", "c": "Hm.", "ck": "min", "w": "'Boring' is an opinion, not a charge to answer.", "r": "See? Boring."}, {"q": "Your attitude is terrible. You just sit in your corner.", "j": "I'm working, I have deadlines and…", "jt": "J", "h": "Better than screaming all day.", "c": "I'm working now. We can talk later.", "ck": "later", "w": "You can say what you're doing without asking permission.", "r": "Work always matters more than me."}, {"q": "You didn't answer my insults. That's why your attitude stinks.", "j": "I didn't answer because I don't want to fight, I…", "jt": "E", "h": "Your insults don't deserve an answer.", "c": "I don't answer insults.", "ck": "bound", "w": "Not answering insults is a choice you can name in four words.", "r": "So now I'm the bad one?"}, {"q": "You got left out of that group because you're selfish.", "j": "I wasn't left out, I stepped back because…", "jt": "A", "h": "And nobody invites you anywhere.", "c": "That's your take.", "ck": "own", "w": "Old stories about you don't need correcting tonight.", "r": "It's not a take, it's the truth."}, {"q": "You don't even know how to have fun.", "j": "I do, last weekend we…", "jt": "A", "h": "You're no fun to be around either.", "c": "I'd like to have fun with you. Not like this.", "ck": "love", "w": "Warm, and clear about what's not okay.", "r": "So it's my fault again?"}, {"q": "Why are your arms shaking? You're so weak.", "j": "They're shaking because I'm at the end of a set and…", "jt": "E", "h": "Try lifting it yourself.", "c": "I'm working out. We can talk after.", "ck": "later", "w": "You don't owe an explanation for a tired muscle.", "r": "You care more about your weights than me."}, {"q": "Stop working out and watch these videos about your fragile ego.", "j": "I don't have a fragile ego, I just…", "jt": "D", "h": "Your ego is the fragile one.", "c": "Not now. I'm finishing my workout.", "ck": "bound", "w": "You can say no to an invitation built to prove a point.", "r": "See, fragile."}, {"q": "I'll apologise for the screaming when I feel like it.", "j": "But you should apologise now because…", "jt": "A", "h": "Don't bother then.", "c": "Okay.", "ck": "min", "w": "You can't force an apology. Leave the door open, don't push it.", "r": "Don't 'okay' me."}, {"q": "You and the therapists messed me up.", "j": "I only tried to help, the therapist said…", "jt": "J", "h": "You messed yourself up.", "c": "I'm sorry it's been so hard. I'm not taking the blame for it.", "ck": "love", "w": "Compassion and no blame can share one sentence.", "r": "You never take responsibility."}, {"q": "You couldn't even open a jar. What's your IQ?", "j": "I've never opened one with a spoon before, so…", "jt": "E", "h": "Higher than yours.", "c": "Here, let's try again.", "ck": "fact", "w": "Fix the jar, not your reputation.", "r": "Now you want to help?"}, {"q": "You shouldn't have opinions about mental health.", "j": "But I've read a lot about it and…", "jt": "J", "h": "You're the last one to talk about mental health.", "c": "I'll keep my opinions, and I won't argue about them now.", "ck": "bound", "w": "Your thoughts stay yours. No debate needed.", "r": "So you think you're an expert?"}, {"q": "Do you ever even clean this mirror?", "j": "Yes, I cleaned it on Sunday and…", "jt": "J", "h": "Do you ever clean anything?", "c": "Yes.", "ck": "min", "w": "A yes-or-no question gets a yes or no. Nothing more.", "r": "Doesn't look like it."}, {"q": "You did everything you could to ruin my morning.", "j": "I didn't, the water ran out and the taxi was cancelled…", "jt": "J", "h": "You ruined it yourself.", "c": "This morning has been hard. Let's get you there.", "ck": "fact", "w": "Help with the morning, skip the trial.", "r": "Don't tell me what's hard."}, {"q": "You booked it so late. That's why we missed the plane last time too.", "j": "That's not why we missed it, the check-in…", "jt": "A", "h": "We missed it because of you.", "c": "We're on our way now.", "ck": "fact", "w": "Last year's trip isn't on today's agenda.", "r": "As usual, you never admit anything."}, {"q": "I'm the one holding this relationship together. You never think.", "j": "I do think, I just thought we were using the other entrance…", "jt": "E", "h": "I'm the one holding it together.", "c": "We both put a lot in.", "ck": "dis", "w": "A calm line that doesn't accept the scoreboard.", "r": "You put nothing in."}, {"q": "You're a weak, vulnerable narcissist.", "j": "I'm not a narcissist, I took the test and…", "jt": "D", "h": "And you're a grandiose one.", "c": "I don't see myself that way.", "ck": "dis", "w": "Labels from a quiz aren't facts about you.", "r": "That's what narcissists say."}, {"q": "You used and abused me for two years.", "j": "I didn't, I've always supported you, remember…", "jt": "D", "h": "You're the one who abuses me.", "c": "I see it very differently. I'm going to take some space.", "ck": "step", "w": "Heavy accusations pull for a long defence. Space is safer.", "r": "Running away proves it."}, {"q": "You're pretending to be cold.", "j": "I'm not pretending, I'm shivering because…", "jt": "D", "h": "You're pretending to be upset.", "c": "I'm going to get a blanket.", "ck": "fact", "w": "Look after your body. No proof required.", "r": "Drama."}, {"q": "You trigger me.", "j": "I don't mean to, I was just trying to…", "jt": "J", "h": "You trigger me too.", "c": "I'm sorry it's hard. I'll give you some space.", "ck": "step", "w": "Space helps both of you more than an apology for existing.", "r": "Don't leave when I'm talking."}, {"q": "Why did you wash the pan like that? Why? Answer me!", "j": "Because I thought soap was fine and…", "jt": "E", "h": "Wash it yourself then.", "c": "Let's sort it out on the couch, not in the kitchen.", "ck": "later", "w": "Moving a heated talk out of the kitchen matters more than winning it.", "r": "No, we do it here."}, {"q": "Everyone here is sick in the head, you included.", "j": "Not everyone, my friends are…", "jt": "A", "h": "You're the one who's sick.", "c": "Hm.", "ck": "min", "w": "Sweeping statements need no reply.", "r": "So you agree."}, {"q": "You're being a pick-me.", "j": "I'm not, I only said my pills can cause…", "jt": "D", "h": "And you always make it about you.", "c": "Okay.", "ck": "min", "w": "Nothing to grab, nothing to fight over.", "r": "Don't 'okay' me."}, {"q": "You suck up to your manager.", "j": "I don't, I just showed them a tool I built because…", "jt": "D", "h": "At least my manager respects me.", "c": "I'm glad work went well.", "ck": "fact", "w": "You don't have to apologise for doing well.", "r": "Of course you are."}, {"q": "You're doing nothing to get a better job.", "j": "I am, I signed up for the course and…", "jt": "J", "h": "And what are you doing?", "c": "I'm working on it at my pace.", "ck": "fact", "w": "Your pace is yours.", "r": "Your pace is too slow."}, {"q": "You're never going to move abroad with me.", "j": "I will, I just need time to sort out…", "jt": "J", "h": "Maybe I won't.", "c": "That's a big decision. Let's talk about it on a calm day.", "ck": "later", "w": "Big plans belong to calm days.", "r": "We're talking now."}, {"q": "Other partners take amazing photos. You don't even try.", "j": "I do try, I watched videos and…", "jt": "J", "h": "Other partners don't scream.", "c": "I'm doing my best.", "ck": "fact", "w": "Your effort doesn't need a portfolio.", "r": "Your best isn't enough."}, {"q": "I need to control you to calm down.", "j": "But controlling me won't help because…", "jt": "E", "h": "Control yourself.", "c": "No. I'll help in other ways.", "ck": "bound", "w": "A clear no to control, kindly, with another offer.", "r": "Then you don't want me calm."}, {"q": "I'll beat you up.", "j": "Why would you? I didn't do anything, I only…", "jt": "J", "h": "Try it.", "c": "I'm leaving the room now.", "ck": "step", "w": "A threat isn't a debate. Distance first, talk later.", "r": "Don't you walk away from me."}, {"q": "I need to hurt you, and you'll let me.", "j": "Please don't, I'll do anything, I…", "jt": "J", "h": "Go ahead then.", "c": "No. I'm going out for a while.", "ck": "step", "w": "You never have to agree to being hurt. Leave, and talk only when it's calm.", "r": "You're overreacting."}, {"q": "You're doing nothing about the course. As usual. (by text)", "j": "I am, I emailed them twice and…", "jt": "J", "h": "Stop texting me at work.", "c": "I'm at work. We can talk tonight.", "ck": "later", "w": "Work time is work time.", "r": "You always have an excuse."}, {"q": "You're stupid. (while you're helping)", "j": "I'm not stupid, I just didn't see that…", "jt": "D", "h": "You're stupid.", "c": "(keep going with the task, without a word)", "ck": "min", "w": "Helping is the answer. Words would only add fuel.", "r": "Did you hear me?"}, {"q": "Why are you going that way? You never think!", "j": "Sorry, I thought we were using the outside entrance…", "jt": "E", "h": "Then you lead.", "c": "Let's go your way.", "ck": "fact", "w": "The route isn't worth a fight.", "r": "Of course, now it's my way."}, {"q": "Admit you used me as a punching bag.", "j": "I won't admit it because it's not true, look…", "jt": "A", "h": "You're the one who hits.", "c": "I won't admit to something I didn't do.", "ck": "bound", "w": "A forced confession is a trap. Decline it once.", "r": "Then you're a liar."}, {"q": "Your face says you're judging me.", "j": "I'm not judging you, my face is just tired from…", "jt": "E", "h": "Your face says worse.", "c": "I'm not.", "ck": "dis", "w": "Two words. You can't argue someone out of reading your face.", "r": "I can see it."}];
+    // ===== /PERSONAL SCENARIOS =====
+    const JADE_SCEN = JADE_GENERAL.concat(JADE_PERSONAL); // ids are positions here, so only ever add to the end
+    const JADE_TYPE = {
+      J: ['Justifying', 'You give reasons as if you need permission. It treats the insult as fair and hands over more to pick apart.'],
+      A: ['Arguing', 'You debate the facts. Under attack, arguments don\'t get settled, they get longer.'],
+      D: ['Defending', 'You try to prove you\'re not what you were called. That makes the label the topic.'],
+      E: ['Explaining', 'Long explanations sound like guilt and give more material to twist.']
+    };
+    // Body first: the same three steps every time, then one cue for the kind of reply
+    const JADE_BODY = ['Breathe out slowly, longer than you breathe in.', 'Drop your shoulders and unclench your jaw.', 'Lower your voice and slow it down.'];
+    const JADE_BODY_KIND = {
+      ack: 'Nod once, slowly. Keep your face soft, no eye-rolling.',
+      dis: 'Keep your face neutral and your voice flat and low.',
+      min: 'A small nod, or nothing at all. Keep doing what you were doing.',
+      bound: 'Say it at a normal volume, hands relaxed and open, then stop talking.',
+      step: 'Stand up slowly, keep your hands where they can be seen, and walk out calmly. No door slamming.',
+      own: 'Let your shoulders relax and look away calmly, as if it doesn\'t need an answer.',
+      later: 'Angle your body slightly away, not squared up. Keep the voice low and slow.',
+      fact: 'Move towards the task calmly. Something to do with your hands helps.',
+      love: 'Soften your eyes and your voice, and keep a little distance.'
+    };
+    const JADE_HIT = 'It feels fair for a second, then it\'s a fight about who\'s worse. The heat goes up for both of you.';
+    const JADE_KIND = {
+      ack: ['acknowledge, don\'t agree', 'They feel heard, and you don\'t sign up to the label.', 'Don\'t add reasons. If it goes on, say it once more and let the silence work.'],
+      dis: ['disagree in one line', 'You keep your view without opening a debate.', 'Don\'t explain the difference. If pushed, say it once more, the same way.'],
+      min: ['minimal reply', 'With nothing to grab, the attack runs out of fuel.', 'Stay short. If they push for more: \'I\'ve said what I want to say.\''],
+      bound: ['boundary', 'It says what you will and won\'t do, not what they must do. Your part stays in your control.', 'Follow through: if it goes on, step out, like you said.'],
+      step: ['step out', 'Distance cools things faster than any words.', 'Go calmly, with no speech on the way out. Come back when it\'s quiet.'],
+      own: ['hand back their opinion', 'Their view stays theirs. You don\'t have to carry it.', 'Let it sit. Carry on with what you were doing.'],
+      later: ['postpone', 'The topic matters, just not now. Calm talks go better.', 'Offer a time if you can (\'after dinner?\'). If it keeps going, step out.'],
+      fact: ['stick to the facts', 'You skip the trial and deal with what\'s in front of you.', 'Stay with the task in front of you. Don\'t pick up the bait.'],
+      love: ['kind and firm', 'Warmth and a clear line can share one sentence.', 'Hold the line kindly. Say it the same way again if you need to.']
+    };
+    // Points: 10 on the first try, 4 on the second, 1 on the third; +10 for all ten; +10 more if all ten were first tries;
+    const JADE_RANKS = [[0, 'Rookie'], [300, 'Steady'], [1000, 'Unbothered'], [2500, 'Calm water'], [5000, 'Stone'], [10000, 'Mountain']];
+    let jadeData = { pts: 0, days: [], log: {}, wins: 0, firsts: 0 };
+    try { jadeData = Object.assign(jadeData, JSON.parse(localStorage.getItem('aq_jade') || '{}')); } catch(e) {}
+    const jadeUI = { open: null, tries: [] };
+    function saveJade() {
+      const keys = Object.keys(jadeData.log).sort((a, b) => keyDate(a) - keyDate(b));
+      keys.slice(0, Math.max(0, keys.length - 30)).forEach(k => delete jadeData.log[k]); // keep about a month of detail
+      jadeData.days = jadeData.days.slice(-400);
+      localStorage.setItem('aq_jade', JSON.stringify(jadeData));
+    }
+    function jadeRand(seed) {
+      return () => { seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+    }
+    const jadeDayNum = (d = new Date()) => Math.round(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 864e5);
+    // Today's ten: all of them are shuffled once every 20 days, ten a day, so each day is new until they've all come round
+    const JADE_PER_DAY = 10;
+    function jadeToday() {
+      const days = Math.ceil(JADE_SCEN.length / JADE_PER_DAY), n = jadeDayNum(), r = jadeRand(Math.floor(n / days) * 7919 + 17), ids = JADE_SCEN.map((_, i) => i);
+      for(let i = ids.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [ids[i], ids[j]] = [ids[j], ids[i]]; }
+      return ids.slice((n % days) * JADE_PER_DAY, (n % days) * JADE_PER_DAY + JADE_PER_DAY);
+    }
+
+    function jadeOrder(id) { // the three replies, in an order that stays put for the day
+      const r = jadeRand(jadeDayNum() * 131 + id), o = ['c', 'j', 'h'];
+      for(let i = 2; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [o[i], o[j]] = [o[j], o[i]]; }
+      return o;
+    }
+    function jadeRank(p) {
+      let i = 0;
+      JADE_RANKS.forEach((x, k) => { if(p >= x[0]) i = k; });
+      return { name: JADE_RANKS[i][1], next: JADE_RANKS[i + 1] || null };
+    }
+    function jadeStreak() {
+      const days = new Set(jadeData.days);
+      let n = 0, d = startOfToday();
+      if(!days.has(dayKey(d))) d = addDays(d, -1); // today not finished yet doesn't break it
+      while(days.has(dayKey(d))) { n++; d = addDays(d, -1); }
+      return n;
+    }
+    function renderJade() {
+      const el = document.getElementById('jade-body');
+      if(!el) return;
+      const ids = jadeToday(), log = jadeData.log[dayKey(new Date())] || {}, doneN = ids.filter(i => i in log).length;
+      const rk = jadeRank(jadeData.pts), streak = jadeStreak();
+      const from = JADE_RANKS.filter(x => jadeData.pts >= x[0]).pop()[0], pct = rk.next ? Math.round((jadeData.pts - from) / (rk.next[0] - from) * 100) : 100;
+      const head = `<div class="jade-head"><div style="flex:1;"><b>${rk.name}</b><small>${jadeData.pts} ${pl(jadeData.pts, 'point')}${rk.next ? ` · ${rk.next[0] - jadeData.pts} to ${rk.next[1]}` : ' · top rank'}</small>
+          <div class="jade-bar"><i style="width:${pct}%"></i></div></div>
+        <div class="jade-today"><b>${doneN}/${JADE_PER_DAY} today</b><small>${streak ? `${streak} ${pl(streak, 'day')} in a row` : 'start a streak'}</small></div></div>
+        <div class="jade-real"><span><b>Practised: ${jadeData.wins || 0} calm ${pl(jadeData.wins || 0, 'reply', 'replies')}</b><small>${jadeData.firsts || 0} right on the first try</small></span></div>`;
+      if(jadeUI.open == null) {
+        el.innerHTML = head + `<div class="subtitle" style="text-align:left;">When you're insulted, the urge is to Justify, Argue, Defend or Explain. Each one keeps the fight going. Practise a calm one-liner instead, while it's quiet.</div>` +
+          ids.map((id, i) => `<button type="button" class="sim-scen jade-row ${id in log ? 'done' : ''}" onclick="jadeOpen(${id})"><span><b>${jadeQuote(JADE_SCEN[id].q)}</b><small>${id in log ? `+${log[id]} ${pl(log[id], 'point')}` : 'Tap to practise'}</small></span><span class="sim-n">${id in log ? '✓' : i + 1}</span></button>`).join('') +
+          (doneN === ids.length ? `<div class="jade-done">All ${ids.length} done today. ${escapeHtml(hamsterName)} found something for you: have a look on ${escapeHtml(hamsterName)}'s tab.</div>` : '');
+        return;
+      }
+      const id = jadeUI.open, sc = JADE_SCEN[id], solved = jadeUI.tries.includes('c'), text = { c: sc.c, j: sc.j, h: sc.h };
+      const why = k => k === 'c' ? `<b>Calm reply · ${JADE_KIND[sc.ck][0]}.</b> ${escapeHtml(sc.w)}<span class="jade-help">How it helps: ${JADE_KIND[sc.ck][1]}</span>`
+        : k === 'j' ? `<b>JADE · ${JADE_TYPE[sc.jt][0]}.</b> ${JADE_TYPE[sc.jt][1]}` : `<b>Hitting back.</b> ${JADE_HIT}`;
+      const left = jadeToday().filter(i => !(i in log) && i !== id).length;
+      el.innerHTML = head + `<button type="button" class="link-btn" onclick="jadeUI.open = null; renderJade()">← Today's ten</button>
+        <div class="jade-q">${jadeQuote(sc.q)}</div><div class="today-q">What do you say?</div>` +
+        jadeOrder(id).map(k => {
+          const show = jadeUI.tries.includes(k) || solved;
+          return `<button type="button" class="sim-choice ${show ? (k === 'c' ? 'best' : 'meh') : ''}" ${show ? 'disabled' : ''} onclick="jadePick('${k}')">${escapeHtml(text[k])}</button>` +
+            (show ? `<div class="jade-why ${k === 'c' ? 'good' : ''}">${why(k)}</div>` : '');
+        }).join('') +
+        (solved ? `<div class="jade-pts">+${log[id] || 0} ${pl(log[id] || 0, 'point')}</div>
+            <div class="today-q">Body first</div>
+            <ol class="sim-guide">${JADE_BODY.concat(JADE_BODY_KIND[sc.ck]).map(b => `<li>${b}</li>`).join('')}</ol>
+            <div class="today-q">${sc.c.startsWith('(') ? 'Then picture yourself doing it, calmly:' : 'Then say it out loud once, slowly, in a low voice:'}</div><div class="sim-say">${jadeQuote(sc.c)}</div>
+            <div class="today-q">${escapeHtml(P.Their)} possible response</div><div class="jade-resp">${jadeQuote(sc.r)}</div>
+            <div class="jade-why good"><b>Your next move.</b> ${JADE_KIND[sc.ck][2]}</div>
+            <button class="btn-action" onclick="jadeNext()">${left ? 'Next' : 'Finish'}</button>`
+          : jadeUI.tries.length ? '<div class="subtitle" style="text-align:left;">Try another one.</div>' : '');
+    }
+    // A quote in quotation marks; something done (in brackets) without them
+    const jadeQuote = t => t.startsWith('(') ? `<i>${escapeHtml(t.slice(1, -1))}</i>` : `"${escapeHtml(t)}"`;
+    function jadeOpen(id) {
+      const log = jadeData.log[dayKey(new Date())] || {};
+      jadeUI.open = id;
+      jadeUI.tries = id in log ? ['c', 'j', 'h'] : []; // already done today: show it all again, no new points
+      renderJade();
+    }
+    function jadePick(k) {
+      if(jadeUI.tries.includes(k)) return;
+      jadeUI.tries.push(k);
+      if(k === 'c') {
+        const day = dayKey(new Date()), log = jadeData.log[day] = jadeData.log[day] || {};
+        if(!(jadeUI.open in log)) {
+          const pts = jadeUI.tries.length === 1 ? 10 : jadeUI.tries.length === 2 ? 4 : 1;
+          log[jadeUI.open] = pts;
+          jadeData.pts += pts;
+          jadeData.wins = (jadeData.wins || 0) + 1;
+          if(pts === 10) jadeData.firsts = (jadeData.firsts || 0) + 1;
+          const ids = jadeToday();
+          if(ids.every(i => i in log)) {
+            const perfect = ids.every(i => log[i] === 10);
+            jadeData.pts += perfect ? 20 : 10;
+            if(!jadeData.days.includes(day)) jadeData.days.push(day);
+            logPractice('tools', 1, 'jade'); // counts as looking after yourself: Spirit finds something
+            setTimeout(() => showToast(perfect ? 'Perfect day: +20 bonus points' : 'All five done: +10 bonus points'), 600);
+          }
+          saveJade();
+        }
+      }
+      renderJade();
+    }
+    function jadeNext() {
+      const log = jadeData.log[dayKey(new Date())] || {}, next = jadeToday().find(i => !(i in log));
+      if(next == null) { jadeUI.open = null; renderJade(); return; }
+      jadeOpen(next);
+      const c = document.getElementById('jade-card');
+      if(c) c.scrollIntoView({ block: 'start', behavior: 'smooth' });
     }
 
     // ---------- AFTER A CONFLICT: settle, pick the moment, own your part, say it, listen, then note how it went ----------
@@ -12644,7 +13062,7 @@
     let breathAnim = { from: 0.55, to: 0.55, start: 0, dur: 1 }; // the same scale the circle uses (0.55 out .. 1 in)
     let breathCheerAt = -1e9; // when the last round finished: the companion hops and hearts float up
 
-    // Spirit (or Loki) breathes with you on a little LCD screen: swells on the in-breath, holds, settles on the out-breath
+    // Spirit breathes with you on a little LCD screen: swells on the in-breath, holds, settles on the out-breath
     function breathScaleNow() {
       const k = Math.min(1, (performance.now() - breathAnim.start) / breathAnim.dur), e = 0.5 - Math.cos(k * Math.PI) / 2;
       return breathAnim.from + (breathAnim.to - breathAnim.from) * e;
@@ -12672,7 +13090,7 @@
       g.translate(0, -hop);
       g.translate(160, 141); g.scale(puffX, puffY); g.translate(-160, -141); // swell from his feet
       g.translate(160 - 80 * S, 141 - 141 * S); g.scale(S, S);
-      if(spiritStyle.companion === 'loki') drawLokiFront(g); else drawHamsterFront(g, 0, 0, S);
+      drawHamsterFront(g, 0, 0, S);
       g.restore();
       drawTamaScreen(src, out, 160, false, true);
     }
@@ -13843,81 +14261,89 @@
     }
     applyPuzzleModeText();
 
-    // Initial render: runs last so every variable above is already declared
-    document.getElementById('vagus-count').innerText = vagusCount;
-    renderNotes();
-    renderCurrentMonthCalendar();
-    updateCountMeters();
-    updatePuzzleStats();
-    renderPractice();
-    drawBoard();
-    makeAppIcon();
-    requestSkyLocation();
-    refreshWeather();
-    setInterval(refreshWeather, 30 * 60000);
-    setupSky();
-    drawSky(performance.now());
-    requestAnimationFrame(skyLoop);
-    setupHamsterTap();
-    spiritHuskTick();
-    renderFindsButton();
-    applySpiritBackdrop();
-    setupCalmTiles();
-    renderTodayPins();
-    setupInsightCards();
-    decorateCardHeads();
-    renderPuzzleModeSettings();
-    showJourneySeg('calendar');
-    renderToday();
-    renderHerQuiz();
-    renderHerPattern();
-    resumeCrisisIfActive();
-    renderCrisisFollowup();
-    renderHamsterName();
-    renderIncidents();
-    renderPatterns();
-    renderTagPicker('journal');
-    renderTagPicker('incident');
-    renderUnsentCount();
-    startSession();
-    updatePuzzleRing();
-    applyOniTailoring();
+    // Initial render: runs last so every variable above is already declared.
+    // Safety net: each step runs on its own, so one error can't stop the rest (it once froze the companion and Crisis Practice)
+    const bootErrors = [];
+    function boot(fn) { try { fn(); } catch(e) { bootErrors.push(String(e && e.message || e)); console.error(e); } }
+    boot(() => { document.getElementById('vagus-count').innerText = vagusCount; });
+    boot(() => { renderNotes(); });
+    boot(() => { renderCurrentMonthCalendar(); });
+    boot(() => { updateCountMeters(); });
+    boot(() => { updatePuzzleStats(); });
+    boot(() => { renderPractice(); });
+    boot(() => { drawBoard(); });
+    boot(() => { makeAppIcon(); });
+    boot(() => { requestSkyLocation(); });
+    boot(() => { refreshWeather(); });
+    boot(() => { setInterval(refreshWeather, 30 * 60000); });
+    boot(() => { setupSky(); });
+    boot(() => { drawSky(performance.now()); });
+    boot(() => { requestAnimationFrame(skyLoop); });
+    boot(() => { setupHamsterTap(); });
+    boot(() => { spiritHuskTick(); });
+    boot(() => { renderFindsButton(); });
+    boot(() => { applySpiritBackdrop(); });
+    boot(() => { setupCalmTiles(); });
+    boot(() => { renderTodayPins(); });
+    boot(() => { setupInsightCards(); });
+    boot(() => { decorateCardHeads(); });
+    boot(() => { renderPuzzleModeSettings(); });
+    boot(() => { showJourneySeg('calendar'); });
+    boot(() => { renderToday(); });
+    boot(() => { renderHerQuiz(); });
+    boot(() => { renderHerPattern(); });
+    boot(() => { resumeCrisisIfActive(); });
+    boot(() => { renderCrisisFollowup(); });
+    boot(() => { renderHamsterName(); });
+    boot(() => { renderIncidents(); });
+    boot(() => { renderPatterns(); });
+    boot(() => { renderTagPicker('journal'); });
+    boot(() => { renderTagPicker('incident'); });
+    boot(() => { renderUnsentCount(); });
+    boot(() => { startSession(); });
+    boot(() => { updatePuzzleRing(); });
+    boot(() => { applyOniTailoring(); });
     // When a pick goes stale while the app is open, everything falls back
-    let lastOniSeen = todaysOni();
+    let lastOniSeen = null;
+    boot(() => { lastOniSeen = todaysOni(); });
     setInterval(() => {
       if(todaysOni() === lastOniSeen) return;
       lastOniSeen = todaysOni();
       updateCountMeters();
       applyOniTailoring();
     }, 60000);
-    renderCorrelations();
-    renderValidation();
-    updatePuzzleWindowBanner();
-    setInterval(updatePuzzleWindowBanner, 30000);
-    setupPond();
-    setupLanterns();
-    setupFog();
-    renderMoodCalendar();
-    renderWorkoutCal();
-    renderCalCycle();
-    setInterval(() => { renderCheckinHours(); arrangeToday(); }, 60000); // the evening questions appear at 10 pm without reopening the app
-    calmLoop();
-    if(!reduceMotion) hamsterLoop(); // the Spirit tab shows his scene as drawn (the pixel screen is off)
-    document.querySelectorAll('[data-px]').forEach(el => { if(!el.innerHTML) el.innerHTML = pxIcon(el.dataset.px); });
+    boot(() => { renderCorrelations(); });
+    boot(() => { renderValidation(); });
+    boot(() => { updatePuzzleWindowBanner(); });
+    boot(() => { setInterval(updatePuzzleWindowBanner, 30000); });
+    boot(() => { setupPond(); });
+    boot(() => { setupLanterns(); });
+    boot(() => { setupFog(); });
+    boot(() => { renderMoodCalendar(); });
+    boot(() => { renderWorkoutCal(); });
+    boot(() => { renderCalCycle(); });
+    boot(() => { setInterval(() => { renderCheckinHours(); arrangeToday(); }, 60000); }); // the evening questions appear at 10 pm without reopening the app
+    boot(() => { calmLoop(); });
+    boot(() => { if(!reduceMotion) hamsterLoop(); }); // the Spirit tab shows his scene as drawn (the pixel screen is off)
+    boot(() => { document.querySelectorAll('[data-px]').forEach(el => { if(!el.innerHTML) el.innerHTML = pxIcon(el.dataset.px); }); });
     const TAB_PX = { today: 'sun', journey: 'cal', puzzle: 'blocks', spirit: 'paw', insights: 'bars', calm: 'waves' };
-    document.querySelectorAll('.tab-btn').forEach(b => { const svg = b.querySelector('svg'); if(svg && TAB_PX[b.dataset.tab]) svg.outerHTML = pxIcon(TAB_PX[b.dataset.tab]).replace('<svg', '<svg class="px-tab"'); });
-    document.body.dataset.tab = 'today';
-    enhanceDates();
-    applyDayStates();
-    renderToday();
-    renderRepair();
-    renderSim();
-    document.getElementById('unsponge-text').innerText = `"${UNSPONGE[0]}"`;
-    if(!localStorage.getItem('aq_onboarded')) showWelcome();
-    else maybeStartTour();
-    takeTodaySnapshot();
-    makeAppIcon(); // again, now that Spirit's screen is drawn
-    if(spiritStyle.backdrop === 'weather') fetchWeather().then(applySpiritBackdrop);
+    boot(() => { document.querySelectorAll('.tab-btn').forEach(b => { const svg = b.querySelector('svg'); if(svg && TAB_PX[b.dataset.tab]) svg.outerHTML = pxIcon(TAB_PX[b.dataset.tab]).replace('<svg', '<svg class="px-tab"'); }); });
+    boot(() => { document.body.dataset.tab = 'today'; });
+    boot(() => { enhanceDates(); });
+    boot(() => { applyDayStates(); });
+    boot(() => { renderToday(); });
+    boot(() => { renderRepair(); });
+    boot(() => { renderSim(); });
+    boot(() => { renderJade(); });
+    boot(() => { document.getElementById('unsponge-text').innerText = `"${UNSPONGE[0]}"`; });
+    boot(() => { if(!localStorage.getItem('aq_onboarded')) showWelcome(); else maybeStartTour(); });
+    boot(() => { takeTodaySnapshot(); });
+    boot(() => { makeAppIcon(); }); // again, now that Spirit's screen is drawn
+    boot(() => { if(spiritStyle.backdrop === 'weather') fetchWeather().then(applySpiritBackdrop); });
+    if(bootErrors.length) {
+      try { localStorage.setItem('aq_boot_errors', JSON.stringify({ at: Date.now(), errors: bootErrors.slice(0, 5) })); } catch(e) {}
+      setTimeout(() => showToast(`Something didn't load (${bootErrors[0].slice(0, 60)}). Everything else works.`), 1500);
+    }
 
     // Home-screen icon drawn from the blue oni
     // Home-screen icon: Spirit on his little LCD screen (from Today's snapshot), on a deep night tile
