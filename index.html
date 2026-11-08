@@ -1340,7 +1340,17 @@
     .day-chip.incident { background: rgba(249, 115, 22, 0.25); color: #fdba74; }
     .day-chip.black { background: #000; color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.6); }
 
-    .past-periods { margin-top: 8px; max-height: 180px; overflow-y: auto; }
+    .past-periods { margin-top: 8px; max-height: 220px; overflow-y: auto; }
+    /* Period start/end: a one-tap line in Settings, and an end date on each past period */
+    .period-now { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; margin-bottom: 12px;
+      border-radius: 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); font-size: 0.88rem; }
+    .period-now.on { background: rgba(239, 138, 122, 0.1); border-color: rgba(239, 138, 122, 0.35); }
+    .period-now.on b { color: #ef8a7a; }
+    .period-now button { flex: none; }
+    .period-row { align-items: center; gap: 6px 8px; flex-wrap: wrap; padding: 8px 0; }
+    .period-row > span { flex: 1 1 100%; }
+    .period-row > small { color: var(--text-muted); font-size: 0.72rem; }
+    .period-row .period-end { flex: 1; width: auto !important; margin: 0 !important; padding: 5px 8px !important; font-size: 0.78rem; border-radius: 8px; }
 
     .usage-row { display: flex; justify-content: space-between; font-size: 0.82rem; padding: 5px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
 
@@ -1488,7 +1498,13 @@
     @keyframes bump { 0% { transform: scale(1); } 40% { transform: scale(1.25); } 100% { transform: scale(1); } }
 
     #oni-screen { animation: fadeIn 0.5s ease; transition: opacity 0.45s ease, transform 0.45s ease; }
-    .oni-ask { width: 100%; max-width: 420px; margin: 0 auto 14px; text-align: center; color: rgba(225, 235, 255, 0.82); font-size: 0.95rem; font-weight: 600; letter-spacing: 0.01em; }
+    .oni-ask { width: 100%; max-width: 420px; margin: 0 auto 14px; text-align: center; color: rgba(225, 235, 255, 0.82); font-size: 0.95rem; font-weight: 600; letter-spacing: 0.01em;
+      display: flex; align-items: center; justify-content: center; gap: 10px; }
+    /* Skip the mood pick and go straight into the app */
+    .oni-skip { flex: none; width: 32px; height: 32px; border-radius: 50%; border: 1px solid rgba(225, 235, 255, 0.28); background: rgba(225, 235, 255, 0.08);
+      color: rgba(225, 235, 255, 0.85); display: inline-grid; place-items: center; cursor: pointer; padding: 0 0 0 2px; }
+    .oni-skip svg { width: 12px; height: 12px; fill: currentColor; shape-rendering: crispEdges; display: block; }
+    .oni-skip:active { transform: scale(0.94); }
     #oni-screen.leaving { opacity: 0; transform: scale(1.04); pointer-events: none; }
     .oni-half.blue-side { animation: slideL 0.6s cubic-bezier(.2,.8,.2,1) both; }
     .oni-half.red-side { animation: slideR 0.6s cubic-bezier(.2,.8,.2,1) both; }
@@ -1666,6 +1682,36 @@
     .cyc-of { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); }
     .today-sleep.done { display: block; margin-bottom: 10px; }
     .sleep-done { margin: 0; }
+    /* Simpler Today: arrangeToday() hides what doesn't fit the moment */
+    .slot-off { display: none !important; }
+    /* Look back: one calendar at a time, cycled with two arrows */
+    .cal-cycle { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 2px 12px; text-align: center; }
+    .cal-cycle b { font-size: 0.95rem; }
+    .cal-cycle-dots { display: flex; gap: 5px; justify-content: center; margin-top: 5px; }
+    .cal-cycle-dots i { width: 6px; height: 6px; border-radius: 50%; background: rgba(255, 255, 255, 0.18); }
+    .cal-cycle-dots i.on { background: var(--theme-primary); }
+    .ci-sep { height: 1px; background: rgba(255, 255, 255, 0.06); margin: 14px 0 12px; }
+    /* Workouts: the evening question on Today and the Movement calendar */
+    .wk-q { font-size: 1rem; font-weight: 600; margin: 2px 0 4px; }
+    .wk-btns { display: flex; gap: 8px; margin-top: 12px; }
+    .wk-btns .btn-action { flex: 1; margin: 0; padding: 11px; }
+    .wk-type { width: 100%; margin-top: 10px; padding: 10px 12px; border-radius: 12px; background: var(--bg-input); color: var(--text-main); border: 1px solid var(--border-color); font: inherit; font-size: 0.9rem; }
+    .wk-done { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .wk-done b { color: var(--color-green); }
+    .wk-done .wk-type { width: auto; flex: 1; min-width: 140px; margin: 0; }
+    .wk-status { display: flex; justify-content: space-between; align-items: center; gap: 10px; background: rgba(95, 199, 154, 0.1); border: 1px solid rgba(95, 199, 154, 0.3); border-radius: 12px; padding: 9px 12px; margin-bottom: 10px; }
+    .wk-status.off { background: rgba(242, 196, 107, 0.08); border-color: rgba(242, 196, 107, 0.3); }
+    .wk-status b { color: var(--color-green); font-size: 0.9rem; }
+    .wk-status.off b { color: var(--color-yellow); }
+    .wk-status span { font-size: 0.75rem; color: var(--text-muted); text-align: right; }
+    #wk-grid .cal-day { position: relative; flex-direction: column; color: var(--text-muted); }
+    #wk-grid .cal-day.wk-yes { background: rgba(95, 199, 154, 0.28); border-color: rgba(95, 199, 154, 0.6); color: #e9fff4; }
+    #wk-grid .cal-day.wk-rest { background: rgba(255, 255, 255, 0.08); }
+    #wk-grid .cal-day.wk-due { border: 1px dashed rgba(242, 196, 107, 0.65); }
+    #wk-grid .cal-day.future { opacity: 0.45; cursor: default; }
+    #wk-grid .cal-day small { font-size: 0.5rem; font-weight: 600; opacity: 0.85; line-height: 1; margin-top: 1px; }
+    .wk-legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 12px; font-size: 0.72rem; color: var(--text-muted); }
+    .wk-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
     .link-btn { background: none; border: 0; padding: 4px 2px; color: var(--theme-primary); font: inherit; font-weight: 600; cursor: pointer; }
     /* Crisis Practice */
     .sim-scen { display: flex; justify-content: space-between; align-items: center; gap: 10px; width: 100%; text-align: left; padding: 11px 12px; margin-bottom: 7px;
@@ -1790,7 +1836,7 @@
   <!-- BLUE & RED ONI START SCREEN -->
   <div id="oni-screen">
     <button class="crisis-btn" onclick="startCrisis()" title="Crisis mode" aria-label="Crisis mode">!</button>
-    <div class="oni-ask">How are you feeling right now?</div>
+    <div class="oni-ask">How are you feeling right now?<button type="button" class="oni-skip" onclick="enterApp()" title="Skip" aria-label="Skip"><span data-px="play"></span></button></div>
     <div class="oni-grid">
       <div class="oni-tile" style="--c: 251, 191, 36;" onclick="pickOni('happy', this)"><canvas id="oni-happy-canvas" width="240" height="240"></canvas></div>
       <div class="oni-tile" style="--c: 0, 242, 254;" onclick="pickOni('calm', this)"><canvas id="oni-calm-canvas" width="240" height="240"></canvas></div>
@@ -1804,11 +1850,10 @@
 
   <nav>
     <button class="tab-btn active" data-tab="today" onclick="switchTab('today')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>Today</button>
-    <button class="tab-btn" data-tab="journey" onclick="switchTab('journey')"><svg viewBox="0 0 24 24"><path d="M5 4h11l3 3v13H5z"/><path d="M8 10h8M8 14h8M8 18h5"/></svg>Calendar</button>
+    <button class="tab-btn" data-tab="journey" onclick="switchTab('journey')"><svg viewBox="0 0 24 24"><path d="M5 4h11l3 3v13H5z"/><path d="M8 10h8M8 14h8M8 18h5"/></svg>Look back</button>
     <button class="tab-btn" data-tab="puzzle" onclick="switchTab('puzzle')"><svg viewBox="0 0 24 24"><path d="M12 3l7 4v10l-7 4-7-4V7z"/><path d="M12 12l7-5M12 12v9M12 12L5 7"/></svg>Disrupt</button>
     <button class="tab-btn" data-tab="spirit" onclick="switchTab('spirit')" id="hamster-tab"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="7"/><circle cx="7" cy="6" r="2.5"/><circle cx="17" cy="6" r="2.5"/></svg>Spirit</button>
-    <button class="tab-btn" data-tab="insights" onclick="switchTab('insights')"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Insights</button>
-    <button class="tab-btn" data-tab="calm" onclick="switchTab('calm')"><svg viewBox="0 0 24 24"><path d="M3 12c3-4 6-4 9 0s6 4 9 0"/><path d="M3 17c3-4 6-4 9 0s6 4 9 0"/><path d="M3 7c3-4 6-4 9 0s6 4 9 0"/></svg>Calm</button>
+    <button class="tab-btn" data-tab="calm" onclick="switchTab('calm')"><svg viewBox="0 0 24 24"><path d="M3 12c3-4 6-4 9 0s6 4 9 0"/><path d="M3 17c3-4 6-4 9 0s6 4 9 0"/><path d="M3 7c3-4 6-4 9 0s6 4 9 0"/></svg>Steady</button>
   </nav>
 
   <div id="puzzle-window-banner" class="window-banner" style="display:none;">
@@ -1869,15 +1914,27 @@
           <button class="icon-btn" onclick="exportBackup()">Back up now</button>
         </div>
       </div>
-      <div class="card">
-        <h2 class="card-label">Check in</h2>
-        <div class="today-q" id="today-sleep-q">How did you sleep?</div>
-        <div class="today-sleep" id="today-sleep"></div>
-        <div class="today-q">How are you feeling?</div>
-        <div class="today-moods" id="today-moods"></div>
-        <div class="today-sub" id="today-checked" style="margin:-4px 0 12px;"></div>
-        <div class="today-q">How did today go?</div>
-        <div class="today-days" id="today-days"></div>
+      <div class="card" id="today-checkin-card">
+        <h2 class="card-label"><span id="ci-title">Check in</span></h2>
+        <div id="ci-sleep">
+          <div class="today-q" id="today-sleep-q">How did you sleep?</div>
+          <div class="today-sleep" id="today-sleep"></div>
+        </div>
+        <div id="ci-day">
+          <div class="today-q" id="today-day-q">How did today go?</div>
+          <div class="today-days" id="today-days"></div>
+        </div>
+        <div id="ci-workout" style="display:none;">
+          <div class="ci-sep"></div>
+          <div id="today-workout"></div>
+        </div>
+      </div>
+      <div class="card" id="today-now" style="display:none;">
+        <h2 class="card-label">Right now</h2>
+        <div class="wk-q">Breathing Pacer</div>
+        <div class="today-sub">Slow breaths with <span id="today-now-name">Spirit</span>, two minutes. The fastest way to settle your body.</div>
+        <button class="btn-action" style="margin-top:12px;" onclick="goTool('breathe')">Breathe now</button>
+        <div class="today-sub" style="text-align:center; margin-top:8px;">or <button class="link-btn" onclick="goTool('puzzle')">play Disrupt</button> · <button class="link-btn" onclick="goTool('vagus')">vagus reset</button></div>
       </div>
       <div class="card today-spirit-card" onclick="switchTab('spirit')" title="Visit Spirit">
         <div style="flex:1; min-width:0;">
@@ -1912,8 +1969,9 @@
 
     <!-- JOURNAL -->
     <div class="tab-content" id="tab-journey">
-      <div class="journey-seg private" id="journey-seg">
+      <div class="journey-seg" id="journey-seg">
         <button data-seg="calendar" class="on" onclick="showJourneySeg('calendar')">Calendar</button>
+        <button data-seg="insights" onclick="switchTab('insights')">Insights</button>
         <button data-seg="write" class="private" onclick="showJourneySeg('write')">Write</button>
         <button data-seg="journal" class="private" onclick="showJourneySeg('journal')">Journal</button>
       </div>
@@ -1968,7 +2026,12 @@
       </div>
       </div>
       <div data-seg="calendar">
-      <div class="card">
+      <div class="cal-cycle">
+        <button type="button" class="cal-nav-btn" onclick="cycleCalendar(-1)" aria-label="Previous calendar">‹</button>
+        <div><b id="cal-cycle-name">Days</b><div class="cal-cycle-dots" id="cal-cycle-dots"></div></div>
+        <button type="button" class="cal-nav-btn" onclick="cycleCalendar(1)" aria-label="Next calendar">›</button>
+      </div>
+      <div class="card" data-cal="days">
         <h2 class="card-label">Calendar</h2>
         <div id="calendar-container">
           <div class="cal-legend" id="cal-legend"></div>
@@ -1987,7 +2050,7 @@
       </div>
       </div>
       <div data-seg="calendar">
-      <div class="card">
+      <div class="card" data-cal="moods">
         <h2 class="card-label">Emotional state</h2>
         <div id="mood-container">
           <div class="today-sub cal-hint">From your check-ins. Tap a day to see the times.</div>
@@ -2009,6 +2072,27 @@
           </div>
           <div class="calendar-grid" id="mood-grid"></div>
           <div id="mood-day-detail"></div>
+        </div>
+      </div>
+      </div>
+      <div data-seg="calendar">
+      <div class="card" data-cal="move">
+        <h2 class="card-label">Movement</h2>
+        <div class="wk-status" id="wk-status"></div>
+        <div class="today-sub cal-hint">Tap a day: workout, rest, then empty again.</div>
+        <div class="cal-header">
+          <button class="cal-nav-btn" onclick="changeWorkoutMonth(-1)">‹</button>
+          <span id="wk-month-title">Month Year</span>
+          <button class="cal-nav-btn" onclick="changeWorkoutMonth(1)">›</button>
+        </div>
+        <div class="cal-days-header">
+          <div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div><div>Su</div>
+        </div>
+        <div class="calendar-grid" id="wk-grid"></div>
+        <div class="wk-legend">
+          <span><i style="background:rgba(95,199,154,0.6)"></i>Workout</span>
+          <span><i style="background:rgba(255,255,255,0.12)"></i>Rest</span>
+          <span><i style="border:1px dashed rgba(242,196,107,0.8)"></i>Was due</span>
         </div>
       </div>
       </div>
@@ -2269,6 +2353,12 @@
 
     <!-- INSIGHTS -->
     <div class="tab-content" id="tab-insights">
+      <div class="journey-seg">
+        <button onclick="switchTab('journey'); showJourneySeg('calendar')">Calendar</button>
+        <button class="on">Insights</button>
+        <button class="private" onclick="switchTab('journey'); showJourneySeg('write')">Write</button>
+        <button class="private" onclick="switchTab('journey'); showJourneySeg('journal')">Journal</button>
+      </div>
       <div class="card" id="trend-card">
         <h2 class="card-label">Past 30 days</h2>
         <div class="glance" id="trend-glance"></div>
@@ -2480,7 +2570,8 @@
           <input type="date" id="cfg-period">
         </div>
         <div class="form-group" style="margin-bottom:0;">
-          <label>Past period start dates (makes the cycle patterns accurate):</label>
+          <div class="period-now" id="period-now"></div>
+          <label>Past periods, start and end (makes the cycle patterns accurate):</label>
           <div style="display:flex; gap:8px;">
             <input type="date" id="cfg-past-period" data-quick="past" style="flex:1;">
             <button class="icon-btn" type="button" onclick="addPastPeriod()">+ Add</button>
@@ -3470,13 +3561,12 @@
 
     // First-load tour: a spotlight on the main parts of the app, one short line each
     const TOUR = [
-      [() => document.getElementById('today-moods').closest('.card'), 'Check in', 'Once a day: how you slept, how you feel and how the day went. About ten seconds.'],
+      [() => { const c = document.getElementById('today-checkin-card'); return c && c.style.display !== 'none' ? c : null; }, 'Check in', 'How you slept in the morning, how the day went late in the evening. A few seconds.'],
       [() => document.querySelector('.today-spirit-card'), () => `Meet ${hamsterName}`, () => `${hamsterName} does better on good days and when you look after yourself. Tap to visit.`],
       [() => document.querySelector('.greet-actions .header-crisis'), 'Hard moment?', 'Tap ! any time. It opens calm steps straight away and keeps a record for later.'],
-      [() => document.querySelector('.tab-btn[data-tab="calm"]'), 'Calm', 'Breathing, lanterns, and a guide for making up after a conflict.'],
+      [() => document.querySelector('.tab-btn[data-tab="calm"]'), 'Steady', 'Breathing, lanterns, and a guide for making up after a conflict.'],
       [() => document.querySelector('.tab-btn[data-tab="puzzle"]'), 'Disrupt', 'A short block game. Ten minutes of it helps your mind let go of a hard moment.'],
-      [() => document.querySelector('.tab-btn[data-tab="journey"]'), 'Calendar', 'Every day in its colour, and your check-ins month by month.'],
-      [() => document.querySelector('.tab-btn[data-tab="insights"]'), 'Insights', 'Your patterns show up here after a couple of weeks of check-ins.'],
+      [() => document.querySelector('.tab-btn[data-tab="journey"]'), 'Look back', 'Calendar: every day in its colour. Insights: your patterns, after a couple of weeks of check-ins.'],
       [() => document.querySelector('.header-gear'), 'Settings', 'Names, day colours, backups and feedback. You can replay this tour there too.']
     ];
     let tourStep = -1;
@@ -3606,7 +3696,8 @@
       calmFromToday = false; // only a tool opened from Today's pin goes back to Today
       if(typeof usageTab === 'function') usageTab(name);
       if(name !== 'calm') document.body.classList.remove('calm-tool-open');
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === name));
+      // Calendar and Insights share one tab, Look back
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === (name === 'insights' ? 'journey' : name)));
       document.querySelectorAll('.tab-content').forEach(ct => ct.classList.toggle('active', ct.id === 'tab-' + name));
       document.body.classList.toggle('still-sky', name === 'journey' || name === 'insights'); // numbers read best on a still sky
       document.body.dataset.tab = name;
@@ -3667,6 +3758,7 @@
     }
     function removePastPeriod(d) {
       pastPeriods = pastPeriods.filter(x => x !== d);
+      if(periodEnds[d]) { delete periodEnds[d]; savePeriodEnds(); }
       savePastPeriods();
     }
     function renderPastPeriods() {
@@ -3674,15 +3766,72 @@
       if(!el) return;
       const info = cycleInfo();
       const list = pastPeriods.slice().reverse();
+      const fmt = s => parseDay(s).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' });
       el.innerHTML = (list.length ? list.map((d, i) => {
-        const next = list[i - 1];
+        const next = list[i - 1], end = periodEnds[d];
         const len = next ? Math.round((parseDay(next) - parseDay(d)) / DAY) : null;
-        return `<div class="usage-row"><span>${parseDay(d).toDateString()}${len ? ` <span class="insight-note">· ${len}-day cycle</span>` : ''}</span>
+        const plen = end ? Math.round((parseDay(end) - parseDay(d)) / DAY) + 1 : null;
+        return `<div class="usage-row period-row"><span>${fmt(d)}${end ? ` → ${fmt(end)} <span class="insight-note">· ${plen} ${pl(plen, 'day')}</span>` : ''}${len ? ` <span class="insight-note">· ${len}-day cycle</span>` : ''}</span>
+          <small>Ended</small><input type="date" class="period-end" title="End date" aria-label="End date" value="${end || ''}" min="${d}" max="${isoDay(startOfToday())}" onchange="setPeriodEnd('${d}', this.value)">
           <button class="mood-del" type="button" onclick="removePastPeriod('${d}')">✕</button></div>`;
       }).join('') : '<div class="insight-note">No past dates yet.</div>') +
-      `<div class="insight-note" style="margin-top:6px;">Average cycle: ${info.measured ? `${Math.round(info.avg)} days (from ${info.measured} cycle${info.measured === 1 ? '' : 's'})` : 'assumed 28 days until you add at least 2 dates'}</div>`;
+      `<div class="insight-note" style="margin-top:6px;">Average cycle: ${info.measured ? `${Math.round(info.avg)} days (from ${info.measured} cycle${info.measured === 1 ? '' : 's'})` : 'assumed 28 days until you add at least 2 dates'}` +
+      `${avgPeriodLen() ? ` · period about ${Math.round(avgPeriodLen())} days` : ' · add end dates to learn the period length'}</div>`;
+      // The one-tap line: started today / ended today
+      const now = document.getElementById('period-now');
+      if(now) {
+        const cp = currentPeriod();
+        now.classList.toggle('on', !!cp);
+        now.innerHTML = cp
+          ? `<span><b>On period</b> · day ${cp.day}${cp.end ? ` · ends ${fmt(cp.end)}` : ''}</span>${cp.end ? '' : '<button class="icon-btn" type="button" onclick="periodEndedToday()">Ended today</button>'}`
+          : `<span>Not on period</span><button class="icon-btn" type="button" onclick="periodStartedToday()">Started today</button>`;
+      }
     }
     function parseDay(s) { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); }
+    // PERIOD ENDS: { 'start YYYY-MM-DD': 'end YYYY-MM-DD' }, kept apart from the start dates so older backups still fit
+    let periodEnds = {};
+    try { periodEnds = JSON.parse(localStorage.getItem('aq_period_ends') || '{}') || {}; } catch(e) { periodEnds = {}; }
+    const isoDay = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    function savePeriodEnds() { localStorage.setItem('aq_period_ends', JSON.stringify(periodEnds)); }
+    // Average period length from the logged ends (null until there are 2)
+    function avgPeriodLen() {
+      const lens = Object.entries(periodEnds).map(([st, en]) => Math.round((parseDay(en) - parseDay(st)) / DAY) + 1).filter(l => l >= 1 && l <= 12);
+      return lens.length >= 2 ? lens.reduce((a, b) => a + b, 0) / lens.length : null;
+    }
+    // The period going on now, from the logged dates: { start, day, end } or null
+    function currentPeriod() {
+      const today = startOfToday();
+      const st = [...new Set(pastPeriods)].sort().reverse().find(x => parseDay(x) <= today);
+      if(!st) return null;
+      const day = Math.round((today - parseDay(st)) / DAY) + 1;
+      if(day > 14) return null;
+      const end = periodEnds[st];
+      if(end) return parseDay(end) >= today ? { start: st, day, end } : null;
+      return day <= Math.round(avgPeriodLen() || 5) + 3 ? { start: st, day, end: null } : null; // forgot to tap "ended": it stops on its own
+    }
+    // On the period today? Logged dates first; otherwise the expected days from the cycle
+    function onPeriodNow(ds) {
+      const today = startOfToday();
+      const st = [...new Set(pastPeriods)].sort().reverse().find(x => parseDay(x) <= today);
+      if(st && Math.round((today - parseDay(st)) / DAY) < 14) return !!currentPeriod();
+      return !!ds && ds.cdNow >= 1 && ds.cdNow <= Math.round(avgPeriodLen() || 5);
+    }
+    function periodStartedToday() {
+      if(!saveCycleStart(isoDay(startOfToday()), Math.round(cycleInfo().avg))) return;
+      if(typeof renderToday === 'function') renderToday();
+      showToast('Period start saved');
+    }
+    function periodEndedToday() {
+      const cp = currentPeriod();
+      if(!cp) return;
+      setPeriodEnd(cp.start, isoDay(startOfToday()));
+      showToast('Period end saved');
+    }
+    function setPeriodEnd(start, end) {
+      if(end && parseDay(end) >= parseDay(start)) periodEnds[start] = end; else delete periodEnds[start];
+      savePeriodEnds(); renderPastPeriods();
+      if(typeof renderToday === 'function') renderToday();
+    }
 
     // All known starts (past + the upcoming date from Settings) and the average cycle length
     function cycleInfo() {
@@ -6536,17 +6685,38 @@
       const wx = spiritWeatherNow();
       const code = wx ? wx.code : 0, cloud = wx ? wx.cloud : 20, wind = wx ? Math.min(40, wx.wind || 5) : 5;
       const day = spiritIsDay(), t = now / 1000;
+      // Where the clouds are this frame (worked out first, so the moon can hide behind them)
+      const nClouds = Math.round(cloud / 100 * 5), puffs = [];
+      for(let i = 0; i < nClouds; i++) {
+        const span = w + 120;
+        const x = fract(rand01(i, 3) + t * (0.004 + wind * 0.0006) * (0.7 + rand01(i, 4) * 0.6)) * span - 60;
+        const y = 12 + rand01(i, 5) * 34, sc = 0.7 + rand01(i, 6) * 0.6;
+        [[0, 0, 16], [14, 4, 12], [-14, 5, 11], [6, -6, 11]].forEach(([dx, dy, r]) => puffs.push([x + dx * sc, y + dy * sc, r * sc]));
+      }
       if(!day && cloud < 75) {
         for(let i = 0; i < 22; i++) {
           ctx.fillStyle = `rgba(255, 255, 255, ${0.35 + 0.4 * Math.max(0, Math.sin(t * 1.5 + i * 2))})`;
           ctx.fillRect(rand01(i, 1) * w, rand01(i, 2) * h * 0.55, 1.3, 1.3);
         }
-        // Tonight's real moon phase
-        ctx.fillStyle = 'rgba(40, 46, 70, 0.3)';
+        // Tonight's real moon phase, with a soft glow and outline so it can always be found and tapped.
+        // A cloud passing in front hides it: the more of the moon it covers, the fainter the moon.
+        const mx = w - 34, my = 24;
+        const pts = [[0, 0], [-6, 0], [6, 0], [0, -6], [0, 6], [-4, -4], [4, -4], [-4, 4], [4, 4]];
+        const covered = pts.filter(([dx, dy]) => puffs.some(([px, py, pr]) => Math.hypot(mx + dx - px, my + dy - py) < pr)).length / pts.length;
+        ctx.save();
+        ctx.globalAlpha = 1 - 0.9 * covered;
+        const mg = ctx.createRadialGradient(w - 34, 24, 8, w - 34, 24, 18);
+        mg.addColorStop(0, 'rgba(240, 240, 220, 0.18)'); mg.addColorStop(1, 'rgba(240, 240, 220, 0)');
+        ctx.fillStyle = mg;
+        ctx.beginPath(); ctx.arc(w - 34, 24, 18, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = 'rgba(40, 46, 70, 0.55)';
         ctx.beginPath(); ctx.arc(w - 34, 24, 9, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = 'rgba(240, 240, 220, 0.45)'; ctx.lineWidth = 0.8;
+        ctx.beginPath(); ctx.arc(w - 34, 24, 9, 0, Math.PI * 2); ctx.stroke();
         ctx.fillStyle = 'rgba(240, 240, 220, 0.9)';
         moonLitPath(ctx, w - 34, 24, 9, moonAge());
         ctx.fill();
+        ctx.restore();
       }
       if(day && code <= 2) {
         const g = ctx.createRadialGradient(w - 36, 24, 2, w - 36, 24, 34);
@@ -6555,17 +6725,9 @@
         ctx.beginPath(); ctx.arc(w - 36, 24, 34, 0, Math.PI * 2); ctx.fill();
       }
       const storm = code >= 95, wet = isRain(code);
-      const nClouds = Math.round(cloud / 100 * 5);
       const cloudCol = storm ? 'rgba(70, 75, 90, 0.85)' : wet ? 'rgba(150, 160, 175, 0.75)' : day ? 'rgba(255, 255, 255, 0.8)' : 'rgba(170, 180, 205, 0.3)';
       ctx.fillStyle = cloudCol;
-      for(let i = 0; i < nClouds; i++) {
-        const span = w + 120;
-        const x = fract(rand01(i, 3) + t * (0.004 + wind * 0.0006) * (0.7 + rand01(i, 4) * 0.6)) * span - 60;
-        const y = 12 + rand01(i, 5) * 34, sc = 0.7 + rand01(i, 6) * 0.6;
-        [[0, 0, 16], [14, 4, 12], [-14, 5, 11], [6, -6, 11]].forEach(([dx, dy, r]) => {
-          ctx.beginPath(); ctx.arc(x + dx * sc, y + dy * sc, r * sc, 0, Math.PI * 2); ctx.fill();
-        });
-      }
+      puffs.forEach(([px, py, pr]) => { ctx.beginPath(); ctx.arc(px, py, pr, 0, Math.PI * 2); ctx.fill(); });
       if(code === 45 || code === 48) {
         for(let i = 0; i < 3; i++) {
           ctx.fillStyle = 'rgba(220, 225, 235, 0.18)';
@@ -7370,12 +7532,26 @@
       // The moon is part of the night scene (drawSpiritWeather), so nothing else here
     }
     let todayFrameAt = 0;
+    // The temperature in the corner of his scene (the pixel screen used to show it)
+    function drawSpiritTemp(c) {
+      const wx = spiritWeatherNow();
+      if(!wx || wx.temp == null || Date.now() - wx.at > 6 * 3600000) return;
+      const g = c.getContext('2d');
+      g.save();
+      g.setTransform(1, 0, 0, 1, 0, 0);
+      g.font = '600 10px -apple-system, BlinkMacSystemFont, sans-serif';
+      g.textBaseline = 'top';
+      g.shadowColor = 'rgba(0, 0, 0, 0.45)'; g.shadowBlur = 3;
+      g.fillStyle = 'rgba(255, 255, 255, 0.92)';
+      g.fillText(`${Math.round(wx.temp)}°C`, 8, 7);
+      g.restore();
+    }
 
     function hamsterLoop() {
       requestAnimationFrame(hamsterLoop); // first, so one failing drawing can't stop every animation for good
       const safe = (fn) => { try { fn(); } catch(e) { if(!safe.seen) { safe.seen = 1; console.error(e); } } };
       const c = document.getElementById('hamster-canvas');
-      if(onScreen(c)) try { drawHamster(); drawHearts(); updateSpiritThought(); }
+      if(onScreen(c)) try { drawHamster(); drawSpiritTemp(c); drawHearts(); updateSpiritThought(); }
       catch(e) { // show what went wrong on his scene, so a screenshot tells us
         const g = c.getContext('2d');
         g.setTransform(1, 0, 0, 1, 0, 0);
@@ -9682,8 +9858,10 @@
         'Protect your sleep, even if it means sleeping separately.',
         'Play Disrupt within 6 hours of anything upsetting, and write it down with the time.'
       );
+      // Recovering only makes sense once the period has started (cycle days 1-5), not in the days before it
+      const periodNow = onPeriodNow(ds);
       return [
-        ['Recover and process', SPIRIT_RECOVERY_REMINDERS(ds)],
+        ['Recover and process', periodNow ? SPIRIT_RECOVERY_REMINDERS(ds) : null], // kept in place (null = hidden) so saved ticks stay on the right group
         ['Before it starts', [
           `Put the next dark side of the moon in your calendar: ${shortDate(ds.upcomingStart)} – ${shortDate(ds.upcomingEnd)}.`,
           'Move anything stressful you can (big conversations, trips, deadlines) out of those dates.',
@@ -9733,13 +9911,13 @@
         : `Recovery stretch. Take care of yourself and process what happened last time. Next dark side of the moon: <b>${shortDate(ds.upcomingStart)} – ${shortDate(ds.upcomingEnd)}</b>.`;
 
       const id = dayKey(ds.upcomingEnd), done = new Set(darkPlanState()[id] || []);
-      const groups = darkPlanGroups(ds).map(([title, items], gi) => `<div class="plan-group">${title}</div>` + items.map((t, i) => {
+      const groups = darkPlanGroups(ds).map(([title, items], gi) => !items ? '' : `<div class="plan-group">${title}</div>` + items.map((t, i) => {
         const key = gi + ':' + i;
         return `<label class="plan-item ${done.has(key) ? 'done' : ''}"><input type="checkbox" ${done.has(key) ? 'checked' : ''} onchange="toggleDarkPlan('${id}', '${key}')"><span>${t}</span></label>`;
       }).join('')).join('');
       return `<div class="pat-title">Dark side of the moon</div><div class="cyc-now">${now}</div>` +
         (facts.length ? `<ul class="dark-list">${facts.map(f => `<li>${f}</li>`).join('')}</ul>` : '') +
-        `<details class="dark-plan" id="dark-plan"><summary>Your plan: recover, get ready, stay intact</summary>${groups}</details>`;
+        `<details class="dark-plan" id="dark-plan"><summary>Your plan: ${onPeriodNow(ds) ? 'recover, ' : ''}get ready, stay intact</summary>${groups}</details>`;
     }
 
     // Banner on every tab: during the stretch, a heads-up 3 days before, and a daily self-care reminder in the recovery weeks
@@ -10469,9 +10647,10 @@
       const dbp = daysBeforePeriod(startOfToday(), cyc);
       // This cycle's expected length (today's day plus the days left), so the ring and the phase name always agree
       const L = dbp != null && day + dbp - 1 >= 20 && day + dbp - 1 <= 45 ? day + dbp - 1 : ds.L;
-      const phase = day <= 5 && !ds.inWindow ? 'period' : ds.inWindow ? 'dark' : dbp >= 1 && dbp <= 11 ? 'luteal' : dbp >= 12 && dbp <= 16 ? 'ovulation' : 'follicular';
+      const cp = currentPeriod(), pLen = Math.round(avgPeriodLen() || 5);
+      const phase = onPeriodNow(ds) && !ds.inWindow ? 'period' : ds.inWindow ? 'dark' : dbp >= 1 && dbp <= 11 ? 'luteal' : dbp >= 12 && dbp <= 16 ? 'ovulation' : 'follicular';
       const TEXT = {
-        period:     ['Period', '#ef8a7a', 'Things often ease after the first day or two.'],
+        period:     [cp ? `Period · day ${cp.day}` : 'Period', '#ef8a7a', 'Things often ease after the first day or two.'],
         follicular: ['Follicular · good stretch', 'var(--color-green)', `Usually the calmest part of ${P.their} month. Enjoy it together.`],
         ovulation:  ['Around ovulation', '#f2c46b', 'Usually still a good stretch.'],
         luteal:     ['Luteal', '#a792f0', 'The harder days start soon. Rest up and keep plans light.'],
@@ -10480,7 +10659,7 @@
       // Ring: period, follicular, ovulation and luteal arcs, with today marked
       const cx = 56, cy = 56, r = 44;
       const pt = d => { const a = (d - 1) / L * Math.PI * 2 - Math.PI / 2; return [cx + r * Math.cos(a), cy + r * Math.sin(a)]; };
-      const arcs = [[1, 5, '#ef8a7a'], [6, L - 16, '#5fc79a'], [L - 15, L - 11, '#f2c46b'], [L - 10, L, '#a792f0']];
+      const arcs = [[1, pLen, '#ef8a7a'], [pLen + 1, L - 16, '#5fc79a'], [L - 15, L - 11, '#f2c46b'], [L - 10, L, '#a792f0']];
       let svg = `<circle cx="${cx}" cy="${cy}" r="${r}" stroke="rgba(255,255,255,0.06)" stroke-width="10" fill="none"/>`;
       arcs.forEach(([a, b, c]) => {
         const [x1, y1] = pt(a), [x2, y2] = pt(b + 0.9), large = (b + 0.9 - a) / L > 0.5 ? 1 : 0;
@@ -10709,6 +10888,8 @@
       fog: ['.........', 'xxxxxxx..', '.........', '..xxxxxxx', '.........', 'xxxxxxx..', '.........', '..xxxxxxx', '.........'],
       blocks: ['.........', '.xx......', '.xx......', '.........', '.xx.xx...', '.xx.xx...', '.........', '.xx.xx.xx', '.xx.xx.xx'],
       paw: ['..xx.xx..', '..xx.xx..', 'x.......x', 'xx.....xx', '...xxx...', '..xxxxx..', '.xxxxxxx.', '.xxxxxxx.', '..xx.xx..'],
+      play: ['xx.......', 'xxxx.....', 'xxxxxx...', 'xxxxxxxx.', 'xxxxxxxxx', 'xxxxxxxx.', 'xxxxxx...', 'xxxx.....', 'xx.......'],
+      lift: ['.........', '.........', 'x.......x', 'xx.....xx', 'xxxxxxxxx', 'xx.....xx', 'x.......x', '.........', '.........'],
       pin: ['..xxxxx..', '..xxxxx..', '...xxx...', '...xxx...', '.xxxxxxx.', '....x....', '....x....', '....x....', '....x....']
     };
     function pxIcon(name) {
@@ -10736,12 +10917,13 @@
       [/^diary|^journal|^new entry/, '#a792f0,#60a5fa', '<path d="M5 4h11l3 3v13H5z"/><path d="M8 10h8M8 14h8"/>'],
       [/^calendar/, '#5fc79a,#2dd4bf', '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'],
       [/^unsaid words/, '#fb923c,#f472b6', '<path d="M5 19c0-8 6-14 15-14 0 9-6 15-14 15M5 19l7-7"/>'],
-      [/^record$/, '#ef8a7a,#fb923c', '<path d="M4 20l4-1 11-11-3-3L5 16z"/>']
+      [/^record$/, '#ef8a7a,#fb923c', '<path d="M4 20l4-1 11-11-3-3L5 16z"/>'],
+      [/^workout|^movement/, '#5fc79a,#2dd4bf', '<path d="M6 7v10M18 7v10M3 10v4M21 10v4M6 12h12"/>']
     ];
     const CARD_PX = [[/^a good memory/, 'heart'], [/^through the cycle/, 'trend'], [/cycle context|^harder days/, 'moon'], [/^tonight/, 'clip'], [/^check in|emotional state/, 'smile'],
       [/^past 30|^your week/, 'trend'], [/^month by month/, 'bars'], [/^patterns/, 'sparkle'], [/^your records/, 'folder'], [/^counters/, 'hash'],
       [/^time on exercises/, 'clock'], [/^together/, 'heart'], [/^finds/, 'star'], [/^diary|^journal|^new entry/, 'book'], [/^calendar/, 'cal'],
-      [/^unsaid words/, 'leaf'], [/^record$/, 'pen']];
+      [/^unsaid words/, 'leaf'], [/^record$/, 'pen'], [/^workout|^movement/, 'lift'], [/^right now/, 'circle']];
     function decorateCardHeads() {
       document.querySelectorAll('#tab-today > .card > h2, #tab-journey .card > h2, #tab-spirit > .card > h2, #tab-insights > .card > h2, #tab-record .card > h2').forEach(h => {
         if(h.querySelector('.card-ic')) return;
@@ -10756,6 +10938,131 @@
       renderToday();
     }
 
+    // ---------- WORKOUTS: one question after 10 pm (or the next morning), in a rhythm of every 2 days ----------
+    // aq_workouts: { 'Y-M-D': { w: 1, t: 'Gym' } or { w: 0 } for a rest day }
+    const WORKOUT_TYPES = ['Gym', 'Run', 'Walk', 'Home', 'Bike', 'Swim', 'Sport', 'Other'];
+    const WORKOUT_EVERY = 2;
+    let workouts = {};
+    try { workouts = JSON.parse(localStorage.getItem('aq_workouts') || '{}') || {}; } catch(e) { workouts = {}; }
+    let workoutJust = null, workoutEditing = false;
+    let wkViewYear = new Date().getFullYear(), wkViewMonth = new Date().getMonth();
+    function saveWorkouts() { localStorage.setItem('aq_workouts', JSON.stringify(workouts)); }
+    const workedOut = k => !!(workouts[k] && workouts[k].w);
+    const keyDate = k => { const [y, m, d] = k.split('-').map(Number); return new Date(y, m - 1, d); };
+    // Days since the last workout, today = 0 (null when there isn't one)
+    function workoutGap() {
+      const t = startOfToday();
+      for(let i = 0; i < 400; i++) if(workedOut(dayKey(addDays(t, -i)))) return i;
+      return null;
+    }
+    // A day was due when it and the day before had no workout, and there was one in the 2 weeks before
+    function workoutWasDue(d) {
+      if(workedOut(dayKey(d)) || workedOut(dayKey(addDays(d, -1)))) return false;
+      for(let i = 2; i <= 14; i++) if(workedOut(dayKey(addDays(d, -i)))) return true;
+      return false;
+    }
+    // On track: days since the rhythm last broke (or since the first workout)
+    function workoutRun() {
+      const firsts = Object.keys(workouts).filter(workedOut).map(keyDate).sort((a, b) => a - b);
+      if(!firsts.length) return 0;
+      const t = startOfToday();
+      if(workoutWasDue(addDays(t, -1))) return 0;
+      let n = 0;
+      for(let d = t; d >= firsts[0]; d = addDays(d, -1)) {
+        if(d < t && workoutWasDue(d)) break;
+        n++;
+      }
+      return n;
+    }
+    function typeSelect(k) {
+      const cur = (workouts[k] || {}).t || '';
+      return `<select class="wk-type" onchange="setWorkoutType('${k}', this.value)"><option value="">Type (optional)</option>` +
+        WORKOUT_TYPES.map(t => `<option ${cur === t ? 'selected' : ''}>${t}</option>`).join('') + '</select>';
+    }
+    // Which day the card asks about: today after 10 pm, or yesterday until noon if it wasn't answered
+    function workoutAsk() {
+      const h = new Date().getHours(), t = startOfToday(), k = dayKey(t), y = dayKey(addDays(t, -1));
+      if(h >= 22) return { key: k, when: 'today' };
+      if(h < 12 && (!workouts[y] || workoutJust === y) && localStorage.getItem('aq_workout_skip') !== y) return { key: y, when: 'yesterday' };
+      return null;
+    }
+    function renderWorkoutCard() {
+      const card = document.getElementById('ci-workout'), el = document.getElementById('today-workout');
+      if(!card || !el) return;
+      const ask = workoutAsk();
+      card.style.display = ask ? '' : 'none';
+      if(typeof renderCheckinHours === 'function') renderCheckinHours(true);
+      if(!ask) return;
+      const k = ask.key, entry = workouts[k];
+      if(entry && !workoutEditing) {
+        el.innerHTML = entry.w
+          ? `<div class="wk-done"><b>Workout logged</b>${typeSelect(k)}<button class="link-btn" onclick="workoutEditing = true; renderWorkoutCard()">Change</button></div>`
+          : `<div class="wk-done"><b>Rest day</b><span class="today-sub" style="flex:1;">Logged. ${workedOut(dayKey(addDays(keyDate(k), -1))) ? 'Fine after a workout.' : 'Next one is due.'}</span><button class="link-btn" onclick="workoutEditing = true; renderWorkoutCard()">Change</button></div>`;
+        return;
+      }
+      const d = keyDate(k), before = dayKey(addDays(d, -1));
+      const hint = ask.when === 'yesterday'
+        ? `${d.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' })}. You didn't get to it last night.`
+        : workedOut(before) ? 'You worked out yesterday, so a rest day is fine.' : workoutGap() === null ? 'Every 2 days is the plan.' : 'Workout day today.';
+      el.innerHTML = `<div class="wk-q">Did you work out ${ask.when}?</div><div class="today-sub">${hint}</div>
+        <div class="wk-btns"><button class="btn-action" onclick="logWorkout('${k}', 1)">Yes</button><button class="btn-action btn-secondary" onclick="logWorkout('${k}', 0)">Rest day</button></div>` +
+        (ask.when === 'yesterday' ? `<button class="link-btn" style="margin-top:8px;" onclick="skipWorkoutAsk('${k}')">Skip</button>` : '');
+    }
+    function logWorkout(k, w) {
+      workouts[k] = w ? { w: 1, t: (workouts[k] || {}).t || '' } : { w: 0 };
+      if(!workouts[k].t) delete workouts[k].t;
+      saveWorkouts();
+      workoutJust = k; workoutEditing = false;
+      renderWorkoutCard(); renderWorkoutCal();
+      showToast(w ? 'Workout saved' : 'Rest day saved');
+    }
+    function setWorkoutType(k, t) {
+      if(!workedOut(k)) return;
+      if(t) workouts[k].t = t; else delete workouts[k].t;
+      saveWorkouts(); renderWorkoutCal();
+    }
+    function skipWorkoutAsk(k) { localStorage.setItem('aq_workout_skip', k); renderWorkoutCard(); }
+    function changeWorkoutMonth(delta) {
+      wkViewMonth += delta;
+      if(wkViewMonth < 0) { wkViewMonth = 11; wkViewYear--; }
+      if(wkViewMonth > 11) { wkViewMonth = 0; wkViewYear++; }
+      renderWorkoutCal();
+    }
+    // Tap a past day: empty → workout → rest → empty
+    function cycleWorkoutDay(k) {
+      const e = workouts[k];
+      if(!e) workouts[k] = { w: 1 };
+      else if(e.w) workouts[k] = { w: 0 };
+      else delete workouts[k];
+      saveWorkouts(); renderWorkoutCal(); renderWorkoutCard();
+    }
+    function renderWorkoutCal() {
+      const grid = document.getElementById('wk-grid');
+      if(!grid) return;
+      document.getElementById('wk-month-title').innerText = new Date(wkViewYear, wkViewMonth, 1).toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+      const today = startOfToday();
+      const firstDay = (new Date(wkViewYear, wkViewMonth, 1).getDay() + 6) % 7; // weeks start on Monday
+      const daysInMonth = new Date(wkViewYear, wkViewMonth + 1, 0).getDate();
+      let html = '';
+      for(let i = 0; i < firstDay; i++) html += '<div class="cal-day empty"></div>';
+      for(let d = 1; d <= daysInMonth; d++) {
+        const date = new Date(wkViewYear, wkViewMonth, d), k = dayKey(date), e = workouts[k];
+        const future = date > today, isToday = date.getTime() === today.getTime();
+        const cls = e ? (e.w ? 'wk-yes' : 'wk-rest') : '';
+        const due = !future && !isToday && workoutWasDue(date) ? 'wk-due' : '';
+        html += `<div class="cal-day ${cls} ${due} ${isToday ? 'today' : ''} ${future ? 'future' : ''}" ${future ? '' : `onclick="cycleWorkoutDay('${k}')"`}>
+          <span>${d}</span>${e && e.w && e.t ? `<small>${escapeHtml(e.t)}</small>` : ''}</div>`;
+      }
+      grid.innerHTML = html;
+      // The rhythm line
+      const st = document.getElementById('wk-status'), gap = workoutGap(), run = workoutRun();
+      const runText = run >= 14 ? `${Math.floor(run / 7)} weeks` : `${run} ${pl(run, 'day')}`;
+      const right = gap === null ? 'Every 2 days' : gap === 0 ? 'Done today' : gap === 1 ? 'Rest day today is fine' : gap === 2 ? 'Workout day today' : 'Workout due';
+      st.classList.toggle('off', gap === null || run === 0);
+      st.innerHTML = gap === null ? `<b>No workouts yet</b><span>Every 2 days · log tonight after 10 pm</span>`
+        : run ? `<b>On track · ${runText}</b><span>${right}</span>` : `<b>Back on it when you can</b><span>${right}</span>`;
+    }
+
     function renderToday() {
       renderGreeting();
       const el = document.getElementById('today-cycle');
@@ -10768,14 +11075,7 @@
       // Skipped the optional cycle: the card stays away until dates are added in Settings
       const cycCard = document.getElementById('today-cycle-card');
       if(cycCard) cycCard.style.display = !cycleInfo().starts.length && localStorage.getItem('aq_cycle_skip') ? 'none' : '';
-      const cur = todaysOni();
-      document.getElementById('today-moods').innerHTML = ONI_KINDS.map(k =>
-        `<button class="today-mood ${cur === k ? 'sel' : ''}" onclick="todayPick('${k}')"><canvas id="today-oni-${k}" width="96" height="96"></canvas>${MOODS[k].name}</button>`).join('');
-      ONI_KINDS.forEach(k => drawOniFace('today-oni-' + k, k, 0));
-      const lastPick = moodLog.length ? moodLog[moodLog.length - 1] : null;
-      document.getElementById('today-checked').innerText = lastPick && lastPick.ts >= startOfToday().getTime()
-        ? `Checked in: ${MOODS[lastPick.mood].name} · ${new Date(lastPick.ts).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
-        : 'Not checked in yet today.';
+      // (The mood row was removed from Today: the start screen asks how you feel)
       // Weekly backup reminder (or once there is something worth keeping)
       const lastBackup = +localStorage.getItem('aq_last_backup') || 0;
       const daysSince = lastBackup ? Math.floor((Date.now() - lastBackup) / DAY) : null;
@@ -10786,15 +11086,14 @@
       document.getElementById('today-backup-text').innerText = blackRecently && !backedUpSince ? 'After a hard day, keep a copy of everything safe, off your phone.'
         : lastBackup ? `Last backup ${daysSince === 0 ? 'today' : `${daysSince} ${pl(daysSince, 'day')} ago`}. One tap keeps everything safe.` : 'No backup yet. One tap keeps everything safe.';
       renderTodayMemory();
-      const st = calData[dayKey(new Date())];
       renderSleepRow();
-      document.getElementById('today-days').innerHTML = TODAY_DAYS.map(([k, name, col]) =>
-        `<button class="today-day ${st === k ? 'sel' : ''}" style="--day-col:${col}" onclick="todaySetDay('${k}')">${name}</button>`).join('');
+      renderCheckinHours();
       const today = startOfToday();
       const soon = importantDates.map(e => ({ ...e, when: nextOccurrence(e.md) }))
         .map(e => ({ ...e, n: Math.round((e.when - today) / DAY) })).filter(e => e.n <= 30).sort((a, b) => a.n - b.n);
       document.getElementById('today-coming-card').style.display = 'none'; // countdowns to dates felt stressful
       renderTodayCare();
+      renderWorkoutCard();
       document.getElementById('today-coming').innerHTML = soon.map(e =>
         `<div class="today-coming"><span>${escapeHtml(e.name)}</span><span class="today-sub">${shortDate(e.when)} · ${e.n === 0 ? 'today' : `in ${e.n} day${e.n === 1 ? '' : 's'}`}</span></div>`).join('');
     }
@@ -10819,13 +11118,13 @@
       if(hardYesterday() && !(care[k] && care[k].closed)) {
         const c = care[k];
         if(c) {
-          html += `<div class="card care-card"><h2 class="card-label">After yesterday</h2>
+          html += `<div class="card care-card" data-slot="care"><h2 class="card-label">After yesterday</h2>
             <p class="care-p">Planned for you today: <b>${escapeHtml(c.kind)}</b>. Be gentle with yourself.</p>
             ${c.body === 'hurt' ? '<div class="repair-note">Look after the injury: cold pack and rest. If it\'s more than a bruise, see a doctor. A photo today keeps it on your record.</div>' : ''}
             <button class="btn-action btn-secondary" onclick="careClose()">Close</button></div>`;
         } else {
           const chip = (key, v, label) => `<button type="button" class="tag-chip ${careDraft[key] === v ? 'selected' : ''}" onclick="careDraft.${key} = '${v}'; renderTodayCare()">${label}</button>`;
-          html += `<div class="card care-card"><h2 class="card-label">After yesterday</h2>
+          html += `<div class="card care-card" data-slot="care"><h2 class="card-label">After yesterday</h2>
             <p class="care-p">Yesterday was hard. It wasn't your fault.</p>
             <div class="today-q">How's your body?</div><div class="repair-chips">${chip('body', 'okay', 'Okay')}${chip('body', 'sore', 'Sore or tense')}${chip('body', 'hurt', 'Hurt')}</div>
             ${careDraft.body === 'hurt' ? '<div class="repair-note">Look after the injury: cold pack and rest. If it\'s more than a bruise, see a doctor. A photo today keeps it on your record.</div>' : ''}
@@ -10845,7 +11144,7 @@
         const tools = days.reduce((a, d) => a + ((practice[dayKey(d)] || {}).tools || 0), 0);
         const drills = simDays().filter(x => days.some(d => dayKey(d) === x)).length;
         const ta = (key, ph) => `<textarea class="wk-ta" placeholder="${ph}" oninput="weeklyDraft.${key} = this.value">${escapeHtml(weeklyDraft[key] || '')}</textarea>`;
-        html += `<div class="card"><h2 class="card-label">Your week</h2>
+        html += `<div class="card" data-slot="week"><h2 class="card-label">Your week</h2>
           <div class="wk-dots">${dots}</div>
           <div class="today-sub" style="margin-bottom:10px;">${picks.length} ${pl(picks.length, 'check-in')}${top ? `, mostly ${MOODS[top[0]].name.toLowerCase()}` : ''} · ${tools} calm ${pl(tools, 'tool')} · ${drills} ${pl(drills, 'drill')}</div>
           <div class="today-q">What went okay?</div>${ta('ok', 'Even small things count')}
@@ -10856,10 +11155,41 @@
       // Today's drill, until it's done
       if(typeof SIM_SCENARIOS !== 'undefined' && !drillDoneToday()) {
         const dr = todaysDrill(), streak = simStreak();
-        html += `<button class="today-pin" onclick="openDrill()"><span class="calm-ic">${pxIcon('star')}</span>
+        html += `<button class="today-pin" data-slot="drill" onclick="openDrill()"><span class="calm-ic">${pxIcon('star')}</span>
           <span><b>Today's drill: ${escapeHtml(dr.title)}</b><small>2 minutes · ${streak ? `${streak} ${pl(streak, 'day')} in a row` : 'start a streak'}</small></span><span class="go" aria-hidden="true">›</span></button>`;
       }
       el.innerHTML = html;
+      decorateCardHeads();
+      arrangeToday();
+    }
+    // ---------- TODAY, SIMPLIFIED: only what fits the moment ----------
+    // hard day: "For you right now" (tools) and after-yesterday care · late evening: a good memory, if there is one
+    // otherwise: one suggestion, the first that applies of care, your week, the drill, the cycle, a memory
+    function todayMode() {
+      const st = calData[dayKey(new Date())];
+      if(hardYesterday() || st === 'status-red' || st === 'status-black' || ['angry', 'anxious', 'numb', 'sad'].includes(todaysOni())) return 'hard';
+      return new Date().getHours() >= 22 ? 'evening' : 'day';
+    }
+    function arrangeToday() {
+      const mode = todayMode(), $ = id => document.getElementById(id);
+      if(!$('today-care')) return;
+      document.body.dataset.todayMode = mode;
+      const slots = [...$('today-care').querySelectorAll('[data-slot]')].map(el => [el.dataset.slot, el]);
+      const cyc = $('today-cycle-card'), mem = $('today-memory'), fy = $('for-you');
+      if(cyc) slots.push(['cycle', cyc]);
+      if(mem) slots.push(['memory', mem]);
+      const allowed = mode === 'hard' ? ['care'] : mode === 'evening' ? ['memory'] : ['care', 'week', 'drill', 'cycle', 'memory'];
+      // available = its own renderer wants it shown (inline display isn't 'none')
+      const pick = slots.find(([k, el]) => allowed.includes(k) && el.style.display !== 'none');
+      slots.forEach(([k, el]) => el.classList.toggle('slot-off', !pick || el !== pick[1]));
+      if(fy) fy.classList.toggle('slot-off', mode === 'evening');
+      if($('today-pins')) $('today-pins').classList.toggle('slot-off', mode === 'hard'); // the hard-day tool takes their place
+      // A hard day without a mood pick still gets one tool to do right now
+      const now = $('today-now');
+      if(now) {
+        now.style.display = mode === 'hard' && !(fy && fy.style.display !== 'none') ? '' : 'none';
+        $('today-now-name').innerText = hamsterName;
+      }
     }
     function careSave() {
       const care = careGet('aq_aftercare'), k = dayKey(new Date());
@@ -10898,15 +11228,42 @@
       applyOniTailoring();
       renderToday();
     }
-    function todaySetDay(status) {
-      const k = dayKey(new Date());
+    // Check-in by the hour: sleep until 5 pm; how the day went after 10 pm, or about yesterday until noon if it was missed
+    let dayJust = null;
+    function checkinDayAsk() {
+      const h = new Date().getHours(), t = startOfToday(), y = dayKey(addDays(t, -1));
+      if(h >= 22) return { key: dayKey(t), when: 'today' };
+      if(h < 12 && (!calData[y] || dayJust === y)) return { key: y, when: 'yesterday' };
+      return null;
+    }
+    function renderCheckinHours(fromWorkout) {
+      const card = document.getElementById('today-checkin-card');
+      if(!card) return;
+      const h = new Date().getHours(), showSleep = h < 17, ask = checkinDayAsk(), wk = typeof workoutAsk === 'function' && !!workoutAsk();
+      document.getElementById('ci-sleep').style.display = showSleep ? '' : 'none';
+      document.getElementById('ci-day').style.display = ask ? '' : 'none';
+      card.style.display = showSleep || ask || wk ? '' : 'none';
+      document.getElementById('ci-title').innerText = h >= 22 ? 'Tonight' : 'Check in';
+      // The workout question sits under the day question, with a line between them only when both show
+      const sep = document.querySelector('#ci-workout .ci-sep');
+      if(sep) sep.style.display = showSleep || ask ? '' : 'none';
+      if(!fromWorkout && typeof renderWorkoutCard === 'function') renderWorkoutCard();
+      if(!ask) return;
+      const st = calData[ask.key];
+      document.getElementById('today-day-q').innerText = `How did ${ask.when} go?`;
+      document.getElementById('today-days').innerHTML = TODAY_DAYS.map(([k, name, col]) =>
+        `<button class="today-day ${st === k ? 'sel' : ''}" style="--day-col:${col}" onclick="todaySetDay('${k}', '${ask.key}')">${name}</button>`).join('');
+    }
+    function todaySetDay(status, key) {
+      const k = key || dayKey(new Date());
+      if(k !== dayKey(new Date())) dayJust = k; // keep yesterday's question in view after answering it
       calData[k] = calData[k] === status ? '' : status; // tap again to clear
       localStorage.setItem('aq_cal', JSON.stringify(calData));
       renderCurrentMonthCalendar();
       updateCountMeters();
       renderToday();
       const day = TODAY_DAYS.find(([st]) => st === calData[k]);
-      showToast(day ? `Today marked ${day[1].toLowerCase()}` : 'Cleared');
+      showToast(day ? `${k === dayKey(new Date()) ? 'Today' : 'Yesterday'} marked ${day[1].toLowerCase()}` : 'Cleared');
     }
 
     // ---------- CALM AS TILES (normal mode): one tool open at a time ----------
@@ -11398,6 +11755,23 @@
 
     // ---------- JOURNAL SECTIONS ----------
     let journeySeg = 'calendar';
+    // The three calendars (day colours, moods, movement), one at a time
+    const CAL_VIEWS = [['days', 'Days'], ['moods', 'Moods'], ['move', 'Movement']];
+    let calView = 0;
+    try { calView = Math.max(0, CAL_VIEWS.findIndex(([k]) => k === localStorage.getItem('aq_cal_view'))); } catch(e) {}
+    function cycleCalendar(d) {
+      calView = (calView + d + CAL_VIEWS.length) % CAL_VIEWS.length;
+      try { localStorage.setItem('aq_cal_view', CAL_VIEWS[calView][0]); } catch(e) {}
+      renderCalCycle();
+    }
+    function renderCalCycle() {
+      const [key, name] = CAL_VIEWS[calView];
+      document.querySelectorAll('#tab-journey [data-cal]').forEach(el => el.classList.toggle('slot-off', el.dataset.cal !== key));
+      const n = document.getElementById('cal-cycle-name');
+      if(n) n.innerText = name;
+      const dots = document.getElementById('cal-cycle-dots');
+      if(dots) dots.innerHTML = CAL_VIEWS.map((_, i) => `<i class="${i === calView ? 'on' : ''}"></i>`).join('');
+    }
     function showJourneySeg(seg) {
       if(seg !== 'calendar' && !document.body.classList.contains('journal-open')) seg = 'calendar'; // Write and Journal open only after the secret taps
       journeySeg = seg;
@@ -11471,7 +11845,7 @@
       });
       if(withC[1] >= 4 && without[1] >= 4) {
         const gap = withC[0] / withC[1] - without[0] / without[1];
-        if(gap >= 0.2) out.push(['good', `<b>Calm tools help:</b> after a rough day where you used one, the next day was good ${withC[0]} of ${withC[1]} ${pl(withC[1], 'time')}. Without, ${without[0]} of ${without[1]}.`, 3 + gap * 3]);
+        if(gap >= 0.2) out.push(['good', `<b>Steady tools help:</b> after a rough day where you used one, the next day was good ${withC[0]} of ${withC[1]} ${pl(withC[1], 'time')}. Without, ${without[0]} of ${without[1]}.`, 3 + gap * 3]);
       }
 
       // 5. Good run
@@ -11526,7 +11900,7 @@
       [/^<b>(Better|Harder|About the same)/, 'month', 'This month', '<path d="M3 17l6-6 4 4 8-8M15 7h6v6"/>'],
       [/Hard days cluster/, 'cycle', 'Cycle', '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>'],
       [/hardest day/, 'weekday', 'Weekdays', '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'],
-      [/Calm tools help/, 'helps', 'What helps', '<path d="M5 19c0-8 6-14 15-14 0 9-6 15-14 15M5 19l7-7"/>'],
+      [/Steady tools help/, 'helps', 'What helps', '<path d="M5 19c0-8 6-14 15-14 0 9-6 15-14 15M5 19l7-7"/>'],
       [/good days in a row/, 'run', 'Good run', '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>'],
       [/since the last hard day/, 'since', 'Calm stretch', '<path d="M5 12l4 4 10-10"/>'],
       [/[Cc]rises/, 'crisis', 'Crises', '<circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/>'],
@@ -11597,7 +11971,7 @@
         ['Crises', cur.crises.length, prev.crises.length, false, v => v + (avgMin(cur) !== null ? ` · ~${avgMin(cur)} min` : '')],
         ['Feeling', feel(cur), feel(prev), true, feelWord, feelWord],
         ['Disrupt', Math.round(cur.disrupt), Math.round(prev.disrupt), true, v => `${v} min`, v => `${v} min`],
-        ['Calm tools used', cur.tools, prev.tools, true]
+        ['Steady tools used', cur.tools, prev.tools, true]
       ];
       const hasAny = cur.good + cur.tense + cur.hard + cur.inc + cur.picks.length + prev.good + prev.hard + prev.picks.length > 0;
       el.innerHTML = !hasAny ? '<div class="today-sub">Mark days and check in, and this fills in.</div>' : rows.map(([name, a, b, upGood, fmt, fmtPrev]) => {
@@ -11950,6 +12324,7 @@
         card.style.display = 'none';
       }
 
+      if(typeof arrangeToday === 'function') arrangeToday();
       // Journal prompt
       document.getElementById('note-input').placeholder = t ? t.prompt : 'Type thoughts or event details...';
 
@@ -11971,7 +12346,7 @@
     // trimmed and tuned around how you actually use it.
     const TAB_KEYS = ['today', 'journey', 'puzzle', 'spirit', 'calm', 'insights'];
     // Older tabs (vagus, recover, practise) keep their names so past usage still reads right
-    const TAB_LABEL = { today: 'Today', journey: 'Calendar', puzzle: 'Disrupt', spirit: 'Spirit', calm: 'Calm', insights: 'Insights',
+    const TAB_LABEL = { today: 'Today', journey: 'Look back · Calendar', puzzle: 'Disrupt', spirit: 'Spirit', calm: 'Steady', insights: 'Look back · Insights',
                         vagus: 'Vagus', recover: 'Recover', practise: 'Practise' };
     // Time recorded before tabs had names (by their old position)
     const OLD_TAB = { 0: 'vagus', 1: 'journey', 2: 'puzzle', 3: 'recover', 4: 'spirit', 5: 'calm', 6: 'practise' };
@@ -13523,6 +13898,9 @@
     setupLanterns();
     setupFog();
     renderMoodCalendar();
+    renderWorkoutCal();
+    renderCalCycle();
+    setInterval(() => { renderCheckinHours(); arrangeToday(); }, 60000); // the evening questions appear at 10 pm without reopening the app
     calmLoop();
     if(!reduceMotion) hamsterLoop(); // the Spirit tab shows his scene as drawn (the pixel screen is off)
     document.querySelectorAll('[data-px]').forEach(el => { if(!el.innerHTML) el.innerHTML = pxIcon(el.dataset.px); });
