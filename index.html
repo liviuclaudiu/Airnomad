@@ -1195,7 +1195,7 @@
     .spirit-level { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 2px; font-size: 0.72rem; color: var(--text-muted); }
     .spirit-level .lv { font-weight: 800; color: var(--theme-primary); }
     .spirit-level .stage { font-weight: 700; }
-    #tab-spirit .hamster-canvas-container { position: relative; }
+    #tab-spirit .hamster-canvas-container { position: relative; max-width: none; width: calc(100% + 24px); margin: 0 -12px 8px; border-radius: 18px; } /* almost edge to edge */
     .spirit-thought { position: absolute; transform: translate(-50%, 0) scale(0.85); opacity: 0; pointer-events: none; transition: opacity 0.35s, transform 0.35s;
                       background: rgba(255, 255, 255, 0.92); color: #1f2433; font-size: 0.7rem; font-weight: 600; padding: 4px 9px; border-radius: 12px;
                       white-space: nowrap; max-width: 70%; overflow: hidden; text-overflow: ellipsis; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25); }
@@ -2210,6 +2210,8 @@
         <button class="icon-btn" id="feed-btn" onclick="feedHamster()" style="margin-top:8px;">Feed</button>
         <button class="icon-btn" id="trick-btn" onclick="spiritDoTrick()" style="margin-top:8px;">Trick</button>
         <button class="icon-btn" id="walk-btn" onclick="spiritWalk()" style="margin-top:8px;">Walk</button>
+        <button class="icon-btn" id="burrow-btn" onclick="toggleBurrow()" style="margin-top:8px;">Burrow</button>
+        <button class="icon-btn" id="care-btn" onclick="spiritCareTap()" style="margin-top:8px; display:none;">Pet</button>
         <div class="spirit-find-note" id="spirit-find-note"></div>
         <div class="advice-bubble" id="hamster-advice" style="display:none;"></div>
       </div>
@@ -4172,7 +4174,7 @@
     function renderSpiritStrip() {
       const el = document.getElementById('spirit-strip');
       if(!el) return;
-      const look = { thriving: ['#5fc79a', 'Thriving'], calm: ['var(--theme-primary)', 'Calm'], recovering: ['#f2c46b', 'Recovering'], stressed: ['#ef4444', 'Zombified'] };
+      const look = { thriving: ['#5fc79a', 'Thriving'], calm: ['var(--theme-primary)', 'Calm'], recovering: ['#f2c46b', 'Recovering'], stressed: ['#f2b38a', 'Needs care'] };
       const today = startOfToday(), logs = spiritLogsByDay();
       let html = '';
       for(let i = 29; i >= 0; i--) {
@@ -4269,8 +4271,8 @@
 
       if(zombify) {
         hamsterMood = 'stressed';
-        hStatus.innerText = "Zombified / High Strain";
-        hStatus.style.color = "#ef4444";
+        hStatus.innerText = CARE_WORDS[spiritCareLevel()] || "Needs lots of care";
+        hStatus.style.color = "#f2b38a";
         hDesc.innerText = health.zombifyReason === 'yellow'
           ? "Many tense days without a break. Go easy on yourself."
           : badDays10 >= 2 ? "Several hard days close together. Go easy on yourself." : "A hard day. Go easy on yourself.";
@@ -4280,7 +4282,7 @@
         hAdvice.innerText = `Reminder: ${randomAdvice}`;
       } else if(hamsterScore < 0) {
         hamsterMood = 'recovering';
-        hStatus.innerText = "Wilted / Recovering";
+        hStatus.innerText = "Taking it easy";
         hStatus.style.color = "#f2c46b";
         hDesc.innerText = "Slightly more hard days than good. Healing takes time.";
         
@@ -4303,7 +4305,7 @@
       if(hamsterHasData) hDesc.innerText = spiritPlainWords(health);
       const healEl = document.getElementById('hamster-heal');
       if(healEl) {
-        const LV = { fresh: [4, 'Badly hurt'], stitched: [3, 'Hurt, stitched up'], bandaged: [2, 'Bandaged, healing'], scars: [1, 'Small scars, nearly healed'] }[hamsterWound];
+        const LV = spiritCareLevel() ? [spiritCareLevel(), CARE_WORDS[spiritCareLevel()].replace('himself', pron().him + 'self')] : null;
         if(!LV) healEl.style.display = 'none';
         else {
           // Healed once the scars fade (a week after the last hard day) and he's out of the worse stages
@@ -4312,11 +4314,12 @@
           const healed = new Date(Math.max(scarsGone.getTime(), addDays(today, extra).getTime()));
           const n = Math.round((healed - today) / DAY);
           healEl.innerHTML = `<span class="heal-bar">${[1, 2, 3, 4].map(i => `<i class="${i <= LV[0] ? 'on' : ''}"></i>`).join('')}</span>` +
-            `${LV[1]} · ${n <= 0 ? 'heals today' : `healed in about ${n} ${pl(n, 'day')} (${shortDate(healed)}) if the next days are calm`}`;
+            `${LV[1]} · ${n <= 0 ? `back to ${pron().him}self today` : `back to ${pron().him}self in about ${n} ${pl(n, 'day')} (${shortDate(healed)}) if the next days are calm`}`;
           healEl.style.display = '';
         }
       }
 
+      renderCareButton();
       renderSpiritStrip();
       renderSpiritLevel(false);
       drawHamster();
@@ -4382,8 +4385,8 @@
       const yawnO = idle && idle.kind === 'yawn' ? Math.sin(Math.min(1, idle.p * 1.15) * Math.PI) : 0; // mouth opening wide and closing
       const standK = (idle && idle.kind === 'stand' ? Math.sin(idle.p * Math.PI) : 0) + yawnO * 0.35 // up on his hind legs (a little, mid-yawn)
                    - (sneezeP > 0.4 && sneezeP < 0.6 ? Math.sin((sneezeP - 0.4) / 0.2 * Math.PI) * 0.6 : 0); // ...and a little jerk down as he sneezes
-      const shiver = mood === 'stressed' ? Math.sin(now / 55) * 0.5 : todaysOni() === 'anxious' ? Math.sin(now / 45) * 0.6 : 0;
-      const sway = mood === 'stressed' ? Math.sin(now / 700) * 0.06 : B.sway;
+      const shiver = todaysOni() === 'anxious' ? Math.sin(now / 45) * 0.6 : 0;
+      const sway = B.sway;
       const breathe = 1 + Math.sin(now / B.speed) * B.amp;
       const slump = mood === 'recovering' ? 0.95 : B.slump;
       // Sniffing: the nose twitches in short bursts (not when numb)
@@ -4393,7 +4396,7 @@
       const puff = spiritEatState() ? 1 + 0.08 * Math.abs(Math.sin(performance.now() / 90)) : cheeksFull() ? 1.22 : 1;
 
       // Syrian hamster colours (muted when zombified)
-      const zombie = mood === 'stressed';
+      const zombie = false; // no zombie look any more: on hard stretches he's cosy instead (drawSpiritCosy)
       const { fur, furDark, cream } = spiritFur(zombie);
       const pink = '#f2a7a7';
 
@@ -4414,7 +4417,7 @@
       ctx.translate(-cx, -141);
 
       // Ears (behind the head). Flattened back when stressed.
-      const earFlat = mood === 'stressed' || B.earFlat;
+      const earFlat = B.earFlat;
       [-1, 1].forEach(s => {
         const ex = cx + s * (earFlat ? 25 : 21), ey = earFlat ? 33 : 27;
         const twitch = !reduceMotion && !earFlat && s === ((Math.floor(now / 5300) % 2) ? 1 : -1) && (now % 5300) < 160 ? s * 0.35 : 0; // a quick ear flick now and then
@@ -4478,7 +4481,7 @@
       // Ruffled tufts when zombified (the fine fur is drawn above)
       ctx.strokeStyle = 'rgba(120, 70, 30, 0.35)';
       ctx.lineWidth = 1;
-      const tufts = mood === 'stressed'
+      const tufts = false
         ? [[-44, 96, -6, -6], [44, 96, 6, -6], [-40, 112, -7, -3], [40, 112, 7, -3], [-30, 34, -5, -6], [30, 34, 5, -6], [0, 26, 0, -6]]
         : [];
       tufts.forEach(([x, y, dx, dy]) => {
@@ -4674,7 +4677,7 @@
         ctx.fillRect(-3, -3, 6, 6);
         ctx.restore();
       } else {
-        drawHealingMarks(ctx, [[cx + 27, 88, 11], [cx - 29, 110, 10], [cx + 14, 125, 7]], bodyPath);
+        drawSpiritCosy(ctx, 'front');
       }
       // (no forehead mark or tusks: he's drawn as a real hamster)
       drawSpiritOni(ctx, {
@@ -4688,8 +4691,8 @@
       drawSpiritExtras(ctx, { cheeks: [[cx - 21, 60], [cx + 21, 60]] }, zombie);
       ctx.restore();
 
-      // Dropped seed + sweat drop when zombified
-      if(mood === 'stressed') {
+      // (no dropped seed or sweat drop any more)
+      if(false) {
         if(!spiritEatState()) oval(cx + 40, 138, 3.5, 6.5, '#3d3226', 1.3);
         ctx.fillStyle = 'rgba(150, 210, 255, 0.85)';
         ctx.beginPath();
@@ -4772,7 +4775,111 @@
       ctx.restore();
     }
 
-    // Bandages while recovering, then faint scars, then nothing once the fur has grown back
+    // ---------- HIS STASH AND BURROW ----------
+    // A check-in sends him off to fetch seeds (or a berry); a calming exercise, a golden star (up to 3 a day).
+    // He carries each load home in his cheeks. His burrow fills up with the total days you've logged, never a streak.
+    let spiritStash = { seed: 0, berry: 0, star: 0, day: '', c: 0, s: 0 };
+    try { Object.assign(spiritStash, JSON.parse(localStorage.getItem('aq_spirit_stash') || '{}')); } catch(e) {}
+    const saveStash = () => localStorage.setItem('aq_spirit_stash', JSON.stringify(spiritStash));
+    const BURROW_UNLOCKS = [[3, 'bedding'], [7, 'chew block'], [10, 'hammock'], [15, 'lantern'], [20, 'flower box'], [30, 'pantry'], [45, 'cosy nook'], [60, 'mailbox']];
+    const daysLogged = () => Object.keys(calData).length;
+    const burrowHas = name => daysLogged() >= BURROW_UNLOCKS.find(u => u[1] === name)[0];
+    let spiritRun = null, spiritCarry = null; // spiritRun: { stage: 'out' | 'away', until, load }; spiritCarry: what's in his cheeks
+    // Anything owed today? (checked as he wanders)
+    function spiritRunDue() {
+      const k = dayKey(new Date());
+      if(spiritStash.day !== k) { spiritStash.day = k; spiritStash.c = 0; spiritStash.s = 0; }
+      const sc = selfCareToday();
+      if(sc.checked && spiritStash.c < 1) return Math.random() < 0.3 ? 'berry' : 'seed';
+      if(Math.min(3, sc.ex) > spiritStash.s) return 'star';
+      return null;
+    }
+    function stashDeliver(load) {
+      spiritStash[load] = (spiritStash[load] || 0) + 1;
+      if(load === 'star') spiritStash.s++; else spiritStash.c++;
+      saveStash();
+    }
+
+    // ---------- NEEDS CARE: on hard stretches he gets cosy instead of hurt ----------
+    // fresh: hood blanket, hot water bottle, tea · stitched: blanket and tea · bandaged: cool pack and scarf · scars: scarf
+    const spiritCareLevel = () => ({ fresh: 4, stitched: 3, bandaged: 2, scars: 1 })[hamsterWound] || 0;
+    const CARE_WORDS = { 4: 'Needs lots of care', 3: 'Wrapped up and resting', 2: 'A bit fragile', 1: 'Nearly back to himself' };
+    function cosyQuilt(ctx, path, top) {
+      ctx.save();
+      ctx.fillStyle = '#7f8fd6'; path(); ctx.fill('evenodd');
+      path(); ctx.clip('evenodd');
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)'; ctx.lineWidth = 3;
+      for(let x = -10; x < 170; x += 12) { ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, 150); ctx.stroke(); }
+      for(let y = top + 6; y < 150; y += 12) { ctx.beginPath(); ctx.moveTo(-10, y); ctx.lineTo(170, y); ctx.stroke(); }
+      ctx.restore();
+      ctx.strokeStyle = '#5d6bb0'; ctx.lineWidth = 1.5; path(); ctx.stroke();
+    }
+    function cosyScarf(ctx, view) {
+      const t = (reduceMotion ? 0 : performance.now()) / 1000;
+      ctx.save(); ctx.fillStyle = '#d9534f'; ctx.strokeStyle = 'rgba(255, 255, 255, 0.55)'; ctx.lineWidth = 2;
+      if(view === 'front') {
+        ctx.beginPath(); ctx.moveTo(46, 66); ctx.quadraticCurveTo(80, 80, 114, 66); ctx.lineTo(116, 76); ctx.quadraticCurveTo(80, 90, 44, 76); ctx.closePath(); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(96, 80); ctx.lineTo(104, 80); ctx.lineTo(108 + Math.sin(t * 2) * 1.5, 104); ctx.lineTo(98 + Math.sin(t * 2) * 1.5, 106); ctx.closePath(); ctx.fill();
+        [56, 70, 84, 98].forEach(x => { const d = x === 70 || x === 84; ctx.beginPath(); ctx.moveTo(x, 69 + (d ? 5 : 3)); ctx.lineTo(x + 2, 79 + (d ? 4 : 1)); ctx.stroke(); });
+        ctx.beginPath(); ctx.moveTo(99, 92); ctx.lineTo(106, 92); ctx.stroke();
+      } else { // side: a band round his neck, its end hanging down his back
+        ctx.beginPath(); ctx.moveTo(96, 53); ctx.quadraticCurveTo(110, 80, 104, 110); ctx.lineTo(93, 108); ctx.quadraticCurveTo(98, 80, 86, 57); ctx.closePath(); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(92, 92); ctx.lineTo(97, 98); ctx.lineTo(84 + Math.sin(t * 2) * 1.5, 120); ctx.lineTo(77 + Math.sin(t * 2) * 1.5, 115); ctx.closePath(); ctx.fill();
+        [[92, 62], [98, 76], [100, 92]].forEach(([x, y]) => { ctx.beginPath(); ctx.moveTo(x - 4, y); ctx.lineTo(x + 5, y + 2); ctx.stroke(); });
+      }
+      ctx.restore();
+    }
+    function cosyIcePack(ctx, x, y, rot) {
+      ctx.save(); ctx.translate(x, y); ctx.rotate(rot);
+      ctx.fillStyle = '#8fd3f4'; ctx.beginPath(); ctx.roundRect(-13, -6, 26, 11, 5); ctx.fill();
+      ctx.strokeStyle = '#5bb0d8'; ctx.lineWidth = 1; ctx.stroke();
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.6)'; ctx.beginPath(); ctx.roundRect(-9, -4, 8, 3, 1.5); ctx.fill();
+      ctx.restore();
+    }
+    // view: 'front' (cx 80, feet at 141), 'side' (facing right, feet at 138) or 'sleep' (curled up side-on)
+    function drawSpiritCosy(ctx, view) {
+      const lv = spiritCareLevel();
+      if(!lv) return;
+      ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      if(view === 'front') {
+        if(lv === 4) { // a blanket over his head like a hood, his face peeking out, hugging a hot water bottle
+          cosyQuilt(ctx, () => { ctx.beginPath(); ctx.moveTo(40, 70); ctx.bezierCurveTo(36, 30, 56, 14, 80, 14); ctx.bezierCurveTo(104, 14, 124, 30, 120, 70);
+            ctx.bezierCurveTo(138, 96, 138, 132, 116, 142); ctx.lineTo(44, 142); ctx.bezierCurveTo(22, 132, 22, 96, 40, 70); ctx.closePath();
+            ctx.moveTo(108, 50); ctx.ellipse(80, 50, 28, 22, 0, 0, Math.PI * 2); }, 14);
+          ctx.fillStyle = '#e88aa8'; ctx.beginPath(); ctx.roundRect(64, 84, 32, 30, 9); ctx.fill(); ctx.fillRect(75, 78, 10, 8);
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)'; ctx.lineWidth = 1.5; [92, 99, 106].forEach(y => { ctx.beginPath(); ctx.moveTo(68, y); ctx.lineTo(92, y); ctx.stroke(); });
+          ctx.fillStyle = '#f2a7a7'; [-1, 1].forEach(s => { ctx.beginPath(); ctx.ellipse(80 + s * 15, 96, 6, 5, 0, 0, Math.PI * 2); ctx.fill(); });
+        } else if(lv === 3) { // a blanket round his shoulders
+          cosyQuilt(ctx, () => { ctx.beginPath(); ctx.moveTo(36, 78); ctx.bezierCurveTo(50, 64, 110, 64, 124, 78); ctx.bezierCurveTo(138, 100, 136, 132, 118, 142);
+            ctx.lineTo(42, 142); ctx.bezierCurveTo(24, 132, 22, 100, 36, 78); ctx.closePath(); }, 66);
+        } else {
+          cosyScarf(ctx, 'front');
+          if(lv === 2) cosyIcePack(ctx, 92, 24, 0.25);
+        }
+      } else if(view === 'sleep') { // asleep: tucked in under his blanket
+        if(lv >= 3) cosyQuilt(ctx, () => { ctx.beginPath(); ctx.moveTo(26, 138); ctx.bezierCurveTo(4, 126, 10, 76, 52, 66); ctx.bezierCurveTo(78, 60, 100, 62, 108, 72);
+          ctx.quadraticCurveTo(116, 104, 108, 138); ctx.closePath(); }, 60);
+      } else {
+        if(lv >= 3) cosyQuilt(ctx, () => { ctx.beginPath(); ctx.moveTo(28, 136); ctx.bezierCurveTo(8, 124, 10, 72, 50, 61);
+          if(lv === 4) { ctx.bezierCurveTo(72, 50, 98, 38, 112, 43); ctx.bezierCurveTo(119, 46, 119, 60, 112, 66); ctx.quadraticCurveTo(102, 100, 100, 136); } // over his head too
+          else { ctx.bezierCurveTo(72, 53, 92, 48, 100, 52); ctx.quadraticCurveTo(108, 96, 100, 136); }
+          ctx.closePath(); }, 40);
+        else { cosyScarf(ctx, 'side'); if(lv === 2) cosyIcePack(ctx, 116, 47, 0.35); }
+      }
+      ctx.restore();
+    }
+    // A mug of tea steaming on the grass by his door while he needs lots of care
+    function drawSpiritTea(ctx, now, x, y) {
+      ctx.fillStyle = '#f4efe6'; ctx.beginPath(); ctx.roundRect(x - 5, y - 9, 10, 9, 1.5); ctx.fill();
+      ctx.strokeStyle = '#f4efe6'; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.arc(x + 6, y - 4.5, 2.6, -Math.PI / 2, Math.PI / 2); ctx.stroke();
+      ctx.fillStyle = '#b07a4a'; ctx.fillRect(x - 4, y - 8.5, 8, 2);
+      if(reduceMotion) return;
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.55)'; ctx.lineWidth = 0.9;
+      for(let i = 0; i < 2; i++) { const k = ((now / 2000) + i / 2) % 1; ctx.globalAlpha = 1 - k; ctx.beginPath(); ctx.moveTo(x - 1.5 + i * 3, y - 11 - k * 10); ctx.quadraticCurveTo(x + 1.5 + i * 3, y - 14 - k * 10, x - 1.5 + i * 3, y - 17 - k * 10); ctx.stroke(); }
+      ctx.globalAlpha = 1;
+    }
+
+    // (old: bandages while recovering, then faint scars; no longer drawn)
     function drawHealingMarks(ctx, spots, bodyPath) {
       if(hamsterWound !== 'bandaged' && hamsterWound !== 'scars') return;
       ctx.save();
@@ -5057,23 +5164,46 @@
     }
 
 
-    // On all fours, seen from behind (160px frame, ground at 141): his round rump as he squeezes into his house
+    // A rounded square (superellipse) outline with outward normals, for the fur edge
+    function spiritSquircleOutline(key, cx, cy, rx, ry, p) {
+      if(spiritOutlineCache[key]) return spiritOutlineCache[key];
+      const n = Math.round(Math.PI * (rx + ry) / 5), out = [], e = 2 / p;
+      for(let i = 0; i < n; i++) {
+        const a = i / n * Math.PI * 2, c = Math.cos(a), sn = Math.sin(a);
+        const ux = Math.sign(c) * Math.pow(Math.abs(c), e), uy = Math.sign(sn) * Math.pow(Math.abs(sn), e);
+        const nx = Math.sign(ux) * Math.pow(Math.abs(ux), p - 1) / rx, ny = Math.sign(uy) * Math.pow(Math.abs(uy), p - 1) / ry, m = Math.hypot(nx, ny) || 1;
+        out.push([cx + rx * ux, cy + ry * uy, nx / m, ny / m]);
+      }
+      return (spiritOutlineCache[key] = out);
+    }
+    function fillSpiritSquircle(ctx, cx, cy, rx, ry, p, c) {
+      const e = 2 / p, n = 64;
+      ctx.fillStyle = c; ctx.beginPath();
+      for(let i = 0; i < n; i++) {
+        const a = i / n * Math.PI * 2, co = Math.cos(a), sn = Math.sin(a);
+        const x = cx + rx * Math.sign(co) * Math.pow(Math.abs(co), e), y = cy + ry * Math.sign(sn) * Math.pow(Math.abs(sn), e);
+        i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+      }
+      ctx.closePath(); ctx.fill();
+    }
+
+    // On all fours, seen from behind (160px frame, ground at 141): his chunky, squarish rump as he squeezes into his house
     function drawHamsterBack(ctx) {
-      const zombie = hamsterMood === 'stressed';
+      const zombie = false;
       const { fur, furDark } = spiritFur(zombie);
       const cx = 80;
       const oval = (x, y, rx, ry, c, rot = 0) => { ctx.fillStyle = c; ctx.beginPath(); ctx.ellipse(x, y, rx, ry, rot, 0, Math.PI * 2); ctx.fill(); };
       oval(cx, 141, 46, 5, 'rgba(0, 0, 0, 0.35)');
       // His head is further away: just the top of it and his ears peek over his back
       [-1, 1].forEach(s => oval(cx + s * 16, 71, 7.5, 9, furDark, s * 0.3));
-      oval(cx, 84, 23, 15, mixHexToHex(fur, furDark, 0.5));
+      fillSpiritSquircle(ctx, cx, 84, 24, 15, 3, mixHexToHex(fur, furDark, 0.5));
       const edge = mixHexToHex(fur, furDark, 0.55);
-      drawSpiritFurStyle(ctx, spiritEllipseOutline('back-head', cx, 84, 23, 15), mixHexToHex(fur, furDark, 0.6), furDark, (x, y) => y > 90);
+      drawSpiritFurStyle(ctx, spiritSquircleOutline('back-head-sq', cx, 84, 24, 15, 3), mixHexToHex(fur, furDark, 0.6), furDark, (x, y) => y > 90);
       // Rump
       const g = ctx.createRadialGradient(cx, 98, 6, cx, 112, 50);
       g.addColorStop(0, fur); g.addColorStop(0.75, fur); g.addColorStop(1, furDark);
-      oval(cx, 112, 44, 30, g);
-      drawSpiritFurStyle(ctx, spiritEllipseOutline('back-rump', cx, 112, 44, 30), edge, furDark, (x, y) => y > 132);
+      fillSpiritSquircle(ctx, cx, 112, 42, 29, 3.6, g);
+      drawSpiritFurStyle(ctx, spiritSquircleOutline('back-rump-sq', cx, 112, 42, 29, 3.6), edge, furDark, (x, y) => y > 132);
       // Darker fur down his spine and a few tufts
       oval(cx, 104, 10, 22, 'rgba(0, 0, 0, 0.08)');
       ctx.strokeStyle = 'rgba(120, 70, 30, 0.35)';
@@ -5092,7 +5222,7 @@
 
     // On all fours, facing you (160px frame, ground at 141): crawling out of his house head first
     function drawHamsterCrawlFront(ctx) {
-      const mood = hamsterMood, zombie = mood === 'stressed';
+      const mood = hamsterMood, zombie = false;
       const { fur, furDark, cream } = spiritFur(zombie);
       const now = reduceMotion ? 0 : performance.now();
       const cx = 80;
@@ -5101,9 +5231,9 @@
       // Body behind his head
       const bg = ctx.createLinearGradient(cx - 46, 0, cx + 46, 0);
       bg.addColorStop(0, furDark); bg.addColorStop(0.3, fur); bg.addColorStop(0.7, fur); bg.addColorStop(1, furDark);
-      oval(cx, 110, 46, 28, bg);
+      fillSpiritSquircle(ctx, cx, 112, 44, 27, 3.4, bg);
       const edge = mixHexToHex(fur, furDark, 0.55);
-      drawSpiritFurStyle(ctx, spiritEllipseOutline('crawl-body', cx, 110, 46, 28), edge, furDark, (x, y) => y > 132);
+      drawSpiritFurStyle(ctx, spiritSquircleOutline('crawl-body-sq', cx, 112, 44, 27, 3.4), edge, furDark, (x, y) => y > 132);
       // Ears and head
       [-1, 1].forEach(s => { oval(cx + s * 20, 68, 8, 9, furDark, s * 0.35); oval(cx + s * 20.5, 69, 5, 6, '#f2a7a7', s * 0.35); });
       oval(cx, 94, 30, 26, fur);
@@ -5291,12 +5421,12 @@
       const now = g.now;
       const oval = (x, y, rx, ry, color) => { ctx.fillStyle = color; ctx.beginPath(); ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2); ctx.fill(); };
 
-      // Expression (his wounds take over while he's zombified)
-      if(!g.zombie && hamsterMood !== 'recovering') {
+      // Expression (his wounds take over while he's zombified; asleep, his eyes are already shut)
+      if(!g.zombie && hamsterMood !== 'recovering' && !g.asleep) {
         if(oni === 'calm' && (now % 6000) > 3600) {
           // Peaceful closed-eye moments
           g.eyes.forEach(([x, y]) => {
-            oval(x, y, 5.2, 5.6, g.fur);
+            oval(x, y + 0.3, 7.2, 7.8, g.fur); // covers his whole (bigger) eye
             ctx.strokeStyle = '#2a1a10';
             ctx.lineWidth = 2;
             ctx.beginPath();
@@ -5309,16 +5439,16 @@
           g.eyes.forEach(([x, y]) => {
             ctx.save();
             ctx.beginPath();
-            ctx.ellipse(x, y, 5, 5.4, 0, 0, Math.PI * 2);
+            ctx.ellipse(x, y + 0.3, 6.8, 7.3, 0, 0, Math.PI * 2);
             ctx.clip();
             ctx.fillStyle = g.fur;
-            ctx.fillRect(x - 6, y - 6, 12, 6.5);
+            ctx.fillRect(x - 8, y - 8, 16, 8.5);
             ctx.restore();
             ctx.strokeStyle = '#4a3020';
             ctx.lineWidth = 1.4;
             ctx.beginPath();
-            ctx.moveTo(x - 4.6, y + 0.5);
-            ctx.lineTo(x + 4.6, y + 0.5);
+            ctx.moveTo(x - 6, y + 0.5);
+            ctx.lineTo(x + 6, y + 0.5);
             ctx.stroke();
           });
         }
@@ -5410,6 +5540,40 @@
       setTimeout(() => sayThought(lines[i]), 450);
       for(let k = 0; k < 3; k++) hamsterHearts.push({ x: hamsterWalk.x + (Math.random() - 0.5) * 30, y: 72 + Math.random() * 8, vy: -(0.4 + Math.random() * 0.4), life: 1, ph: Math.random() * 6 });
     }
+    // The care button (only while he needs care). Just comfort: it doesn't change his score.
+    function renderCareButton() {
+      const b = document.getElementById('care-btn'); if(!b) return;
+      const lv = spiritCareLevel();
+      b.style.display = lv ? '' : 'none';
+      b.innerText = spiritRain ? 'Stop the rain' : lv === 4 ? 'Sit together' : lv === 3 ? 'Tuck in' : 'Pet';
+    }
+    let spiritRain = null; // { ctx, until }: a minute of soft rain sounds while you sit together
+    function spiritRainStop() {
+      if(!spiritRain) return;
+      const r = spiritRain; spiritRain = null;
+      try { r.gain.gain.setTargetAtTime(0, r.ac.currentTime, 0.6); setTimeout(() => r.ac.close(), 2500); } catch(e) {}
+      clearTimeout(r.timer); renderCareButton();
+    }
+    function spiritRainStart() {
+      const AC = window.AudioContext || window.webkitAudioContext; if(!AC) return;
+      try {
+        const ac = new AC(), len = ac.sampleRate * 2, buf = ac.createBuffer(1, len, ac.sampleRate), d = buf.getChannelData(0);
+        let last = 0; for(let i = 0; i < len; i++) { last = (last + 0.04 * (Math.random() * 2 - 1)) / 1.04; d[i] = last * 3.2 + (Math.random() * 2 - 1) * 0.04; } // soft brown noise with a little hiss
+        const src = ac.createBufferSource(); src.buffer = buf; src.loop = true;
+        const lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 1400;
+        const gain = ac.createGain(); gain.gain.value = 0; gain.gain.setTargetAtTime(0.5, ac.currentTime, 1.2);
+        src.connect(lp); lp.connect(gain); gain.connect(ac.destination); src.start();
+        spiritRain = { ac, gain, timer: setTimeout(spiritRainStop, 60000) };
+      } catch(e) { spiritRain = null; }
+    }
+    function spiritCareTap() {
+      const lv = spiritCareLevel();
+      if(spiritRain) { spiritRainStop(); return; }
+      careForHamster();
+      if(lv === 4) { spiritRainStart(); showToast('Sitting together for a minute'); }
+      else if(lv === 3) { if(spiritStyle.house !== false && !spiritOuting && !spiritHome.inside && !reduceMotion) hamsterWalk.toHouse = true; showToast(`Tucked ${pron().him} in`); } // off to bed in his burrow
+      renderCareButton();
+    }
     function careForHamster() {
       for(let i = 0; i < 5; i++) {
         hamsterHearts.push({ x: hamsterWalk.x + (Math.random() - 0.5) * 40, y: 70 + Math.random() * 10,
@@ -5468,11 +5632,13 @@
       // A tree line on the near hills (snowy in snow)
       if(!spiritOuting) {
         const trunk = day ? '#6b4a32' : '#2d2420', leaf = day ? (grey ? '#5d7c64' : '#4f8f5a') : '#1f3a30';
-        for(let i = 0; i < 7; i++) {
-          const x = ((i * 52 + 20 - off * 0.16) % 360 + 360) % 360 - 20, h = 14 + (i % 3) * 4, base = 124;
-          ctx.fillStyle = trunk; ctx.fillRect(x - 1.5, base - h * 0.45, 3, h * 0.45);
-          ctx.fillStyle = leaf; ctx.beginPath(); ctx.arc(x, base - h * 0.6, h * 0.42, 0, Math.PI * 2); ctx.arc(x - h * 0.28, base - h * 0.45, h * 0.3, 0, Math.PI * 2); ctx.arc(x + h * 0.28, base - h * 0.45, h * 0.3, 0, Math.PI * 2); ctx.fill();
-          if(wx && wx.snow) { ctx.fillStyle = '#f4f8ff'; ctx.beginPath(); ctx.arc(x, base - h * 0.85, h * 0.25, Math.PI, 0); ctx.fill(); }
+        for(let i = 0; i < 12; i++) {
+          const x = ((i * 31 + 12 + (i % 2) * 9 - off * 0.16) % 360 + 360) % 360 - 20, h = 11 + (i * 7 % 4) * 3 + (i % 2 ? 0 : 4), base = 122 + (i % 2) * 3;
+          ctx.fillStyle = trunk; ctx.fillRect(x - 1.2, base - h * 0.5, 2.4, h * 0.5);
+          ctx.fillStyle = leaf; ctx.beginPath(); ctx.arc(x, base - h * 0.72, h * 0.42, 0, Math.PI * 2); ctx.fill(); // a round lollipop crown
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.14)'; ctx.beginPath(); ctx.arc(x, base - h * 0.72, h * 0.42, 0.15 * Math.PI, 0.85 * Math.PI); ctx.fill();
+          if(day) { ctx.fillStyle = 'rgba(255, 255, 255, 0.28)'; ctx.beginPath(); ctx.arc(x - h * 0.13, base - h * 0.86, h * 0.13, 0, Math.PI * 2); ctx.fill(); }
+          if(wx && wx.snow) { ctx.fillStyle = '#f4f8ff'; ctx.beginPath(); ctx.arc(x, base - h * 1.02, h * 0.3, Math.PI, 0); ctx.fill(); } // snow on the round crown
         }
       }
     }
@@ -5533,7 +5699,7 @@
       visitorNext = now + 35000 + Math.random() * 50000;
       const night = !spiritIsDay(), wx = spiritWx();
       if(wx && (wx.rain || wx.storm)) return; // nobody comes by in the rain
-      const kinds = night ? ['fireflies', 'fireflies', 'cat'] : ['bird', 'bird', 'butterfly', 'butterfly', 'snail', 'cat'];
+      const kinds = night ? ['fireflies'] : ['bird', 'bird', 'butterfly', 'butterfly', 'snail']; // (the cat was removed)
       const kind = kinds[Math.floor(Math.random() * kinds.length)], dir = Math.random() < 0.5 ? 1 : -1;
       spiritVisitor = { kind, start: now, dir, dur: { bird: 6000, butterfly: 14000, snail: 40000, cat: 9000, fireflies: 20000 }[kind], y: 30 + Math.random() * 25 };
       if(kind === 'cat') {
@@ -5732,8 +5898,7 @@
     function spiritScale() {
       const base = 0.85 * (SPIRIT_SIZE[spiritStyle.size] || 1) * spiritStageNow[2];
       if(!spiritWheel || spiritWheel.stage !== 'run' || spiritSnapshotting) return base;
-      const k = Math.min(1, (performance.now() - spiritWheel.start) / 250); // the wheel stands a little further back
-      return base + (0.4 - base) * k;
+      return WHEEL.mounted ? base : Math.min(base, 0.4); // the treadmill takes him as he is; only the stand wheel needs him smaller
     }
 
     // Asleep from midnight to 7:00, sleepy in the evening after sunset.
@@ -6240,6 +6405,7 @@
       return t;
     }
     function sayThought(text) {
+      return; // speech bubbles are off: longer lines didn't fit his scene
       const el = document.getElementById('spirit-thought');
       if(!el) return;
       spiritThought = { text, until: performance.now() + 5000 };
@@ -6270,15 +6436,15 @@
       if(h.zombifyReason === 'bad') {
         const need = 6 - (h.greenSince * 3 + h.yellowSince * 2), g = Math.ceil(need / 3), y = Math.ceil(need / 2);
         const P = pron();
-        const lead = h.greenSince + h.yellowSince ? 'Healing from a hard day.' : `A hard day hit ${P.him}.`;
+        const lead = h.greenSince + h.yellowSince ? `Feeling better after a hard day.` : `A hard day. ${P.He}'s wrapped up and resting.`;
         return g === y ? `${lead} One more good or tense day and ${P.he}'s back.` : `${lead} ${g === 1 ? 'One more good day' : plural(g, 'good day')} (or ${y} tense) and ${P.he}'s back.`;
       }
       if(h.zombifyReason === 'yellow') {
         const g = 2 - h.greensAfterYellow, fade = 10 - h.lastYellowAgo;
-        return `Many tense days in a row wore ${pron().him} out. ${g === 1 ? 'One good day' : '2 good days'} and ${pron().he}'s back, or it fades in ${plural(fade, 'day')}.`;
+        return `Many tense days in a row. ${pron().He}'s wrapped up and resting. ${g === 1 ? 'One good day' : '2 good days'} and ${pron().he}'s back, or it fades in ${plural(fade, 'day')}.`;
       }
       const P = pron();
-      if(h.score < 0) return `A few more hard days than good lately. Good days and a little self-care help ${P.him} heal.`;
+      if(h.score < 0) return `A few more hard days than good lately. Good days and a little self-care help ${P.him} feel better.`;
       if(h.score >= 5) return h.streak >= 2 ? `${h.streak} good days in a row. ${P.He}'s thriving.` : `Lots of good days lately. ${P.He}'s thriving.`;
       return h.streak >= 2 ? `${h.streak} good days in a row. Keep going and ${P.he}'ll thrive.` : `Steady days keep ${P.him} balanced. Good days help ${P.him} thrive.`;
     }
@@ -6408,9 +6574,10 @@
     }
 
     // His little house on the right. He wanders in now and then; tap it to call him in or out.
-    const HOUSE = { x: 222, w: 90, door: 267 };
+    const HOUSE = { x: 243, w: 90, door: 288 }; // his hobbit hill sits at the right edge, half off the screen
     const spiritHome = { inside: false, until: 0, anim: null }; // anim: squeezing in or out of the door
-    const SPIRIT_DOOR_MS = 800;
+    const SPIRIT_DOOR_MS = 1200; // long enough to see him step through
+    const DOOR_R = 28; // the burrow hole's half-width
     // The moon shows at night when the sky isn't too cloudy (see drawSpiritWeather)
     function spiritMoonHit(e) {
       const c = document.getElementById('hamster-canvas'), wx = spiritWeatherNow();
@@ -6424,13 +6591,16 @@
       if(spiritOuting) return false;
       const c = document.getElementById('hamster-canvas'), r = c.getBoundingClientRect();
       const x = (e.clientX - r.left) * c.width / r.width, y = (e.clientY - r.top) * c.height / r.height;
-      return Math.hypot(x - WHEEL.x, y - (138 - WHEEL.r)) <= WHEEL.r + 4;
+      if(WHEEL.mounted) { const gy = groundAt(WHEEL.x); return Math.abs(x - WHEEL.x) <= TREAD.half + 8 && y >= gy - 30 && y <= gy + 4; }
+      const k = depthAt(WHEEL.x), cy = groundAt(WHEEL.x) - (3 + WHEEL.r) * k;
+      return Math.hypot(x - WHEEL.x, y - cy) <= WHEEL.r * k + 4;
     }
     function spiritHouseHit(e) {
       const c = document.getElementById('hamster-canvas');
       const r = c.getBoundingClientRect();
       const x = (e.clientX - r.left) * c.width / r.width, y = (e.clientY - r.top) * c.height / r.height;
-      return spiritStyle.house !== false && x >= HOUSE.x - 4 && y >= 44;
+      const mid = HOUSE.x + HOUSE.w / 2, k = depthAt(mid), half = (HOUSE.w / 2 + 10) * k;
+      return spiritStyle.house !== false && x >= mid - half && x <= mid + half && y >= groundAt(mid) - 78 * k && y <= groundAt(mid) + 4;
     }
     function spiritHouseTap() {
       const w = hamsterWalk;
@@ -6513,25 +6683,121 @@
       }
     }
 
+    // ---------- THE HILL: his igloo and wheel sit up on a gentle rise at the back; he walks up it to reach them.
+    // (k can make things up there smaller for distance; it's 1, so everything keeps its size)
+    const HILL = { x0: 112, x1: 162, top: 116, k: 1 }; // a rise at the back: higher up, same size
+    const hillOn = () => spiritStyle.house !== false && !spiritOuting;
+    function hillT(x) { if(!hillOn() || x <= HILL.x0) return 0; if(x >= HILL.x1) return 1; const f = (x - HILL.x0) / (HILL.x1 - HILL.x0); return f * f * (3 - 2 * f); }
+    const groundAt = x => 141 - (141 - HILL.top) * hillT(x); // where his feet are at this x
+    const depthAt = x => 1 - (1 - HILL.k) * hillT(x);         // how much smaller things look there
+    // A big tree at the left edge, a few rocks, bees around the flowers by day and a ladybird in the grass
+    function drawMeadowLife(ctx, now) {
+      if(spiritOuting) return;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      const day = spiritIsDay(), t = now / 1000, snowy = (spiritWx() || {}).snow;
+      // big lollipop tree, partly off the left edge
+      ctx.fillStyle = day ? '#7a5236' : '#2d2420'; ctx.beginPath(); ctx.roundRect(2, 82, 7, 60, 3); ctx.fill();
+      const crown = day ? '#4f9a5c' : '#1f3a30';
+      ctx.fillStyle = crown; [[5, 70, 26], [-12, 82, 18], [22, 84, 16]].forEach(([x, y, r]) => { ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill(); });
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.14)'; ctx.beginPath(); ctx.arc(5, 74, 26, 0.15 * Math.PI, 0.85 * Math.PI); ctx.fill();
+      if(day) { ctx.fillStyle = 'rgba(255, 255, 255, 0.22)'; ctx.beginPath(); ctx.arc(-2, 60, 8, 0, Math.PI * 2); ctx.fill(); }
+      if(day && !snowy) { ctx.fillStyle = '#e5484d'; [[12, 64], [-2, 78], [18, 80]].forEach(([x, y]) => { ctx.beginPath(); ctx.arc(x, y, 2.2, 0, Math.PI * 2); ctx.fill(); }); } // apples
+      if(snowy) { ctx.fillStyle = '#f4f8ff'; ctx.beginPath(); ctx.arc(5, 56, 18, Math.PI, 0); ctx.fill(); }
+      // rocks
+      [[64, 140, 6, 3.5], [150, 141, 4.5, 2.8], [92, 142, 3, 2]].forEach(([x, y, rx, ry]) => {
+        ctx.fillStyle = day ? '#9aa1a8' : '#4b5058'; ctx.beginPath(); ctx.ellipse(x, y, rx, ry, 0, Math.PI, 0); ctx.fill();
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.25)'; ctx.beginPath(); ctx.ellipse(x - rx * 0.3, y - ry * 0.5, rx * 0.35, ry * 0.25, 0, 0, Math.PI * 2); ctx.fill();
+      });
+      if(reduceMotion) return;
+      // bees looping around the flowers (days only, not in rain)
+      const wx = spiritWeatherNow();
+      if(day && !(wx && (isRain(wx.code) || wx.code >= 61))) [[52, 0], [96, 2.1]].forEach(([fx, ph]) => {
+        const bx = fx + Math.cos(t * 1.8 + ph) * 9, by = 118 + Math.sin(t * 2.6 + ph) * 4, dir = -Math.sin(t * 1.8 + ph) > 0 ? 1 : -1;
+        const flap = Math.abs(Math.sin(now / 30));
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+        ctx.beginPath(); ctx.ellipse(bx - dir * 0.5, by - 2.2, 1.8, 1 + flap * 1.2, -0.4 * dir, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#f5c518'; ctx.beginPath(); ctx.ellipse(bx, by, 2.6, 1.8, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#2a2018'; ctx.fillRect(bx - 0.6, by - 1.7, 0.9, 3.4); ctx.fillRect(bx + 1.1, by - 1.5, 0.8, 3);
+        ctx.beginPath(); ctx.arc(bx + dir * 2.4, by, 0.9, 0, Math.PI * 2); ctx.fill();
+      });
+      // a ladybird crawling slowly through the grass, back and forth
+      const lk = (t * 0.06) % 2, lx = 70 + (lk < 1 ? lk : 2 - lk) * 40, ldir = lk < 1 ? 1 : -1, ly = 136;
+      ctx.fillStyle = '#1a1416'; ctx.beginPath(); ctx.arc(lx + ldir * 2.6, ly, 1.3, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = day ? '#e5383b' : '#8e2a2c'; ctx.beginPath(); ctx.ellipse(lx, ly, 2.8, 2.2, 0, Math.PI, 0); ctx.fill();
+      ctx.fillStyle = '#1a1416'; [[-1, -1], [1.2, -1.2], [0.1, -0.4]].forEach(([dx, dy]) => { ctx.beginPath(); ctx.arc(lx + dx, ly + dy, 0.55, 0, Math.PI * 2); ctx.fill(); });
+    }
+    function drawSpiritHill(ctx) {
+      if(!hillOn()) return;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      const day = spiritIsDay(), snowy = (spiritWx() || {}).snow;
+      const g = ctx.createLinearGradient(0, HILL.top - 6, 0, 141);
+      g.addColorStop(0, snowy ? '#eef4fb' : day ? '#93c975' : '#35574a'); g.addColorStop(1, snowy ? '#d7e3f0' : day ? '#77ad5c' : '#28443a');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.moveTo(HILL.x0 - 30, 142);
+      ctx.bezierCurveTo(HILL.x0 + 4, 141, HILL.x0 + 14, HILL.top + 1, HILL.x1 + 6, HILL.top - 1);
+      ctx.quadraticCurveTo(270, HILL.top - 7, 322, HILL.top - 2);
+      ctx.lineTo(322, 142); ctx.closePath(); ctx.fill();
+      // A dirt path running straight up from the front of the scene to his door: wide near you, narrower at the door
+      const mid = HOUSE.x + HOUSE.w / 2, pts = [], N = 26;
+      const P = [[mid, 152], [mid, 140], [mid, HILL.top + 10], [mid, HILL.top - 0.5]];
+      for(let i = 0; i <= N; i++) {
+        const t = i / N, u = 1 - t;
+        const x = u * u * u * P[0][0] + 3 * u * u * t * P[1][0] + 3 * u * t * t * P[2][0] + t * t * t * P[3][0];
+        const y = u * u * u * P[0][1] + 3 * u * u * t * P[1][1] + 3 * u * t * t * P[2][1] + t * t * t * P[3][1];
+        pts.push([x, y, 17 - 5 * t]);
+      }
+      const edge = side => pts.map((p, i) => { const q = pts[Math.min(N, i + 1)], o = pts[Math.max(0, i - 1)], dx = q[0] - o[0], dy = q[1] - o[1], n = Math.hypot(dx, dy) || 1; return [p[0] - dy / n * p[2] * side, p[1] + dx / n * p[2] * side]; });
+      const L = edge(1), Rr = edge(-1).reverse();
+      ctx.fillStyle = snowy ? '#e2e7ef' : day ? '#d1ad78' : '#5e4b37';
+      ctx.beginPath(); L.concat(Rr).forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = snowy ? 'rgba(160, 175, 195, 0.6)' : day ? 'rgba(140, 100, 55, 0.55)' : 'rgba(30, 22, 15, 0.6)'; ctx.lineWidth = 0.9;
+      [L, Rr].forEach(side => { ctx.beginPath(); side.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); ctx.stroke(); });
+      ctx.fillStyle = snowy ? 'rgba(170, 180, 200, 0.6)' : day ? 'rgba(150, 115, 70, 0.6)' : 'rgba(40, 30, 20, 0.6)'; // pebbles
+      for(let i = 2; i < N; i += 3) { const [x, y, w] = pts[i]; ctx.beginPath(); ctx.ellipse(x + (rand01(i, 70) - 0.5) * w, y + (rand01(i, 71) - 0.5) * 2, 1.2, 0.7, 0, 0, Math.PI * 2); ctx.fill(); }
+      ctx.strokeStyle = snowy ? 'rgba(255, 255, 255, 0.6)' : day ? 'rgba(60, 120, 50, 0.55)' : 'rgba(20, 40, 30, 0.6)'; ctx.lineWidth = 1; // grass along the ridge
+      for(let x = HILL.x1 - 10; x < 320; x += 7) { const y = groundAt(x) - (x > 230 ? (x - 230) * 0.04 : 0); ctx.beginPath(); ctx.moveTo(x, y + 1); ctx.lineTo(x + 1.5, y - 3); ctx.stroke(); }
+    }
     // ---------- WHEEL: next to his house. He runs on it in bursts, mostly in the evening, like real hamsters ----------
     // Mounted on the side of his igloo when he has it (with a lightbulb on top that lights while he runs), on a stand otherwise
-    const WHEEL = { get x() { return spiritStyle.house !== false ? 200 : 192; }, get r() { return spiritStyle.house !== false ? 28 : 30; },
+    const WHEEL = { get x() { return spiritStyle.house !== false ? 186 : 192; }, get r() { return spiritStyle.house !== false ? 30 : 30; },
                     get mounted() { return spiritStyle.house !== false; } };
     var spiritWheel = null; // { stage: 'go' | 'run', start, until, angle } (var, so spiritScale can look at it any time)
+    // A little treadmill beside his igloo: he runs on the belt at his normal size, the stripes rolling under his feet
+    const TREAD = { half: 30, lift: 9 }; // belt half-length; how far the belt top sits above the ground
+    function drawTreadmill(ctx, now) {
+      const cx = WHEEL.x, gy = groundAt(cx), L = TREAD.half, run = !!spiritWheel && spiritWheel.stage === 'run';
+      if(run) spiritWheel.angle = (spiritWheel.angle || 0) + 0.6;
+      const off = spiritWheel && spiritWheel.angle || 0;
+      ctx.save();
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.22)'; ctx.beginPath(); ctx.ellipse(cx, gy + 1, L + 8, 3, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#7d8a96'; ctx.beginPath(); ctx.roundRect(cx - L - 5, gy - 7, 2 * L + 10, 6, 3); ctx.fill(); // the frame
+      ctx.fillStyle = '#5f6b78'; ctx.fillRect(cx - L - 2, gy - 2, 3, 3); ctx.fillRect(cx + L - 1, gy - 2, 3, 3);     // little feet
+      ctx.fillStyle = '#2f3640'; ctx.beginPath(); ctx.roundRect(cx - L, gy - TREAD.lift - 1, 2 * L, 4, 2); ctx.fill(); // the belt
+      ctx.save(); ctx.beginPath(); ctx.rect(cx - L, gy - TREAD.lift - 1, 2 * L, 4); ctx.clip();
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)'; ctx.lineWidth = 1;
+      for(let x = cx - L - 6 + (off % 6); x < cx + L + 6; x += 6) { ctx.beginPath(); ctx.moveTo(x, gy - TREAD.lift - 1); ctx.lineTo(x - 2, gy - TREAD.lift + 3); ctx.stroke(); }
+      ctx.restore();
+      ctx.fillStyle = '#c9d2dc'; [cx - L, cx + L].forEach(x => { ctx.beginPath(); ctx.arc(x, gy - TREAD.lift + 1, 3, 0, Math.PI * 2); ctx.fill(); }); // rollers
+      ctx.fillStyle = '#3f9db4'; ctx.beginPath(); ctx.roundRect(cx + L + 1, gy - 22, 4, 16, 2); ctx.fill(); // a little rail at the front, with a light on it
+      ctx.fillStyle = run ? '#7dff9a' : '#2e5a3c'; ctx.beginPath(); ctx.arc(cx + L + 3, gy - 23, 1.8, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+    }
     function drawSpiritWheel(ctx, now, front) {
       if(spiritOuting) return;
       ctx.setTransform(1, 0, 0, 1, 0, 0);
+      if(WHEEL.mounted) { if(!front) drawTreadmill(ctx, now); return; }
       const cx = WHEEL.x, cy = 138 - WHEEL.r, r = WHEEL.r;
       const leg = (dx) => { ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + dx, 141); ctx.stroke(); };
       ctx.save();
+      ctx.translate(cx, groundAt(cx)); ctx.scale(depthAt(cx), depthAt(cx)); ctx.translate(-cx, -141); // up on the hill with the igloo
       ctx.lineCap = 'round';
       const inside = spiritWheel && spiritWheel.stage === 'run';
       if(front) { if(inside && !WHEEL.mounted) { ctx.strokeStyle = '#9aa7b4'; ctx.lineWidth = 3; leg(14); } ctx.restore(); return; } // the near leg of the stand, over him
       ctx.fillStyle = 'rgba(0, 0, 0, 0.22)'; ctx.beginPath(); ctx.ellipse(cx, 141, r + 4, 3, 0, 0, Math.PI * 2); ctx.fill();
       if(WHEEL.mounted) {
-        // An axle into the igloo wall, and a wire up to the lightbulb on the dome
-        ctx.strokeStyle = '#7d8a96'; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + 20, cy); ctx.stroke();
-        ctx.strokeStyle = '#4b4f57'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(cx + 18, cy - 2); ctx.bezierCurveTo(cx + 24, 84, cx + 46, 62, HOUSE.x + HOUSE.w / 2 - 3, 66); ctx.stroke();
+        // An axle into the igloo wall (the wire to the lightbulb is drawn with the house)
+        ctx.strokeStyle = '#7d8a96'; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + r + 6, cy); ctx.stroke();
       } else {
         ctx.strokeStyle = '#7d8a96'; ctx.lineWidth = 3; leg(-14);
         if(!inside) { ctx.strokeStyle = '#9aa7b4'; leg(14); }
@@ -6545,12 +6811,13 @@
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.55)'; ctx.lineWidth = 1; // the rungs he runs on
       for(let i = 0; i < 20; i++) { const t = a + i * Math.PI / 10; ctx.beginPath(); ctx.moveTo(cx + Math.cos(t) * (r - 3), cy + Math.sin(t) * (r - 3)); ctx.lineTo(cx + Math.cos(t) * (r + 1), cy + Math.sin(t) * (r + 1)); ctx.stroke(); }
       ctx.fillStyle = '#e7edf2'; ctx.beginPath(); ctx.arc(cx, cy, 3.5, 0, Math.PI * 2); ctx.fill();
-      if(WHEEL.mounted) drawWheelBulb(ctx, now, inside);
       ctx.restore();
     }
     // The lightbulb on top of the igloo: dark glass and a filament, glowing warm (with a little flicker) while he runs
     function drawWheelBulb(ctx, now, on) {
-      const bx = HOUSE.x + HOUSE.w / 2, by = 57;
+      const bx = HOUSE.x + HOUSE.w / 2, by = 59;
+      ctx.save();
+      ctx.translate(bx, 70); ctx.scale(1.8, 1.8); ctx.translate(-bx, -70); // a big bulb, its socket sitting on top of the dome
       ctx.fillStyle = '#8b929c'; ctx.fillRect(bx - 3.5, by + 5, 7, 6); // the socket on the dome
       ctx.fillStyle = '#6b717a'; ctx.fillRect(bx - 3.5, by + 7, 7, 1); ctx.fillRect(bx - 3.5, by + 9, 7, 1);
       if(on) {
@@ -6566,6 +6833,7 @@
       ctx.strokeStyle = on ? 'rgba(255, 140, 40, 0.9)' : 'rgba(110, 110, 120, 0.8)'; ctx.lineWidth = 0.9; // filament
       ctx.beginPath(); ctx.moveTo(bx - 2.5, by + 3); ctx.lineTo(bx - 1.5, by - 1); ctx.lineTo(bx, by + 1); ctx.lineTo(bx + 1.5, by - 1); ctx.lineTo(bx + 2.5, by + 3); ctx.stroke();
       ctx.fillStyle = 'rgba(255, 255, 255, 0.7)'; ctx.beginPath(); ctx.arc(bx - 2.2, by - 2.4, 1.3, 0, Math.PI * 2); ctx.fill(); // shine on the glass
+      ctx.restore();
     }
     // A little water dish at the far left: now and then he trots over for a drink
     const DISH = { x: 26 };
@@ -6590,26 +6858,71 @@
       const { x, w } = HOUSE, base = 141, top = 80, mid = x + w / 2;
       const lit = spiritHome.inside || !spiritIsDay();
       ctx.save();
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-      ctx.beginPath(); ctx.ellipse(mid, base + 2, w / 2 + 6, 4, 0, 0, Math.PI * 2); ctx.fill();
-      // A pet-shop plastic igloo: a see-through lilac dome with ridges and a shine, glowing softly when he's home or at night
-      const domeL = x - 8, domeR = x + w + 8, domeTop = 70;
-      const dome = () => { ctx.beginPath(); ctx.moveTo(domeL, base); ctx.bezierCurveTo(domeL, 92, mid - 27, domeTop, mid, domeTop); ctx.bezierCurveTo(mid + 27, domeTop, domeR, 92, domeR, base); ctx.closePath(); };
-      const dg = ctx.createRadialGradient(mid - 18, domeTop + 18, 6, mid, base - 20, 72);
-      dg.addColorStop(0, lit ? 'rgba(238, 224, 255, 0.97)' : 'rgba(217, 194, 255, 0.95)');
-      dg.addColorStop(1, lit ? 'rgba(172, 142, 236, 0.93)' : 'rgba(155, 127, 224, 0.88)');
-      ctx.fillStyle = dg;
-      if(lit) { ctx.shadowColor = 'rgba(205, 175, 255, 0.65)'; ctx.shadowBlur = 12; }
-      dome(); ctx.fill();
-      ctx.shadowBlur = 0;
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)'; ctx.lineWidth = 1.5; // moulded ridges
-      ctx.beginPath(); ctx.moveTo(x, 120); ctx.bezierCurveTo(x + 16, 112, x + w - 16, 112, x + w, 120); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(x + 8, 98); ctx.bezierCurveTo(x + 24, 90, x + w - 24, 90, x + w - 8, 98); ctx.stroke();
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)'; ctx.lineWidth = 3; ctx.lineCap = 'round'; // the shine on the plastic
-      ctx.beginPath(); ctx.moveTo(x + 10, 82); ctx.bezierCurveTo(x + 22, 74, x + 30, 72, x + 40, 72); ctx.stroke();
-      // Round doorway (same size and place as before, so going in and out still lines up)
-      ctx.fillStyle = '#4a3070';
-      ctx.beginPath(); ctx.moveTo(mid - 20, base); ctx.lineTo(mid - 20, base - 24); ctx.arc(mid, base - 24, 20, Math.PI, 0); ctx.lineTo(mid + 20, base); ctx.closePath(); ctx.fill();
+      ctx.translate(mid, groundAt(mid)); ctx.scale(depthAt(mid), depthAt(mid)); ctx.translate(-mid, -141); // up on the hill
+      // A grassy hobbit hill, running off the right edge: a round burrow hole (no door, he's a hamster),
+      // a round window that glows when he's home or at night, and a chimney with smoke
+      const day = spiritIsDay(), snowy = (spiritWx() || {}).snow, C = mid + 34, hTop = 62, hw = 102;
+      const mound = () => { ctx.beginPath(); ctx.moveTo(C - hw, base + 1); ctx.bezierCurveTo(C - hw + 6, 98, C - 50, hTop, C, hTop); ctx.bezierCurveTo(C + 50, hTop, C + hw - 6, 98, C + hw, base + 1); ctx.closePath(); };
+      // the chimney (its base hidden in the hill) and its smoke
+      const chX = mid - 30, chY = 70; // on the left shoulder, clear of the lightbulb
+      ctx.fillStyle = day ? '#a69b8c' : '#5e574e'; ctx.beginPath(); ctx.roundRect(chX - 5, chY + 2, 10, 30, 1.5); ctx.fill();
+      ctx.fillStyle = day ? '#8a7f70' : '#4a443d'; ctx.fillRect(chX - 6.5, chY, 13, 4);
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.18)'; ctx.lineWidth = 0.8;
+      [chY + 7, chY + 12, chY + 17].forEach((y, i) => { ctx.beginPath(); ctx.moveTo(chX - 5, y); ctx.lineTo(chX + 5, y); ctx.moveTo(chX + (i % 2 ? -1 : 1.5), y); ctx.lineTo(chX + (i % 2 ? -1 : 1.5), y + 5); ctx.stroke(); });
+      for(let i = 0; i < 3; i++) {
+        const k = reduceMotion ? i / 3 + 0.15 : ((now / 2600) + i / 3) % 1;
+        ctx.fillStyle = day ? `rgba(255, 255, 255, ${0.6 * (1 - k)})` : `rgba(190, 200, 220, ${0.4 * (1 - k)})`;
+        ctx.beginPath(); ctx.arc(chX + k * 9 + Math.sin(k * 6 + i) * 1.5, chY - 3 - k * 30, 2.2 + k * 4, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.28)';
+      ctx.beginPath(); ctx.ellipse(C, base + 2, hw + 4, 4, 0, 0, Math.PI * 2); ctx.fill();
+      const mg = ctx.createLinearGradient(0, hTop, 0, base);
+      mg.addColorStop(0, snowy ? '#f4f8fd' : day ? '#8fc873' : '#3f6448'); mg.addColorStop(1, snowy ? '#dbe5f0' : day ? '#68a351' : '#2b4836');
+      ctx.fillStyle = mg; mound(); ctx.fill();
+      ctx.strokeStyle = snowy ? '#b9c7d8' : day ? '#4f8a40' : '#21392b'; ctx.lineWidth = 2; ctx.lineJoin = 'round'; mound(); ctx.stroke();
+      if(day && !snowy) { ctx.fillStyle = 'rgba(255, 255, 255, 0.16)'; ctx.beginPath(); ctx.ellipse(C - 30, hTop + 14, 22, 7, -0.25, 0, Math.PI * 2); ctx.fill(); }
+      ctx.strokeStyle = snowy ? 'rgba(160, 178, 200, 0.7)' : day ? 'rgba(60, 120, 45, 0.8)' : 'rgba(20, 40, 28, 0.8)'; ctx.lineWidth = 1.1; ctx.lineCap = 'round';
+      [[-74, 112], [-58, 92], [-30, 84], [-4, 80], [-66, 130], [12, 92]].forEach(([dx, y]) => { ctx.beginPath(); ctx.moveTo(C + dx - 2.5, y); ctx.lineTo(C + dx, y - 3.5); ctx.lineTo(C + dx + 2.5, y); ctx.stroke(); });
+      // the round window, left of the hole
+      const wx0 = mid - 50, wy0 = 116;
+      if(lit) { const hg = ctx.createRadialGradient(wx0, wy0, 2, wx0, wy0, 16); hg.addColorStop(0, 'rgba(255, 207, 107, 0.45)'); hg.addColorStop(1, 'rgba(255, 207, 107, 0)'); ctx.fillStyle = hg; ctx.beginPath(); ctx.arc(wx0, wy0, 16, 0, Math.PI * 2); ctx.fill(); }
+      ctx.fillStyle = lit ? '#ffd27a' : '#cfe7f5'; ctx.beginPath(); ctx.arc(wx0, wy0, 6.5, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = '#5a4030'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.lineWidth = 1.1; ctx.beginPath(); ctx.moveTo(wx0, wy0 - 6.5); ctx.lineTo(wx0, wy0 + 6.5); ctx.moveTo(wx0 - 6.5, wy0); ctx.lineTo(wx0 + 6.5, wy0); ctx.stroke();
+      // the burrow hole: a ring of stones around a dark round opening, a little dirt kicked out in front
+      const archP = (r) => { ctx.beginPath(); ctx.moveTo(mid - r, base); ctx.lineTo(mid - r, base - 20); ctx.arc(mid, base - 20, r, Math.PI, 0); ctx.lineTo(mid + r, base); ctx.closePath(); };
+      ctx.fillStyle = snowy ? '#c9cfd8' : day ? '#a69b8c' : '#5e574e'; archP(DOOR_R + 5); ctx.fill();
+      ctx.strokeStyle = day ? '#6f6658' : '#38332d'; ctx.lineWidth = 1;
+      for(let i = 0; i <= 8; i++) { const an = Math.PI + i * Math.PI / 8; ctx.beginPath(); ctx.moveTo(mid + Math.cos(an) * DOOR_R, base - 20 + Math.sin(an) * DOOR_R); ctx.lineTo(mid + Math.cos(an) * (DOOR_R + 5), base - 20 + Math.sin(an) * (DOOR_R + 5)); ctx.stroke(); }
+      archP(DOOR_R + 5); ctx.stroke();
+      const hole = ctx.createRadialGradient(mid, base - 12, 4, mid, base - 16, DOOR_R + 4);
+      hole.addColorStop(0, '#120b07'); hole.addColorStop(1, '#3a281b');
+      ctx.fillStyle = hole; archP(DOOR_R); ctx.fill();
+      ctx.fillStyle = snowy ? '#e2e7ef' : day ? '#b48e5e' : '#5e4b37';
+      ctx.beginPath(); ctx.ellipse(mid, base + 0.5, DOOR_R + 8, 3.2, 0, 0, Math.PI * 2); ctx.fill();
+      // a few flowers at the foot of the hill
+      if(!snowy) [[-66, '#f28aa0'], [-60, '#ffe08a'], [-40, '#c9a7ff'], [40, '#f28aa0']].forEach(([dx, c]) => {
+        const fx = mid + dx, fy = base - 3;
+        ctx.strokeStyle = '#4f8a46'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(fx, base); ctx.lineTo(fx, fy); ctx.stroke();
+        ctx.fillStyle = day ? c : 'rgba(255, 255, 255, 0.35)'; ctx.beginPath(); ctx.arc(fx, fy, 2, 0, Math.PI * 2); ctx.fill();
+      });
+      if(spiritCareLevel() >= 3 && !snowy) drawSpiritTea(ctx, now, mid - DOOR_R - 14, base);
+      if(burrowHas('flower box')) { const fx = wx0, fy = wy0 + 7; // a flower box under the window
+        ctx.fillStyle = '#9a6534'; ctx.fillRect(fx - 9, fy, 18, 5);
+        [['#f28aa0', -6], ['#ffe08a', -1], ['#c9a7ff', 4], ['#f28aa0', 7]].forEach(([c, dx]) => { ctx.fillStyle = '#4f8a46'; ctx.fillRect(fx + dx, fy - 4, 1, 4); ctx.fillStyle = day ? c : 'rgba(255,255,255,0.4)'; ctx.beginPath(); ctx.arc(fx + dx + 0.5, fy - 4, 1.8, 0, Math.PI * 2); ctx.fill(); }); }
+      if(burrowHas('lantern')) { const lx = mid + DOOR_R + 2, ly = base - 46; // hanging by the door, glowing at night
+        ctx.strokeStyle = '#3a2a1a'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(lx - 6, ly - 6); ctx.lineTo(lx, ly - 6); ctx.lineTo(lx, ly - 3); ctx.stroke();
+        if(!day) { ctx.fillStyle = 'rgba(255, 215, 107, 0.25)'; ctx.beginPath(); ctx.arc(lx, ly + 2, 9, 0, Math.PI * 2); ctx.fill(); }
+        ctx.fillStyle = day ? '#f7eccc' : '#ffd76b'; ctx.fillRect(lx - 2.5, ly - 2, 5, 7); ctx.strokeStyle = '#3a2a1a'; ctx.lineWidth = 0.8; ctx.strokeRect(lx - 2.5, ly - 2, 5, 7); }
+      if(burrowHas('mailbox')) { const bx = mid - 74; // a little red mailbox at the foot of the hill
+        ctx.fillStyle = '#7a5236'; ctx.fillRect(bx, base - 15, 2.5, 15); ctx.fillStyle = '#d9534f'; ctx.beginPath(); ctx.roundRect(bx - 5, base - 23, 13, 9, [4, 4, 1, 1]); ctx.fill();
+        ctx.fillStyle = '#ffd23f'; ctx.fillRect(bx + 7, base - 25, 1.4, 6); }
+      if(WHEEL.mounted) { // the wire from the wheel's axle to the lightbulb on top, then the bulb
+        ctx.strokeStyle = '#4b4f57'; ctx.lineWidth = 1.6;
+        const up = 141 - groundAt(mid), rx = WHEEL.x + TREAD.half + 3, ry = groundAt(WHEEL.x) - 22 + up; // the treadmill's rail, in house space
+        ctx.beginPath(); ctx.moveTo(rx, ry); ctx.bezierCurveTo(rx + 10, ry - 30, x + 20, 66, mid - 4, 74); ctx.stroke();
+        ctx.save(); ctx.translate(0, 8); drawWheelBulb(ctx, now, !!spiritWheel && spiritWheel.stage === 'run'); ctx.restore();
+      }
       // Two eyes peeking out of the dark when he's inside
       const grumpy = performance.now() < spiritGrumpUntil;
       if(spiritHome.inside && spiritAsleep() && !grumpy) {
@@ -6628,6 +6941,18 @@
     }
 
     const hamsterWalk = { x: 200, dir: -1, walking: false, target: 200, until: 0, phase: 0, facing: 'front', turnAt: 0 };
+    // Hop turn: when he turns round side-on he does a little hop and swaps direction at the top of it
+    let spiritLastDir = null, spiritTurnHop = null;
+    const TURN_HOP_MS = 440;
+    function spiritTurnHopState(now) {
+      const d = hamsterWalk.dir;
+      if(spiritLastDir === null || reduceMotion || spiritSnapshotting || spiritHome.anim) { spiritLastDir = d; spiritTurnHop = null; return null; }
+      if(d !== spiritLastDir) { spiritTurnHop = { start: now, from: spiritLastDir }; spiritLastDir = d; }
+      if(!spiritTurnHop) return null;
+      const k = (now - spiritTurnHop.start) / TURN_HOP_MS;
+      if(k >= 1) { spiritTurnHop = null; return null; }
+      return { dir: k < 0.5 ? spiritTurnHop.from : d, lift: Math.sin(k * Math.PI) };
+    }
     let hamsterJumpStart = -1;
 
     // Tap the hamster to make him jump
@@ -6689,7 +7014,7 @@
         // Squeezing through the door: stay put until it's done
         w.walking = false; w.facing = 'side';
         if(now - spiritHome.anim.start >= SPIRIT_DOOR_MS) {
-          if(spiritHome.anim.kind === 'in') { spiritCheeksUntil = 0; spiritHome.inside = true; spiritHome.until = now + ((spiritWx() || {}).storm ? 30000 : 6000) + Math.random() * 7000; }
+          if(spiritHome.anim.kind === 'in') { if(spiritCarry) { stashDeliver(spiritCarry); spiritCarry = null; } spiritCheeksUntil = 0; spiritHome.inside = true; spiritHome.until = now + ((spiritWx() || {}).storm ? 30000 : 6000) + Math.random() * 7000; }
           else { w.walking = true; w.dir = -1; }
           spiritHome.anim = null;
         }
@@ -6698,6 +7023,23 @@
       if(spiritHome.inside) {
         if((now > spiritHome.until || spiritAsleep()) && !reduceMotion) leaveHouse(); // at bedtime he comes out to sleep on the grass
         return;
+      }
+      // Off to fetch something: trot out of the left edge, a little while away, back with stuffed cheeks, then home with it
+      if(!spiritRun && !spiritCarry && hasHouse && !reduceMotion && !spiritEat && !spiritTrick && !spiritWheel && !spiritAsleep() && !w.toHouse && !spiritSnapshotting && (spiritRunDue.at || 0) < now) {
+        spiritRunDue.at = now + 1500;
+        const load = spiritRunDue();
+        if(load) spiritRun = { stage: 'out', load };
+      }
+      if(spiritRun) {
+        if(spiritRun.stage === 'out') {
+          w.facing = 'side'; w.dir = -1; w.walking = true; w.x -= 1.3; w.phase += 0.3;
+          if(w.x < -50) { spiritRun.stage = 'away'; spiritRun.until = now + 1800; w.walking = false; }
+          return;
+        }
+        if(now < spiritRun.until) { w.walking = false; return; }
+        spiritCarry = spiritRun.load; spiritRun = null;
+        spiritCheeksUntil = now + 90000; w.dir = 1; w.toHouse = true;
+        showSpiritNote(spiritCarry === 'star' ? `${hamsterName} found a golden star` : `${hamsterName}'s cheeks are full of ${spiritCarry === 'berry' ? 'berries' : 'seeds'}`);
       }
       const trick = spiritTrickState();
       if(trick) {
@@ -6854,17 +7196,39 @@
     const rand01 = (i, k) => fract(Math.sin(i * 12.9898 + k * 78.233) * 43758.5453);
 
     // Real weather behind him: sun or moon and stars, clouds, rain, snow, fog, lightning
+    // Storybook clouds: three round bumps on a flat bottom, a soft outline and a pale shade underneath (no faces)
+    const CLOUD_BUMPS = [[-15, 1, 10], [0, -6, 14], [15, 1, 10], [-6, 3, 9], [7, 3, 9]];
+    function drawCartoonCloud(ctx, x, y, sc, o) {
+      const fill = o.storm ? '#7b8395' : o.wet ? '#c7cfdb' : o.day ? '#ffffff' : 'rgba(150, 160, 198, 0.55)';
+      const shade = o.storm ? '#666d7f' : o.wet ? '#aab4c3' : o.day ? '#d3e5f8' : 'rgba(112, 122, 165, 0.55)';
+      const line = o.storm ? 'rgba(40, 44, 56, 0.7)' : o.day ? 'rgba(70, 95, 130, 0.5)' : 'rgba(30, 36, 70, 0.55)';
+      const shape = () => {
+        ctx.beginPath();
+        CLOUD_BUMPS.forEach(([dx, dy, r]) => { ctx.moveTo(x + (dx + r) * sc, y + dy * sc); ctx.arc(x + dx * sc, y + dy * sc, r * sc, 0, Math.PI * 2); });
+        ctx.rect(x - 25 * sc, y + 1 * sc, 50 * sc, 8 * sc); // the flat bottom
+      };
+      ctx.save();
+      ctx.lineWidth = 2.2; ctx.strokeStyle = line; ctx.lineJoin = 'round';
+      shape(); ctx.stroke();            // outline (the fill covers the inner half, so only the outside edge shows)
+      ctx.fillStyle = fill; shape(); ctx.fill();
+      ctx.save(); shape(); ctx.clip(); // a pale shade along the bottom
+      ctx.fillStyle = shade; ctx.beginPath(); ctx.ellipse(x, y + 10 * sc, 30 * sc, 6 * sc, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+      if(o.day && !o.storm && !o.wet) { ctx.fillStyle = 'rgba(255, 255, 255, 0.9)'; ctx.beginPath(); ctx.ellipse(x - 4 * sc, y - 12 * sc, 4 * sc, 2 * sc, -0.4, 0, Math.PI * 2); ctx.fill(); }
+      ctx.restore();
+    }
     function drawSpiritWeather(ctx, now, w, h) {
       const wx = spiritWeatherNow();
       const code = wx ? wx.code : 0, cloud = wx ? wx.cloud : 20, wind = wx ? Math.min(40, wx.wind || 5) : 5;
       const day = spiritIsDay(), t = now / 1000;
       // Where the clouds are this frame (worked out first, so the moon can hide behind them)
-      const nClouds = Math.round(cloud / 100 * 5), puffs = [];
+      const nClouds = Math.round(cloud / 100 * 5), puffs = [], cloudsAt = [];
       for(let i = 0; i < nClouds; i++) {
         const span = w + 120;
         const x = fract(rand01(i, 3) + t * (0.004 + wind * 0.0006) * (0.7 + rand01(i, 4) * 0.6)) * span - 60;
-        const y = 12 + rand01(i, 5) * 34, sc = 0.7 + rand01(i, 6) * 0.6;
-        [[0, 0, 16], [14, 4, 12], [-14, 5, 11], [6, -6, 11]].forEach(([dx, dy, r]) => puffs.push([x + dx * sc, y + dy * sc, r * sc]));
+        const y = 14 + rand01(i, 5) * 32, sc = 0.7 + rand01(i, 6) * 0.6;
+        cloudsAt.push([x, y, sc]);
+        CLOUD_BUMPS.forEach(([dx, dy, r]) => puffs.push([x + dx * sc, y + dy * sc, r * sc])); // for hiding the moon
       }
       if(!day && cloud < 75) {
         for(let i = 0; i < 22; i++) {
@@ -6911,6 +7275,14 @@
         ctx.fill();
         ctx.restore();
       }
+      if(day && code <= 2 && !reduceMotion) { // a little pollen drifting in the sunshine
+        for(let i = 0; i < 9; i++) {
+          const k = fract(t * 0.03 * (0.6 + rand01(i, 40)) + rand01(i, 41));
+          const px = (rand01(i, 42) * w + Math.sin(t * 0.6 + i) * 10 + k * 40) % w, py = 125 - k * 95;
+          ctx.fillStyle = `rgba(255, 250, 210, ${0.75 * Math.sin(k * Math.PI)})`;
+          ctx.beginPath(); ctx.arc(px, py, 1.2, 0, Math.PI * 2); ctx.fill();
+        }
+      }
       if(day && code <= 2) {
         const g = ctx.createRadialGradient(w - 36, 24, 2, w - 36, 24, 34);
         g.addColorStop(0, 'rgba(255, 245, 200, 0.95)'); g.addColorStop(0.3, 'rgba(255, 220, 120, 0.5)'); g.addColorStop(1, 'rgba(255, 220, 120, 0)');
@@ -6918,9 +7290,7 @@
         ctx.beginPath(); ctx.arc(w - 36, 24, 34, 0, Math.PI * 2); ctx.fill();
       }
       const storm = code >= 95, wet = isRain(code);
-      const cloudCol = storm ? 'rgba(70, 75, 90, 0.85)' : wet ? 'rgba(150, 160, 175, 0.75)' : day ? 'rgba(255, 255, 255, 0.8)' : 'rgba(170, 180, 205, 0.3)';
-      ctx.fillStyle = cloudCol;
-      puffs.forEach(([px, py, pr]) => { ctx.beginPath(); ctx.arc(px, py, pr, 0, Math.PI * 2); ctx.fill(); });
+      cloudsAt.forEach(([x, y, sc]) => drawCartoonCloud(ctx, x, y, sc, { day, storm, wet }));
       if(code === 45 || code === 48) {
         for(let i = 0; i < 3; i++) {
           ctx.fillStyle = 'rgba(220, 225, 235, 0.18)';
@@ -7003,6 +7373,27 @@
             for(let i = 0; i < 3; i++) { ctx.beginPath(); ctx.arc(rand01(i + k * 5, 34) * w, top + 4 + rand01(i + k * 5, 35) * 7, 1.3, 0, Math.PI * 2); ctx.fill(); }
           });
         }
+        if(kind === 'grass' && !spiritSnapshotting) {
+          // A few storybook flowers on stalks: five round petals and a yellow middle (dimmer at night)
+          [[52, '#ff8fb1'], [96, '#c8b6ff'], [178, '#ffd84d'], [12, '#9ad0ff']].forEach(([fx, col]) => {
+            const fy = top + 2, a = night ? 0.45 : 1;
+            ctx.globalAlpha = a;
+            ctx.strokeStyle = '#4f8f43'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(fx, fy + 6); ctx.quadraticCurveTo(fx - 1, fy + 1, fx, fy - 5); ctx.stroke();
+            ctx.fillStyle = col;
+            for(let p = 0; p < 5; p++) { const an = p / 5 * Math.PI * 2; ctx.beginPath(); ctx.arc(fx + Math.cos(an) * 2.2, fy - 5 + Math.sin(an) * 2.2, 1.7, 0, Math.PI * 2); ctx.fill(); }
+            ctx.fillStyle = '#ffe27a'; ctx.beginPath(); ctx.arc(fx, fy - 5, 1.2, 0, Math.PI * 2); ctx.fill();
+            ctx.globalAlpha = 1;
+          });
+          // Two little toadstools: red caps with white spots
+          [[38, 1], [112, 0.75]].forEach(([mx, k]) => {
+            const my = top + 6;
+            ctx.fillStyle = night ? '#cfc7b8' : '#f6efe2'; ctx.fillRect(mx - 1.6 * k, my - 6 * k, 3.2 * k, 6 * k);
+            ctx.fillStyle = night ? '#8f3a3a' : '#e5484d';
+            ctx.beginPath(); ctx.ellipse(mx, my - 6 * k, 5.5 * k, 4 * k, 0, Math.PI, 0); ctx.fill();
+            ctx.fillStyle = '#fff';
+            [[-2.5, -7.5], [1.5, -8.6], [3, -6.6]].forEach(([dx, dy]) => { ctx.beginPath(); ctx.arc(mx + dx * k, my + dy * k, 0.9 * k, 0, Math.PI * 2); ctx.fill(); });
+          });
+        }
       } else if(kind === 'sand' || kind === 'dune') {
         ctx.fillStyle = kind === 'sand' ? 'rgba(150, 115, 60, 0.35)' : 'rgba(60, 25, 20, 0.35)';
         for(let i = 0; i < 40; i++) ctx.fillRect(rand01(i, 36) * w, top + 3 + rand01(i, 37) * (h - top - 3), 1.2, 1.2);
@@ -7069,17 +7460,78 @@
     }
 
     let spiritLastHop = 0, spiritBackdropAt = 0;
+    // The burrow, seen in a cut-away: bedroom, pantry with his stash, a cosy nook, all filling up with days logged
+    var spiritBurrowView = false;
+    function toggleBurrow() {
+      spiritBurrowView = !spiritBurrowView;
+      const b = document.getElementById('burrow-btn'); if(b) b.innerText = spiritBurrowView ? 'Outside' : 'Burrow';
+      drawHamster();
+    }
+    function burrowStar(c, x, y, r, col) { c.fillStyle = col; c.beginPath(); for(let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, rr = i % 2 ? r * 0.45 : r; c.lineTo(x + Math.cos(a) * rr, y + Math.sin(a) * rr); } c.closePath(); c.fill(); }
+    function drawBurrow(ctx, now) {
+      const has = burrowHas, { fur, furDark, cream } = spiritFur(false);
+      ctx.save(); ctx.lineCap = 'round';
+      ctx.fillStyle = '#6b4a30'; ctx.fillRect(0, 0, 320, 150);
+      ctx.fillStyle = '#7d5a3c'; for(let i = 0; i < 60; i++) { ctx.beginPath(); ctx.arc((i * 53) % 320, 12 + (i * 37) % 138, 1 + (i % 3), 0, Math.PI * 2); ctx.fill(); } // pebbles in the soil
+      ctx.fillStyle = '#68a351'; ctx.fillRect(0, 0, 320, 8); ctx.fillStyle = '#8fc873'; ctx.fillRect(0, 0, 320, 4); // grass on top
+      const dirt = '#2e2016', room = (x, y, w, h) => { ctx.fillStyle = dirt; ctx.beginPath(); ctx.ellipse(x, y, w, h, 0, 0, Math.PI * 2); ctx.fill(); };
+      ctx.strokeStyle = dirt; ctx.lineWidth = 16;
+      ctx.beginPath(); ctx.moveTo(300, 6); ctx.quadraticCurveTo(280, 50, 240, 62); ctx.lineTo(90, 80); ctx.stroke(); // the tunnel down from his door
+      ctx.beginPath(); ctx.moveTo(200, 68); ctx.quadraticCurveTo(210, 100, 190, 112); ctx.stroke();
+      if(has('cosy nook')) { ctx.beginPath(); ctx.moveTo(260, 60); ctx.quadraticCurveTo(275, 95, 268, 112); ctx.stroke(); }
+      // bedroom
+      room(78, 92, 56, 30);
+      ctx.fillStyle = '#4a3424'; ctx.beginPath(); ctx.ellipse(78, 114, 50, 8, 0, 0, Math.PI); ctx.fill();
+      if(has('bedding')) { ctx.fillStyle = 'rgba(232, 200, 106, 0.6)'; ctx.beginPath(); ctx.ellipse(78, 110, 26, 6, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#e8c86a'; for(let i = 0; i < 26; i++) { ctx.save(); ctx.translate(52 + (i * 7) % 52, 108 + (i % 4) * 2.2); ctx.rotate((i % 5 - 2) * 0.4); ctx.fillRect(-4, -0.6, 8, 1.2); ctx.restore(); } }
+      if(has('hammock')) { ctx.strokeStyle = '#a07040'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(34, 76); ctx.lineTo(44, 84); ctx.moveTo(122, 76); ctx.lineTo(112, 84); ctx.stroke();
+        ctx.fillStyle = '#e8b4d0'; ctx.beginPath(); ctx.moveTo(44, 84); ctx.quadraticCurveTo(78, 104, 112, 84); ctx.quadraticCurveTo(78, 96, 44, 84); ctx.fill(); }
+      if(has('chew block')) { ctx.fillStyle = '#d9a86a'; ctx.fillRect(112, 104, 9, 9); ctx.fillStyle = '#c08c50'; ctx.fillRect(112, 104, 9, 2); ctx.fillStyle = '#7a5236'; ctx.beginPath(); ctx.arc(116.5, 109, 1.3, 0, Math.PI * 2); ctx.fill(); }
+      // him, curled up asleep in bed (or in the hammock), when he's home or it's bedtime
+      if(spiritHome.inside || spiritAsleep()) {
+        const sx = 78, sy = has('hammock') ? 88 : 106, br = 1 + Math.sin(now / 1200) * 0.03;
+        ctx.fillStyle = fur; ctx.beginPath(); ctx.ellipse(sx, sy, 14 * br, 9 / br, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = cream; ctx.beginPath(); ctx.ellipse(sx + 7, sy + 3, 6, 4, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = furDark; ctx.beginPath(); ctx.ellipse(sx + 4, sy - 7, 3, 3.5, -0.4, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#2a1a10'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(sx + 9, sy - 1, 2, 0.15 * Math.PI, 0.85 * Math.PI); ctx.stroke();
+        if(spiritCareLevel() >= 3) { ctx.fillStyle = 'rgba(127, 143, 214, 0.9)'; ctx.beginPath(); ctx.ellipse(sx - 3, sy + 2, 13, 7, 0, 0, Math.PI * 2); ctx.fill(); } // tucked in under his blanket
+      } else { ctx.fillStyle = 'rgba(255, 255, 255, 0.5)'; ctx.font = '7px sans-serif'; ctx.textAlign = 'center'; ctx.fillText(`${hamsterName} is out in the meadow`, 78, 76); ctx.textAlign = 'left'; }
+      if(has('lantern')) { const lg = ctx.createRadialGradient(150, 72, 2, 150, 72, 40); lg.addColorStop(0, 'rgba(255, 215, 107, 0.35)'); lg.addColorStop(1, 'rgba(255, 215, 107, 0)'); ctx.fillStyle = lg; ctx.fillRect(100, 30, 100, 90);
+        ctx.fillStyle = '#ffd76b'; ctx.fillRect(147, 70, 6, 8); ctx.strokeStyle = '#3a2a1a'; ctx.lineWidth = 0.8; ctx.strokeRect(147, 70, 6, 8); }
+      // the pantry: his stash in a heap (a small nook until the pantry opens)
+      const big = has('pantry');
+      room(188, 124, big ? 34 : 22, big ? 18 : 12);
+      ctx.fillStyle = '#5a4030'; ctx.beginPath(); ctx.ellipse(188, 138, big ? 28 : 18, 3.5, 0, 0, Math.PI * 2); ctx.fill();
+      const items = [...Array(spiritStash.seed || 0).fill('seed'), ...Array(spiritStash.berry || 0).fill('berry'), ...Array(spiritStash.star || 0).fill('star')];
+      let i = 0;
+      for(let row = 0, cap = big ? 9 : 5; i < items.length && cap > 0; row++, cap -= 2) for(let k = 0; k < cap && i < items.length; k++, i++) {
+        const it = items[i], x = 188 + (k - (cap - 1) / 2) * 4.6, y = 136 - row * 3.6;
+        if(it === 'star') burrowStar(ctx, x, y, 3, '#ffd23f');
+        else if(it === 'berry') { ctx.fillStyle = '#e0587a'; ctx.beginPath(); ctx.arc(x, y, 2.2, 0, Math.PI * 2); ctx.fill(); }
+        else { ctx.fillStyle = '#efe6d0'; ctx.beginPath(); ctx.ellipse(x, y, 2.4, 1.4, 0.4, 0, Math.PI * 2); ctx.fill(); ctx.strokeStyle = '#3a2a1a'; ctx.lineWidth = 0.6; ctx.stroke(); }
+      }
+      if(has('cosy nook')) { room(262, 122, 30, 18); ctx.fillStyle = '#b5524a'; ctx.beginPath(); ctx.ellipse(262, 136, 20, 3.5, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#8a5a30'; ctx.fillRect(256, 110, 12, 10); ctx.fillStyle = '#9ccbff'; ctx.fillRect(257.5, 111.5, 9, 7); ctx.fillStyle = '#4f9a5c'; ctx.beginPath(); ctx.arc(262, 117, 3, Math.PI, 0); ctx.fill(); }
+      // what's in the stash, and what comes next
+      const d = daysLogged(), nx = BURROW_UNLOCKS.find(u => u[0] > d);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.82)'; ctx.font = '7px sans-serif';
+      ctx.fillText(`Stash: ${spiritStash.seed || 0} ${pl(spiritStash.seed || 0, 'seed')} · ${spiritStash.berry || 0} ${pl(spiritStash.berry || 0, 'berry', 'berries')} · ${spiritStash.star || 0} ${pl(spiritStash.star || 0, 'star')}`, 8, 20);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+      ctx.fillText(`${d} ${pl(d, 'day')} logged${nx ? ` · next: ${nx[1]} at ${nx[0]}` : ' · everything unlocked'}`, 8, 30);
+      ctx.restore();
+    }
     function drawHamster() {
       const hCanvas = document.getElementById('hamster-canvas');
       if(!hCanvas) return;
       const ctx = hCanvas.getContext('2d');
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.clearRect(0, 0, hCanvas.width, hCanvas.height);
+      if(spiritBurrowView && !spiritSnapshotting) { updateHamsterWalk(reduceMotion ? 0 : performance.now(), hCanvas.width, hamsterMood); drawBurrow(ctx, reduceMotion ? 0 : performance.now()); return; }
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
 
       const mood = hamsterMood;
-      const zombie = mood === 'stressed';
+      const zombie = false; // cosy instead of zombie (drawSpiritCosy)
       const now = reduceMotion ? 0 : performance.now();
       const ground = 138;
 
@@ -7093,8 +7545,8 @@
       // Jump: a quick arc, lower and wobblier when zombified, tiny when sleepy
       const jumpT = hamsterJumpStart >= 0 ? (performance.now() - hamsterJumpStart) / 650 : 1;
       const jumpH = zombie ? 12 : mood === 'recovering' ? 8 : 30;
-      const jumpY = jumpT < 1 ? -Math.sin(jumpT * Math.PI) * jumpH : 0;
-      const jumpK = jumpT < 1 ? Math.sin(jumpT * Math.PI) : 0;
+      let jumpY = jumpT < 1 ? -Math.sin(jumpT * Math.PI) * jumpH : 0;
+      let jumpK = jumpT < 1 ? Math.sin(jumpT * Math.PI) : 0;
 
       const S = spiritScale();
       if(spiritStyle.backdrop === 'weather') drawSpiritWeather(ctx, now, hCanvas.width, hCanvas.height);
@@ -7104,6 +7556,8 @@
       if(spiritOuting) drawSpiritOuting(ctx, now);
       else {
         drawSpiritDecor(ctx);
+        drawSpiritHill(ctx);
+        drawMeadowLife(ctx, now);
         drawSpiritGarden(ctx, now);
         drawSpiritHouse(ctx, now);
         drawSpiritWheel(ctx, now, false); // after the house: it's mounted on the igloo's side
@@ -7138,26 +7592,36 @@
       }
 
       ctx.save(); // trick and door transforms below, undone before the overlay
+      { // up the hill he's further away: higher on screen and smaller
+        const hx = hamsterWalk.x, hk = depthAt(hx);
+        const lift = spiritWheel && spiritWheel.stage === 'run' && WHEEL.mounted ? TREAD.lift : 0; // up on the treadmill belt
+        const gy = groundAt(hx) - lift;
+        if(hk !== 1 || gy !== 141) { ctx.translate(hx, gy); ctx.scale(hk, hk); ctx.translate(-hx, -141); }
+      }
       if(spiritHome.anim) {
-        // Squeezing through the door: he shrinks into (or out of) the dark doorway, clipped to its arch near the end
+        // Going in: he trots up into the doorway, the doorway's edges hide him as he steps through, and the dark inside
+        // swallows him. Coming out is the same, backwards, with him facing you.
         const k = Math.min(1, (performance.now() - spiritHome.anim.start) / SPIRIT_DOOR_MS);
-        const e = spiritHome.anim.kind === 'in' ? k : 1 - k;
+        const e = spiritHome.anim.kind === 'in' ? k : 1 - k; // 0 = in front of the door, 1 = inside
         const mid = HOUSE.x + HOUSE.w / 2;
-        if(e > 0.35) {
-          ctx.beginPath(); ctx.moveTo(mid - 20, 141); ctx.lineTo(mid - 20, 117); ctx.arc(mid, 117, 20, Math.PI, 0); ctx.lineTo(mid + 20, 141); ctx.closePath();
-          ctx.clip();
-        }
-        ctx.globalAlpha = 1 - 0.8 * e;
-        ctx.translate(mid, 141);
-        ctx.scale(1 - 0.6 * e, 1 - 0.6 * e);
-        ctx.translate(-mid, -141);
-        // Going in you see his back; coming out he faces you
+        const arch = () => { ctx.beginPath(); ctx.moveTo(mid - DOOR_R, 141); ctx.lineTo(mid - DOOR_R, 121); ctx.arc(mid, 121, DOOR_R, Math.PI, 0); ctx.lineTo(mid + DOOR_R, 141); ctx.closePath(); };
+        const step = Math.abs(Math.sin(k * Math.PI * 5)) * 1.6; // the little bob of each step
+        ctx.save();
+        if(e > 0.3) { arch(); ctx.clip(); } // in the doorway: the walls hide the rest of him
+        ctx.translate(mid, 141); ctx.scale(1 - 0.25 * e, 1 - 0.25 * e); ctx.translate(-mid, -141 - e * 6 - step); // further in, a little up and away
         ctx.save();
         ctx.translate(hamsterWalk.x - 80 * S, 141 - 141 * S);
         ctx.scale(S, S);
-        if(spiritHome.anim.kind === 'in') drawHamsterBack(ctx);
-        else drawHamsterCrawlFront(ctx);
+        if(spiritHome.anim.kind === 'in') drawHamsterBack(ctx); // going in you see his back
+        else drawHamsterCrawlFront(ctx);                        // coming out he faces you
         ctx.restore();
+        ctx.restore();
+        if(e > 0.25) { // the dark of the doorway closing over him
+          ctx.save(); arch(); ctx.clip();
+          ctx.fillStyle = `rgba(18, 11, 7, ${Math.min(1, (e - 0.25) / 0.65)})`;
+          ctx.fillRect(mid - DOOR_R - 2, 88, DOOR_R * 2 + 4, 56);
+          ctx.restore();
+        }
         ctx.restore();
         drawSpiritOverlay(ctx, now, S);
         return;
@@ -7223,6 +7687,7 @@
           if(k >= 1) spiritShake = 0;
           else { const a = Math.sin(k * Math.PI * 12) * 0.16 * (1 - k); ctx.translate(hamsterWalk.x, 141); ctx.rotate(a); ctx.scale(1 + 0.05 * (1 - k), 1); ctx.translate(-hamsterWalk.x, -141); }
         }
+        spiritLastDir = hamsterWalk.dir; spiritTurnHop = null; // facing you isn't a turn
         ctx.translate(hamsterWalk.x - 80 * S, 141 - 141 * S + jumpY);
         ctx.scale(S, S);
         drawHamsterFront(ctx, jumpY, jumpK, S);
@@ -7240,9 +7705,12 @@
       }
 
       // The drawing below is laid out facing right around x = 82; move and mirror it into place
+      const turnHop = asleepPose ? null : spiritTurnHopState(now);
+      if(turnHop) { jumpY += -turnHop.lift * 26 * S; jumpK = Math.max(jumpK, turnHop.lift * 0.6); }
+      const faceDir = turnHop ? turnHop.dir : hamsterWalk.dir;
       ctx.save();
       ctx.translate(hamsterWalk.x, 141 - ground * S + hop + jumpY);
-      ctx.scale(hamsterWalk.dir * S, S); // dir -1 mirrors him to face left
+      ctx.scale(faceDir * S, S); // dir -1 mirrors him to face left
       ctx.translate(-82, 0);
 
       // Motion: breathing, sniffing nose, blinking; zombie sway; sleepy slump when recovering
@@ -7337,6 +7805,8 @@
         oval(114 + HX(114), 96 + HY(114), 16, 13, mixHexToHex(fur, cream, 0.35));
         oval(116 + HX(116), 100 + HY(116), 12, 8, cream);
         ctx.restore();
+        if(spiritCarry === 'star') burrowStar(ctx, 126, 106, 4.2, '#ffd23f');
+        else if(spiritCarry) oval(126, 107, 3, spiritCarry === 'berry' ? 3 : 2, spiritCarry === 'berry' ? '#d64b6a' : '#3a2a1a');
       }
 
       drawSpiritPattern(ctx, {
@@ -7506,12 +7976,12 @@
         ctx.fillRect(-3.5, -3.5, 7, 7);
         ctx.restore();
       } else {
-        drawHealingMarks(ctx, [[62, 74, 11], [36, 104, 10], [86, ground - 14, 8]], bodyPath);
+        drawSpiritCosy(ctx, asleepPose ? 'sleep' : 'side');
       }
       // (no forehead mark or tusks: he's drawn as a real hamster)
       drawSpiritOni(ctx, {
-        now, zombie, fur,
-        eyes: [[122, 72]],
+        now, zombie, fur, asleep: asleepPose,
+        eyes: [[122 + HX(122), 72 + HY(122)]],
         cheeks: [[124, 92]],
         mark: [131, 60],
         sparkles: [[90, 34], [146, 50], [30, 70]],
@@ -7586,20 +8056,32 @@
       if(m.width !== W || m.height !== H) { m.width = W; m.height = H; }
       const g = m.getContext('2d');
       g.setTransform(1, 0, 0, 1, 0, 0);
-      // Sky and ground in his area's colours
-      const [skyTop, skyLow, ground] = tamaArea();
-      const rgb = c => `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
-      const sky = g.createLinearGradient(0, 0, 0, H);
-      sky.addColorStop(0, rgb(skyTop)); sky.addColorStop(1, rgb(skyLow));
-      g.fillStyle = sky; g.fillRect(0, 0, W, H);
-      const groundY = H * 0.9;
-      g.fillStyle = rgb(ground);
-      g.beginPath(); g.moveTo(0, groundY + H * 0.02); g.quadraticCurveTo(W / 2, groundY - H * 0.03, W, groundY + H * 0.02); g.lineTo(W, H); g.lineTo(0, H); g.closePath(); g.fill();
       // A crop around him, the same framing the pixel screen used
       let cropH = Math.min(150, 141 * spiritScale() + 26);
       const cropW = Math.min(320, cropH * 224 / 122);
       cropH = cropW * 122 / 224;
       const sx = Math.max(0, Math.min(320 - cropW, 160 - cropW / 2)), sy = Math.max(0, 146 - cropH);
+      // His real world behind him: sky, storybook clouds, hills with lollipop trees, grass with flowers (stars and moon at night).
+      // Drawn by the same code as his tab, onto a sharp 3x scene canvas (those functions reset the transform, so it's scaled for them)
+      const RS = 3;
+      let bgC = drawTodaySpirit.bg;
+      if(!bgC) {
+        bgC = drawTodaySpirit.bg = Object.assign(document.createElement('canvas'), { width: 320 * RS, height: 150 * RS });
+        const bc = bgC.getContext('2d'), base = CanvasRenderingContext2D.prototype.setTransform;
+        bc.setTransform = function(a, b, c, d, e, f) { return base.call(this, a * RS, b * RS, c * RS, d * RS, e * RS, f * RS); };
+      }
+      const b = bgC.getContext('2d');
+      b.setTransform(1, 0, 0, 1, 0, 0);
+      const [skyTop, skyLow] = tamaArea(), rgb = c => `rgb(${c[0]}, ${c[1]}, ${c[2]})`;
+      const sky = b.createLinearGradient(0, 0, 0, 150);
+      sky.addColorStop(0, rgb(skyTop)); sky.addColorStop(1, rgb(skyLow));
+      b.fillStyle = sky; b.fillRect(0, 0, 320, 150);
+      const tnow = reduceMotion ? 0 : performance.now();
+      if((spiritStyle.backdrop || 'weather') === 'weather') drawSpiritWeather(b, tnow, 320, 150);
+      drawSpiritGround(b, 320, 150);
+      drawWorldDepth(b, tnow);
+      g.imageSmoothingEnabled = true;
+      g.drawImage(bgC, sx * RS, sy * RS, cropW * RS, cropH * RS, 0, 0, W, H);
       const f = W / cropW;
       const S = spiritScale() * 1.15;
       spiritSnapshotting = true; // keeps him still: no swaying or bobbing
