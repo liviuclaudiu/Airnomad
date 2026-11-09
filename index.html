@@ -11424,8 +11424,8 @@
       arrangeToday();
     }
     // ---------- TODAY, SIMPLIFIED: only what fits the moment ----------
-    // hard day: "For you right now" (tools) and after-yesterday care · late evening: a good memory, if there is one
-    // otherwise: one suggestion, the first that applies of care, your week, the drill, the cycle, a memory
+    // the cycle card always shows · hard day: "For you right now" (tools) and after-yesterday care · late evening: a good memory
+    // otherwise: one bigger card (care, your week or a memory) plus today's drill row
     function todayMode() {
       const st = calData[dayKey(new Date())];
       if(hardYesterday() || st === 'status-red' || st === 'status-black' || ['angry', 'anxious', 'numb', 'sad'].includes(todaysOni())) return 'hard';
@@ -11439,10 +11439,17 @@
       const cyc = $('today-cycle-card'), mem = $('today-memory'), fy = $('for-you');
       if(cyc) slots.push(['cycle', cyc]);
       if(mem) slots.push(['memory', mem]);
-      const allowed = mode === 'hard' ? ['care'] : mode === 'evening' ? ['memory'] : ['care', 'week', 'drill', 'cycle', 'memory'];
       // available = its own renderer wants it shown (inline display isn't 'none')
-      const pick = slots.find(([k, el]) => allowed.includes(k) && el.style.display !== 'none');
-      slots.forEach(([k, el]) => el.classList.toggle('slot-off', !pick || el !== pick[1]));
+      const avail = k => slots.find(([kk, el]) => kk === k && el.style.display !== 'none');
+      const on = new Set(), add = it => { if(it) on.add(it[1]); };
+      add(avail('cycle')); // the cycle card (the period tracker) always stays
+      if(mode === 'hard') add(avail('care'));
+      else if(mode === 'evening') add(avail('memory'));
+      else {
+        add(['care', 'week', 'memory'].map(avail).find(Boolean)); // one bigger card
+        add(avail('drill')); // and today's drill, a single row, until it's done
+      }
+      slots.forEach(([k, el]) => el.classList.toggle('slot-off', !on.has(el)));
       if(fy) fy.classList.toggle('slot-off', mode === 'evening');
       if($('today-pins')) $('today-pins').classList.toggle('slot-off', mode === 'hard'); // the hard-day tool takes their place
       // A hard day without a mood pick still gets one tool to do right now
