@@ -328,6 +328,19 @@
     .cal-header span.away { text-decoration: underline dotted; text-underline-offset: 3px; }
     .cal-month-sum { text-align: center; font-size: 0.74rem; color: var(--text-muted); margin-top: 8px; }
     .lay-off { display: none !important; }
+    .cc-row, .cc-axis { display: flex; align-items: center; gap: 6px; margin: 3px 0; }
+    .cc-lbl, .cc-axis > span { flex: none; width: 46px; font-size: 0.68rem; color: var(--text-muted); line-height: 1.1; }
+    .cc-lbl small { display: block; opacity: 0.7; font-size: 0.6rem; }
+    .cc-cells { flex: 1; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 1px; }
+    .cc-cells i { height: 16px; border-radius: 2px; background: rgba(255, 255, 255, 0.08); position: relative; }
+    .cc-axis .cc-cells i { height: auto; background: none; font-style: normal; font-size: 0.55rem; color: var(--text-muted); text-align: left; overflow: visible; white-space: nowrap; }
+    .cc-cells i.g { background: rgba(16, 185, 129, 0.6); } .cc-cells i.y { background: rgba(245, 158, 11, 0.6); }
+    .cc-cells i.r { background: rgba(239, 68, 68, 0.65); } .cc-cells i.k { background: #0a0614; box-shadow: inset 0 0 0 1px rgba(167, 139, 250, 0.7); }
+    .cc-cells i.cc-none { background: none; } .cc-cells i.cc-future { background: rgba(255, 255, 255, 0.03); }
+    .cc-cells i.cc-today { outline: 1.5px solid #fff; outline-offset: 0; z-index: 1; }
+    .cyc-hist-line { display: block; width: 100%; margin: 10px 0 8px; padding: 8px 10px; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03); color: var(--text-muted); font: inherit; font-size: 0.8rem; text-align: left; cursor: pointer; }
+    .cyc-hist-line b { color: var(--text-main, #fff); }
     /* About you: the You card, your goals and Your evening */
     .you-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .you-tile { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 9px 10px; }
@@ -1976,6 +1989,7 @@
           </svg>
           <button class="header-crisis" onclick="startCrisis()" title="Crisis mode" aria-label="Crisis mode">!</button>
           <button class="icon-btn header-gear header-sun" onclick="morningUpFromHeader()" title="Morning: tap when your partner wakes" aria-label="Morning guide"><svg class="sun-px" viewBox="0 0 11 11" aria-hidden="true"><rect x="5" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="9" y="1" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="8" y="2" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="5" y="3" width="1" height="1"/><rect x="6" y="3" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="6" y="4" width="1" height="1"/><rect x="7" y="4" width="1" height="1"/><rect x="8" y="4" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="4" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/><rect x="6" y="5" width="1" height="1"/><rect x="8" y="5" width="1" height="1"/><rect x="9" y="5" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="4" y="6" width="1" height="1"/><rect x="5" y="6" width="1" height="1"/><rect x="6" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="9" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/><rect x="6" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/><rect x="9" y="7" width="1" height="1"/><rect x="10" y="7" width="1" height="1"/><rect x="0" y="8" width="1" height="1"/><rect x="1" y="8" width="1" height="1"/><rect x="2" y="8" width="1" height="1"/><rect x="8" y="8" width="1" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="10" y="8" width="1" height="1"/><rect x="0" y="10" width="1" height="1"/><rect x="1" y="10" width="1" height="1"/><rect x="2" y="10" width="1" height="1"/><rect x="3" y="10" width="1" height="1"/><rect x="4" y="10" width="1" height="1"/><rect x="5" y="10" width="1" height="1"/><rect x="6" y="10" width="1" height="1"/><rect x="7" y="10" width="1" height="1"/><rect x="8" y="10" width="1" height="1"/><rect x="9" y="10" width="1" height="1"/><rect x="10" y="10" width="1" height="1"/></svg></button>
+          <button class="icon-btn header-gear" onclick="quickBackup()" title="Back up now" aria-label="Back up now"><svg class="gear-px" viewBox="0 0 9 9" aria-hidden="true"><rect x="0" y="0" width="1" height="1"/><rect x="1" y="0" width="1" height="1"/><rect x="2" y="0" width="1" height="1"/><rect x="3" y="0" width="1" height="1"/><rect x="4" y="0" width="1" height="1"/><rect x="5" y="0" width="1" height="1"/><rect x="6" y="0" width="1" height="1"/><rect x="7" y="0" width="1" height="1"/><rect x="0" y="1" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="7" y="1" width="1" height="1"/><rect x="8" y="1" width="1" height="1"/><rect x="0" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="8" y="2" width="1" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="8" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="4" y="4" width="1" height="1"/><rect x="5" y="4" width="1" height="1"/><rect x="6" y="4" width="1" height="1"/><rect x="8" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="6" y="5" width="1" height="1"/><rect x="8" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="6" y="6" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="0" y="7" width="1" height="1"/><rect x="1" y="7" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/><rect x="6" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/><rect x="8" y="7" width="1" height="1"/></svg></button>
           <button class="icon-btn header-gear" onclick="openSettings()" title="Settings" aria-label="Settings"><svg class="gear-px" viewBox="0 0 11 11" aria-hidden="true"><rect x="4" y="0" width="1" height="1"/><rect x="5" y="0" width="1" height="1"/><rect x="6" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="2" y="1" width="1" height="1"/><rect x="4" y="1" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="6" y="1" width="1" height="1"/><rect x="8" y="1" width="1" height="1"/><rect x="9" y="1" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="2" width="1" height="1"/><rect x="6" y="2" width="1" height="1"/><rect x="7" y="2" width="1" height="1"/><rect x="8" y="2" width="1" height="1"/><rect x="9" y="2" width="1" height="1"/><rect x="2" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="3" width="1" height="1"/><rect x="5" y="3" width="1" height="1"/><rect x="6" y="3" width="1" height="1"/><rect x="7" y="3" width="1" height="1"/><rect x="8" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="1" y="4" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/><rect x="7" y="4" width="1" height="1"/><rect x="8" y="4" width="1" height="1"/><rect x="9" y="4" width="1" height="1"/><rect x="10" y="4" width="1" height="1"/><rect x="0" y="5" width="1" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="2" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="7" y="5" width="1" height="1"/><rect x="8" y="5" width="1" height="1"/><rect x="9" y="5" width="1" height="1"/><rect x="10" y="5" width="1" height="1"/><rect x="0" y="6" width="1" height="1"/><rect x="1" y="6" width="1" height="1"/><rect x="2" y="6" width="1" height="1"/><rect x="3" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/><rect x="8" y="6" width="1" height="1"/><rect x="9" y="6" width="1" height="1"/><rect x="10" y="6" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="3" y="7" width="1" height="1"/><rect x="4" y="7" width="1" height="1"/><rect x="5" y="7" width="1" height="1"/><rect x="6" y="7" width="1" height="1"/><rect x="7" y="7" width="1" height="1"/><rect x="8" y="7" width="1" height="1"/><rect x="1" y="8" width="1" height="1"/><rect x="2" y="8" width="1" height="1"/><rect x="3" y="8" width="1" height="1"/><rect x="4" y="8" width="1" height="1"/><rect x="5" y="8" width="1" height="1"/><rect x="6" y="8" width="1" height="1"/><rect x="7" y="8" width="1" height="1"/><rect x="8" y="8" width="1" height="1"/><rect x="9" y="8" width="1" height="1"/><rect x="1" y="9" width="1" height="1"/><rect x="2" y="9" width="1" height="1"/><rect x="4" y="9" width="1" height="1"/><rect x="5" y="9" width="1" height="1"/><rect x="6" y="9" width="1" height="1"/><rect x="8" y="9" width="1" height="1"/><rect x="9" y="9" width="1" height="1"/><rect x="4" y="10" width="1" height="1"/><rect x="5" y="10" width="1" height="1"/><rect x="6" y="10" width="1" height="1"/></svg></button>
         </div>
       </div>
@@ -2129,6 +2143,13 @@
           </div>
           <div class="calendar-grid" id="cal-grid"></div>
         </div>
+      </div>
+      </div>
+      <div data-seg="calendar">
+      <div class="card" data-cal="cycles">
+        <h2 class="card-label">Cycles side by side</h2>
+        <div class="today-sub cal-hint">One row per cycle, day 1 on the left, coloured by how each day went.</div>
+        <div id="cyc-compare"></div>
       </div>
       </div>
       <div data-seg="calendar">
@@ -2446,6 +2467,10 @@
         <button class="on">Insights</button>
         <button onclick="switchTab('journey'); showJourneySeg('write')">Write</button>
         <button class="private" onclick="switchTab('journey'); showJourneySeg('journal')">Journal</button>
+      </div>
+      <div class="card private" id="cycle-phases-card">
+        <h2>Through the cycle, phase by phase</h2>
+        <div id="cycle-phases"></div>
       </div>
       <div class="card" id="trend-card">
         <h2 class="card-label">Past 30 days</h2>
@@ -10493,6 +10518,17 @@
       return `<div class="insight-card"><span class="insight-icon">${INSIGHT_PX[icon] ? pxIcon(INSIGHT_PX[icon]) : icon}</span><div>${html}</div></div>`;
     }
 
+    // Today's phase in numbers (set by buildCycleHtml), shown on Today's cycle card; tap to open the phases in Insights
+    let cyclePhaseNow = null;
+    function cycHistLine() {
+      const c = cyclePhaseNow; if(!c) return '';
+      return `<button type="button" class="cyc-hist-line" onclick="openCyclePhases()">${c.name}, last 6 months: <b>${c.hard} of ${c.days} ${pl(c.days, 'day')}</b> hard or tense${c.flagged ? ' · usually a harder phase' : ''} <span aria-hidden="true">›</span></button>`;
+    }
+    function openCyclePhases() {
+      switchTab('insights');
+      const c = document.getElementById('cycle-phases-card');
+      if(c) { c.classList.remove('collapsed'); setTimeout(() => c.scrollIntoView({ block: 'start', behavior: 'smooth' }), 50); }
+    }
     // Cycle: which phases hold most of the hard or tense days, and where things are now
     function buildCycleHtml(allInc) {
       const cyc = cycleInfo();
@@ -10544,6 +10580,8 @@
       // Where you are today
       const today = startOfToday(), nowPh = phaseOf(today), dbp = daysBeforePeriod(today, cyc);
       const nowDay = cycleDayOf(today);
+      cyclePhaseNow = enough && PH[nowPh][1] >= 4 ? { name: PH[nowPh][0], days: PH[nowPh][1], hard: PH[nowPh][2], flagged: flagged(nowPh) } : null;
+      const tl = document.getElementById('today-cyc-hist'); if(tl) tl.innerHTML = cycHistLine();
       let now = `Today: <b>${PH[nowPh][0]}</b>, day ${nowDay} of about ${L}.`;
       if(nowPh !== 'period') now += ` Period in about ${dbp} day${dbp === 1 ? '' : 's'}.`;
       if(enough && flagged(nowPh)) now += ' This is usually a harder stretch. Go gently and keep Disrupt close.';
@@ -11551,6 +11589,7 @@
       return `<div class="today-cycle"><svg width="104" height="104" viewBox="0 0 112 112">${svg}</svg>` +
         `<div><div class="big">Day ${day} <small class="cyc-of">of about ${L}</small></div><div class="phase" style="color:${TEXT[1]}">${TEXT[0]}</div><div class="today-sub">${TEXT[2]}</div></div></div>` +
         `<div class="today-legend"><span><i style="background:#ef8a7a"></i>Period</span><span><i style="background:#5fc79a"></i>Follicular</span><span><i style="background:#f2c46b"></i>Ovulation</span><span><i style="background:#a792f0"></i>Luteal</span></div>` +
+        `<div class="private" id="today-cyc-hist">${cycHistLine()}</div>` +
         `<span class="tag-pill">${label}</span>` +
         `<div class="period-now ${cp ? 'on' : ''}" style="margin:12px 0 0;">${cp
           ? `<span><b>On period</b> · day ${cp.day}${cp.end ? '' : ''}</span>${cp.end ? '' : '<button class="icon-btn" type="button" onclick="periodEndedToday()">Ended today</button>'}`
@@ -12361,6 +12400,8 @@
     let layoutCfg = { hide: [], order: [], tabs: [], calm: {} };
     try { layoutCfg = Object.assign(layoutCfg, JSON.parse(localStorage.getItem('aq_layout') || '{}')); } catch(e) {}
     const saveLayout = () => localStorage.setItem('aq_layout', JSON.stringify(layoutCfg));
+    // Seen but never tapped in the usage report (18 Nov 2026): off once by default, switchable back on in Settings
+    if(!layoutCfg.quiet1) { layoutCfg.hide = [...new Set([...layoutCfg.hide, 'today-now', 'today-night', 'today-pins'])]; layoutCfg.quiet1 = true; saveLayout(); }
     const LAYOUT_TODAY = [['today-checkin-card', 'Check-in'], ['today-evening', 'Your evening (after 10 pm)'], ['today-morning', 'Morning guide (sun button)'], ['today-now', 'Right now (hard days)'], ['today-spirit', 'Spirit'], ['today-write', 'Write button'],
       ['today-you', 'You'], ['today-goals', 'Your goals'], ['today-night', "It's late (night view)"], ['today-pins', 'Pinned tools'], ['today-care', 'Care cards'], ['today-cycle-card', 'Cycle'],
       ['today-memory', 'A good memory'], ['her-quiz', "Tonight's questions"], ['today-coming-card', 'Coming up'], ['for-you', 'For you suggestions']]; // in their original order
@@ -12442,8 +12483,8 @@
       const tiles = document.createElement('div');
       tiles.id = 'calm-tiles';
       tiles.className = 'calm-tiles';
-      const USE_ORDER = ['Breathing', 'JADE', 'Practice', 'Conflict', 'Lanterns', 'Vagus', 'Quiet Reset']; // by how often you use them
-      const MAIN = 4; // Breathing, Don't JADE, Crisis Practice and After a Conflict up front; the rest wait under "More tools"
+      const USE_ORDER = ['JADE', 'Practice', 'Breathing', 'Conflict', 'Lanterns', 'Vagus', 'Quiet Reset']; // by how often you use them (usage report, 18 Nov 2026)
+      const MAIN = 4; // Don't JADE, Crisis Practice, Breathing and After a Conflict up front; the rest wait under "More tools"
       const rank = t => { const r = USE_ORDER.findIndex(k => t.includes(k)); return r < 0 ? USE_ORDER.length : r; };
       const order = titles.map((t, i) => i).filter(i => !calmHidden(titles[i])).sort((a, b) => rank(titles[a]) - rank(titles[b]) || a - b);
       calmTitles = titles;
@@ -12994,13 +13035,13 @@
       if(c) c.scrollIntoView({ block: 'start', behavior: 'smooth' });
     }
 
-    // ---------- AFTER A CONFLICT: settle, pick the moment, own your part, say it, listen, then note how it went ----------
+    // ---------- AFTER A CONFLICT: settle and ask, what to say, listen and note how it went ----------
     const REPAIR_OWN = ['raised my voice', 'stopped listening', 'said something hurtful', 'got defensive', 'brought up old things',
                         'walked away without saying I\'d come back', 'went quiet on you'];
     const REPAIR_FELT = ['hurt', 'overwhelmed', 'scared', 'unheard', 'tired', 'alone'];
     const REPAIR_NEED = ['to slow down when it gets loud', 'a pause word we both respect', 'to hear what hurt you', 'to start again', 'a hug'];
     const repair = { step: 0, own: new Set(), ownText: '', felt: new Set(), need: new Set(), done: false };
-    const REPAIR_STEPS = 6;
+    const REPAIR_STEPS = 3;
     const joinAnd = a => a.length < 2 ? (a[0] || '') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1];
     function repairSentence() {
       const own = [...repair.own, ...(repair.ownText.trim() ? [repair.ownText.trim().replace(/^i\s+/i, '')] : [])];
@@ -13027,10 +13068,6 @@
       document.getElementById('repair-dots').innerHTML = Array.from({ length: REPAIR_STEPS }, (_, i) => `<i class="${i <= st ? 'on' : ''}"></i>`).join('');
       let html = '';
       if(st === 0) {
-        html = `<h3>1. Settle first</h3>
-          <p>After a fight your body needs about 20 minutes to come down. Talking before that usually starts round two.</p>
-          <button class="btn-action btn-secondary" onclick="goTool('breathe')">Breathe for a few rounds</button>`;
-      } else if(st === 1) {
         let cyc = '';
         try { const ds = computeDarkStretch(); if(ds && ds.inWindow) {
           const left = DARK_DAYS + 1 - ds.dayIdx;
@@ -13038,31 +13075,20 @@
         } else if(ds && ds.headsUp) {
           cyc = `<div class="repair-note">The harder days of ${P.their} cycle start in about ${ds.headsUp} ${pl(ds.headsUp, 'day')}. If this needs a real talk, now is better than next week.</div>`;
         } } catch(e) {}
-        html = `<h3>2. Pick the moment</h3>
-          <p>Somewhere private, when neither of you is tired, hungry or rushing. Ask first, and accept either answer:</p>
-          <div class="repair-say">"Can we talk about earlier? Now or later is fine."</div>${cyc}`;
-      } else if(st === 2) {
-        html = `<h3>3. Your part</h3>
-          <p>Owning even a small piece lowers the guard on both sides. What was yours?</p>
-          ${repairChips(REPAIR_OWN, repair.own, 'own')}
-          <input id="repair-own-text" placeholder="Or in your words: I…" value="${escapeHtml(repair.ownText)}" oninput="repair.ownText = this.value">`;
-      } else if(st === 3) {
-        html = `<h3>4. What to say</h3>
+        html = `<h3>1. Settle, then ask</h3>
+          <p>Give your body about 20 minutes to come down first. Then, somewhere private, ask:</p>
+          <div class="repair-say">"Can we talk about earlier? Now or later is fine."</div>${cyc}
+          <button class="btn-action btn-secondary" onclick="goTool('breathe')">Breathe for a few rounds</button>`;
+      } else if(st === 1) {
+        html = `<h3>2. What to say</h3>
+          <div class="today-q">My part</div>${repairChips(REPAIR_OWN, repair.own, 'own')}
           <div class="today-q">I felt…</div>${repairChips(REPAIR_FELT, repair.felt, 'felt')}
           <div class="today-q">What I'd like…</div>${repairChips(REPAIR_NEED, repair.need, 'need')}
           <div class="today-q">Something like</div><div class="repair-say" id="repair-say">${escapeHtml(repairSentence())}</div>`;
-      } else if(st === 4) {
-        html = `<h3>5. Listen</h3>
-          <p>Let ${name} go first. Say back what you heard ("So what hurt was…") before you explain anything.</p>
-          <div class="today-q">Try</div>
-          <ul class="repair-list"><li>"Can we start over?"</li><li>"I see your point."</li><li>"Let me say that again, more gently."</li>
-            <li>"I need a minute. I'm coming back in 20."</li><li>"We're on the same side."</li></ul>
-          <div class="today-q">Avoid</div>
-          <ul class="repair-list avoid"><li>"You always" or "you never"</li><li>"Calm down"</li><li>"It's just your hormones"</li><li>Going back over who started it</li></ul>`;
       } else {
         html = repair.done ? `<h3>Saved</h3><p>${repair.done === 'not' ? 'That\'s okay. Making up is many small tries, not one big one. Try again tomorrow.' : 'Well done for going back to it. That takes more than staying angry.'}</p>`
-          : `<h3>6. How did it go?</h3>
-          <p>It goes in your journal, so you can see over time what helps.</p>
+          : `<h3>3. Listen, then note how it went</h3>
+          <p>Let ${name} go first. Say back what you heard ("So what hurt was…") before you explain anything. Avoid "you always", "calm down" and going over who started it.</p>
           <div class="repair-chips" style="gap:8px;">
             <button class="btn-action" onclick="repairFinish('made')">We made up</button>
             <button class="btn-action btn-secondary" onclick="repairFinish('better')">Better, not fully</button>
@@ -13098,11 +13124,11 @@
         const h = c.querySelector(':scope > h2');
         if(!h || c.classList.contains('ins-card')) return;
         c.classList.add('ins-card');
-        if(c.id !== 'week-card' && c.id !== 'trend-card') c.classList.add('collapsed'); // the summaries start open
+        if(c.id !== 'week-card' && c.id !== 'trend-card' && c.id !== 'cycle-phases-card') c.classList.add('collapsed'); // the summaries (and the cycle phases, the most opened part) start open
         h.addEventListener('click', () => {
           c.classList.toggle('collapsed');
           // Opening another section folds the 30-day summary away
-          if(c.id !== 'trend-card' && !c.classList.contains('collapsed')) document.getElementById('trend-card').classList.add('collapsed');
+          if(c.id !== 'trend-card' && c.id !== 'cycle-phases-card' && !c.classList.contains('collapsed')) document.getElementById('trend-card').classList.add('collapsed');
         });
       });
     }
@@ -13110,7 +13136,7 @@
     // ---------- JOURNAL SECTIONS ----------
     let journeySeg = 'calendar';
     // The three calendars (day colours, moods, movement), one at a time
-    const CAL_VIEWS = [['days', 'Days'], ['moods', 'Moods'], ['move', 'Movement']];
+    const CAL_VIEWS = [['days', 'Days'], ['cycles', 'Cycles'], ['moods', 'Moods'], ['move', 'Movement']];
     let calView = 0;
     try { calView = Math.max(0, CAL_VIEWS.findIndex(([k]) => k === localStorage.getItem('aq_cal_view'))); } catch(e) {}
     function cycleCalendar(d) {
@@ -13119,6 +13145,33 @@
       try { localStorage.setItem('aq_cal_view', CAL_VIEWS[calView][0]); } catch(e) {}
       renderCalCycle();
     }
+    // Cycles side by side: the last 6 cycles as rows, so you can compare them without flipping months
+    function renderCycleCompare() {
+      const el = document.getElementById('cyc-compare'); if(!el) return;
+      const cyc = cycleInfo(), today = startOfToday();
+      const starts = cyc.starts.filter(s => s <= today);
+      if(!starts.length) { el.innerHTML = '<div class="today-sub">Add period dates in Settings to compare cycles.</div>'; return; }
+      const L = Math.round(cyc.avg), rows = [];
+      for(let i = starts.length - 1; i >= 0 && rows.length < 6; i--) {
+        const st = starts[i], nx = starts[i + 1];
+        let len = nx ? Math.round((nx - st) / DAY) : L;
+        if(len > 45) continue; // a gap where a period wasn't entered
+        if(!nx) len = Math.max(L, Math.round((today - st) / DAY) + 1); // the current cycle: its expected length, or longer if it's running late
+        rows.push({ st, len, open: !nx });
+      }
+      const maxLen = Math.max(...rows.map(r => r.len));
+      const CLS = { 'status-green': 'g', 'status-yellow': 'y', 'status-red': 'r', 'status-black': 'k' };
+      el.innerHTML = `<div class="cc-axis"><span></span><div class="cc-cells">${Array.from({ length: maxLen }, (_, d) => `<i>${d === 0 || (d + 1) % 7 === 0 ? d + 1 : ''}</i>`).join('')}</div></div>` +
+        rows.map(({ st, len, open }) => {
+          const cells = Array.from({ length: maxLen }, (_, d) => {
+            if(d >= len) return '<i class="cc-none"></i>';
+            const day = addDays(st, d), k = dayKey(day), future = day > today;
+            return `<i class="${future ? 'cc-future' : CLS[calData[k]] || ''} ${day.getTime() === today.getTime() ? 'cc-today' : ''}"></i>`;
+          }).join('');
+          const lbl = st.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+          return `<div class="cc-row"><span class="cc-lbl">${lbl}<small>${open ? 'now' : len + ' d'}</small></span><div class="cc-cells">${cells}</div></div>`;
+        }).join('');
+    }
     function renderCalCycle() {
       const rest = typeof calResting === 'function' && calResting(); // midnight to 7 am: just the days calendar, no switching
       const [key, name] = rest ? CAL_VIEWS[0] : CAL_VIEWS[calView];
@@ -13126,6 +13179,7 @@
       document.querySelectorAll('#tab-journey [data-cal]').forEach(el => el.classList.toggle('slot-off', el.dataset.cal !== key));
       const n = document.getElementById('cal-cycle-name');
       if(n) n.innerText = name;
+      if(key === 'cycles') renderCycleCompare();
       const dots = document.getElementById('cal-cycle-dots');
       if(dots) dots.innerHTML = rest ? '' : CAL_VIEWS.map((_, i) => `<i class="${i === calView ? 'on' : ''}"></i>`).join('');
     }
@@ -13397,7 +13451,9 @@
       renderDarkBanner();
       renderWeekSummary(allInc);
       renderTrend(allInc);
-      el.innerHTML = buildCrisisHtml() + buildDarkHtml() + buildCycleHtml(allInc) + recovery +
+      const cp = document.getElementById('cycle-phases');
+      if(cp) cp.innerHTML = buildCycleHtml(allInc).replace('<div class="pat-title">Cycle</div>', '');
+      el.innerHTML = buildCrisisHtml() + buildDarkHtml() + recovery +
         (cards.length ? '<div class="pat-title">Other patterns</div>' + cards.join('') : '');
     }
 
@@ -13738,7 +13794,7 @@
       togglePuzzlePause: 'Disrupt: pause', togglePuzzleWhy: 'Disrupt: why it helps', setPuzzleMode: 'Disrupt: switch game', resetBoard: 'Disrupt: new board', startPuzzleWindow: 'Disrupt: start a session',
       addPastPeriod: 'Period: add', removePastPeriod: 'Period: remove', changeWorkoutMonth: 'Movement: change month', cycleWorkoutDay: 'Movement: mark a day', logWorkout: 'Movement: log workout',
       toggleNoteTag: 'Journal: tag an entry', addNoteCustomTag: 'Journal: custom tag', nextMemory: 'Memories: next', careSave: 'After yesterday: save', weeklySave: 'Your week: save',
-      tourNext: 'Tour: next', startTour: 'Tour: start', endTour: 'Tour: end', exportUsage: 'Usage: export', sendFeedback: 'Feedback',
+      tourNext: 'Tour: next', startTour: 'Tour: start', endTour: 'Tour: end', exportUsage: 'Usage: export', openCyclePhases: 'Today: cycle phase line', quickBackup: 'Backup: header button', sendFeedback: 'Feedback',
       periodStartedToday: 'Period: started today', periodEndedToday: 'Period: ended today', copyJournalForAI: 'Journal: copy for AI', shareUsage: 'Usage: share', goalBump: 'Goals: progress', goalSave: 'Goals: add', goalRemove: 'Goals: remove', eveningSave: 'Your evening: save', morningUp: "Morning: partner's up", morningUpFromHeader: 'Morning: sun button', morningNextCue: 'Morning: next cue', morningDone: "Morning: done", morningHow: 'Morning: how it went'
     };
     // The main features, so the card can point out the ones you haven't used lately
@@ -13834,7 +13890,9 @@
 
     document.addEventListener('toggle', e => {
       const d = e.target; if(!(d instanceof HTMLDetailsElement) || !d.open) return;
-      const sm = d.querySelector(':scope > summary'); if(sm) usageEvent('open:' + sm.textContent.trim().slice(0, 40));
+      const sm = d.querySelector(':scope > summary'); if(!sm) return;
+      const nm = sm.querySelector('.cyc-name'); // cycle rows: the phase name only, not its changing counts
+      usageEvent('open:' + (nm || sm).textContent.trim().slice(0, 40));
     }, true);
 
     // Today's cards: which ones you actually see (scrolled into view) and which you tap, per visit
@@ -13863,7 +13921,7 @@
     }
     const USAGE_COLOUR = { 'status-green': 'green', 'status-yellow': 'yellow', 'status-red': 'red', 'status-black': 'black' };
     // Started and finished, to see where people drop off
-    const USAGE_FUNNELS = [['Crisis Practice', 'simOpen', 'simDone'], ["Don't JADE", 'jadeOpen', 'jadePick'], ['After a Conflict', 'repairGo', 'repairFinish'],
+    const USAGE_FUNNELS = [['Crisis Practice', 'simOpen', 'simDone'], ["Don't JADE", ['jadeOpen', 'jadeNext'], 'jadePick'], ['After a Conflict', 'repairGo', 'repairFinish'],
                            ['Tour', 'startTour', 'endTour'], ['Breathing pacer', 'toggleBreathing', 'toggleBreathing']];
     const isTool = id => !/^(tab|open|seen|tapcard):/.test(String(id)) && !['openSettings', 'todayPick', 'todaySetDay', 'todaySetSleep', 'showJourneySeg', 'cycleCalendar', 'changeCalMonth', 'calendarDay'].includes(id);
     function usageStats(days) {
@@ -13879,14 +13937,15 @@
         });
       });
       const features = {};
-      events.filter(e => !/^(tab|open|seen|tapcard):/.test(String(e[1]))).forEach(e => { features[e[1]] = (features[e[1]] || 0) + 1; });
+      events.filter(e => !/^(tab|open|seen|tapcard):/.test(String(e[1])) && !IGNORE.has(e[1])).forEach(e => { features[e[1]] = (features[e[1]] || 0) + 1; });
       const bands = { morning: 0, afternoon: 0, evening: 0, night: 0 };
       sessions.forEach(s => { bands[bandName(new Date(s[0]).getHours())]++; });
       const trackedDays = Math.max(1, Math.min(days, Math.ceil((Date.now() - usage.since) / DAY)));
-      const avgSession = sessions.length ? sessions.reduce((a, s) => a + (s[1] - s[0]), 0) / sessions.length : 0;
+      // Time actually on screen per visit (a visit's start-to-end span also counts time the app sat closed)
+      const avgSession = sessions.length ? Object.values(tabMs).reduce((a, b) => a + b, 0) / sessions.length : 0;
       // Tools by mood and by day colour
       const byMood = {}, byColour = {};
-      events.filter(e => isTool(e[1])).forEach(([ts, id]) => {
+      events.filter(e => isTool(e[1]) && !IGNORE.has(e[1])).forEach(([ts, id]) => {
         const m = usageMoodAt(ts) || 'no pick', c = USAGE_COLOUR[calData[dayKey(new Date(ts))]] || 'unmarked';
         (byMood[m] = byMood[m] || {})[id] = (byMood[m][id] || 0) + 1;
         (byColour[c] = byColour[c] || {})[id] = (byColour[c][id] || 0) + 1;
@@ -13895,16 +13954,17 @@
       const firstTab = {}, firstTap = {};
       sessions.forEach(([a, b]) => {
         const inS = events.filter(e => e[0] >= a && e[0] <= b + 1000);
-        const t = inS.find(e => String(e[1]).startsWith('tab:')), f = inS.find(e => isTool(e[1]));
+        const t = inS.find(e => String(e[1]).startsWith('tab:')), f = inS.find(e => isTool(e[1]) && !IGNORE.has(e[1]));
         if(t) { const k = t[1].slice(4); firstTab[k] = (firstTab[k] || 0) + 1; }
         if(f) firstTap[f[1]] = (firstTap[f[1]] || 0) + 1;
       });
       // Settings and other folded sections opened
       const opened = {};
-      events.filter(e => String(e[1]).startsWith('open:')).forEach(e => { const k = e[1].slice(5); opened[k] = (opened[k] || 0) + 1; });
+      events.filter(e => String(e[1]).startsWith('open:')).forEach(e => { const k = e[1].slice(5).replace(/\d+ of \d+ days?$/, ''); opened[k] = (opened[k] || 0) + 1; });
       const cards = {};
       events.forEach(([, id]) => { const m = String(id).match(/^(seen|tapcard):(.+)$/); if(m) { const c = cards[m[2]] = cards[m[2]] || { seen: 0, tap: 0 }; c[m[1] === 'seen' ? 'seen' : 'tap']++; } });
-      const funnels = USAGE_FUNNELS.map(([name, a, b]) => [name, features[a] || 0, a === b ? null : (features[b] || 0)]).filter(f => f[1]);
+      const cnt = ids => [].concat(ids).reduce((n, id) => n + (features[id] || 0), 0);
+      const funnels = USAGE_FUNNELS.map(([name, a, b]) => [name, cnt(a), a === b ? null : cnt(b)]).filter(f => f[1]);
       return { sessions, tabMs, features, bands, trackedDays, avgSession, byMood, byColour, firstTab, firstTap, opened, funnels, cards };
     }
 
@@ -14017,6 +14077,11 @@
     }
 
     // BACKUP / RESTORE
+    // One tap from the header: the same backup as in Settings
+    function quickBackup() {
+      exportBackup();
+      showToast('Backup saved');
+    }
     function exportBackup() {
       const data = {};
       for(let i = 0; i < localStorage.length; i++) {
